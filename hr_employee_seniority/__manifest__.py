@@ -27,12 +27,11 @@
     "summary": "Calculate an employee's months of employment",
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
-        "hr",
+        "hr_contract",
     ],
     "data": [
         "views/hr_view.xml",
     ],
-    "test": [],
     "demo": [],
     "installable": True,
 }
