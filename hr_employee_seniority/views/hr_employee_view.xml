@@ -23,14 +23,9 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form" />
             <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//group[@name='active_group']" position="after">
-                        <group string="Duration of Service">
-                            <field name="initial_employment_date" />
-                            <field name="length_of_service" />
-                        </group>
-                    </xpath>
-                </data>
+                <xpath expr="//field[@name='coach_id']" position="after">
+                    <field name="length_of_service" />
+                </xpath>
             </field>
         </record>
 

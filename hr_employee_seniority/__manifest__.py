@@ -14,7 +14,7 @@
         "hr_contract",
     ],
     "data": [
-        "views/hr_view.xml",
+        "views/hr_employee_view.xml",
     ],
     "demo": [],
     "installable": True,

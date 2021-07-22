@@ -35,8 +35,7 @@ class HrEmployee(models.Model):
         return last_date.day
 
     def get_months_service_to_date(self, dToday=None):
-        """Returns a dictionary of floats. The key is the employee id, and the value is
-        number of months of employment."""
+        """Returns the number of months of employment."""
 
         self.ensure_one()
         if dToday is None:
@@ -47,7 +46,7 @@ class HrEmployee(models.Model):
         delta = relativedelta(dToday, dToday)
         contracts = self._get_contracts_list()
         if len(contracts) == 0:
-            return (0.0, False)
+            return 0.0
 
         dInitial = fields.Date.to_date(contracts[0].date_start)
 
@@ -72,17 +71,16 @@ class HrEmployee(models.Model):
 
         # Set the number of months the employee has worked
         date_part = float(delta.days) / float(self._get_days_in_month(dInitial))
-        return (
-            round(float((delta.years * 12) + delta.months) + date_part, 2),
-            dInitial,
-        )
+        return round(float((delta.years * 12) + delta.months) + date_part, 2)
 
     def _compute_employed_months(self):
 
         for ee in self:
-            ee.length_of_service = ee.get_months_service_to_date()[0]
+            ee.length_of_service = self.get_months_service_to_date()
 
-    length_of_service = fields.Float(compute="_compute_employed_months", groups=False)
+    length_of_service = fields.Float(
+        compute="_compute_employed_months", groups=False, string="Seniority (months)"
+    )
 
     def get_employment_date(self):
 
