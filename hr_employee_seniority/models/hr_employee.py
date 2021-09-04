@@ -79,7 +79,7 @@ class HrEmployee(models.Model):
             ee.length_of_service = self.get_months_service_to_date()
 
     length_of_service = fields.Float(
-        compute="_compute_employed_months", groups=False, string="Seniority (months)"
+        compute="_compute_employed_months", groups=False, string="Seniority"
     )
 
     def get_employment_date(self):
