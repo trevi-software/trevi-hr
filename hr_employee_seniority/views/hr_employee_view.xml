@@ -24,7 +24,11 @@
             <field name="inherit_id" ref="hr.view_employee_form" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='coach_id']" position="after">
-                    <field name="length_of_service" />
+                    <label for="length_of_service" />
+                    <div class="o_row" name="div_seniority">
+                        <field name="length_of_service" />
+                        <span>months</span>
+                    </div>
                 </xpath>
             </field>
         </record>
