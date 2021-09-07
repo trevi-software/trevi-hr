@@ -49,7 +49,7 @@ class HrContract(models.Model):
         eedata = ee_obj.browse(employee_id).read(['category_ids'])
         job = self.env['hr.job'].browse(job_id)
         for tag in job.category_ids:
-            if tag.id in eedata['category_ids']:
+            if tag.id in eedata[0]['category_ids']:
                 ee_obj.browse(employee_id).write({'category_ids': [(3, tag.id)]})
         return
 
@@ -63,7 +63,7 @@ class HrContract(models.Model):
         eedata = ee_obj.browse(employee_id).read(['category_ids'])
         job = self.env['hr.job'].browse(job_id)
         for tag in job.category_ids:
-            if tag.id not in eedata['category_ids']:
+            if tag.id not in eedata[0]['category_ids']:
                 ee_obj.browse(employee_id).write({'category_ids': [(4, tag.id)]})
         return
 
