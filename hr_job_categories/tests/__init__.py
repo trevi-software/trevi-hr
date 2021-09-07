@@ -18,28 +18,4 @@
 #
 ##############################################################################
 
-{
-    'name': 'Job Categories',
-    'version': '10.0.1.0.0',
-    'category': 'Generic Modules/Human Resources',
-    'description': """
-Attach Categories (Tags) to Employees Based on Job Position
-===========================================================
-
-This module is useful for tagging employees based on their job positions. For example,
-all Supervisors could be attached to the Supervisors category. Define which categries
-a job belongs to in the configuration for the job. When an employee is assigned a particular
-job the categories attached to that job will be attached to the employee record as well.
-    """,
-    'author':'Michael Telahun Makonnen <mmakonnen@gmail.com>',
-    'website':'http://miketelahun.wordpress.com',
-    'depends': [
-        'hr',
-        'hr_contract'
-    ],
-    'data': [
-        'views/hr_view.xml',
-    ],
-    'installable': True,
-    'active': False,
-}
+from . import test_contract
