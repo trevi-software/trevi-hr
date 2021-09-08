@@ -20,7 +20,7 @@
 
 {
     'name': 'Job Categories',
-    'version': '10.0.1.0.0',
+    'version': '14.0.0.0.1',
     'category': 'Generic Modules/Human Resources',
     'description': """
 Attach Categories (Tags) to Employees Based on Job Position
