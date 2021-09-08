@@ -17,20 +17,4 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-{
-    "name": "Public Holidays",
-    "version": "14.0.0.0.1",
-    "license": "AGPL-3",
-    "category": "Generic Modules/Human Resources",
-    "author": "TREVI Software, Odoo Community Association (OCA)",
-    "website": "https://github.com/trevi-software/trevi-hr",
-    "depends": [
-        "hr",
-    ],
-    "data": [
-        "security/ir.model.access.csv",
-        "views/hr_public_holidays_view.xml",
-    ],
-    "installable": True,
-}
+from . import test_public_holidays
