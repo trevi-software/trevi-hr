@@ -38,7 +38,7 @@ class TestContract(TestHrContracts):
         cls.dstart = datetime.now().date()
         cls.dend = (datetime.now() + timedelta(days=90)).date()
         cls.contract_data = {
-            "name": "Adam",
+            "name": "Contract #1",
             "employee_id": cls.employee.id,
             "job_id": False,
             "wage": 1,
