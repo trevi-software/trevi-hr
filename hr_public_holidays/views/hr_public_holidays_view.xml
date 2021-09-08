@@ -6,7 +6,7 @@
         <field name="model">hr.holidays.public</field>
         <field name="arch" type="xml">
             <tree string="Public Holidays">
-                <field name="year"/>
+                <field name="year" />
             </tree>
         </field>
     </record>
@@ -17,11 +17,11 @@
         <field name="arch" type="xml">
             <form string="Public Holidays">
                 <group>
-                    <field name="year"/>
+                    <field name="year" />
                 </group>
-                <newline/>
+                <newline />
                 <group string="Public Holidays" colspan="4" col="1">
-                    <field name="line_ids" nolabel="1"/>
+                    <field name="line_ids" nolabel="1" />
                 </group>
             </form>
         </field>
@@ -32,9 +32,9 @@
         <field name="model">hr.holidays.public.line</field>
         <field name="arch" type="xml">
             <tree string="Public Holidays" editable="top">
-                <field name="date"/>
-                <field name="name"/>
-                <field name="variable"/>
+                <field name="date" />
+                <field name="name" />
+                <field name="variable" />
             </tree>
         </field>
     </record>
@@ -44,9 +44,11 @@
         <field name="res_model">hr.holidays.public</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <menuitem action="open_public_holidays_view"
-              id="menu_public_holidays_view"
-              parent="hr.menu_human_resources_configuration"
-              sequence="20"/>
+    <menuitem
+        action="open_public_holidays_view"
+        id="menu_public_holidays_view"
+        parent="hr.menu_human_resources_configuration"
+        sequence="20"
+    />
 
 </odoo>
