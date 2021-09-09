@@ -1,4 +1,3 @@
-#-*- coding:utf-8 -*-
 ##############################################################################
 #
 #    Copyright (C) 2013 Michael Telahun Makonnen <mmakonnen@gmail.com>.
@@ -20,41 +19,30 @@
 ##############################################################################
 
 {
-    'name': 'Capture employee picture with webcam',
-    'version': '1.0',
-    'category': 'Generic Modules/Human Resources',
-    'description': """
-HR WebCam
-=========
-
-Capture employee pictures with an attached web cam.
-    """,
-    'author':'Michael Telahun Makonnen <mmakonnen@gmail.com>',
-    'website':'http://miketelahun.wordpress.com',
-    'depends': [
-        'hr',
-        'web',
+    "name": "Capture employee picture with webcam",
+    "version": "14.0.1.0.0",
+    "category": "Generic Modules/Human Resources",
+    "author": "TREVI Software",
+    "license": "AGPL-3",
+    "website": "https://github.com/trevi-software/trevi-hr",
+    "depends": [
+        "hr",
+        "web",
     ],
-    'js': [
-        'static/src/js/jquery.webcam.js',
-        'static/src/js/hr_webcam.js',
+    "js": [
+        "static/src/js/jquery.webcam.js",
+        "static/src/js/hr_webcam.js",
     ],
-    'css': [
-        'static/src/css/hr_webcam.css',
+    "css": [
+        "static/src/css/hr_webcam.css",
     ],
-    'qweb': [
-        'static/src/xml/hr_webcam.xml',
+    "qweb": [
+        "static/src/xml/hr_webcam.xml",
     ],
-    'init_xml': [
+    "data": [
+        "hr_webcam_data.xml",
+        "hr_webcam_view.xml",
     ],
-    'update_xml': [
-        'hr_webcam_data.xml',
-        'hr_webcam_view.xml',
-    ],
-    'test': [
-    ],
-    'demo_xml': [
-    ],
-    'installable': True,
-    'active': False,
+    "demo": [],
+    "installable": True,
 }
