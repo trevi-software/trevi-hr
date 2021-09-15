@@ -19,28 +19,18 @@
 ##############################################################################
 
 {
-    'name': 'Simplify Employee Records.',
-    'version': '10.0.1.0.0',
-    'category': 'Generic Modules/Human Resources',
-    'description': """
-Make Employee Records and Contracts Easier to Work With
-=======================================================
-    1. Make the job id in employee object reference job id in latest contract.
-    2. When moving from employee to contract pre-populate the employee field.
-    3. In the contract form show only those positions belonging to the
-       department the employee belongs to.
-    4. Make country (nationality) default to Ethiopia
-    5. Make official identification document number unique
-    """,
-    'author':'Michael Telahun Makonnen <mmakonnen@gmail.com>',
-    'website':'http://miketelahun.wordpress.com',
-    'depends': [
-        'hr',
-        'hr_contract',
+    "name": "Simplify Employee Records.",
+    "version": "14.0.0.0.1",
+    "license": "AGPL-3",
+    "category": "Generic Modules/Human Resources",
+    "author": "TREVI Software, Odoo Community Association (OCA)",
+    "website": "https://github.com/trevi-software/trevi-hr",
+    "depends": [
+        "hr",
+        "hr_contract",
     ],
-    'data': [
-        'views/hr_simplify_view.xml',
+    "data": [
+        "views/hr_simplify_view.xml",
     ],
-    'installable': True,
-    'active': False,
+    "installable": True,
 }
