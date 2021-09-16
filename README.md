@@ -15,7 +15,12 @@ This repository contains Human Resource addons developed by TREVI Software
 
 [//]: # (addons)
 
-This part will be replaced when running the oca-gen-addons-table script from OCA/maintainer-tools.
+Available addons
+----------------
+addon | version | summary
+--- | --- | ---
+[hr_employee_seniority](hr_employee_seniority/) | 14.0.1.0.0 | Calculate an employee's months of employment
+[hr_photobooth](hr_photobooth/) | 14.0.1.0.0 | Capture employee picture with webcam
 
 [//]: # (end addons)
 
