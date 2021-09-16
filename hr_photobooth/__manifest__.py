@@ -9,6 +9,7 @@
     "category": "Human Resources",
     "author": "TREVI Software",
     "license": "AGPL-3",
+    "images": ["static/src/img/main_screenshot.png"],
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
         "hr",
