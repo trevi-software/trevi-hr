@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="group_payroll_manager" model="res.groups">
+            <field name="name">Payroll Manager</field>
+            <field name="category_id" ref="base.module_category_human_resources" />
+            <field name="users" eval="[(4, ref('base.user_root'))]" />
+            <field name="comment">the user will do payroll processing</field>
+        </record>
+
+    </data>
+</odoo>
