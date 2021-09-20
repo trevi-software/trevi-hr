@@ -4,7 +4,10 @@
 
         <record id="group_payroll_manager" model="res.groups">
             <field name="name">Payroll Manager</field>
-            <field name="category_id" ref="base.module_category_human_resources" />
+            <field
+                name="category_id"
+                ref="ir_module_category_payroll.module_category_payroll"
+            />
             <field name="users" eval="[(4, ref('base.user_root'))]" />
             <field name="comment">the user will do payroll processing</field>
         </record>
