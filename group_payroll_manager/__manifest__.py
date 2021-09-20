@@ -7,6 +7,7 @@
     "summary": "Permissions group Payroll Manager",
     "version": "14.0.1.0.0",
     "category": "Payroll",
+    "images": ["static/src/img/main_screenshot.png"],
     "author": "TREVI Software, Michael Telahun Makonnen",
     "license": "AGPL-3",
     "website": "https://github.com/trevi-software/trevi-hr",
