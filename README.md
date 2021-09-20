@@ -20,6 +20,8 @@ Available addons
 addon | version | summary
 --- | --- | ---
 [group_payroll_manager](group_payroll_manager/) | 14.0.1.0.0 | Permissions group Payroll Manager
+[hr_contract_init](hr_contract_init/) | 14.0.1.0.0 | Contracts - Initial Settings
+[hr_contract_init_payroll](hr_contract_init_payroll/) | 14.0.1.0.0 | Contract Payroll Structure Initial Settings
 [hr_employee_seniority](hr_employee_seniority/) | 14.0.1.0.0 | Calculate an employee's months of employment
 [hr_job_categories](hr_job_categories/) | 14.0.1.0.0 | Job Categories
 [hr_photobooth](hr_photobooth/) | 14.0.1.0.0 | Capture employee picture with webcam
