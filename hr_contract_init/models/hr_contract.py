@@ -22,24 +22,18 @@ class ContractInit(models.Model):
         string="Name",
         size=64,
         required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
     )
     date = fields.Date(
         string="Effective Date",
         required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
     )
     wage_ids = fields.One2many(
         comodel_name="hr.contract.init.wage",
         inverse_name="contract_init_id",
         string="Starting Wages",
-        states={"draft": [("readonly", False)]},
     )
     trial_period = fields.Integer(
         string="Trial Period",
-        states={"draft": [("readonly", False)]},
         default=0,
         help="Length of Trial Period, in days",
     )
