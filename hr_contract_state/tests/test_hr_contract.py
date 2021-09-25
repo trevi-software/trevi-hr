@@ -200,3 +200,26 @@ class TestContract(common.SavepointCase):
         self.assertEqual("close", c.state)
         self.assertEqual("normal", c.kanban_state)
         self.assertFalse(c.state_ending)
+
+    def test_signal_close_ended_contract(self):
+        """Calling signal_close() doesn't alter contract end date that is in the past"""
+
+        # Start
+        start = datetime.now().date() + relativedelta(days=-100)
+        today = datetime.now().date()
+        end = today + relativedelta(days=100)
+        c = self.create_contract("draft", "normal", start, end)
+        c.signal_confirm()
+        self.assertEqual("open", c.state)
+        self.assertEqual("normal", c.kanban_state)
+        self.assertFalse(c.state_ending)
+
+        prev_end = today - relativedelta(days=1)
+        c.date_end = prev_end
+        c.signal_close()
+
+        # Ended
+        self.assertEqual(prev_end, c.date_end)
+        self.assertEqual("close", c.state)
+        self.assertEqual("normal", c.kanban_state)
+        self.assertFalse(c.state_ending)
