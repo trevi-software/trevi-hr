@@ -3,7 +3,9 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 
-from datetime import datetime
+from datetime import date, datetime
+
+from dateutil.relativedelta import relativedelta
 
 from odoo.tests import common
 
@@ -59,3 +61,15 @@ class TestContract(common.SavepointCase):
 
         self.assertEqual(self.job_ux_designer, self.employee.job_id)
         self.assertEqual(self.dept_rnd, self.employee.department_id)
+
+    def test_new_contract_sets_contract_id(self):
+        """Creation of employee contract sets link to contract"""
+
+        self.assertFalse(self.employee.contract_id)
+
+        start = date.today()
+        trial_end = date.today() + relativedelta(days=60)
+        contract = self.create_contract(start, trial_end=trial_end)
+        contract.signal_confirm()
+
+        self.assertEqual(contract, self.employee.contract_id)

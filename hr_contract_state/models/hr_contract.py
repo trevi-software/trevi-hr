@@ -231,7 +231,11 @@ class HrContract(models.Model):
         return
 
     def signal_close(self):
-        self.write({"date_end": date.today(), "state": "close"})
+        for c in self:
+            vals = {"state": "close"}
+            if not c.date_end or c.date_end >= date.today():
+                vals.update({"date_end": date.today()})
+            c.write(vals)
         return
 
     def write(self, vals):
