@@ -11,7 +11,6 @@
     "images": ["static/src/img/main_screenshot.png"],
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
-        "group_payroll_manager",
         "hr_contract",
         "hr_contract_init",
         "payroll",
