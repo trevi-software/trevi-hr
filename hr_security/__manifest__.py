@@ -12,7 +12,6 @@
     "license": "AGPL-3",
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
-        "ir_module_category_payroll",
         "hr",
         "hr_contract",
     ],
