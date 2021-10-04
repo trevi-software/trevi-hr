@@ -19,16 +19,29 @@ Available addons
 ----------------
 addon | version | summary
 --- | --- | ---
+[base_lock](base_lock/) | 14.0.1.0.0 | Base locking module.
 [group_payroll_manager](group_payroll_manager/) | 14.0.1.0.0 | Permissions group Payroll Manager
 [hr_contract_init](hr_contract_init/) | 14.0.1.0.0 | Contracts - Initial Settings
 [hr_contract_init_payroll](hr_contract_init_payroll/) | 14.0.1.0.0 | Contract Payroll Structure Initial Settings
+[hr_contract_state](hr_contract_state/) | 14.0.1.0.0 | Workflows and notifications on employee contracts.
 [hr_employee_seniority](hr_employee_seniority/) | 14.0.1.0.0 | Calculate an employee's months of employment
+[hr_employee_state](hr_employee_state/) | 14.0.1.0.0 | Track the HR status of employees
+[hr_employee_state_payroll](hr_employee_state_payroll/) | 14.0.1.0.0 | Adds access records to employee separation records
 [hr_job_categories](hr_job_categories/) | 14.0.1.0.0 | Job Categories
+[hr_leave_type_unique](hr_leave_type_unique/) | 14.0.1.0.0 | Ensure leave types are unique
+[hr_payslip_misc](hr_payslip_misc/) | 10.0.1.0.0 | Payroll Extension
 [hr_photobooth](hr_photobooth/) | 14.0.1.0.0 | Capture employee picture with webcam
 [hr_public_holidays](hr_public_holidays/) | 14.0.1.0.0 | Public Holidays
 [hr_security](hr_security/) | 14.0.1.0.0 | Human Resources permissions groups
 [hr_simplify](hr_simplify/) | 14.0.1.0.0 | Simplify Employee Records.
 [ir_module_category_payroll](ir_module_category_payroll/) | 14.0.1.0.0 | Creates Payroll module category
+[payroll_lock_hr_attendance](payroll_lock_hr_attendance/) | 14.0.1.0.0 | Links attendance records with payroll period locks.
+[payroll_period](payroll_period/) | 14.0.1.0.0 | Configurable payroll schedules.
+[payroll_period_account](payroll_period_account/) | 14.0.1.0.0 | Links payroll periods to accounting
+[payroll_period_base_lock](payroll_period_base_lock/) | 14.0.1.0.0 | Adds a base lock field to a payroll period.
+[payroll_period_contract_init](payroll_period_contract_init/) | 14.0.1.0.0 | Links payroll period schedules with employee contracts.
+[payroll_period_payroll_register](payroll_period_payroll_register/) | 14.0.1.0.0 | Creates a link between a payroll register and a payroll period.
+[payroll_period_payslip_amendment](payroll_period_payslip_amendment/) | 14.0.1.0.0 | Creates a link between payslip amendments and a payroll period.
 
 [//]: # (end addons)
 
