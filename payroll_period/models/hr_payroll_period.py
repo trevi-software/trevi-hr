@@ -330,12 +330,9 @@ class HrPayrollPeriod(models.Model):
             },
         }
 
-    def rerun_payslip(self, slip_id):
+    def rerun_payslip(self, slip):
 
         self.ensure_one()
-        Payslip = self.env["hr.payslip"]
-
-        slip = Payslip.browse(slip_id)
         run = slip.payslip_run_id
         ee = slip.employee_id
 
@@ -353,12 +350,12 @@ class HrPayrollPeriod(models.Model):
         slip = None
 
         # Create a pay slip
-        slip_id = self.create_payslip(ee.id, run.id)
+        slip = self.create_payslip(ee.id, run.id)
 
         # Calculate payroll for all the pay slips in this batch (run)
-        slip_id.compute_sheet()
+        slip.compute_sheet()
 
-        return slip_id
+        return slip
 
     def process_employee(self, employee_id):
         """Hook method to allow subclasses to override creation of a payslip
