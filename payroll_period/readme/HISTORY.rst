@@ -3,3 +3,4 @@
 
 * [ADD] Additional access rules
 * [FIX] Replace broken gtk-icons with font-awesome icons in payslip exception buttons in form view
+* [FIX] Properly spell out Payroll period schedule field name in hr.contract
