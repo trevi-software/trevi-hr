@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="view_payroll_period_form" model="ir.ui.view">
+            <field name="name">hr.payroll.period.form.inherit.processing</field>
+            <field name="model">hr.payroll.period</field>
+            <field name="inherit_id" ref="payroll_period.view_payroll_period_form" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//button[@name='set_state_payment']" position="before">
+                        <button
+                            name="%(action_payroll_period_process)d"
+                            type="action"
+                            states="open,ended,locked,generate"
+                            class="oe_highlight"
+                            string="Process Payroll"
+                        />
+                    </xpath>
+                    <xpath expr="//field[@name='name']" position="before">
+                        <field name="register_id" />
+                    </xpath>
+                    <xpath
+                        expr="//form/sheet/notebook/page/group/field/tree/button[@name='button_ignore']"
+                        position="before"
+                    >
+                        <button
+                            name="button_recalculate"
+                            type="object"
+                            icon="fa-gears"
+                        />
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</odoo>
