@@ -103,13 +103,13 @@
                                             <button
                                                 name="button_ignore"
                                                 type="object"
-                                                icon="fa fa-check"
+                                                icon="fa-check"
                                                 attrs="{'invisible': ['|', ('severity', '!=', 'critical'), '&amp;', ('severity', '=', 'critical'), ('ignore', '=', True)]}"
                                             />
                                             <button
                                                 name="button_unignore"
                                                 type="object"
-                                                icon="fa fa-close"
+                                                icon="fa-close"
                                                 attrs="{'invisible': ['|', ('severity', '!=', 'critical'), '&amp;', ('severity', '=', 'critical'), ('ignore', '=', False)]}"
                                             />
                                         </tree>

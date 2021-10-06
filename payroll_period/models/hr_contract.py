@@ -7,4 +7,6 @@ from odoo import fields, models
 class Contract(models.Model):
     _inherit = "hr.contract"
 
-    pps_id = fields.Many2one("hr.payroll.period.schedule", required=True)
+    pps_id = fields.Many2one(
+        "hr.payroll.period.schedule", "Payroll Period Schedule", required=True
+    )
