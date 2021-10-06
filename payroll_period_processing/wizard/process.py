@@ -204,7 +204,8 @@ class ProcessingWizard(models.TransientModel):
         # Get list of departments
         department_ids = self.env["hr.department"].search([])
 
-        self.create_payslip_runs(register_values, department_ids)
+        register = self.create_payslip_runs(register_values, department_ids)
+        register.set_denominations()
 
     @api.model
     def _remove_register(self, register):
@@ -277,3 +278,5 @@ class ProcessingWizard(models.TransientModel):
 
         # Attach payroll register to this pay period
         period.register_id = register
+
+        return register
