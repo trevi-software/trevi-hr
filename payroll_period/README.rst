@@ -41,6 +41,14 @@ To configure payslip exception rules, you need to:
 #. Go to Payroll -> Configuration -> Payslip Exception Rules
 #. Click on the "Create" button to create a new rule
 
+Changelog
+=========
+
+14.0.1.1.1 (2021-10-o6)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [ADD] Additional access rules
+* [FIX] Replace broken gtk-icons with font-awesome icons in payslip exception buttons in form view
 
 Bug Tracker
 ===========
