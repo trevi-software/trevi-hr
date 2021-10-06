@@ -100,17 +100,16 @@
                                             <field name="slip_id" />
                                             <field name="severity" />
                                             <field name="ignore" />
-                                            <!--<button name="button_recalculate" type="object" string="Re-Compute" icon="gtk-execute"/>-->
                                             <button
                                                 name="button_ignore"
                                                 type="object"
-                                                icon="gtk-no"
+                                                icon="fa fa-check"
                                                 attrs="{'invisible': ['|', ('severity', '!=', 'critical'), '&amp;', ('severity', '=', 'critical'), ('ignore', '=', True)]}"
                                             />
                                             <button
                                                 name="button_unignore"
                                                 type="object"
-                                                icon="gtk-yes"
+                                                icon="fa fa-close"
                                                 attrs="{'invisible': ['|', ('severity', '!=', 'critical'), '&amp;', ('severity', '=', 'critical'), ('ignore', '=', False)]}"
                                             />
                                         </tree>
