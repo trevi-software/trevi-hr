@@ -69,7 +69,7 @@
                 name="condition_python"
             >result = categories.NET > -0.01 and categories.NET &lt; 0.01</field>
             <field name="sequence" eval="20" />
-            <field name="severity">low</field>
+            <field name="severity">critical</field>
         </record>
 
     </data>
