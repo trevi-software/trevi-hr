@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <!-- Alert-related subtypes for messaging / Chatter -->
+
+        <record id="mt_alert_trial_ending" model="mail.message.subtype">
+            <field name="name">Trial Period Ending</field>
+            <field name="res_model">hr.contract</field>
+            <field name="default" eval="True" />
+            <field name="description">Trial Period is ending</field>
+        </record>
+
+        <record id="mt_alert_contract_ending" model="mail.message.subtype">
+            <field name="name">Contract Period Ending</field>
+            <field name="res_model">hr.contract</field>
+            <field name="default" eval="True" />
+            <field name="description">Contract Period is ending</field>
+        </record>
+
+    </data>
+</odoo>

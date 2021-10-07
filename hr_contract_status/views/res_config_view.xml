@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+        <record id="view_hr_config_contract_state" model="ir.ui.view">
+            <field name="name">hr settings for contract state</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="hr.res_config_settings_view_form" />
+            <field name="arch" type="xml">
+                <xpath
+                expr="//div[@name='employee_rights_setting_container']"
+                position="after"
+            >
+                    <h2>Employee Contracts</h2>
+                    <div
+                    class="row mt16 o_settings_container"
+                    name="employee_contracts_setting_container"
+                >
+                        <div
+                        class="col-12 col-lg-6 o_setting_box"
+                        title="Allow multiple concurrent employee contracts."
+                    >
+                            <div class="o_setting_left_pane">
+                                <field name="concurrent_contracts" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="concurrent_contracts" />
+                                <div class="text-muted">
+                                    Employees can have more than one contract active at a time.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>
