@@ -105,9 +105,9 @@ class HrContract(models.Model):
         self.ensure_one()
         if "state" in init_values:
             if self.state == "trial_ending":
-                return self.env["hr_contract_state.mt_alert_trial_ending"]
+                return self.env.ref("hr_contract_state.mt_alert_trial_ending")
             elif self.state == "contract_ending":
-                return self.env["hr_contract_state.mt_alert_contract_ending"]
+                return self.env.ref("hr_contract_state.mt_alert_contract_ending")
         return super(HrContract, self)._track_subtype(init_values)
 
     @api.model
