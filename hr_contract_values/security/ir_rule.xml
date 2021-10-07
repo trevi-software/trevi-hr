@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+
+        <record model="ir.rule" id="contract_init_shared_company_rule">
+            <field
+                name="name"
+            >Shared Contract Initial Values Record: multi-company</field>
+            <field name="model_id" ref="model_hr_contract_init" />
+            <field name="global" eval="True" />
+            <field name="domain_force">
+                ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+            </field>
+        </record>
+
+    </data>
+</odoo>
