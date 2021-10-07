@@ -14,5 +14,17 @@
             </field>
         </record>
 
+        <record id="view_contract_init_tree" model="ir.ui.view">
+            <field name="name">hr.contract.init.view.tree.payroll</field>
+            <field name="model">hr.contract.init</field>
+            <field name="inherit_id" ref="hr_contract_init.view_contract_init_tree" />
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='trial_period']" position="after">
+                    <field name="struct_id" />
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </odoo>
