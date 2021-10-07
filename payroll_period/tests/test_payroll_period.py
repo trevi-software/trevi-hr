@@ -331,7 +331,7 @@ class TestSchedule(common.SavepointCase):
         id_old = slip.id
         self.assertEqual(1, slip.get_salary_line_total("NET"))
 
-        slip = pp.rerun_payslip(slip.id)
+        slip = pp.rerun_payslip(slip)
 
         self.assertEqual(1, slip.get_salary_line_total("NET"))
         self.assertNotEqual(id_old, slip.id)
