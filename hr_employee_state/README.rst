@@ -28,6 +28,14 @@ This module manages the employee life-cycle from on-boarding to separation.
 .. contents::
    :local:
 
+Changelog
+=========
+
+14.0.1.0.1 (2021-10-07)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Scheduled actions related to employment status no longer fail because of a programming error
+
 Bug Tracker
 ===========
 

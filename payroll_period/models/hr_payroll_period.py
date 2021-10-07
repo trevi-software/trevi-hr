@@ -5,7 +5,7 @@
 from datetime import datetime, timedelta
 
 from dateutil.relativedelta import relativedelta
-from pytz import timezone, utc
+from pytz import timezone
 
 from odoo import _, api, exceptions, fields, models
 
@@ -85,17 +85,17 @@ class HrPayrollPeriod(models.Model):
         self.ensure_one()
         if "state" in init_values:
             if self.state == "open":
-                return self.env["payroll_period.mt_state_open"]
+                return self.env.ref("payroll_period.mt_state_open")
             elif self.state == "end":
-                return self.env["payroll_period.mt_state_end"]
+                return self.env.ref("payroll_period.mt_state_end")
             elif self.state == "lock":
-                return self.env["payroll_period.mt_state_lock"]
+                return self.env.ref("payroll_period.mt_state_lock")
             elif self.state == "generate":
-                return self.env["payroll_period.mt_state_generate"]
+                return self.env.ref("payroll_period.mt_state_generate")
             elif self.state == "payment":
-                return self.env["payroll_period.mt_state_payment"]
+                return self.env.ref("payroll_period.mt_state_payment")
             elif self.state == "close":
-                return self.env["payroll_period.mt_state_close"]
+                return self.env.ref("payroll_period.mt_state_close")
         return super(HrPayrollPeriod, self)._track_subtype(init_values)
 
     @api.model
@@ -246,11 +246,12 @@ class HrPayrollPeriod(models.Model):
     def payslip_create_hook(self, dictCreate):
         return dictCreate
 
-    @api.model
-    def create_payslip(
-        self, employee_id, dPeriodStart, dPeriodEnd, run_id=False, annual_pay_periods=12
-    ):
+    def create_payslip(self, employee_id, run_id=False):
 
+        self.ensure_one()
+        annual_pay_periods = self.schedule_id.annual_pay_periods
+        dPeriodStart = self.date_start.date()
+        dPeriodEnd = self.date_end.date()
         Payslip = self.env["hr.payslip"]
         ee = self.env["hr.employee"].browse(employee_id)
         (
@@ -329,13 +330,9 @@ class HrPayrollPeriod(models.Model):
             },
         }
 
-    def rerun_payslip(self, slip_id):
+    def rerun_payslip(self, slip):
 
         self.ensure_one()
-        Payslip = self.env["hr.payslip"]
-        PayrollPeriod = self.env["hr.payroll.period"]
-
-        slip = Payslip.browse(slip_id)
         run = slip.payslip_run_id
         ee = slip.employee_id
 
@@ -348,36 +345,19 @@ class HrPayrollPeriod(models.Model):
                 )
             )
 
-        # DateTime in db is stored as naive UTC. Convert it to explicit UTC
-        # and then convert that into the time zone of the pay period schedule.
-        #
-        local_tz = timezone(self.schedule_id.tz)
-        utcDTStart = utc.localize(self.date_start)
-        loclDTStart = utcDTStart.astimezone(local_tz)
-        utcDTEnd = utc.localize(self.date_end)
-        loclDTEnd = utcDTEnd.astimezone(local_tz)
-
         # Remove any pre-existing pay slip
         slip.unlink()
         slip = None
 
         # Create a pay slip
-        slip_id = PayrollPeriod.create_payslip(
-            ee.id,
-            loclDTStart.date(),
-            loclDTEnd.date(),
-            run.id,
-            self.schedule_id.annual_pay_periods,
-        )
+        slip = self.create_payslip(ee.id, run.id)
 
         # Calculate payroll for all the pay slips in this batch (run)
-        slip_id.compute_sheet()
-        # self.set_denominations()
+        slip.compute_sheet()
 
-        return slip_id
+        return slip
 
-    @api.model
-    def process_employee(self, period_id, employee_id):
+    def process_employee(self, employee_id):
         """Hook method to allow subclasses to override creation of a payslip
         for an employee."""
 

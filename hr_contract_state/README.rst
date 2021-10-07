@@ -29,6 +29,14 @@ This module implements employee contract workflow and notifications.
 .. contents::
    :local:
 
+Changelog
+=========
+
+14.0.1.0.1 (2021-10-07)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Scheduled actions related to contract state no longer fail because of a programming error
+
 Bug Tracker
 ===========
 

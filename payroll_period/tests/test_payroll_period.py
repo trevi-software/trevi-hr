@@ -245,9 +245,7 @@ class TestSchedule(common.SavepointCase):
                 "period_id": pp.id,
             }
         )
-        slip = pp.create_payslip(
-            self.eeJohn.id, start.date(), end.date(), run_id=run.id
-        )
+        slip = pp.create_payslip(self.eeJohn.id, run_id=run.id)
 
         self.assertEqual(pp.date_start.date(), slip.date_from)
         self.assertEqual(pp.date_end.date(), slip.date_to)
@@ -274,9 +272,7 @@ class TestSchedule(common.SavepointCase):
                 "period_id": pp.id,
             }
         )
-        slip = pp.create_payslip(
-            self.eeJohn.id, start.date(), end.date(), run_id=run.id
-        )
+        slip = pp.create_payslip(self.eeJohn.id, run_id=run.id)
 
         self.assertEqual(pp.date_start.date(), slip.date_from)
         self.assertEqual(c2End.date(), slip.date_to)
@@ -302,9 +298,7 @@ class TestSchedule(common.SavepointCase):
         )
         self.assertEqual("open", cc.state)
         self.assertIn(self.rule_commision, cc.struct_id.rule_ids)
-        slip = pp.create_payslip(
-            self.eeJohn.id, start.date(), end.date(), run_id=run.id
-        )
+        slip = pp.create_payslip(self.eeJohn.id, run_id=run.id)
 
         payslip_input = self.env["hr.payslip.input"].search(
             [("payslip_id", "=", slip.id)]
@@ -332,14 +326,12 @@ class TestSchedule(common.SavepointCase):
                 "period_id": pp.id,
             }
         )
-        slip = pp.create_payslip(
-            self.eeJohn.id, start.date(), end.date(), run_id=run.id
-        )
+        slip = pp.create_payslip(self.eeJohn.id, run_id=run.id)
         slip.compute_sheet()
         id_old = slip.id
         self.assertEqual(1, slip.get_salary_line_total("NET"))
 
-        slip = pp.rerun_payslip(slip.id)
+        slip = pp.rerun_payslip(slip)
 
         self.assertEqual(1, slip.get_salary_line_total("NET"))
         self.assertNotEqual(id_old, slip.id)

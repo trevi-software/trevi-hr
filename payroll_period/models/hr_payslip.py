@@ -37,12 +37,13 @@ class HrPayslip(models.Model):
         rules_dict = {}
         worked_days_dict = {}
         inputs_dict = {}
+        categories_dict = self.get_categories_dict()
         for worked_days_line in self.worked_days_line_ids:
             worked_days_dict[worked_days_line.code] = worked_days_line
         for input_line in self.input_line_ids:
             inputs_dict[input_line.code] = input_line
 
-        categories = BrowsableObject(self.employee_id.id, {}, self.env)
+        categories = BrowsableObject(self.employee_id.id, categories_dict, self.env)
         inputs = InputLine(self.employee_id.id, inputs_dict, self.env)
         worked_days = WorkedDays(self.employee_id.id, worked_days_dict, self.env)
         payslips = Payslips(self.employee_id.id, self, self.env)
@@ -65,30 +66,60 @@ class HrPayslip(models.Model):
             # 'utils': utils,
         }
 
+    def get_categories_dict(self):
+        def _sum_salary_rule_category(_dict, category, amount):
+            if category.parent_id:
+                _dict = _sum_salary_rule_category(_dict, category.parent_id, amount)
+
+            if category.code in _dict.keys():
+                _dict[category.code] += amount
+            else:
+                _dict[category.code] = amount
+
+            return _dict
+
+        self.ensure_one()
+
+        # Get all the rules for all the payroll structures associated
+        # with all the contracts for this employee for this period
+        #
+        contracts = self.employee_id._get_contracts(
+            date_from=self.date_from, date_to=self.date_to
+        )
+        structure_ids = contracts.get_all_structures()
+        tupleList = (
+            self.env["hr.payroll.structure"].browse(structure_ids).get_all_rules()
+        )
+        rule_ids = [i for i, _s in tupleList]
+        rules = self.env["hr.salary.rule"].browse(rule_ids).sorted("sequence")
+
+        # Setup categories dict with all possible categories
+        #
+        categories = {}
+        for rule in rules:
+            if rule.category_id.id not in categories.keys():
+                categories.update({rule.category_id.code: 0})
+
+        # Populate the dict with the sum of all the salary lines for that
+        # category and its children
+        for line in self.line_ids:
+            idCateg = line.salary_rule_id.category_id.code
+            prev_amount = 0
+            if not fields.Float.is_zero(categories[idCateg], precision_rounding=2):
+                prev_amount = categories[idCateg]
+            categories = _sum_salary_rule_category(
+                categories, line.salary_rule_id.category_id, line.total - prev_amount
+            )
+
+        return categories
+
     def compute_sheet(self):
 
-        super(HrPayslip, self).compute_sheet()
+        res = super(HrPayslip, self).compute_sheet()
 
-        def _sum_salary_rule_category(localdict, category, amount):
-            if category.parent_id:
-                localdict = _sum_salary_rule_category(
-                    localdict, category.parent_id, amount
-                )
-
-            if category.code in localdict["categories"].dict:
-                localdict["categories"].dict[category.code] += amount
-            else:
-                localdict["categories"].dict[category.code] = amount
-
-            return localdict
-
-        ExceptionRule = self.env["hr.payslip.exception.rule"]
-        rule_ids = ExceptionRule.search([])
-        rule_seq = []
-        for rule in rule_ids:
-            rule_seq.append((rule.id, rule.sequence))
-        sorted_rule_ids = [id for id, sequence in sorted(rule_seq, key=lambda x: x[1])]
-        sorted_rules = ExceptionRule.browse(sorted_rule_ids)
+        sorted_rules = (
+            self.env["hr.payslip.exception.rule"].search([]).sorted("sequence")
+        )
 
         for payslip in self:
 
@@ -96,22 +127,15 @@ class HrPayslip(models.Model):
             employee = payslip.employee_id
             contract = employee.contract_id
             localdict = dict(baselocaldict, employee=employee, contract=contract)
-            localdict["result"] = None
-
-            # Total the sum of the categories
-            for line in payslip.details_by_salary_rule_category:
-                localdict = _sum_salary_rule_category(
-                    localdict, line.salary_rule_id.category_id, line.total
-                )
 
             for rule in sorted_rules:
-                for rule in sorted_rules:
-                    if rule.satisfy_condition(localdict):
-                        val = {
-                            "name": rule.name,
-                            "slip_id": payslip.id,
-                            "rule_id": rule.id,
-                        }
-                        self.env["hr.payslip.exception"].create(val)
+                localdict["result"] = False
+                if rule.satisfy_condition(localdict):
+                    val = {
+                        "name": rule.name,
+                        "slip_id": payslip.id,
+                        "rule_id": rule.id,
+                    }
+                    self.env["hr.payslip.exception"].create(val)
 
-        return True
+        return res

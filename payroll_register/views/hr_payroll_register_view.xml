@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="hr_payroll_register_filter" model="ir.ui.view">
+            <field name="name">Payroll Registers Search View</field>
+            <field name="model">hr.payroll.register</field>
+            <field name="arch" type="xml">
+                <search string="Payroll Registers Search View">
+                    <field name="name" />
+                    <field name="company_id" groups="base.group_multi_company" />
+                    <group expand="0" string="Group By...">
+                        <filter
+                            name="group_company"
+                            string="Company"
+                            icon="terp-go-home"
+                            domain="[]"
+                            context="{'group_by':'company_id'}"
+                            groups="base.group_multi_company"
+                        />
+                    </group>
+                </search>
+             </field>
+         </record>
+
+        <record id="hr_payroll_register_tree" model="ir.ui.view">
+            <field name="name">hr.payroll.register.tree</field>
+            <field name="model">hr.payroll.register</field>
+            <field name="arch" type="xml">
+                <tree string="Payroll Registers">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_payroll_register_form" model="ir.ui.view">
+            <field name="name">hr.payroll.register.form</field>
+            <field name="model">hr.payroll.register</field>
+            <field name="arch" type="xml">
+                <form string="Payroll Register">
+                    <sheet>
+                        <header>
+                            <button
+                                name="%(action_create_runs)d"
+                                type="action"
+                                string="Create Payslips"
+                            />
+                            <button
+                                name="action_delete_runs"
+                                type="object"
+                                string="Remove All Payslips"
+                                confirm="This will delete all payslip records for this month. Are you sure you want to continue?"
+                            />
+                            <field name="state" widget="statusbar" />
+                        </header>
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="date_start" />
+                                <field name="date_end" />
+                                <field name="company_id" />
+                            </group>
+                            <group>
+                            </group>
+                         </group>
+                        <group>
+                            <group string="Payslip Batches">
+                                <field name="run_ids" colspan="4" nolabel="1">
+                                    <tree string="Payslip Runs by Department">
+                                        <field name="name" />
+                                        <field name="date_start" />
+                                        <field name="date_end" />
+                                        <field name="state" />
+                                    </tree>
+                                </field>
+                            </group>
+                            <group name="denominations" string="Denominations">
+                                <group>
+                                    <field
+                                        name="denomination_ids"
+                                        nolabel="1"
+                                        colspan="2"
+                                    >
+                                        <tree
+                                            string="Payroll Register Denominations"
+                                            default_order="denomination"
+                                        >
+                                            <field name="denomination" />
+                                            <field name="denomination_qty" />
+                                        </tree>
+                                    </field>
+                                    <newline />
+                                    <div name="exact_change">
+                                        <label for="exact_change" string="Net Amount" />
+                                        <field
+                                            name="exact_change"
+                                            nolabel="1"
+                                            widget="monetary"
+                                        />
+                                    </div>
+                                </group>
+                                <newline />
+                                <button
+                                    name="set_denominations"
+                                    type="object"
+                                    string="Re-calculate"
+                                    states="draft"
+                                />
+                            </group>
+                       </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="open_payroll_registers" model="ir.actions.act_window">
+            <field name="name">Registers</field>
+            <field name="res_model">hr.payroll.register</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="hr_payroll_register_tree" />
+        </record>
+        <menuitem
+            id="menu_payroll_register"
+            action="open_payroll_registers"
+            parent="payroll.payroll_menu_root"
+            sequence="30"
+        />
+
+    </data>
+</odoo>
