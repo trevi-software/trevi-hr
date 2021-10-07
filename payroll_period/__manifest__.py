@@ -14,7 +14,7 @@
     "depends": [
         "hr",
         "hr_contract",
-        "hr_employee_state",
+        "hr_employee_status",
         "payroll",
     ],
     "data": [
