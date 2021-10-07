@@ -4,7 +4,7 @@
 
 {
     "name": "Contract Payroll Structure Initial Settings",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.1.0",
     "category": "Payroll",
     "license": "AGPL-3",
     "author": "TREVI Software, Michael Telahun Makonnen",
