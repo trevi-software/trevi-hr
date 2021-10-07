@@ -8,7 +8,7 @@
             <field name="name">Employee separation: multi-company</field>
             <field
                 name="model_id"
-                ref="hr_employee_state.model_hr_employee_termination"
+                ref="hr_employee_status.model_hr_employee_termination"
             />
             <field eval="True" name="global" />
             <field

@@ -71,11 +71,11 @@ class Separation(models.Model):
         self.ensure_one()
         if "state" in init_values:
             if self.state == "confirm":
-                return self.env.ref("hr_employee_state.mt_alert_state_confirm")
+                return self.env.ref("hr_employee_status.mt_alert_state_confirm")
             elif self.state == "done":
-                return self.env.ref("hr_employee_state.mt_alert_state_done")
+                return self.env.ref("hr_employee_status.mt_alert_state_done")
             elif self.state == "cancel":
-                return self.env.ref("hr_employee_state.mt_alert_state_cancel")
+                return self.env.ref("hr_employee_status.mt_alert_state_cancel")
 
         return super(Separation, self)._track_subtype(init_values)
 

@@ -12,7 +12,7 @@
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
         "hr_contract",
-        "hr_contract_init",
+        "hr_contract_values",
         "payroll",
     ],
     "data": [

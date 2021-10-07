@@ -12,7 +12,7 @@
     "author": "TREVI Software, Michael Telahun Makonnen",
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
-        "hr_employee_state",
+        "hr_employee_statuss",
     ],
     "data": [
         "security/ir.model.access.csv",

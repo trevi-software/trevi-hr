@@ -182,7 +182,7 @@
             <field name="name">hr.contract.form.inherit.1</field>
             <field name="model">hr.contract</field>
             <field name="priority">99</field>
-            <field name="inherit_id" ref="hr_contract_state.view_contract_form" />
+            <field name="inherit_id" ref="hr_contract_status.view_contract_form" />
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//button[@name='signal_close']" position="replace">

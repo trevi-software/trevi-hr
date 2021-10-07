@@ -36,7 +36,7 @@ class TestEmployee(common.SavepointCase):
 
     def apply_separation_cron(self):
         self.env.ref(
-            "hr_employee_state.ir_cron_data_separation_update_state"
+            "hr_employee_status.ir_cron_data_separation_update_state"
         ).method_direct_trigger()
 
     def create_contract(

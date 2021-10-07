@@ -11,7 +11,7 @@
     "website": "https://github.com/trevi-software/trevi-hr",
     "images": ["static/src/img/main_screenshot.png"],
     "depends": [
-        "currency_denomination",
+        "res_currency_denominationtion",
         "payroll",
     ],
     "data": [

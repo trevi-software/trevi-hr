@@ -14,9 +14,8 @@
     "depends": [
         "hr",
         "hr_contract",
-        "hr_contract_init",
-        "hr_security",
-        "hr_simplify",
+        "hr_contract_values",
+        "trevi_hr_usability",
     ],
     "data": [
         "security/ir.model.access.csv",

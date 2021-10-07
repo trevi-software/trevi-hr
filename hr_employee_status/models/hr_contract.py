@@ -121,7 +121,7 @@ class HrContract(models.Model):
             vals = {
                 "name": c.date_end and c.date_end,
                 "employee_id": c.employee_id.id,
-                "reason_id": self.env.ref("hr_employee_state.term_contract_end").id,
+                "reason_id": self.env.ref("hr_employee_status.term_contract_end").id,
             }
             c.setup_pending_done(vals)
 
