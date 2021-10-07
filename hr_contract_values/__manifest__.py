@@ -15,7 +15,7 @@
         "hr",
         "hr_contract",
         "hr_job_categories",
-        "hr_simplify",
+        "trevi_hr_usability",
     ],
     "data": [
         "security/ir.model.access.csv",
