@@ -24,7 +24,7 @@ addon | version | summary
 [hr_contract_status](hr_contract_status/) | 14.0.1.0.1 | Workflows and notifications on employee contracts.
 [hr_contract_values](hr_contract_values/) | 14.0.1.0.0 | Contracts - Initial Settings
 [hr_contract_values_payroll](hr_contract_values_payroll/) | 14.0.1.1.0 | Contract Payroll Structure Initial Settings
-[hr_employee_seniority](hr_employee_seniority/) | 14.0.1.0.0 | Calculate an employee's months of employment
+[hr_employee_seniority_months](hr_employee_seniority_months/) | 14.0.1.0.0 | Calculate an employee's months of employment
 [hr_employee_status](hr_employee_status/) | 14.0.1.0.1 | Track the HR status of employees
 [hr_employee_status_payroll](hr_employee_status_payroll/) | 14.0.1.0.0 | Adds access records to employee separation records
 [hr_job_categories](hr_job_categories/) | 14.0.1.0.0 | Job Categories
