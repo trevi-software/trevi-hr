@@ -14,19 +14,23 @@ Time Bank
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-trevi-software%2Ftrevi--hr-lightgray.png?logo=github
-    :target: https://github.com/trevi-software/trevi-hr/tree/14.0/hr_accrual_timebank
+    :target: https://github.com/trevi-software/trevi-hr/tree/14.0/hr_accrual_bank
     :alt: trevi-software/trevi-hr
 
 |badge1| |badge2| |badge3| 
 
-Accruals to Time Bank
-=====================
+Accruals to Bank
+================
 
 An Accrual is any benefit (usually time) that accrues on behalf of an employee over an extended
-period of time. This can be vacation days, sick days, or a simple time bank. The actual policy
-and mechanics of time bank accrual should be handled by other modules. This module only provides
+period of time. This can be vacation days, sick days, or some other benefit. The actual policy
+and mechanics of bank accrual should be handled by other modules. This module only provides
 the basic framework for recording the data. While this module's functionality overlaps with
-Odoo's accrual leave allocations they are not the same and are not interchangeable.
+Odoo's accrual leave allocations they are not the same and are not interchangeable. Specifically, this
+module:
+* Allows more complex accrual accounting (for example 1.5 days for every month for the first 12 months, then 1.75 days for the next 12 months, etc...)
+* Allows creation of accruals from salary rules during payroll processing
+* Does not attach units to the accrued amount (1.0 can mean a vacation day, a dollar, a product, or anything else depending on the module)
 
 **Table of contents**
 
@@ -39,7 +43,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/trevi-software/trevi-hr/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed
-`feedback <https://github.com/trevi-software/trevi-hr/issues/new?body=module:%20hr_accrual_timebank%0Aversion:%2014.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/trevi-software/trevi-hr/issues/new?body=module:%20hr_accrual_bank%0Aversion:%2014.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -60,6 +64,6 @@ Other credits
 Maintainers
 ~~~~~~~~~~~
 
-This module is part of the `trevi-software/trevi-hr <https://github.com/trevi-software/trevi-hr/tree/14.0/hr_accrual_timebank>`_ project on GitHub.
+This module is part of the `trevi-software/trevi-hr <https://github.com/trevi-software/trevi-hr/tree/14.0/hr_accrual_bank>`_ project on GitHub.
 
 You are welcome to contribute.
