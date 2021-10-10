@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record model="ir.cron" id="hr_accrual_policy_cron">
+            <field name="name">Accrual Policies: Update</field>
+            <field name="model_id" ref="model_hr_policy_accrual" />
+            <field name="type">ir.actions.server</field>
+            <field name="doall" eval="True" />
+            <field name="state">code</field>
+            <field name="code">model.try_calculate_accruals()</field>
+            <field
+                name="nextcall"
+                eval="(DateTime.now() + timedelta(hours= +(24-DateTime.now().hour))).strftime('%Y-%m-%d %H:%M:%S')"
+            />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+
+    </data>
+</odoo>
