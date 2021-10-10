@@ -35,34 +35,38 @@ class HrAccrual(models.Model):
 
         return res
 
-    def deposit(self, employee_id, amount, date_str, name=None):
+    def deposit(self, employee_id, amount, date, name=None):
 
         line_obj = self.env["hr.accrual.line"]
 
         res = []
         for accrual in self:
 
+            lv = False
+            if accrual.holiday_status_id:
+                leave_allocation = {
+                    "name": name is not None and name or "Allocation from Accrual",
+                    "allocation_type": "regular",
+                    "state": "draft",
+                    "employee_id": employee_id,
+                    "number_of_days": amount,
+                    "holiday_status_id": accrual.holiday_status_id.id,
+                    "from_accrual": True,
+                }
+                lv = self.env["hr.leave.allocation"].create(leave_allocation)
+                lv.action_confirm()
+                lv.action_validate()
+
             # Create accrual line
             #
             vals = {
-                "date": date_str,
+                "date": date,
                 "employee_id": employee_id,
                 "amount": amount,
                 "accrual_id": accrual.id,
+                "leave_allocation_id": lv and lv.id or False,
             }
             res.append(line_obj.create(vals))
-
-            if not accrual.holiday_status_id:
-                break
-            leave_allocation = {
-                "name": name is not None and name or "Allocation from Accrual",
-                "allocation_type": "regular",
-                "employee_id": employee_id,
-                "number_of_days": amount,
-                "holiday_status_id": accrual.holiday_status_id.id,
-                "from_accrual": True,
-            }
-            self.env["hr.leave.allocation"].create(leave_allocation)
 
         return res
 
@@ -80,4 +84,5 @@ class HrAccrualLine(models.Model):
     employee_id = fields.Many2one(
         string="Employee", comodel_name="hr.employee", required=True
     )
+    leave_allocation_id = fields.Many2one("hr.leave.allocation")
     amount = fields.Float(digits="Accruals", required=True)
