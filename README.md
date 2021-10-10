@@ -21,6 +21,7 @@ addon | version | summary
 --- | --- | ---
 [base_lock](base_lock/) | 14.0.1.0.0 | Base locking module.
 [group_payroll_manager](group_payroll_manager/) | 14.0.1.0.0 | Permissions group Payroll Manager
+[hr_accrual_bank](hr_accrual_bank/) | 14.0.1.0.0 | Basic framework for recording accruals to a time bank
 [hr_contract_status](hr_contract_status/) | 14.0.1.0.1 | Workflows and notifications on employee contracts.
 [hr_contract_values](hr_contract_values/) | 14.0.1.0.0 | Contracts - Initial Settings
 [hr_contract_values_payroll](hr_contract_values_payroll/) | 14.0.1.1.0 | Contract Payroll Structure Initial Settings
@@ -37,6 +38,11 @@ addon | version | summary
 [payroll_period_account](payroll_period_account/) | 14.0.1.0.0 | Links payroll periods to accounting
 [payroll_period_base_lock](payroll_period_base_lock/) | 14.0.1.0.0 | Adds a base lock field to a payroll period.
 [payroll_period_processing](payroll_period_processing/) | 14.0.1.0.0 | Payroll period processing wizard
+[payroll_policy_absence](payroll_policy_absence/) | 14.0.1.0.0 | Define properties of an employee absense policy for payroll.
+[payroll_policy_accrual](payroll_policy_accrual/) | 14.0.1.0.0 | Automatically or manually accrue to time banks to be withdrawn later
+[payroll_policy_group](payroll_policy_group/) | 14.0.1.0.0 | Group payroll policies and assign them to contracts
+[payroll_policy_ot](payroll_policy_ot/) | 14.0.1.0.0 | Assign over-time policies to a policy group
+[payroll_policy_presence](payroll_policy_presence/) | 14.0.1.0.0 | Define properties of an employee presence policy
 [payroll_register](payroll_register/) | 14.0.1.0.0 | Payroll Register
 [res_currency_denomination](res_currency_denomination/) | 14.0.1.0.0 | Currency Denominations
 [trevi_hr_usability](trevi_hr_usability/) | 14.0.1.0.0 | Simplify Employee Records.
