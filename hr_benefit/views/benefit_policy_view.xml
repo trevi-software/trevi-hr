@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <!-- Policies -->
+
+        <record id="view_benefit_policy_filter" model="ir.ui.view">
+            <field name="name">hr.benefit.policy.filter</field>
+            <field name="model">hr.benefit.policy</field>
+            <field name="arch" type="xml">
+                <search string="Search Benefit Policies">
+                    <field name="name" string="Policies" />
+                    <field name="employee_id" />
+                    <field name="benefit_id" />
+                    <separator />
+                    <filter
+                        icon="terp-go-year"
+                        name="is_active"
+                        string="Active Policies"
+                        domain="[('state','in', ['draft', 'open'])]"
+                        help="Filters policies that are not terminated."
+                    />
+                    <filter
+                        string="My Policies"
+                        icon="terp-personal"
+                        name="my_policies"
+                        domain="[('employee_id.user_id','=', uid)]"
+                    />
+                    <filter
+                        name="current_policies"
+                        string="Current Policies"
+                        domain="['&amp;', '|',  ('end_date', '=', False), ('end_date', '&gt;=', context_today().strftime('%Y-%m-%d')), ('state', '!=', 'done')]"
+                    />
+                    <group expand="0" string="Group By...">
+                        <filter
+                            name="group_benefit_id"
+                            string="Benefit"
+                            icon="terp-stock_symbol-selection"
+                            domain="[]"
+                            context="{'group_by':'benefit_id'}"
+                        />
+                        <filter
+                            name="group_employee_id"
+                            string="Employee"
+                            icon="terp-personal"
+                            domain="[]"
+                            context="{'group_by':'employee_id'}"
+                        />
+                        <filter
+                            name="group_department_id"
+                            string="Department"
+                            icon="terp-personal"
+                            domain="[]"
+                            context="{'group_by':'department_id'}"
+                        />
+                        <filter
+                            name="group_start_date"
+                            string="Start Date"
+                            icon="terp-personal"
+                            domain="[]"
+                            context="{'group_by':'start_date'}"
+                        />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_benefits_policy_tree" model="ir.ui.view">
+            <field name="name">hr.benefit.policy.tree</field>
+            <field name="model">hr.benefit.policy</field>
+            <field name="arch" type="xml">
+                <tree string="Benefit Policies">
+                    <field name="name" />
+                    <field name="employee_id" />
+                    <field name="department_id" />
+                    <field name="benefit_id" />
+                    <field name="start_date" />
+                    <field name="end_date" />
+                    <field name="active" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_benefits_policy_form" model="ir.ui.view">
+            <field name="name">hr.benefit.policy.form</field>
+            <field name="model">hr.benefit.policy</field>
+            <field name="arch" type="xml">
+                <form string="Benefit Policy">
+                    <header>
+                        <button
+                            name='state_open'
+                            type="object"
+                            states="draft"
+                            string="Start Policy"
+                            class="oe_highlight"
+                        />
+                        <button
+                            name='end_policy'
+                            type="object"
+                            states="open"
+                            string="End Policy"
+                            class="oe_highlight"
+                        />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                        <group>
+                            <group string="Details">
+                                <field name="employee_id" />
+                                <label for="start_date" string="Duration" />
+                                <div>
+                                    <field
+                                        name="start_date"
+                                        class="oe_inline"
+                                    /> - <field name="end_date" class="oe_inline" />
+                                </div>
+                                <field name="advantage_override" />
+                                <field name="premium_override" />
+                            </group>
+                            <group string="Benefit">
+                                <field name="department_id" />
+                                <field name="benefit_id" />
+                                <field name="active" />
+                                <field name="benefit_code" invisible="1" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="General">
+                                <group name="left">
+                                    <field
+                                        name="advantage_override_amount"
+                                        invisible="1"
+                                    />
+                                    <field
+                                        name="premium_override_amount"
+                                        invisible="1"
+                                    />
+                                    <field
+                                        name="premium_override_total"
+                                        invisible="1"
+                                    />
+                                    <field
+                                        name="advantage_amount"
+                                        attrs="{'readonly': [('advantage_override', '=', False)], 'required': [('advantage_override', '=', True)]}"
+                                    />
+                                    <field
+                                        name="premium_amount"
+                                        attrs="{'readonly': [('premium_override', '=', False)], 'required': [('premium_override', '=', True)]}"
+                                    />
+                                    <field
+                                        name="premium_total"
+                                        attrs="{'readonly': [('premium_override', '=', False)], 'required': [('premium_override', '=', True)]}"
+                                    />
+                                    <field name="premium_installments" readonly="1" />
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="open_benefits_policy_view" model="ir.actions.act_window">
+            <field name="name">Policies</field>
+            <field name="res_model">hr.benefit.policy</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_is_active': 1}</field>
+            <field name="search_view_id" ref="view_benefit_policy_filter" />
+        </record>
+<!--
+        <menuitem id="menu_benefits_policy"
+            action="open_benefits_policy_view"
+            parent="menu_benefits_root"
+            groups="base.group_user"
+            sequence="5"/>
+-->
+        <record id="open_my_benefit_policies" model="ir.actions.act_window">
+            <field name="name">Policies</field>
+            <field name="res_model">hr.benefit.policy</field>
+            <field name="view_mode">tree,form</field>
+            <field
+                name="context"
+            >{'search_default_my_policies':1, 'search_default_is_active':1}</field>
+            <field name="search_view_id" ref="view_benefit_policy_filter" />
+        </record>
+        <menuitem
+            id="menu_my_benefit_policies"
+            action="open_my_benefit_policies"
+            parent="menu_benefits_root"
+            groups="base.group_user"
+            sequence="6"
+        />
+
+    </data>
+</odoo>
