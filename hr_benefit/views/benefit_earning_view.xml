@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <!-- Policy Advantages -->
+
+        <record id="view_benefit_policy_advantage_tree" model="ir.ui.view">
+            <field name="name">hr.benefit.advantage.tree</field>
+            <field name="model">hr.benefit.advantage</field>
+            <field name="arch" type="xml">
+                <tree string="Benefit Advantages">
+                    <field name="benefit_id" />
+                    <field name="effective_date" />
+                    <field name="type" />
+                    <field name="min_employed_days" />
+                    <field name="active" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_benefit_policy_advantage_form" model="ir.ui.view">
+            <field name="name">hr.benefit.advantage.form</field>
+            <field name="model">hr.benefit.advantage</field>
+            <field name="arch" type="xml">
+                <form string="Benefit Advantage">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="effective_date" />
+                                <field name="min_employed_days" />
+                                <field name="type" />
+                            </group>
+                            <group>
+                                <field name="benefit_id" />
+                                <field name="active" />
+                            </group>
+                        </group>
+                        <group string="Elegibility">
+                            <group>
+                                <field name="category_ids" />
+                                <field name="job_ids" />
+                            </group>
+                            <group>
+                                <field name="invert_categories" />
+                                <field name="invert_jobs" />
+                            </group>
+                        </group>
+                        <group
+                            string="Allowance"
+                            attrs="{'invisible': [('type', '!=', 'allowance')]}"
+                        >
+                            <group>
+                                <group>
+                                    <field
+                                        name="allowance_amount"
+                                        attrs="{'required': [('type', '=', 'allowance')]}"
+                                    />
+                                </group>
+                            </group>
+                        </group>
+                        <group
+                            string="Loan"
+                            attrs="{'invisible': [('type', '!=', 'loan')]}"
+                        >
+                            <group>
+                                <group>
+                                    <field
+                                        name="loan_amount"
+                                        attrs="{'required': [('type', '=', 'loan')]}"
+                                    />
+                                </group>
+                            </group>
+                        </group>
+                        <group
+                            string="Re-imbursement"
+                            attrs="{'invisible': [('type', '!=', 'reimburse')]}"
+                        >
+                            <group>
+                                <field name="reim_nolimit" />
+                            </group>
+                            <group
+                                string="Limit"
+                                attrs="{'invisible': [('reim_nolimit', '!=', False)]}"
+                            >
+                                <field name="reim_limit_amount" />
+                                <field
+                                    name="reim_limit_period"
+                                    attrs="{'required': [('type', '=', 'reimburse')]}"
+                                />
+                                <field
+                                    name="reim_period_month_day"
+                                    attrs="{'invisible': [('reim_limit_period', '!=', 'monthly')]}"
+                                />
+                                <label
+                                    for="reim_period_annual_month"
+                                    string="First Day of Cycle"
+                                    attrs="{'invisible': [('reim_limit_period', '!=', 'annual')]}"
+                                />
+                                <field
+                                    name="reim_period_annual_month"
+                                    nolabel="1"
+                                    class="oe_inline"
+                                    attrs="{'invisible': [('reim_limit_period', '!=', 'annual')]}"
+                                />
+                                <field
+                                    name="reim_period_annual_day"
+                                    nolabel="1"
+                                    class="oe_inline"
+                                    attrs="{'invisible': [('reim_limit_period', '!=', 'annual')]}"
+                                />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="open_benefits_policy_advantage_view" model="ir.actions.act_window">
+            <field name="name">Earnings</field>
+            <field name="res_model">hr.benefit.advantage</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem
+            id="menu_benefits_policy_advantage"
+            action="open_benefits_policy_advantage_view"
+            parent="menu_benefits_configuration"
+            groups="base.group_user"
+            sequence="8"
+        />
+
+    </data>
+</odoo>
