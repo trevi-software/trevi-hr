@@ -22,6 +22,8 @@ addon | version | summary
 [base_lock](base_lock/) | 14.0.1.0.0 | Base locking module.
 [group_payroll_manager](group_payroll_manager/) | 14.0.1.0.0 | Permissions group Payroll Manager
 [hr_accrual_bank](hr_accrual_bank/) | 14.0.1.0.0 | Basic framework for recording accruals to a time bank
+[hr_benefit](hr_benefit/) | 14.0.1.0.0 | Assign benefits and deductables to employees
+[hr_benefit_payroll](hr_benefit_payroll/) | 14.0.1.0.0 | Access benefits in payroll through salary rules.
 [hr_contract_status](hr_contract_status/) | 14.0.1.0.1 | Workflows and notifications on employee contracts.
 [hr_contract_values](hr_contract_values/) | 14.0.1.0.0 | Contracts - Initial Settings
 [hr_contract_values_payroll](hr_contract_values_payroll/) | 14.0.1.1.0 | Contract Payroll Structure Initial Settings
@@ -29,6 +31,7 @@ addon | version | summary
 [hr_employee_status](hr_employee_status/) | 14.0.1.0.1 | Track the HR status of employees
 [hr_employee_status_payroll](hr_employee_status_payroll/) | 14.0.1.0.0 | Adds access records to employee separation records
 [hr_job_categories](hr_job_categories/) | 14.0.1.0.0 | Job Categories
+[hr_job_change_state](hr_job_change_state/) | 14.0.1.0.0 | Change State of Jobs
 [hr_job_hierarchy](hr_job_hierarchy/) | 14.0.1.0.0 | Job Hierarchy
 [hr_leave_type_unique](hr_leave_type_unique/) | 14.0.1.0.0 | Ensure leave types are unique
 [hr_photobooth](hr_photobooth/) | 14.0.1.0.0 | Capture employee picture with webcam
