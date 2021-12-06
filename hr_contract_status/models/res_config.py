@@ -12,7 +12,7 @@ class ResConfig(models.TransientModel):
 
     concurrent_contracts = fields.Boolean(
         string="Allow concurrent contracts",
-        config_parameter="hr_contract_statuss.concurrent_contracts",
+        config_parameter="hr_contract_status.concurrent_contracts",
         default=False,
         help="Allow multiple concurrent contracts for an employee",
     )
