@@ -37,7 +37,7 @@ class TestContract(common.SavepointCase):
         second contract fails"""
 
         self.assertFalse(
-            self.IrConfig.get_param("hr_contract_statuss.concurrent_contracts", False)
+            self.IrConfig.get_param("hr_contract_status.concurrent_contracts", False)
         )
         start = datetime.strptime("2015-11-01", "%Y-%m-%d").date()
         end = datetime.strptime("2015-11-30", "%Y-%m-%d").date()
@@ -56,9 +56,9 @@ class TestContract(common.SavepointCase):
         """If concurrent contracts are enabled creating more than
         one open contract suceeds"""
 
-        self.IrConfig.sudo().set_param("hr_contract_statuss.concurrent_contracts", True)
+        self.IrConfig.sudo().set_param("hr_contract_status.concurrent_contracts", True)
         self.assertTrue(
-            self.IrConfig.get_param("hr_contract_statuss.concurrent_contracts", False)
+            self.IrConfig.get_param("hr_contract_status.concurrent_contracts", False)
         )
         start = datetime.strptime("2015-11-01", "%Y-%m-%d").date()
         end = datetime.strptime("2015-11-30", "%Y-%m-%d").date()
