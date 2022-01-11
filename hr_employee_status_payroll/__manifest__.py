@@ -13,6 +13,7 @@
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
         "hr_employee_status",
+        "payroll",
     ],
     "data": [
         "security/ir.model.access.csv",
