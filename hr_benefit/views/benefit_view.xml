@@ -40,6 +40,7 @@
                     <field name="has_premium" />
                     <field name="min_employed_days" />
                     <field name="multi_policy" />
+                    <field name="company_id" groups="base.group_multi_company" />
                 </tree>
             </field>
         </record>
@@ -68,6 +69,10 @@
                             <group>
                                 <field name="has_advantage" />
                                 <field name="has_premium" />
+                                <field
+                                    name="company_id"
+                                    groups="base.group_multi_company"
+                                />
                             </group>
                             <group>
                                 <group

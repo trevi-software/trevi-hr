@@ -9,6 +9,7 @@ class Benefit(models.Model):
 
     _name = "hr.benefit"
     _description = "Employee Benefit"
+    _check_company_auto = True
 
     name = fields.Char(required=True)
     code = fields.Char(required=True)
@@ -25,6 +26,9 @@ class Benefit(models.Model):
     min_employed_days = fields.Integer(string="Minimum Employed Days", default=0)
     active = fields.Boolean(default=True)
     multi_policy = fields.Boolean(string="Multiple Policies/Employee", default=False)
+    company_id = fields.Many2one(
+        "res.company", required=True, default=lambda self: self.env.company
+    )
 
     def name_get(self):
 

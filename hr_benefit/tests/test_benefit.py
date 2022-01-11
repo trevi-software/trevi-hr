@@ -156,3 +156,22 @@ class TestBenefit(common.TestBenefitCommon):
         clm.claim_approve()
         with self.assertRaises(UserError):
             clm.set_to_draft()
+
+    def test_multicompany_nosearch(self):
+        """A benefit in one company does not appear in searches by another"""
+
+        bn = self.create_benefit(self.benefit_create_vals)
+        self.assertNotEqual(
+            bn.company_id,
+            self.company1,
+            "Company of benefit is not equal to 'A Company'",
+        )
+
+        lst = (
+            self.Benefit.with_user(self.userHRO)
+            .with_context(allowed_company_ids=self.company1.ids)
+            .search([("code", "=", "A")])
+        )
+        self.assertEqual(
+            len(lst), 0, "Benefit does not appear in searches by 'A Company'"
+        )
