@@ -114,6 +114,8 @@ class TestHrSimplify(SavepointCase):
         with Form(contract) as f:
             f.employee_id = self.emp_kal
             f.job_id = self.job_mkt_director
+            if self.env.ref("payroll.structure_base"):
+                f.struct_id = self.env.ref("payroll.structure_base")
             self.assertEqual(f.employee_dept_id, self.dept_RandD)
 
     def test_compute_employees(self):
