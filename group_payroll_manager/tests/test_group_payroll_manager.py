@@ -32,7 +32,7 @@ class TestGroupPayrollManager(common.SavepointCase):
 
         ee = self.HrEmployee.create({"name": "A"})
         try:
-            ee.with_user(self.userPM.id).read([])
+            ee.with_user(self.userPM.id).read(["name"])
         except AccessError:
             self.fail("raised an AccessError Exception")
 
