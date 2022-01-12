@@ -177,7 +177,9 @@ class HrPayrollRegister(models.Model):
             denominations, smallest_note = register._get_denominations()
 
             denom_qty_list = dict.fromkeys(denominations, 0)
-            cents_factor = float(smallest_note) / denominations[-1]
+            cents_factor = float(smallest_note) / (
+                len(denominations) and denominations[-1] or 1
+            )
             for net in net_lines:
                 cents, notes = math.modf(net)
 
