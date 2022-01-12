@@ -15,6 +15,8 @@
         "payroll_account",
         "payroll_period",
     ],
-    "data": [],
+    "data": [
+        "security/ir.model.access.csv",
+    ],
     "installable": True,
 }
