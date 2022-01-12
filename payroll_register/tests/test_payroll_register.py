@@ -115,6 +115,7 @@ class TestPayrollRegister(common.SavepointCase):
             {
                 "date_start": self.start,
                 "date_end": self.end,
+                "currency_id": self.env.ref("base.ETB").id,
             }
         )
         wiz = self.Wizard.with_context({"active_id": reg.id}).create(
