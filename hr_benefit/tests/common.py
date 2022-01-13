@@ -21,12 +21,16 @@ class TestBenefitCommon(common.SavepointCase):
         cls.EnrollWizard = cls.env["hr.benefit.enroll.employee"]
         cls.EnrollMultiWizard = cls.env["hr.benefit.enroll.multi.employee"]
 
+        # Company A
+        cls.company1 = cls.env["res.company"].create({"name": "A company"})
+
         # Normal User John
         cls.userJohn = new_test_user(
             cls.env,
             login="john",
             groups="base.group_user",
             name="John",
+            company_ids=[(6, 0, cls.env.companies.ids)],
         )
         cls.eeJohn = cls.env["hr.employee"].create(
             {"name": "John", "user_id": cls.userJohn.id}
@@ -38,9 +42,25 @@ class TestBenefitCommon(common.SavepointCase):
             login="paul",
             groups="base.group_user",
             name="Paul",
+            company_ids=[(6, 0, cls.env.companies.ids)],
         )
         cls.eePaul = cls.env["hr.employee"].create(
             {"name": "Paul", "user_id": cls.userPaul.id}
+        )
+
+        # Company A User James
+        cls.userJames = new_test_user(
+            cls.env,
+            login="james",
+            groups="base.group_user",
+            name="James",
+            company_id=cls.company1.id,
+            company_ids=[(6, 0, cls.company1.ids)],
+        )
+        cls.eeJames = (
+            cls.env["hr.employee"]
+            .with_context(allowed_company_ids=cls.company1.ids)
+            .create({"name": "James", "user_id": cls.userJames.id})
         )
 
         cls.benefit_create_vals = {"name": "A", "code": "A"}
@@ -52,6 +72,7 @@ class TestBenefitCommon(common.SavepointCase):
             groups="base.group_user,hr.group_hr_manager",
             name="Payroll manager",
             email="hrm@example.com",
+            company_ids=[(6, 0, cls.env.companies.ids)],
         )
         # HR User
         cls.userHRO = new_test_user(
@@ -60,6 +81,7 @@ class TestBenefitCommon(common.SavepointCase):
             groups="base.group_user,hr.group_hr_user",
             name="Payroll officer",
             email="hro@example.com",
+            company_ids=[(6, 0, cls.env.companies.ids)],
         )
 
     def create_policy(

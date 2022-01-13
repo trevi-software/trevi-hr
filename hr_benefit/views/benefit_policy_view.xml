@@ -121,6 +121,10 @@
                                 </div>
                                 <field name="advantage_override" />
                                 <field name="premium_override" />
+                                <field
+                                    name="company_id"
+                                    groups="base.group_multi_company"
+                                />
                             </group>
                             <group string="Benefit">
                                 <field name="department_id" />

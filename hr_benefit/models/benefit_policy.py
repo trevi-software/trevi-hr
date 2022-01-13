@@ -15,6 +15,7 @@ class BenefitPolicy(models.Model):
 
     _name = "hr.benefit.policy"
     _description = "Benefit Enrollment"
+    _check_company_auto = True
 
     name = fields.Char(string="Reference", readonly=True)
     benefit_id = fields.Many2one(
@@ -23,6 +24,7 @@ class BenefitPolicy(models.Model):
         required=True,
         readonly=True,
         states={"draft": [("readonly", False)]},
+        check_company=True,
     )
     benefit_code = fields.Char(readonly=True, related="benefit_id.code", store=True)
     employee_id = fields.Many2one(
@@ -31,6 +33,7 @@ class BenefitPolicy(models.Model):
         required=True,
         readonly=True,
         states={"draft": [("readonly", False)]},
+        check_company=True,
     )
     department_id = fields.Many2one(related="employee_id.department_id", store=True)
     start_date = fields.Date(
@@ -80,6 +83,9 @@ class BenefitPolicy(models.Model):
         selection=[("draft", "Draft"), ("open", "Open"), ("done", "Done")],
         readonly=True,
         default="draft",
+    )
+    company_id = fields.Many2one(
+        "res.company", required=True, default=lambda self: self.env.company
     )
 
     def name_get(self):

@@ -242,3 +242,46 @@ class TestBenefit(common.TestBenefitCommon):
         self.assertEqual(bn, policy_ids[0].benefit_id)
         self.assertEqual(date.today(), policy_ids[0].start_date)
         self.assertFalse(policy_ids[0].end_date)
+
+    def test_multicompany_nosearch(self):
+        """A policy in one company does not appear in searches by another"""
+
+        bn = self.create_benefit(self.benefit_create_vals)
+        pol = self.create_policy(self.eeJohn, bn, date.today())
+        self.assertNotEqual(
+            pol.company_id,
+            self.company1,
+            "Company of policy is not equal to 'A Company'",
+        )
+
+        lst = (
+            self.Policy.with_user(self.userHRO)
+            .with_context(allowed_company_ids=self.company1.ids)
+            .search([("name", "=", pol.name)])
+        )
+        self.assertEqual(
+            len(lst), 0, "Policy does not appear in searches by 'A Company'"
+        )
+
+    def test_multicompany_employee(self):
+        """Creating policy for employee from different company raises exception"""
+
+        self.assertEqual(
+            self.eeJames.company_id, self.company1, "Company of employee is 'A Company'"
+        )
+
+        bn = self.create_benefit(self.benefit_create_vals)
+        self.assertNotEqual(
+            bn.company_id,
+            self.company1,
+            "Company of benefit is not equal to 'A Company'",
+        )
+
+        with self.assertRaises(UserError):
+            pol = self.create_policy(self.eeJames, bn, date.today())
+
+            self.assertNotEqual(
+                pol.company_id,
+                self.company1,
+                "Company of policy is not equal to 'A Company'",
+            )

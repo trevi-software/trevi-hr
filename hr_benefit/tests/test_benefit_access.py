@@ -16,9 +16,9 @@ class TestBenefitAccess(common.TestBenefitCommon):
 
         # HRM
         self.create_succeeds(self.userHRM, self.Benefit, self.benefit_create_vals)
-        self.unlink_succeeds(self.userHRM, bn)
         self.read_succeeds(self.userHRM, self.Benefit, bn.id)
         self.write_succeeds(self.userHRM, self.Benefit, bn.id, {"name": "tba"})
+        self.unlink_succeeds(self.userHRM, bn)
 
         # HRO
         self.create_fails(self.userHRO, self.Benefit, self.benefit_create_vals)
