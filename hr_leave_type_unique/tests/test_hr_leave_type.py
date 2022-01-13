@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 
-import psycopg2
+from psycopg2 import IntegrityError
 
 from odoo.tests import common
 
@@ -22,7 +22,7 @@ class TestHrLeaveType(common.SavepointCase):
         """Leave type codes should be unique"""
 
         self.HrLeaveType.create({"name": "X", "code": CODE})
-        with self.assertRaises(psycopg2.errors.UniqueViolation):
+        with self.assertRaises(IntegrityError):
             self.HrLeaveType.create({"name": "Y", "code": CODE})
 
     def test_unique_multicompany(self):
