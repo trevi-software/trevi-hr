@@ -31,7 +31,7 @@ class TestContract(common.SavepointCase):
             }
         )
 
-    def create_contract(self, start, end=None, trial_end=None):
+    def create_contract(self, start, end=None, trial_end=None, state="draft"):
         return self.env["hr.contract"].create(
             {
                 "name": "Contract",
@@ -41,6 +41,7 @@ class TestContract(common.SavepointCase):
                 "trial_date_end": trial_end,
                 "date_end": end,
                 "job_id": self.job_ux_designer.id,
+                "state": state,
             }
         )
 
@@ -73,3 +74,19 @@ class TestContract(common.SavepointCase):
         contract.signal_confirm()
 
         self.assertEqual(contract, self.employee.contract_id)
+
+    def test_consecutive_contracts(self):
+        """List of contracts in period includes 'closed' contracts"""
+
+        start = date(2021, 1, 1)
+        end = date(2021, 1, 14)
+        jan_end = date(2021, 1, 31)
+        start2 = start + relativedelta(days=14)
+        cc1 = self.create_contract(start, end=end, state="close")
+        cc2 = self.create_contract(start2)
+        cc2.signal_confirm()
+        contracts = self.employee._get_contracts(start, jan_end)
+        self.assertEqual(cc1.state, "close", "Contract 1 has ended")
+
+        self.assertIn(cc1, contracts, "Contract 1 (closed) is in list of contracts")
+        self.assertIn(cc1, contracts, "Contract 2 (open) is in list of contracts")
