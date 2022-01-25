@@ -27,7 +27,9 @@ class HrEmployee(models.Model):
                 or employee.contract_id.state not in ["open", "trial"]
             )
 
-    def _get_contracts(self, date_from, date_to, states=["open"], kanban_state=False):
+    def _get_contracts(
+        self, date_from, date_to, states=["open"], kanban_state=False  # noqa: B006
+    ):  # pylint: disable=W0102
 
         # Over-ride base class method to includes Closed/Ended contracts. Useful
         # when multiple consecutive contracts occur in a payroll period.
