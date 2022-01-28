@@ -8,5 +8,5 @@ class Contract(models.Model):
     _inherit = "hr.contract"
 
     pps_id = fields.Many2one(
-        "hr.payroll.period.schedule", "Payroll Period Schedule", required=True
+        "hr.payroll.period.schedule", "Payroll Period Schedule", required=False
     )

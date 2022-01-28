@@ -11,7 +11,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='struct_id']" position="after">
-                        <field name="pps_id" />
+                        <field name="pps_id" required="1" />
                     </xpath>
                     <xpath expr="//field[@name='schedule_pay']" position="replace" />
                 </data>
