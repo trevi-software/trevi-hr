@@ -1,3 +1,7 @@
+14.0.1.1.2 (2022-01-12)
+~~~~~~~~~~~~~~~~~~~~~~~
+* [ADD] Allow users to view their own (and subordinates) payslips
+
 14.0.1.1.1 (2021-10-07)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
