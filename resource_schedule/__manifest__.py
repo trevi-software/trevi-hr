@@ -1,0 +1,51 @@
+# Copyright (C) 2022 Trevi Software (https://trevi.et)
+# Copyright (C) 2013 Michael Telahun Makonnen <mmakonnen@gmail.com>.
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+
+{
+    "name": "Employee Shift Scheduling",
+    "summary": "Easily create, manage, and track employee shift planning.",
+    "version": "14.0.1.0.0",
+    "category": "Human Resources",
+    "license": "AGPL-3",
+    "author": "TREVI Software, Michael Telahun Makonnen",
+    "images": ["static/src/img/main_screenshot.png"],
+    "website": "https://github.com/trevi-software/trevi-hr",
+    "depends": [
+        "hr",
+        "hr_attendance",
+        "hr_contract",
+        "hr_holidays",
+        "resource",
+        "web_timeline",
+    ],
+    "data": [
+        "data/ir_module_category.xml",
+        "data/resource_calendar_data.xml",
+        "data/hr_schedule_cron.xml",
+        "security/groups.xml",
+        "security/ir.model.access.csv",
+        # 'security/ir_rule.xml',
+        # 'wizard/restday_view.xml',
+        "views/menus.xml",
+        "wizard/generate_schedules_view.xml",
+        "wizard/validate_schedule_view.xml",
+        "views/hr_employee_view.xml",
+        "views/hr_contract_view.xml",
+        "views/hr_job_view.xml",
+        "views/resource_calendar_view.xml",
+        "views/resource_calendar_attendance_template_view.xml",
+        "views/resource_calendar_attendance_view.xml",
+        "views/resource_calendar_weekday_view.xml",
+        "views/resource_resource_view.xml",
+        "views/resource_schedule_area_view.xml",
+        "views/resource_schedule_group_view.xml",
+        "views/resource_schedule_shift_view.xml",
+        "views/resource_schedule_team_view.xml",
+        "views/res_config_settings_view.xml",
+    ],
+    "demo": [
+        "data/resource_calendar_demo.xml",
+    ],
+    "installable": True,
+}

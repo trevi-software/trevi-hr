@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="view_schedule_employee_selection" model="ir.ui.view">
+            <field name="name">resource.schedule.generate.view</field>
+            <field name="model">resource.schedule.generate</field>
+            <field name="arch" type="xml">
+                <form string="Schedule Shifts">
+                    <group>
+                        <group>
+                            <field name="date_start" />
+                            <field name="no_weeks" />
+                            <field name="type" />
+                        </group>
+                        <group>
+                            <field
+                                name="resource_calendar_id"
+                                attr="{
+                                'required': [('type', '=', 'calendar)],
+                                'invisible': [('type', '!=', 'calendar')],
+                            }"
+                            />
+                        </group>
+                    </group>
+                    <group string="Employees">
+                        <field name="employee_ids" nolabel="1" />
+                    </group>
+                    <group
+                        string="Teams"
+                        attr="{'invisible': [('type', '!=', 'team')]}"
+                    >
+                        <field name="schedule_team_ids" />
+                    </group>
+                    <newline />
+                    <footer>
+                        <button
+                            name="generate_schedules"
+                            type="object"
+                            string="Generate"
+                            class="oe_highlight"
+                        />
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_schedules_by_employee" model="ir.actions.act_window">
+            <field name="name">Generate Schedules</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">resource.schedule.generate</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            id="menu_schedules_by_employee"
+            action="action_schedules_by_employee"
+            parent="menu_schedule_ops"
+            sequence="10"
+        />
+
+    </data>
+</odoo>

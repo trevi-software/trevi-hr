@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_attendance_template_tree" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.template.tree</field>
+        <field name="model">resource.calendar.attendance.template</field>
+        <field name="arch" type="xml">
+            <tree string="Work Detail Templates">
+                <field name="name" />
+                <field name="day_period" />
+                <field name="hour_from" />
+                <field name="hour_to" />
+                <field name="default_area_id" />
+                <field name="autopunch" />
+                <field name="autodeduct_break" />
+                <field name="break_minutes" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="active" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_attendance_template_form" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.template.form</field>
+        <field name="model">resource.calendar.attendance.template</field>
+        <field name="arch" type="xml">
+            <form string="Work Detail Template">
+                <sheet>
+                    <field name="active" invisible="1" />
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="day_period" />
+                            <field name="hour_from" />
+                            <field name="hour_to" />
+                        </group>
+                        <group>
+                            <field name="default_area_id" />
+                            <field name="autopunch" />
+                            <field name="autodeduct_break" />
+                            <field name="break_minutes" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                    </group>
+                    <group name="group_ids" string="Scheduling Groups">
+                        <field name="schedule_group_ids" nolabel="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="open_attendance_template_view" model="ir.actions.act_window">
+        <field name="name">Work Detail Template</field>
+        <field name="res_model">resource.calendar.attendance.template</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        action="open_attendance_template_view"
+        id="menu_attendance_template_view"
+        parent="menu_schedule_config"
+        sequence="70"
+    />
+
+</odoo>

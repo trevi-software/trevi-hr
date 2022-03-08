@@ -1,0 +1,6 @@
+<odoo>
+    <record id="module_category_scheduling" model="ir.module.category">
+        <field name="name">Scheduling</field>
+        <field name="sequence">20</field>
+    </record>
+</odoo>

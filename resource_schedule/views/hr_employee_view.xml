@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+        <!-- Employee Shifts -->
+
+        <record id="hr_employee_view_form" model="ir.ui.view">
+            <field name="name">hr.employee.view.inherit.schedule</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//div[@name='button_box']" position="inside">
+                        <button
+                        string="Schedules"
+                        class="oe_stat_button"
+                        icon="fa-tasks"
+                        name="action_view_schedule"
+                        type="object"
+                    />
+                    </xpath>
+                    <xpath expr="//field[@name='tz']" position="after">
+                        <field name="schedule_group_id" />
+                        <field name="default_area_id" />
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+</odoo>
