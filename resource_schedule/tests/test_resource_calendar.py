@@ -13,6 +13,9 @@ class TestResourceCalenar(common.SavepointCase):
         cls.wtpl_morning = cls.env.ref("resource_schedule.attendance_template_0")
         cls.wtpl_afternoon = cls.env.ref("resource_schedule.attendance_template_1")
         cls.wtpl_weekday = cls.env.ref("resource_schedule.attendance_template_demo0")
+        cls.wtpl_flex_weekday = cls.env.ref(
+            "resource_schedule.attendance_template_demo11"
+        )
         cls.default_calendar = cls.env.ref("resource_schedule.resource_calendar_44h")
         cls.production_calendar = cls.env.ref("resource_schedule.resource_calendar_56h")
 
@@ -227,4 +230,18 @@ class TestResourceCalenar(common.SavepointCase):
 
         self.assertEqual(
             cal.hours_per_day, 8, "Average hours/day correctly deducts break time"
+        )
+
+    def test_flex_hours_per_day(self):
+
+        cal = self.default_calendar.copy()
+        cal.attendance_ids.unlink()
+        self.wtpl_flex_weekday.flex_scheduled_hrs = 8
+        with Form(cal) as frmCalendar:
+            for idx in range(5):
+                with frmCalendar.attendance_ids.new() as line:
+                    line.template_id = self.wtpl_flex_weekday
+                    line.dayofweek = str(idx)
+        self.assertEqual(
+            cal.hours_per_day, 8, "Average hours/day equals flex scheduled hours"
         )

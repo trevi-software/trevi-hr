@@ -70,6 +70,24 @@
                                 'required': [('display_type', '=', False)],
                             }"
                         />
+                        <field name="shift_type" optional="hide" />
+                        <field
+                            name="flex_core_from"
+                            widget="float_time"
+                            optional="hide"
+                        />
+                        <field
+                            name="flex_core_to"
+                            widget="float_time"
+                            optional="hide"
+                        />
+                        <field name="flex_scheduled_hrs" optional="hide" />
+                        <field
+                            name="flex_scheduled_avg"
+                            widget="boolean_toggle"
+                            optional="hide"
+                        />
+                        <field name="flex_weekly_hrs" optional="hide" />
                         <field name="date_from" optional="hide" />
                         <field name="date_to" optional="hide" />
                         <field

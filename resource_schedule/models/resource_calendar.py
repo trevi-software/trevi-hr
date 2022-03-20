@@ -108,15 +108,22 @@ class ResourceCalendar(models.Model):
 
         return super(ResourceCalendar, filtered)._check_attendance()
 
-    # Over-ride parent class method to handle more than two weeks
+    # Over-ride parent class method to handle more than two weeks and flex schedule
     def _compute_hours_per_day(self, attendances):
         if not attendances:
             return super()._compute_hours_per_day(attendances)
 
         hour_count = 0.0
         for attendance in attendances:
-            hour_count += attendance.hour_to - attendance.hour_from
-            if attendance.template_id and attendance.template_id.autodeduct_break:
+            if attendance.shift_type != "flex":
+                hour_count += attendance.hour_to - attendance.hour_from
+            elif attendance.shift_type == "flex":
+                hour_count += attendance.flex_scheduled_hrs
+            if (
+                attendance.shift_type != "flex"
+                and attendance.template_id
+                and attendance.template_id.autodeduct_break
+            ):
                 hour_count -= float(attendance.template_id.break_minutes) / 60.0
 
         number_of_days = 0

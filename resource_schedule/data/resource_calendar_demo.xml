@@ -181,7 +181,25 @@
             <field name="name">12 Hr Day</field>
             <field name="hour_from">6</field>
             <field name="hour_to">18</field>
-            <field name="day_period">morning</field>
+            <field name="day_period">12day</field>
+        </record>
+
+        <record
+            id="attendance_template_demo11"
+            model="resource.calendar.attendance.template"
+        >
+            <field name="name">Flex Workday</field>
+            <field name="shift_type">flex</field>
+            <field name="hour_from">6</field>
+            <field name="hour_to">20</field>
+            <field name="flex_core_from">11</field>
+            <field name="flex_core_to">15</field>
+            <field name="flex_scheduled_hrs">8</field>
+            <field name="day_period">8day</field>
+            <field
+                name="schedule_group_ids"
+                eval="[(6, 0, [ref('schedule_group3')])]"
+            />
         </record>
 
         <!-- Working Times -->

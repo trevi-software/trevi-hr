@@ -28,7 +28,7 @@
                 <field name="start_week" />
                 <field name="color" widget="color_picker" />
                 <field name="company_id" groups="base.group_multi_company" />
-                <field name="active" />
+                <field name="active" widget="boolean_toggle" />
             </tree>
         </field>
     </record>

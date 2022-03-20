@@ -487,6 +487,12 @@ class ResourceScheduleShift(models.Model):
                     "span_midnight": attendance.span_midnight,
                     "autopunch": attendance.autopunch,
                     "sequence": attendance.sequence,
+                    "shift_type": attendance.shift_type,
+                    "flex_core_from": attendance.flex_core_from,
+                    "flex_core_to": attendance.flex_core_to,
+                    "flex_scheduled_hrs": attendance.flex_scheduled_hrs,
+                    "flex_scheduled_avg": attendance.flex_scheduled_avg,
+                    "flex_weekly_hrs": attendance.flex_weekly_hrs,
                 }
                 values_list.append(values)
                 prev_weekday = str(dTmp.weekday())

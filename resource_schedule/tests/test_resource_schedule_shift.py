@@ -25,6 +25,9 @@ class TestResourceScheduleShift(common.SavepointCase):
         cls.sunday = cls.env.ref("resource_schedule.wd_sun")
         cls.tuesday = cls.env.ref("resource_schedule.wd_tue")
         cls.att_template = cls.env.ref("resource_schedule.attendance_template_demo0")
+        cls.flex_workday_template = cls.env.ref(
+            "resource_schedule.attendance_template_demo11"
+        )
         cls.area_1 = cls.env.ref("resource_schedule.schedule_area0")
         cls.area_2 = cls.env.ref("resource_schedule.schedule_area1")
         cls.default_calendar = cls.env.ref("resource_schedule.resource_calendar_44h")
@@ -453,6 +456,61 @@ class TestResourceScheduleShift(common.SavepointCase):
         for shift in shifts:
             dtShiftStart = datetime.combine(today, float_to_time(19))
             dtShiftEnd = datetime.combine(today + timedelta(days=1), float_to_time(3))
+            self.assertTrue(
+                shift.span_midnight, "The shift has the field 'span_midnight' set"
+            )
+            self.assertEqual(
+                shift.datetime_start, dtShiftStart, "Shift start time is today"
+            )
+            self.assertEqual(
+                shift.datetime_end, dtShiftEnd, "Shift end time is tomorrow"
+            )
+
+            today += timedelta(days=1)
+
+    def test_flex_night_shift(self):
+
+        self.flex_workday_template.span_midnight = True
+        self.flex_workday_template.hour_from = 18
+        self.flex_workday_template.hour_to = 6
+        self.flex_workday_template.flex_core_from = 22
+        self.flex_workday_template.flex_core_to = 4
+        dStart, dEnd = self.get_start_end_dates()
+        self.empty_calendar.attendance_ids.unlink()
+        self.empty_calendar.attendance_ids = [
+            (0, 0, {"dayofweek": "0", "template_id": self.flex_workday_template.id}),
+            (0, 0, {"dayofweek": "1", "template_id": self.flex_workday_template.id}),
+            (0, 0, {"dayofweek": "2", "template_id": self.flex_workday_template.id}),
+            (0, 0, {"dayofweek": "3", "template_id": self.flex_workday_template.id}),
+            (0, 0, {"dayofweek": "4", "template_id": self.flex_workday_template.id}),
+            (0, 0, {"dayofweek": "5", "template_id": self.flex_workday_template.id}),
+            (0, 0, {"dayofweek": "6", "template_id": self.flex_workday_template.id}),
+        ]
+        self.employee.resource_id.calendar_id = self.empty_calendar
+        shifts = self.ScheduleShift.search(
+            [
+                ("resource_id", "=", self.employee.resource_id.id),
+            ]
+        )
+        self.assertEqual(len(shifts), 0, "Initialy, there are not shifts at all")
+
+        shifts = self.employee.create_schedule(dStart, dEnd)
+        self.assertGreater(len(shifts), 0, "I was able to create shifts")
+
+        today = dStart
+        for shift in shifts:
+            dtShiftStart = datetime.combine(today, float_to_time(15))
+            dtShiftEnd = datetime.combine(today + timedelta(days=1), float_to_time(3))
+            self.assertEqual(shift.shift_type, "flex", "The shift is a flex shift")
+            self.assertEqual(
+                shift.flex_scheduled_hrs, 8, "The flex scheduled hours are 8"
+            )
+            self.assertEqual(
+                shift.flex_core_from, 22, "The shift has the correct core from time"
+            )
+            self.assertEqual(
+                shift.flex_core_to, 4, "The shift has the correct core to time"
+            )
             self.assertTrue(
                 shift.span_midnight, "The shift has the field 'span_midnight' set"
             )

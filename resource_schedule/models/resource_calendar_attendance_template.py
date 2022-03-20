@@ -1,7 +1,8 @@
 # Copyright (C) 2022 Trevi Software (https://trevi.et)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo import fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class ResourceCalendarAttendanceTemplate(models.Model):
@@ -17,9 +18,9 @@ class ResourceCalendarAttendanceTemplate(models.Model):
             ("morning", "Morning"),
             ("afternoon", "Afternoon"),
             ("evening", "Evening"),
-            ("8day", "8 Hour Day"),
-            ("12day", "12 Hour Day"),
-            ("12night", "12 Hour Night"),
+            ("8day", "Work day"),
+            ("12day", "All day"),
+            ("12night", "All night"),
         ],
         required=True,
     )
@@ -42,5 +43,54 @@ class ResourceCalendarAttendanceTemplate(models.Model):
     schedule_group_ids = fields.Many2many(
         "resource.schedule.group", "resource_attendance_template_schedule_group_rel"
     )
+    shift_type = fields.Selection(
+        selection=[("std", "Standard"), ("flex", "Flex Shift")],
+        default="std",
+        required=True,
+    )
+    flex_core_from = fields.Float(default=0)
+    flex_core_to = fields.Float(default=0)
+    flex_scheduled_hrs = fields.Float()
+    flex_scheduled_avg = fields.Boolean(
+        help="If this option is checked scheduled hours denotes a daily average"
+        "over a period of one week."
+    )
+    flex_weekly_hrs = fields.Float(
+        help="If this value is set the resource must work this number of"
+        "hours total during the week."
+    )
     active = fields.Boolean(default=True)
     company_id = fields.Many2one("res.company", default=lambda s: s.env.company)
+
+    @api.constrains("shift_type", "autopunch")
+    def _check_autopunch(self):
+        for rec in self:
+            if rec.shift_type == "flex" and rec.autopunch is True:
+                raise ValidationError(_("Auto-punch cannot be used with a Flex Shift"))
+
+    @api.constrains("shift_type", "autodeduct_break")
+    def _check_autodeduct_break(self):
+        for rec in self:
+            if rec.shift_type == "flex" and rec.autodeduct_break is True:
+                raise ValidationError(
+                    _("Auto-deduct break time cannot be used with a Flex Shift")
+                )
+
+    @api.onchange("flex_scheduled_hrs")
+    def _onchange_flex_scheduled_hrs(self):
+        for rec in self:
+            if rec.flex_scheduled_hrs < 0:
+                rec.flex_scheduled_hrs = 0
+            elif rec.flex_scheduled_hrs > 24:
+                rec.flex_scheduled_hrs = 24
+
+    @api.onchange("flex_core_from", "flex_core_to", "hour_from", "hour_to")
+    def _onchange_flex(self):
+        for rec in self:
+            if rec.flex_core_from != 0 and rec.hour_from > rec.flex_core_from:
+                rec.hour_from = rec.flex_core_from
+            if rec.flex_core_to != 0 and rec.hour_to < rec.flex_core_to:
+                rec.hour_to = rec.flex_core_to
+            if rec.flex_core_from != 0 and rec.flex_core_to != 0:
+                if rec.flex_core_to < rec.flex_core_from:
+                    rec.flex_core_to = rec.flex_core_from
