@@ -4,6 +4,7 @@
 from . import test_hr_attendance
 from . import test_hr_contract
 from . import test_hr_employee
+from . import test_hr_leave
 from . import test_resource_calendar
 from . import test_resource_calendar_attendance
 from . import test_resource_schedule_area

@@ -59,6 +59,9 @@ class ResourceScheduleShift(models.Model):
         store=True,
     )
     published = fields.Boolean(string="Publish")
+    hr_attendance_ids = fields.One2many(
+        "hr.attendance", "schedule_shift_id", "Attendance Records"
+    )
 
     def name_get(self):
 
@@ -348,6 +351,7 @@ class ResourceScheduleShift(models.Model):
                     "employee_id": employee.id,
                     "check_in": detail.datetime_start,
                     "autopunch": True,
+                    "schedule_shift_id": detail.id,
                 }
                 if detail.datetime_end <= now:
                     values.update({"check_out": detail.datetime_end})
@@ -374,6 +378,7 @@ class ResourceScheduleShift(models.Model):
                         "employee_id": employee.id,
                         "check_in": detail.datetime_start,
                         "autopunch": True,
+                        "schedule_shift_id": detail.id,
                     }
                     if detail.datetime_end <= now:
                         values.update({"check_out": detail.datetime_end})
