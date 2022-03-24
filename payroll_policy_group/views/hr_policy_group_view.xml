@@ -61,7 +61,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='wage']" position="after">
-                        <field name="policy_group_id" />
+                        <field name="policy_group_id" required="1" />
                     </xpath>
                 </data>
             </field>
