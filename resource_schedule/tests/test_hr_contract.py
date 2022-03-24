@@ -63,20 +63,6 @@ class TestContract(common.SavepointCase):
             "hr_contract.ir_cron_data_contract_update_state"
         ).method_direct_trigger()
 
-    def test_no_resource_calendar(self):
-
-        prev_start = date(2021, 1, 1)
-        prev_end = date(2021, 1, 31)
-        c = self.create_contract(start=prev_start, end=prev_end, calendar_id=False)
-        self.apply_cron()
-
-        self.assertFalse(c.resource_calendar_id, "The contract has no Work Schedule")
-        self.assertEqual(
-            len(c.employee_id.resource_id.scheduled_shift_ids),
-            0,
-            "No shifts are created for contracts without a Work Schedule",
-        )
-
     def test_no_work_detail(self):
 
         c = self.create_contract(calendar_id=self.empty_calendar.id)
