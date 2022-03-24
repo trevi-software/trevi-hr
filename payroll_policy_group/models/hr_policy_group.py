@@ -43,6 +43,5 @@ class HrContract(models.Model):
     policy_group_id = fields.Many2one(
         string="Policy Group",
         comodel_name="hr.policy.group",
-        required=True,
         default=_get_policy_group,
     )
