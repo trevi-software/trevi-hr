@@ -14,7 +14,7 @@
         "base",
         "hr",
         "hr_contract",
-        "hr_job_categories",
+        "trevi_hr_job_categories",
         "trevi_hr_usability",
     ],
     "data": [
