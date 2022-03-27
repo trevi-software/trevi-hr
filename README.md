@@ -29,19 +29,22 @@ addon | version | summary
 [hr_contract_values](hr_contract_values/) | 14.0.1.0.0 | Contracts - Initial Settings
 [hr_contract_values_payroll](hr_contract_values_payroll/) | 14.0.1.1.0 | Contract Payroll Structure Initial Settings
 [hr_employee_seniority_months](hr_employee_seniority_months/) | 14.0.1.0.0 | Calculate an employee's months of employment
-[hr_employee_status](hr_employee_status/) | 14.0.1.0.1 | Track the HR status of employees
+[hr_employee_status](hr_employee_status/) | 14.0.1.0.2 | Track the HR status of employees
 [hr_employee_status_payroll](hr_employee_status_payroll/) | 14.0.1.0.0 | Adds access records to employee separation records
-[hr_job_categories](hr_job_categories/) | 14.0.1.0.0 | Job Categories
 [hr_job_change_state](hr_job_change_state/) | 14.0.1.0.0 | Change State of Jobs
-[hr_job_hierarchy](hr_job_hierarchy/) | 14.0.1.0.0 | Job Hierarchy
+[hr_job_transfer](hr_job_transfer/) | 14.0.1.0.0 | Departmental Transfer
+[hr_jobs_hierarchy](hr_jobs_hierarchy/) | 14.0.1.0.0 | Job Hierarchy
 [hr_leave_type_unique](hr_leave_type_unique/) | 14.0.1.0.0 | Ensure leave types are unique
 [hr_photobooth](hr_photobooth/) | 14.0.1.0.0 | Capture employee picture with webcam
-[hr_public_holidays](hr_public_holidays/) | 14.0.1.0.0 | Public Holidays
 [ir_module_category_payroll](ir_module_category_payroll/) | 14.0.1.0.0 | Creates Payroll module category
-[payroll_period](payroll_period/) | 14.0.1.1.1 | Configurable payroll schedules.
+[payroll_payslip_amendment](payroll_payslip_amendment/) | 14.0.1.0.0 | Add amendments to current and future pay slips
+[payroll_payslip_amendment_contract_status](payroll_payslip_amendment_contract_status/) | 14.0.1.0.0 | Link payslip amendments with the employee contract state.
 [payroll_period_account](payroll_period_account/) | 14.0.1.0.0 | Links payroll periods to accounting
 [payroll_period_base_lock](payroll_period_base_lock/) | 14.0.1.0.0 | Adds a base lock field to a payroll period.
+[payroll_period_contract_values](payroll_period_contract_values/) | 14.0.1.0.0 | Links payroll period schedules with employee contracts.
+[payroll_period_payslip_amendment](payroll_period_payslip_amendment/) | 14.0.1.0.0 | Link payslip amendments with a payroll period.
 [payroll_period_processing](payroll_period_processing/) | 14.0.1.0.0 | Payroll period processing wizard
+[payroll_periods](payroll_periods/) | 14.0.1.1.2 | Configurable payroll schedules.
 [payroll_policy_absence](payroll_policy_absence/) | 14.0.1.0.0 | Define properties of an employee absense policy for payroll.
 [payroll_policy_accrual](payroll_policy_accrual/) | 14.0.1.0.0 | Automatically or manually accrue to time banks to be withdrawn later
 [payroll_policy_group](payroll_policy_group/) | 14.0.1.0.0 | Group payroll policies and assign them to contracts
@@ -49,6 +52,8 @@ addon | version | summary
 [payroll_policy_presence](payroll_policy_presence/) | 14.0.1.0.0 | Define properties of an employee presence policy
 [payroll_register](payroll_register/) | 14.0.1.0.0 | Payroll Register
 [res_currency_denomination](res_currency_denomination/) | 14.0.1.0.0 | Currency Denominations
+[trevi_hr_job_categories](trevi_hr_job_categories/) | 14.0.1.0.0 | Job Categories
+[trevi_hr_public_holidays](trevi_hr_public_holidays/) | 14.0.1.0.0 | Public Holidays
 [trevi_hr_usability](trevi_hr_usability/) | 14.0.1.0.0 | Simplify Employee Records.
 
 [//]: # (end addons)
