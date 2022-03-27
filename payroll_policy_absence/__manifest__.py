@@ -13,7 +13,6 @@
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
         "hr_holidays",
-        "payroll_period",
         "payroll_policy_group",
     ],
     "data": [

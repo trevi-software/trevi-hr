@@ -12,7 +12,7 @@
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
         "payroll_payslip_amendment",
-        "payroll_period",
+        "payroll_periods",
     ],
     "data": [
         "views/hr_payslip_amendment_view.xml",

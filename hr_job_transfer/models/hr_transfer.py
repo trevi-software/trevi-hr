@@ -112,11 +112,11 @@ class HrTransfer(models.Model):
 
         if "state" in init_values:
             if self.state == "confirm":
-                return self.env.ref("hr_transfer.mt_alert_xfer_confirmed")
+                return self.env.ref("hr_job_transfer.mt_alert_xfer_confirmed")
             elif self.state == "pending":
-                return self.env.ref("hr_transfer.mt_alert_xfer_pending")
+                return self.env.ref("hr_job_transfer.mt_alert_xfer_pending")
             elif self.state == "done":
-                return self.env.ref("hr_transfer.mt_alert_xfer_done")
+                return self.env.ref("hr_job_transfer.mt_alert_xfer_done")
 
         return super(HrTransfer, self)._track_subtype(init_values)
 
@@ -144,7 +144,9 @@ class HrTransfer(models.Model):
     def action_transfer(self):
 
         self.ensure_one()
-        has_permission = self._check_permission_group("hr_transfer.group_hr_transfer")
+        has_permission = self._check_permission_group(
+            "hr_job_transfer.group_hr_transfer"
+        )
         if has_permission and not self.effective_date_in_future():
             self.state_done()
         else:
@@ -153,14 +155,18 @@ class HrTransfer(models.Model):
     def action_confirm(self):
 
         self.ensure_one()
-        has_permission = self._check_permission_group("hr_transfer.group_hr_transfer")
+        has_permission = self._check_permission_group(
+            "hr_job_transfer.group_hr_transfer"
+        )
         if has_permission:
             self.signal_confirm()
 
     def action_cancel(self):
 
         self.ensure_one()
-        has_permission = self._check_permission_group("hr_transfer.group_hr_transfer")
+        has_permission = self._check_permission_group(
+            "hr_job_transfer.group_hr_transfer"
+        )
         if has_permission:
             self.write({"state": "cancel"})
 
@@ -286,7 +292,7 @@ class HrTransfer(models.Model):
             self._check_state(transfer.src_contract_id, transfer.date)
             # If the user is a member of 'approval' group, go straight to 'approval'
             if (
-                self.user_has_groups("hr_transfer.group_hr_transfer")
+                self.user_has_groups("hr_job_transfer.group_hr_transfer")
                 and transfer.effective_date_in_future()
             ):
                 transfer.state = "pending"
@@ -299,7 +305,7 @@ class HrTransfer(models.Model):
     def try_pending_department_transfers(self):
         """Completes pending departmental transfers. Called from the scheduler."""
 
-        self._check_permission_group("hr_transfer.group_hr_transfer")
+        self._check_permission_group("hr_job_transfer.group_hr_transfer")
 
         Transfer = self.env["hr.department.transfer"]
         pending_transfers = Transfer.search(

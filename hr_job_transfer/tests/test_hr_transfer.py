@@ -23,7 +23,7 @@ class TestHrTransfer(SavepointCase):
 
         # -- groups
         cls.group_hr_user = cls.env.ref("hr.group_hr_user")
-        cls.group_hr_transfer = cls.env.ref("hr_transfer.group_hr_transfer")
+        cls.group_hr_transfer = cls.env.ref("hr_job_transfer.group_hr_transfer")
         cls.group_hr_manager = cls.env.ref("hr.group_hr_manager")
 
         # -- user
@@ -94,7 +94,9 @@ class TestHrTransfer(SavepointCase):
         )
 
     def apply_transfer_cron(self):
-        self.env.ref("hr_transfer.hr_department_transfer_cron").method_direct_trigger()
+        self.env.ref(
+            "hr_job_transfer.hr_department_transfer_cron"
+        ).method_direct_trigger()
 
     def test_only_draft_transfer_can_be_deleted(self):
         employee = self.create_employee("#John", self.job_trainee.id)

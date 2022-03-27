@@ -16,7 +16,7 @@
         "hr_holidays",
         "trevi_hr_public_holidays",
         "payroll",
-        "payroll_period",
+        "payroll_periods",
         "payroll_register",
     ],
     "data": [

@@ -14,7 +14,7 @@
     "depends": [
         "hr_contract",
         "hr_contract_values_payroll",
-        "payroll_period",
+        "payroll_periods",
     ],
     "data": [
         "views/hr_contract_init_view.xml",

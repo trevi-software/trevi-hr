@@ -27,7 +27,7 @@
                         states="draft"
                         string="Confirm"
                         class="oe_highlight"
-                        groups="hr_transfer.group_hr_transfer"
+                        groups="hr_job_transfer.group_hr_transfer"
                     />
                     <button
                         name="action_transfer"
@@ -35,7 +35,7 @@
                         states="confirm"
                         string="Transfer"
                         class="oe_highlight"
-                        groups="hr_transfer.group_hr_transfer"
+                        groups="hr_job_transfer.group_hr_transfer"
                     />
                     <button
                         name="action_cancel"
@@ -43,7 +43,7 @@
                         states="confirm,pending"
                         string="Cancel"
                         class="oe_highlight"
-                        groups="hr_transfer.group_hr_transfer"
+                        groups="hr_job_transfer.group_hr_transfer"
                     />
                     <field name="state" widget="statusbar" />
                 </header>

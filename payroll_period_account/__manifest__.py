@@ -13,7 +13,7 @@
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
         "payroll_account",
-        "payroll_period",
+        "payroll_periods",
     ],
     "data": [
         "security/ir.model.access.csv",
