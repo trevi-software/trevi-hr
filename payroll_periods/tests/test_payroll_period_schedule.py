@@ -39,7 +39,7 @@ class TestSchedule(common.SavepointCase):
 
     def apply_create_cron(self):
         self.env.ref(
-            "payroll_period.hr_payroll_period_create_cron"
+            "payroll_periods.hr_payroll_period_create_cron"
         ).method_direct_trigger()
 
     def test_annual_period_no(self):

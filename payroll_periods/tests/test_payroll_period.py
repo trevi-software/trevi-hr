@@ -19,7 +19,7 @@ class TestSchedule(common.SavepointCase):
         cls.Run = cls.env["hr.payslip.run"]
         cls.Payslip = cls.env["hr.payslip"]
         cls.Exception = cls.env["hr.payslip.exception"]
-        cls.exRuleCrit = cls.env.ref("payroll_period.payslip_exception_third")
+        cls.exRuleCrit = cls.env.ref("payroll_periods.payslip_exception_third")
         cls.eeJohn = cls.env["hr.employee"].create({"name": "EE John"})
         # Payroll Manager user
         cls.userPM = new_test_user(
@@ -91,7 +91,7 @@ class TestSchedule(common.SavepointCase):
 
     def apply_end_cron(self):
         self.env.ref(
-            "payroll_period.hr_payroll_period_ended_cron"
+            "payroll_periods.hr_payroll_period_ended_cron"
         ).method_direct_trigger()
 
     def test_newly_created_period(self):

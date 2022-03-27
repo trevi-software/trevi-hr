@@ -11,7 +11,7 @@
     "author": "TREVI Software, Michael Telahun Makonnen",
     "license": "AGPL-3",
     "website": "https://github.com/trevi-software/trevi-hr",
-    "depends": ["base_lock", "payroll_period"],
+    "depends": ["base_lock", "payroll_periods"],
     "data": [
         "security/ir.model.access.csv",
     ],

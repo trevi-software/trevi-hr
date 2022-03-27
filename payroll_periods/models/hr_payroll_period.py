@@ -85,17 +85,17 @@ class HrPayrollPeriod(models.Model):
         self.ensure_one()
         if "state" in init_values:
             if self.state == "open":
-                return self.env.ref("payroll_period.mt_state_open")
+                return self.env.ref("payroll_periods.mt_state_open")
             elif self.state == "end":
-                return self.env.ref("payroll_period.mt_state_end")
+                return self.env.ref("payroll_periods.mt_state_end")
             elif self.state == "lock":
-                return self.env.ref("payroll_period.mt_state_lock")
+                return self.env.ref("payroll_periods.mt_state_lock")
             elif self.state == "generate":
-                return self.env.ref("payroll_period.mt_state_generate")
+                return self.env.ref("payroll_periods.mt_state_generate")
             elif self.state == "payment":
-                return self.env.ref("payroll_period.mt_state_payment")
+                return self.env.ref("payroll_periods.mt_state_payment")
             elif self.state == "close":
-                return self.env.ref("payroll_period.mt_state_close")
+                return self.env.ref("payroll_periods.mt_state_close")
         return super(HrPayrollPeriod, self)._track_subtype(init_values)
 
     @api.model
