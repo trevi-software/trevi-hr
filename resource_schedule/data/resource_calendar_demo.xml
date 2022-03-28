@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Scheduling Areas -->
+        <record id="schedule_area0" model="resource.schedule.area">
+            <field name="name">Main Dining Room</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="schedule_area1" model="resource.schedule.area">
+            <field name="name">Pool-side Bar</field>
+            <field name="color" eval="3" />
+        </record>
+        <record id="schedule_area2" model="resource.schedule.area">
+            <field name="name">Lobby</field>
+            <field name="color" eval="5" />
+        </record>
+
+        <!-- Scheduling Groups -->
+        <record id="schedule_group0" model="resource.schedule.group">
+            <field name="name">Kitchen</field>
+        </record>
+        <record id="schedule_group1" model="resource.schedule.group">
+            <field name="name">Housekeeping</field>
+        </record>
+        <record id="schedule_group2" model="resource.schedule.group">
+            <field name="name">Reception</field>
+        </record>
+        <record id="schedule_group3" model="resource.schedule.group">
+            <field name="name">Office</field>
+        </record>
+
+        <!-- Template for some possible workdetails -->
+
+        <record
+            id="attendance_template_demo0"
+            model="resource.calendar.attendance.template"
+        >
+            <field name="name">Weekday Hours</field>
+            <field name="hour_from">8</field>
+            <field name="hour_to">17</field>
+            <field name="day_period">8day</field>
+            <field name="autodeduct_break" eval="True" />
+            <field name="break_minutes">60</field>
+            <field
+                name="schedule_group_ids"
+                eval="[(6, 0, [ref('schedule_group3')])]"
+            />
+        </record>
+
+        <record
+            id="attendance_template_demo1"
+            model="resource.calendar.attendance.template"
+        >
+            <field name="name">Half-day Saturday</field>
+            <field name="hour_from">8</field>
+            <field name="hour_to">12.5</field>
+            <field name="day_period">morning</field>
+            <field
+                name="schedule_group_ids"
+                eval="[(6, 0, [ref('schedule_group3')])]"
+            />
+        </record>
+
+        <record
+            id="attendance_template_demo3"
+            model="resource.calendar.attendance.template"
+        >
+            <field name="name">Morning Reception</field>
+            <field name="hour_from">6</field>
+            <field name="hour_to">14</field>
+            <field name="day_period">morning</field>
+            <field
+                name="schedule_group_ids"
+                eval="[(6, 0, [ref('schedule_group2')])]"
+            />
+            <field name="default_area_id" ref="schedule_area2" />
+        </record>
+
+        <record
+            id="attendance_template_demo4"
+            model="resource.calendar.attendance.template"
+        >
+            <field name="name">Afternooon Reception</field>
+            <field name="hour_from">10</field>
+            <field name="hour_to">18</field>
+            <field name="day_period">afternoon</field>
+            <field
+                name="schedule_group_ids"
+                eval="[(6, 0, [ref('schedule_group2')])]"
+            />
+            <field name="default_area_id" ref="schedule_area2" />
+        </record>
+
+        <record
+            id="attendance_template_demo2"
+            model="resource.calendar.attendance.template"
+        >
+            <field name="name">Evening Reception</field>
+            <field name="hour_from">18</field>
+            <field name="hour_to">23</field>
+            <field name="day_period">evening</field>
+            <field
+                name="schedule_group_ids"
+                eval="[(6, 0, [ref('schedule_group2')])]"
+            />
+            <field name="default_area_id" ref="schedule_area2" />
+        </record>
+
+        <record
+            id="attendance_template_demo5"
+            model="resource.calendar.attendance.template"
+        >
+            <field name="name">Room Cleaning</field>
+            <field name="hour_from">6</field>
+            <field name="hour_to">14</field>
+            <field name="day_period">morning</field>
+            <field
+                name="schedule_group_ids"
+                eval="[(6, 0, [ref('schedule_group1')])]"
+            />
+        </record>
+
+        <record
+            id="attendance_template_demo6"
+            model="resource.calendar.attendance.template"
+        >
+            <field name="name">Common Area Cleaning</field>
+            <field name="hour_from">6</field>
+            <field name="hour_to">9</field>
+            <field name="day_period">morning</field>
+            <field
+                name="schedule_group_ids"
+                eval="[(6, 0, [ref('schedule_group1')])]"
+            />
+        </record>
+
+        <record
+            id="attendance_template_demo7"
+            model="resource.calendar.attendance.template"
+        >
+            <field name="name">Breakfast / Lunch</field>
+            <field name="hour_from">6</field>
+            <field name="hour_to">15</field>
+            <field name="day_period">morning</field>
+            <field
+                name="schedule_group_ids"
+                eval="[(6, 0, [ref('schedule_group0')])]"
+            />
+        </record>
+
+        <record
+            id="attendance_template_demo8"
+            model="resource.calendar.attendance.template"
+        >
+            <field name="name">Dinner</field>
+            <field name="hour_from">15</field>
+            <field name="hour_to">22</field>
+            <field name="day_period">afternoon</field>
+            <field
+                name="schedule_group_ids"
+                eval="[(6, 0, [ref('schedule_group0')])]"
+            />
+        </record>
+
+        <record
+            id="attendance_template_demo9"
+            model="resource.calendar.attendance.template"
+        >
+            <field name="name">12 Hr Night</field>
+            <field name="hour_from">18</field>
+            <field name="hour_to">6</field>
+            <field name="day_period">evening</field>
+            <field name="span_midnight" eval="True" />
+        </record>
+
+        <record
+            id="attendance_template_demo10"
+            model="resource.calendar.attendance.template"
+        >
+            <field name="name">12 Hr Day</field>
+            <field name="hour_from">6</field>
+            <field name="hour_to">18</field>
+            <field name="day_period">12day</field>
+        </record>
+
+        <record
+            id="attendance_template_demo11"
+            model="resource.calendar.attendance.template"
+        >
+            <field name="name">Flex Workday</field>
+            <field name="shift_type">flex</field>
+            <field name="hour_from">6</field>
+            <field name="hour_to">20</field>
+            <field name="flex_core_from">11</field>
+            <field name="flex_core_to">15</field>
+            <field name="flex_scheduled_hrs">8</field>
+            <field name="day_period">8day</field>
+            <field
+                name="schedule_group_ids"
+                eval="[(6, 0, [ref('schedule_group3')])]"
+            />
+        </record>
+
+        <!-- Working Times -->
+
+        <record id="resource_calendar_44h" model="resource.calendar">
+            <field name="name">Standard 44 hours/week</field>
+            <field
+                name="attendance_ids"
+                eval="[
+            (0, 0, {'dayofweek': '0', 'template_id': ref('attendance_template_demo0')}),
+            (0, 0, {'dayofweek': '1', 'template_id': ref('attendance_template_demo0')}),
+            (0, 0, {'dayofweek': '2', 'template_id': ref('attendance_template_demo0')}),
+            (0, 0, {'dayofweek': '3', 'template_id': ref('attendance_template_demo0')}),
+            (0, 0, {'dayofweek': '4', 'template_id': ref('attendance_template_demo0')}),
+            (0, 0, {'dayofweek': '5', 'template_id': ref('attendance_template_demo1')})
+            ]"
+            />
+        </record>
+
+        <record id="resource_calendar_56h" model="resource.calendar">
+            <field name="name">Full Week Schedule</field>
+            <field name="dayoff_type">fix_one</field>
+            <field
+                name="default_dayoff_ids"
+                eval="[
+            (6, 0, [ref('wd_sun')])
+            ]"
+            />
+            <field
+                name="attendance_ids"
+                eval="[
+            (0, 0, {'dayofweek': '0', 'template_id': ref('attendance_template_demo0')}),
+            (0, 0, {'dayofweek': '1', 'template_id': ref('attendance_template_demo0')}),
+            (0, 0, {'dayofweek': '2', 'template_id': ref('attendance_template_demo0')}),
+            (0, 0, {'dayofweek': '3', 'template_id': ref('attendance_template_demo0')}),
+            (0, 0, {'dayofweek': '4', 'template_id': ref('attendance_template_demo0')}),
+            (0, 0, {'dayofweek': '5', 'template_id': ref('attendance_template_demo0')}),
+            (0, 0, {'dayofweek': '6', 'template_id': ref('attendance_template_demo0')})
+            ]"
+            />
+        </record>
+
+        <record id="resource_calendar_dupont" model="resource.calendar">
+            <field name="name">Dupont Schedule</field>
+            <field name="dayoff_type">fix_all</field>
+            <field name="two_weeks_calendar" eval="True" />
+            <field
+                name="attendance_ids"
+                eval="[
+            (0, 0, {'sequence': 10, 'dayofweek': '0', 'name': 'First Week', 'hour_from': 0, 'hour_to': 0, 'display_type': 'line_section'}),
+            (0, 0, {'sequence': 11, 'dayofweek': '0', 'template_id': ref('attendance_template_demo9')}),
+            (0, 0, {'sequence': 12, 'dayofweek': '1', 'template_id': ref('attendance_template_demo9')}),
+            (0, 0, {'sequence': 13, 'dayofweek': '2', 'template_id': ref('attendance_template_demo9')}),
+            (0, 0, {'sequence': 14, 'dayofweek': '3', 'template_id': ref('attendance_template_demo9')}),
+            (0, 0, {'sequence': 20, 'dayofweek': '0', 'name': 'Second Week', 'hour_from': 0, 'hour_to': 0, 'display_type': 'line_section'}),
+            (0, 0, {'sequence': 21, 'dayofweek': '0', 'template_id': ref('attendance_template_demo10')}),
+            (0, 0, {'sequence': 22, 'dayofweek': '1', 'template_id': ref('attendance_template_demo10')}),
+            (0, 0, {'sequence': 23, 'dayofweek': '2', 'template_id': ref('attendance_template_demo10')}),
+            (0, 0, {'sequence': 24, 'dayofweek': '4', 'template_id': ref('attendance_template_demo9')}),
+            (0, 0, {'sequence': 25, 'dayofweek': '5', 'template_id': ref('attendance_template_demo9')}),
+            (0, 0, {'sequence': 26, 'dayofweek': '6', 'template_id': ref('attendance_template_demo9')}),
+            (0, 0, {'sequence': 30, 'dayofweek': '0', 'name': 'Third Week', 'hour_from': 0, 'hour_to': 0, 'display_type': 'line_section'}),
+            (0, 0, {'sequence': 31, 'dayofweek': '3', 'template_id': ref('attendance_template_demo10')}),
+            (0, 0, {'sequence': 32, 'dayofweek': '4', 'template_id': ref('attendance_template_demo10')}),
+            (0, 0, {'sequence': 33, 'dayofweek': '5', 'template_id': ref('attendance_template_demo10')}),
+            (0, 0, {'sequence': 34, 'dayofweek': '6', 'template_id': ref('attendance_template_demo10')}),
+            (0, 0, {'sequence': 40, 'dayofweek': '0', 'name': 'Fourth Week', 'hour_from': 0, 'hour_to': 0, 'display_type': 'line_section'})
+            ]"
+            />
+        </record>
+
+        <!-- Scheduling Teams -->
+        <record id="schedule_team0" model="resource.schedule.team">
+            <field name="name">Alpha</field>
+            <field name="color" eval="2" />
+            <field name="resource_calendar_id" ref="resource_calendar_dupont" />
+            <field name="start_week" eval="0" />
+        </record>
+        <record id="schedule_team1" model="resource.schedule.team">
+            <field name="name">Bravo</field>
+            <field name="color" eval="4" />
+            <field name="resource_calendar_id" ref="resource_calendar_dupont" />
+            <field name="start_week" eval="1" />
+        </record>
+        <record id="schedule_team2" model="resource.schedule.team">
+            <field name="name">Charlie</field>
+            <field name="color" eval="6" />
+            <field name="resource_calendar_id" ref="resource_calendar_dupont" />
+            <field name="start_week" eval="2" />
+        </record>
+        <record id="schedule_team3" model="resource.schedule.team">
+            <field name="name">Delta</field>
+            <field name="color" eval="8" />
+            <field name="resource_calendar_id" ref="resource_calendar_dupont" />
+            <field name="start_week" eval="3" />
+        </record>
+
+    </data>
+</odoo>

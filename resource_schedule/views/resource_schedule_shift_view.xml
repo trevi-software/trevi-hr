@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_resource_schedule_search" model="ir.ui.view">
+        <field name="name">resource.schedule.shift.search</field>
+        <field name="model">resource.schedule.shift</field>
+        <field name="arch" type="xml">
+            <search string="Resource Shift Search">
+                <field name="name" />
+                <field name="schedule_team_id" />
+                <field name="resource_id" />
+                <filter
+                    icon="terp-go-today"
+                    string="Today"
+                    name="today"
+                    domain="[('datetime_start','&gt;=',current_date),('datetime_start','&lt;=',current_date)]"
+                />
+                <separator />
+                <filter
+                    name="my_schedule"
+                    string="My Schedule"
+                    domain="[('resource_id.user_id.id', '=', uid)]"
+                />
+                <filter
+                    name="my_team"
+                    string="My Team"
+                    domain="[('schedule_team_id.resource_ids.user_id', '=', uid)]"
+                />
+                <filter
+                    name="my_department"
+                    string="My Department"
+                    domain="[('department_id.manager_id.user_id.id', '=', uid)]"
+                />
+                <filter
+                    name="my_area"
+                    string="My Area"
+                    domain="[('default_area_id.resource_ids.id', 'in', [uid])]"
+                />
+                <separator />
+                <filter
+                    string="Human"
+                    name="human"
+                    domain="[('resource_type','=', 'user')]"
+                />
+                <filter
+                    string="Material"
+                    name="material"
+                    domain="[('resource_type','=', 'material')]"
+                />
+                <separator />
+                <group expand="0" string="Group By...">
+                    <filter
+                        name="date"
+                        string="Date"
+                        icon="terp-personal"
+                        domain="[]"
+                        context="{'group_by':'day'}"
+                    />
+                    <filter
+                        name="area"
+                        string="Area"
+                        icon="terp-personal"
+                        domain="[]"
+                        context="{'group_by':'default_area_id'}"
+                    />
+                    <filter
+                        name="team"
+                        string="Team"
+                        icon="terp-personal"
+                        domain="[]"
+                        context="{'group_by':'schedule_team_id'}"
+                    />
+                    <filter
+                        name="department"
+                        string="Department"
+                        icon="terp-personal"
+                        domain="[]"
+                        context="{'group_by':'department_id'}"
+                    />
+                    <filter
+                        name="resource"
+                        string="Resource"
+                        icon="terp-personal"
+                        domain="[]"
+                        context="{'group_by':'resource_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_resource_schedule_timeline" model="ir.ui.view">
+        <field name="model">resource.schedule.shift</field>
+        <field name="type">timeline</field>
+        <field name="arch" type="xml">
+            <timeline
+                date_start="datetime_start"
+                date_stop="datetime_end"
+                string="Shift hours"
+                default_group_by="resource_id"
+                mode="week"
+                stack="0"
+                color="resource_id"
+                event_open_popup="true"
+                zoomKey="ctrlKey"
+                colors="#ec7063:resource_id == false;"
+            >
+                <field name="resource_id" />
+                <field name="schedule_team_id" />
+                <templates>
+                    <div t-name="timeline-item">
+                        <div t-esc="record.display_name" />
+                    </div>
+                </templates>
+            </timeline>
+        </field>
+    </record>
+
+    <record id="view_resource_schedule_shift_tree" model="ir.ui.view">
+        <field name="name">resource.schedule.shift.tree</field>
+        <field name="model">resource.schedule.shift</field>
+        <field name="arch" type="xml">
+            <tree string="Scheduling">
+                <field name="template_id" invisible="1" />
+                <field name="display_name" />
+                <field name="resource_id" />
+                <field name="schedule_team_id" />
+                <field name="day" />
+                <field name="day_period" />
+                <field name="tz" />
+                <field name="default_area_id" />
+                <field name="resource_type" />
+                <field name="calendar_id" />
+                <field name="published" widget="boolean_toggle" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_resource_schedule_shift_form" model="ir.ui.view">
+        <field name="name">resource.schedule.shift.form</field>
+        <field name="model">resource.schedule.shift</field>
+        <field name="arch" type="xml">
+            <form string="Scheduling">
+                <sheet>
+                    <group>
+                        <group name="shift" string="Shift Information">
+                            <field name="template_id" invisible="1" />
+                            <field name="resource_id" />
+                            <field name="datetime_start" />
+                            <field name="datetime_end" />
+                            <field name="duration" invisible="1" />
+                            <field name="day_period" />
+                            <field name="tz" />
+                        </group>
+                        <group name="area" string="Work Area">
+                            <field name="default_area_id" />
+                            <field name="schedule_team_id" />
+                            <field name="department_id" />
+                            <field name="resource_type" />
+                            <field name="published" widget="boolean_toggle" />
+                        </group>
+                    </group>
+                    <group>
+                        <group name="details" string="Work Detail">
+                            <field name="name" invisible="1" />
+                            <field name="dayofweek" />
+                            <field name="hour_from" invisible="1" />
+                            <field name="hour_to" invisible="1" />
+                        </group>
+                        <group name="calendar" string="Work Calendar">
+                            <field name="calendar_id" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_resource_schedule_shift_calendar" model="ir.ui.view">
+        <field name="name">resource.schedule.shift.calendar</field>
+        <field name="model">resource.schedule.shift</field>
+        <field name="arch" type="xml">
+            <calendar
+                string="Scheduling"
+                date_start="datetime_start"
+                date_stop="datetime_end"
+                color="resource_id"
+                event_open_popup="true"
+                quick_add="False"
+                mode="week"
+            >
+                <field name="company_id" invisible="1" />
+                <field
+                    name="resource_id"
+                    avatar_field="avatar_128"
+                    widget="many2one_avatar"
+                />
+                <field name="schedule_team_id" filters="1" color="color" />
+                <field name="department_id" filters="1" color="color" />
+                <field name="duration" invisible="1" />
+            </calendar>
+        </field>
+    </record>
+
+    <record id="open_employee_schedule_view" model="ir.actions.act_window">
+        <field name="name">Schedule</field>
+        <field name="res_model">resource.schedule.shift</field>
+        <field name="view_mode">timeline,calendar,tree,form</field>
+        <field name="search_view_id" ref="view_resource_schedule_search" />
+    </record>
+
+    <record id="open_my_schedule_view" model="ir.actions.act_window">
+        <field name="name">My Schedule</field>
+        <field name="res_model">resource.schedule.shift</field>
+        <field name="view_mode">timeline,calendar,tree,form</field>
+        <field name="search_view_id" ref="view_resource_schedule_search" />
+        <field name="context">{'search_default_my_schedule': 1}</field>
+    </record>
+
+    <record id="open_team_schedule_view" model="ir.actions.act_window">
+        <field name="name">My Team Schedule</field>
+        <field name="res_model">resource.schedule.shift</field>
+        <field name="view_mode">timeline,calendar,tree,form</field>
+        <field name="search_view_id" ref="view_resource_schedule_search" />
+        <field name="context">{'search_default_my_team': 1}</field>
+    </record>
+
+    <record id="open_dept_schedule_view" model="ir.actions.act_window">
+        <field name="name">My Department Schedule</field>
+        <field name="res_model">resource.schedule.shift</field>
+        <field name="view_mode">timeline,calendar,tree,form</field>
+        <field name="search_view_id" ref="view_resource_schedule_search" />
+        <field name="context">{'search_default_my_department': 1}</field>
+    </record>
+
+    <menuitem
+        id="menu_schedule_schedule"
+        parent="menu_root_schedule"
+        name="Schedule"
+        sequence="10"
+    />
+
+    <menuitem
+        action="open_my_schedule_view"
+        id="menu_my_schedule_view"
+        parent="menu_schedule_schedule"
+        sequence="10"
+    />
+    <menuitem
+        action="open_team_schedule_view"
+        id="menu_team_schedule_view"
+        parent="menu_schedule_schedule"
+        sequence="20"
+    />
+    <menuitem
+        action="open_dept_schedule_view"
+        id="menu_dept_schedule_view"
+        parent="menu_schedule_schedule"
+        sequence="30"
+    />
+
+</odoo>

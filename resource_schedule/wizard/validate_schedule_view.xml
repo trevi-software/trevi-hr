@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="view_department_selection" model="ir.ui.view">
+            <field name="name">resource.schedule.validate.departments.view</field>
+            <field name="model">resource.schedule.validate.departments</field>
+            <field name="arch" type="xml">
+                <form string="Departmet Selection">
+                    <group string="Departments">
+                        <field name="department_ids" nolabel="1" />
+                    </group>
+                    <newline />
+                    <footer>
+                        <button
+                            name="view_schedules"
+                            type="object"
+                            string="View Schedules"
+                            class="oe_highlight"
+                        />
+                        <button
+                            name="do_validate"
+                            type="object"
+                            string="Validate All"
+                            class="oe_highlight"
+                        />
+                        <button
+                            special="cancel"
+                            string="Cancel"
+                            class="btn-secondary"
+                        />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_schedules_by_department" model="ir.actions.act_window">
+            <field name="name">Publish Schedules</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">resource.schedule.validate.departments</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            id="menu_schedules_generate"
+            action="action_schedules_by_department"
+            parent="menu_schedule_ops"
+            sequence="20"
+        />
+
+    </data>
+</odoo>
