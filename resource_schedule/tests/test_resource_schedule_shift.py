@@ -3,6 +3,8 @@
 
 from datetime import date, datetime, timedelta
 
+from pytz import timezone, utc
+
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, common
 
@@ -109,6 +111,21 @@ class TestResourceScheduleShift(common.SavepointCase):
             dStart -= timedelta(days=1)
         dEnd = dStart + timedelta(days=total_days)
         return dStart, dEnd
+
+    def localize_dt(self, dt, tz, reverse=False):
+        """
+        Localize naive dt from database (UTC) to timzezone tz. If reverse is True
+        a naive dt that is in timezone tz is converted to naive dt for storage in db.
+        """
+
+        local_tz = timezone(tz)
+        if not reverse:
+            res = utc.localize(dt, is_dst=False).astimezone(local_tz)
+        else:
+            res = (
+                local_tz.localize(dt, is_dst=False).astimezone(utc).replace(tzinfo=None)
+            )
+        return res
 
     def test_record_order(self):
 
@@ -454,8 +471,23 @@ class TestResourceScheduleShift(common.SavepointCase):
 
         today = dStart
         for shift in shifts:
-            dtShiftStart = datetime.combine(today, float_to_time(19))
-            dtShiftEnd = datetime.combine(today + timedelta(days=1), float_to_time(3))
+            dtShiftStart = datetime.combine(
+                today, float_to_time(self.night_template.hour_from)
+            )
+            tzLocal = timezone(self.night_calendar.tz)
+            dtShiftStart = (
+                tzLocal.localize(dtShiftStart, is_dst=False)
+                .astimezone(utc)
+                .replace(tzinfo=None)
+            )
+            dtShiftEnd = datetime.combine(
+                today + timedelta(days=1), float_to_time(self.night_template.hour_to)
+            )
+            dtShiftEnd = (
+                tzLocal.localize(dtShiftEnd, is_dst=False)
+                .astimezone(utc)
+                .replace(tzinfo=None)
+            )
             self.assertTrue(
                 shift.span_midnight, "The shift has the field 'span_midnight' set"
             )
@@ -499,8 +531,19 @@ class TestResourceScheduleShift(common.SavepointCase):
 
         today = dStart
         for shift in shifts:
-            dtShiftStart = datetime.combine(today, float_to_time(15))
-            dtShiftEnd = datetime.combine(today + timedelta(days=1), float_to_time(3))
+            dtShiftStart = datetime.combine(today, float_to_time(18))
+            dtShiftEnd = datetime.combine(today + timedelta(days=1), float_to_time(6))
+            tzLocal = timezone(self.empty_calendar.tz)
+            dtShiftStart = (
+                tzLocal.localize(dtShiftStart, is_dst=False)
+                .astimezone(utc)
+                .replace(tzinfo=None)
+            )
+            dtShiftEnd = (
+                tzLocal.localize(dtShiftEnd, is_dst=False)
+                .astimezone(utc)
+                .replace(tzinfo=None)
+            )
             self.assertEqual(shift.shift_type, "flex", "The shift is a flex shift")
             self.assertEqual(
                 shift.flex_scheduled_hrs, 8, "The flex scheduled hours are 8"
@@ -574,8 +617,21 @@ class TestResourceScheduleShift(common.SavepointCase):
         self.assertEqual(len(punches), 0, "Initialy, there are no attendances at all")
 
         # Run this test as if it was the end of the day
-        now = datetime.combine(dStart, datetime.max.time())
-        start = datetime.combine(dStart, datetime.min.time())
+        tzLocal = timezone(self.production_calendar.tz)
+        now = (
+            tzLocal.localize(
+                datetime.combine(dStart, datetime.max.time()), is_dst=False
+            )
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
+        start = (
+            tzLocal.localize(
+                datetime.combine(dStart, datetime.min.time()), is_dst=False
+            )
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
         end = now
 
         shifts = self.employee.create_schedule(dStart, dEnd)
@@ -595,14 +651,25 @@ class TestResourceScheduleShift(common.SavepointCase):
             ]
         )
         self.assertEqual(len(punches), 1, "I was able to create hr.attendance records.")
+
+        dtShiftStart = (
+            tzLocal.localize(datetime.combine(dStart, float_to_time(8)), is_dst=False)
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
+        dtShiftEnd = (
+            tzLocal.localize(datetime.combine(dStart, float_to_time(17)), is_dst=False)
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
         self.assertEqual(
             punches[0].check_in,
-            datetime.combine(dStart, datetime.strptime("0500", "%H%M").time()),
+            dtShiftStart,
             "Start date and time of hr.attendance record is correct",
         )
         self.assertEqual(
             punches[0].check_out,
-            datetime.combine(dStart, datetime.strptime("1400", "%H%M").time()),
+            dtShiftEnd,
             "End date and time of hr.attendance record is correct",
         )
 
@@ -637,9 +704,24 @@ class TestResourceScheduleShift(common.SavepointCase):
             ]
         )
         self.assertEqual(len(punches), 1, "I was able to create hr.attendance records.")
+
+        tzLocal = timezone(self.night_calendar.tz)
+        dtShiftStart = (
+            tzLocal.localize(datetime.combine(dStart, float_to_time(22)), is_dst=False)
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
+        dtShiftEnd = (
+            tzLocal.localize(
+                datetime.combine(dStart + timedelta(days=1), float_to_time(6)),
+                is_dst=False,
+            )
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
         self.assertEqual(
             punches[0].check_in,
-            datetime.combine(dStart, datetime.strptime("1900", "%H%M").time()),
+            dtShiftStart,
             "Start date and time of hr.attendance record is correct",
         )
         self.assertFalse(
@@ -657,9 +739,7 @@ class TestResourceScheduleShift(common.SavepointCase):
 
         self.assertEqual(
             punches[0].check_out,
-            datetime.combine(
-                dStart + timedelta(days=1), datetime.strptime("300", "%H%M").time()
-            ),
+            dtShiftEnd,
             "End date and time of hr.attendance record is correct",
         )
 
@@ -705,7 +785,15 @@ class TestResourceScheduleShift(common.SavepointCase):
         self.assertGreater(len(shifts), 0, "I was able to create shifts")
         self.assertTrue(shifts[0].autopunch, "The shifts have autopunch set")
 
-        now = datetime.combine(dStart, datetime.strptime("4:59", "%H:%M").time())
+        tzLocal = timezone(self.std35_calendar.tz)
+        now = (
+            tzLocal.localize(
+                datetime.combine(dStart, datetime.strptime("7:59", "%H:%M").time()),
+                is_dst=False,
+            )
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
 
         self.ScheduleShift.check_and_create_autopunch(
             self.employee,
@@ -721,7 +809,14 @@ class TestResourceScheduleShift(common.SavepointCase):
             len(punches), 0, "No punches created before scheduled shift start"
         )
 
-        now = datetime.combine(dStart, datetime.strptime("8:59", "%H:%M").time())
+        now = (
+            tzLocal.localize(
+                datetime.combine(dStart, datetime.strptime("11:59", "%H:%M").time()),
+                is_dst=False,
+            )
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
 
         self.ScheduleShift.check_and_create_autopunch(
             self.employee,
@@ -734,9 +829,21 @@ class TestResourceScheduleShift(common.SavepointCase):
             ]
         )
         self.assertEqual(len(punches), 1, "One attendance created before lunch starts")
+
+        tzLocal = timezone(self.night_calendar.tz)
+        dtShiftStart = (
+            tzLocal.localize(datetime.combine(dStart, float_to_time(8)), is_dst=False)
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
+        dtShiftEnd = (
+            tzLocal.localize(datetime.combine(dStart, float_to_time(12)), is_dst=False)
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
         self.assertEqual(
             punches[0].check_in,
-            datetime.combine(dStart, datetime.strptime("5:00", "%H:%M").time()),
+            dtShiftStart,
             "Start date/time of hr.attendance record is correct",
         )
         self.assertFalse(
@@ -744,7 +851,14 @@ class TestResourceScheduleShift(common.SavepointCase):
             "The out-punch is empty because check-out time hasn't arrived yet",
         )
 
-        now = datetime.combine(dStart, datetime.strptime("9:00", "%H:%M").time())
+        now = (
+            tzLocal.localize(
+                datetime.combine(dStart, datetime.strptime("12:00", "%H:%M").time()),
+                is_dst=False,
+            )
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
 
         self.ScheduleShift.check_and_create_autopunch(
             self.employee,
@@ -759,19 +873,26 @@ class TestResourceScheduleShift(common.SavepointCase):
         self.assertEqual(len(punches), 1, "Still only one attendance created")
         self.assertEqual(
             punches[0].check_in,
-            datetime.combine(dStart, datetime.strptime("5:00", "%H:%M").time()),
+            dtShiftStart,
             "Start date/time of hr.attendance record is correct",
         )
         self.assertEqual(
             punches[0].check_out,
-            datetime.combine(dStart, datetime.strptime("9:00", "%H:%M").time()),
+            dtShiftEnd,
             "End date/time of hr.attendance record is correct",
         )
         saved_punches = punches
         saved_checkin = punches[0].check_in
         saved_checkout = punches[0].check_out
 
-        now = datetime.combine(dStart, datetime.strptime("9:30", "%H:%M").time())
+        now = (
+            tzLocal.localize(
+                datetime.combine(dStart, datetime.strptime("12:30", "%H:%M").time()),
+                is_dst=False,
+            )
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
 
         self.ScheduleShift.check_and_create_autopunch(
             self.employee,
@@ -793,7 +914,14 @@ class TestResourceScheduleShift(common.SavepointCase):
             punches[0].check_out, saved_checkout, "Check-out time hasn't changed"
         )
 
-        now = datetime.combine(dStart, datetime.strptime("10:00", "%H:%M").time())
+        now = (
+            tzLocal.localize(
+                datetime.combine(dStart, datetime.strptime("13:00", "%H:%M").time()),
+                is_dst=False,
+            )
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
 
         self.ScheduleShift.check_and_create_autopunch(
             self.employee,
@@ -806,16 +934,35 @@ class TestResourceScheduleShift(common.SavepointCase):
             ]
         )
         self.assertEqual(len(punches), 2, "Two attendance records created")
+
+        tzLocal = timezone(self.std35_calendar.tz)
+        dtShiftStart = (
+            tzLocal.localize(datetime.combine(dStart, float_to_time(13)), is_dst=False)
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
+        dtShiftEnd = (
+            tzLocal.localize(datetime.combine(dStart, float_to_time(16)), is_dst=False)
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
         self.assertEqual(
             punches[0].check_in,
-            datetime.combine(dStart, datetime.strptime("10:00", "%H:%M").time()),
+            dtShiftStart,
             "Start date/time of hr.attendance record is correct",
         )
         self.assertFalse(
             punches[0].check_out, "End date/time of hr.attendance record is False"
         )
 
-        now = datetime.combine(dStart, datetime.strptime("13:30", "%H:%M").time())
+        now = (
+            tzLocal.localize(
+                datetime.combine(dStart, datetime.strptime("16:30", "%H:%M").time()),
+                is_dst=False,
+            )
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
 
         self.ScheduleShift.check_and_create_autopunch(
             self.employee,
@@ -830,12 +977,12 @@ class TestResourceScheduleShift(common.SavepointCase):
         self.assertEqual(len(punches), 2, "Two attendance records created")
         self.assertEqual(
             punches[0].check_in,
-            datetime.combine(dStart, datetime.strptime("10:00", "%H:%M").time()),
+            dtShiftStart,
             "Start date/time of hr.attendance record is correct",
         )
         self.assertEqual(
             punches[0].check_out,
-            datetime.combine(dStart, datetime.strptime("13:00", "%H:%M").time()),
+            dtShiftEnd,
             "End date/time of hr.attendance record is correct",
         )
         self.assertEqual(
@@ -909,7 +1056,15 @@ class TestResourceScheduleShift(common.SavepointCase):
         self.assertGreater(len(shifts), 0, "I was able to create shifts")
         self.assertTrue(shifts[0].autopunch, "The shifts have autopunch set")
 
-        now = datetime.combine(dStart, datetime.strptime("12:45", "%H:%M").time())
+        tzLocal = timezone(self.production_calendar.tz)
+        now = (
+            tzLocal.localize(
+                datetime.combine(dStart, datetime.strptime("15:45", "%H:%M").time()),
+                is_dst=False,
+            )
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
         punches = self.ScheduleShift._autopunch_shifts(now)
         lastrun = LastRun.search([])
         self.assertEqual(len(punches), 1, "There is one attendance record")
@@ -933,25 +1088,49 @@ class TestResourceScheduleShift(common.SavepointCase):
             len(punches), 3, "There are 3 attendance records (mon, tue, wed)"
         )
         lastrun = LastRun.search([])
+
+        dtShiftEnd = (
+            tzLocal.localize(datetime.combine(dStart, float_to_time(17)), is_dst=False)
+            .astimezone(utc)
+            .replace(tzinfo=None)
+        )
         self.assertEqual(
             punches[2].check_out,
-            datetime.combine(dStart, datetime.strptime("14:00", "%H:%M").time()),
+            dtShiftEnd,
             "End date/time of monday is now filled in",
+        )
+
+        dtShiftStart = (
+            tzLocal.localize(datetime.combine(dTue, float_to_time(8)), is_dst=False)
+            .astimezone(utc)
+            .replace(tzinfo=None)
         )
         self.assertEqual(
             punches[1].check_in,
-            datetime.combine(dTue, datetime.strptime("5:00", "%H:%M").time()),
-            "End dat/time of monday is now filled in",
+            dtShiftStart,
+            "Start date/time of tuesday is now filled in",
+        )
+
+        dtShiftEnd = (
+            tzLocal.localize(datetime.combine(dTue, float_to_time(17)), is_dst=False)
+            .astimezone(utc)
+            .replace(tzinfo=None)
         )
         self.assertEqual(
             punches[1].check_out,
-            datetime.combine(dTue, datetime.strptime("14:00", "%H:%M").time()),
-            "End dat/time of monday is now filled in",
+            dtShiftEnd,
+            "End date/time of tuesday is now filled in",
+        )
+
+        dtShiftStart = (
+            tzLocal.localize(datetime.combine(dWed, float_to_time(8)), is_dst=False)
+            .astimezone(utc)
+            .replace(tzinfo=None)
         )
         self.assertEqual(
             punches[0].check_in,
-            datetime.combine(dWed, datetime.strptime("5:00", "%H:%M").time()),
-            "End dat/time of tuesday is now filled in",
+            dtShiftStart,
+            "Start date/time of wednesday is now filled in",
         )
         self.assertFalse(
             punches[0].check_out, "Wednesday's check-out time hasn't arrived yet"

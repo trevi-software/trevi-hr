@@ -70,7 +70,7 @@ class HrContract(models.Model):
                 ]
             )
             if len(prev_sched_ids) == 0:
-                sched_obj.create_schedule(
+                sched_obj.sudo().create_schedule(
                     ee.resource_id, dTmp, dTmp + timedelta(days=6), calendar
                 )
 
