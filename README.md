@@ -28,6 +28,7 @@ addon | version | summary
 [hr_contract_status](hr_contract_status/) | 14.0.1.0.1 | Workflows and notifications on employee contracts.
 [hr_contract_values](hr_contract_values/) | 14.0.1.0.0 | Contracts - Initial Settings
 [hr_contract_values_payroll](hr_contract_values_payroll/) | 14.0.1.1.0 | Contract Payroll Structure Initial Settings
+[hr_contract_values_resource_schedule](hr_contract_values_resource_schedule/) | 14.0.1.0.0 | Set working hours in default contract values.
 [hr_employee_seniority_months](hr_employee_seniority_months/) | 14.0.1.0.0 | Calculate an employee's months of employment
 [hr_employee_status](hr_employee_status/) | 14.0.1.0.2 | Track the HR status of employees
 [hr_employee_status_payroll](hr_employee_status_payroll/) | 14.0.1.0.0 | Adds access records to employee separation records
@@ -52,6 +53,7 @@ addon | version | summary
 [payroll_policy_presence](payroll_policy_presence/) | 14.0.1.0.0 | Define properties of an employee presence policy
 [payroll_register](payroll_register/) | 14.0.1.0.0 | Payroll Register
 [res_currency_denomination](res_currency_denomination/) | 14.0.1.0.0 | Currency Denominations
+[resource_schedule](resource_schedule/) | 14.0.1.0.0 | Easily create, manage, and track employee shift planning.
 [trevi_hr_job_categories](trevi_hr_job_categories/) | 14.0.1.0.0 | Job Categories
 [trevi_hr_public_holidays](trevi_hr_public_holidays/) | 14.0.1.0.0 | Public Holidays
 [trevi_hr_usability](trevi_hr_usability/) | 14.0.1.0.0 | Simplify Employee Records.

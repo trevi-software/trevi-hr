@@ -19,11 +19,14 @@ Employee Shift Scheduling
 
 |badge1| |badge2| |badge3| 
 
-Easily create, manage, and track employee schedules. Schedules consist of three general
-concepts:
-1. Schedule Templates - user-defined template assigned to an employee's contract
-2. Schedule Details - date and time objects denoting a shift's start and end times
-3. Schedules - a collection of schedule details denoting the actual schedule for one or more weeks
+Easily create, manage, and track employee shift planning.
+
+#. Work Detail Templates - templates describe a shift for one day. For example: 8 a.m to 5 p.m.
+#. Work Detail - the Odoo record for describing a day in a Work Time. These records can get their settings from a Work Detail Template.
+#. Work Time - the Odoo record for describing a weekly schedule.
+#. Shift Schedule - the actual times that an employee is scheduled to work on a specific day.
+#. Schedule Area - the area the employee is assigned to for a shift. For example, in a hotel with multiple dinning rooms all serving staff may have the same shifts but be assigned to different dinning rooms.
+#. Schedule Group - schedule groups allow an organization to split employees into groups. Schedule groups can have their own work detail templates and managers who are responsible for managing shifts.
 
 There is also a workflow by which Over Time may be scheduled on an individual basis or by
 batching multiple employees together.
@@ -32,6 +35,11 @@ batching multiple employees together.
 
 .. contents::
    :local:
+
+Known issues / Roadmap
+======================
+
+* When demo data is enabled and the module is updated you may encounter and error the the demo data failed to install. This error may safely be ignored.
 
 Bug Tracker
 ===========
@@ -55,7 +63,7 @@ Authors
 Other credits
 ~~~~~~~~~~~~~
 
-* TREVI Software <https://trevi.et>
+* Michael Telahun Makonnen <mtm@trevi.et>
 
 Maintainers
 ~~~~~~~~~~~
