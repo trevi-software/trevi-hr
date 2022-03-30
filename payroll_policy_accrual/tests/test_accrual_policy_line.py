@@ -1,7 +1,7 @@
 # Copyright (C) 2021 TREVI Software
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 from dateutil.relativedelta import relativedelta
 
@@ -17,6 +17,7 @@ class TestAccrualPolicy(common.SavepointCase):
         cls.PolicyGroup = cls.env["hr.policy.group"]
         cls.Policy = cls.env["hr.policy.accrual"]
         cls.PolicyLine = cls.env["hr.policy.line.accrual"]
+        cls.AccrualJob = cls.env["hr.policy.line.accrual.job"]
         cls.Accrual = cls.env["hr.accrual"]
         cls.Employee = cls.env["hr.employee"]
         cls.LeaveType = cls.env["hr.leave.type"]
@@ -112,6 +113,8 @@ class TestAccrualPolicy(common.SavepointCase):
 
         # Setup Employee
         start = date.today() - relativedelta(months=1)
+        dLastRun = date.today() - relativedelta(days=4)
+        dtLastRun = datetime.combine(dLastRun, datetime.min.time())
         ee = self.Employee.create({"name": "John"})
         cc = self.create_contract(ee.id, "draft", "done", start)
         cc.signal_confirm()
@@ -141,6 +144,9 @@ class TestAccrualPolicy(common.SavepointCase):
         )
         cc.policy_group_id = pg.id
 
+        self.AccrualJob.create(
+            {"name": dLastRun, "execution_time": dtLastRun, "policy_line_id": pl.id}
+        )
         self.assertEqual(0, len(aa.line_ids))
 
         self.apply_cron()
@@ -161,11 +167,12 @@ class TestAccrualPolicy(common.SavepointCase):
                 aa.line_ids[0].amount, lva[0].number_of_days, precision_digits=2
             ),
         )
-        self.assertEqual(1, len(pl.job_ids))
-        self.assertEqual(1, len(pl.job_ids[0].accrual_line_ids))
-        self.assertEqual(1, len(pl.job_ids[0].holiday_ids))
-        self.assertEqual(pl.job_ids[0].holiday_ids[0], lva[0])
-        self.assertIn(pl.job_ids[0].holiday_ids[0].state, ["validate", "validate1"])
-        self.assertTrue(pl.job_ids[0].execution_time)
-        self.assertTrue(pl.job_ids[0].end_time)
-        self.assertGreater(pl.job_ids[0].end_time, pl.job_ids[0].execution_time)
+        job = pl.job_ids.filtered(lambda j: j.name == start + relativedelta(months=1))
+        self.assertEqual(5, len(pl.job_ids))
+        self.assertEqual(1, len(job.accrual_line_ids))
+        self.assertEqual(1, len(job.holiday_ids))
+        self.assertEqual(job.holiday_ids[0], lva[0])
+        self.assertIn(job.holiday_ids[0].state, ["validate", "validate1"])
+        self.assertTrue(job.execution_time)
+        self.assertTrue(job.end_time)
+        self.assertGreater(job.end_time, pl.job_ids[0].execution_time)
