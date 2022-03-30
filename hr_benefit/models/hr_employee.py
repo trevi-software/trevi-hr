@@ -27,7 +27,7 @@ class HrEmployee(models.Model):
         for ee in self:
             ee.benefit_policies_count = HrBenefitPolicy.search_count(
                 [
-                    ("id", "in", ee.benefit_policy_id.ids),
+                    ("id", "in", ee.benefit_policy_ids.ids),
                     ("employee_id", "=", ee.id),
                     ("start_date", "<=", dToday),
                     ("state", "!=", "done"),
