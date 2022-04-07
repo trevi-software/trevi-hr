@@ -12,6 +12,16 @@ from . import common
 
 
 class TestBenefit(common.TestBenefitCommon):
+    def test_get_advantage_no_benefit(self):
+        """#29 Try getting an advantage from an empty benefit recordset"""
+
+        self.Benefit.get_latest_advantage(date.today())
+
+    def test_get_premium_no_benefit(self):
+        """#29 Try getting a premium from an empty benefit recordset"""
+
+        self.Benefit.get_latest_premium(date.today())
+
     def test_get_latest_earning(self):
         """Get the earning with the latest effective date that is not in the future"""
 

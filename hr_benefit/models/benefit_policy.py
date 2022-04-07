@@ -113,6 +113,7 @@ class BenefitPolicy(models.Model):
 
             if not rec.benefit_id or not rec.start_date:
                 rec.write(res)
+                continue
 
             dToday = date.today()
             if rec.advantage_override:

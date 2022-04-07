@@ -44,9 +44,9 @@ class Benefit(models.Model):
         greater than all others.
         """
 
-        self.ensure_one()
-        if not dToday:
+        if not self or not dToday:
             return None
+        self.ensure_one()
 
         res = None
         line_ids = None
