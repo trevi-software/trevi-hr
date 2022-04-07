@@ -6,7 +6,8 @@ on:
       - "14.0*"
   push:
     branches:
-      - "14.0*"
+      - "14.0"
+      - "14.0-ocabot-*"
 
 jobs:
   unreleased-deps:
@@ -65,4 +66,4 @@ jobs:
       - uses: codecov/codecov-action@v1
       - name: Update .pot files
         run: oca_export_and_push_pot https://x-access-token:${{ secrets.GIT_PUSH_TOKEN }}@github.com/${{ github.repository }}
-        if: ${{ matrix.makepot == 'true' && github.event_name == 'push' && github.repository_owner == 'OCA' }}
+        if: ${{ matrix.makepot == 'true' && github.event_name == 'push' && github.repository_owner == 'trevi-software' }}
