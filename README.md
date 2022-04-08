@@ -24,7 +24,7 @@ addon | version | summary
 [base_lock](base_lock/) | 14.0.1.0.0 | Base locking module.
 [group_payroll_manager](group_payroll_manager/) | 14.0.1.0.0 | Permissions group Payroll Manager
 [hr_accrual_bank](hr_accrual_bank/) | 14.0.1.0.0 | Basic framework for recording accruals to a time bank
-[hr_benefit](hr_benefit/) | 14.0.1.0.0 | Assign benefits and deductables to employees
+[hr_benefit](hr_benefit/) | 14.0.1.0.1 | Assign benefits and deductables to employees
 [hr_benefit_payroll](hr_benefit_payroll/) | 14.0.1.0.0 | Access benefits in payroll through salary rules.
 [hr_contract_status](hr_contract_status/) | 14.0.1.0.1 | Workflows and notifications on employee contracts.
 [hr_contract_values](hr_contract_values/) | 14.0.1.0.0 | Contracts - Initial Settings
@@ -52,6 +52,7 @@ addon | version | summary
 [payroll_policy_group](payroll_policy_group/) | 14.0.1.0.0 | Group payroll policies and assign them to contracts
 [payroll_policy_ot](payroll_policy_ot/) | 14.0.1.0.0 | Assign over-time policies to a policy group
 [payroll_policy_presence](payroll_policy_presence/) | 14.0.1.0.0 | Define properties of an employee presence policy
+[payroll_policy_rounding](payroll_policy_rounding/) | 14.0.1.0.0 | Define attendance check-in and check-out rounding policies
 [payroll_register](payroll_register/) | 14.0.1.0.0 | Payroll Register
 [res_currency_denomination](res_currency_denomination/) | 14.0.1.0.0 | Currency Denominations
 [resource_schedule](resource_schedule/) | 14.0.1.0.0 | Easily create, manage, and track employee shift planning.
