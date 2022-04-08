@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <!-- Policy Lines -->
+
+        <record id="rounding_policy_line_tree_view" model="ir.ui.view">
+            <field name="name">hr.policy.line.rounding.tree</field>
+            <field name="model">hr.policy.line.rounding</field>
+            <field name="arch" type="xml">
+                <tree string="Rounding Policy Lines">
+                    <field name="policy_id" />
+                    <field name="attendance_type" />
+                    <field name="grace" />
+                    <field name="round_type" />
+                    <field name="round_interval" />
+                    <field name="preauth_ot" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="rounding_policy_line_form_view" model="ir.ui.view">
+            <field name="name">hr.policy.line.rounding.form</field>
+            <field name="model">hr.policy.line.rounding</field>
+            <field name="arch" type="xml">
+                <form string="Rounding Policy Line">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="attendance_type" />
+                                <field name="grace" />
+                                <field name="round_type" />
+                                <field name="round_interval" />
+                            </group>
+                            <group>
+                                <field name="policy_id" />
+                                <field name="preauth_ot" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="open_rounding_policy_line" model="ir.actions.act_window">
+            <field name="name">Rounding Policy Lines</field>
+            <field name="res_model">hr.policy.line.rounding</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Policy -->
+
+        <record id="rounding_policy_view_tree" model="ir.ui.view">
+            <field name="name">hr.policy.rounding.tree</field>
+            <field name="model">hr.policy.rounding</field>
+            <field name="arch" type="xml">
+                <tree string="Attendance Rounding Policies">
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="tz" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="rounding_policy_view_form" model="ir.ui.view">
+            <field name="name">hr.policy.rounding.form</field>
+            <field name="model">hr.policy.rounding</field>
+            <field name="arch" type="xml">
+                <form string="Attendance Rounding Policy">
+                    <sheet>
+                        <h1>
+                            <label for="name" string="Name" class="oe_edit_only" />
+                            <field name="name" />
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="date" />
+                            </group>
+                            <group>
+                                <field name="tz" />
+                            </group>
+                        </group>
+                        <group string="Rounding Lines">
+                            <field name="line_ids" nolabel="1">
+                                <tree string="Rounding Lines" editable="top">
+                                    <field name="attendance_type" />
+                                    <field name="grace" />
+                                    <field name="round_type" />
+                                    <field name="round_interval" />
+                                    <field name="preauth_ot" />
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="open_rounding_policy" model="ir.actions.act_window">
+            <field name="name">Rounding Policies</field>
+            <field name="res_model">hr.policy.rounding</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem
+            action="open_rounding_policy"
+            id="menu_hr_rounding_policy"
+            parent="payroll_policy_group.menu_hr_policy_configuration"
+            sequence="11"
+        />
+
+        <!-- Policy Group -->
+
+        <record id="policy_group_view_form" model="ir.ui.view">
+            <field name="name">hr.policy.group.form.rounding</field>
+            <field name="model">hr.policy.group</field>
+            <field
+                name="inherit_id"
+                ref="payroll_policy_group.policy_group_view_form"
+            />
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='right']" position="inside">
+                    <field name="rounding_policy_ids" />
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Attendance -->
+
+        <record id="view_attendance_tree" model="ir.ui.view">
+            <field name="name">hr.attendance.tree</field>
+            <field name="model">hr.attendance</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_tree" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='check_in']" position="after">
+                    <field name="clock_in" />
+                </xpath>
+                <xpath expr="//field[@name='check_out']" position="after">
+                    <field name="clock_out" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_attendance_filter" model="ir.ui.view">
+            <field name="name">hr.attendance.filter.inherit.policy</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.hr_attendance_view_filter" />
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='groupby_check_out']" position="after">
+                    <filter
+                        string="Clock In"
+                        name="groupby_name"
+                        context="{'group_by': 'clock_in'}"
+                    />
+                    <filter
+                        string="Clock Out"
+                        name="groupby_check_out"
+                        context="{'group_by': 'clock_out'}"
+                    />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_attendance_form" model="ir.ui.view">
+            <field name="name">hr.attendance.form</field>
+            <field name="model">hr.attendance</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <group>
+                        <field name="clock_in" />
+                        <field name="clock_out" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

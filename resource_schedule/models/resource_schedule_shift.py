@@ -172,6 +172,35 @@ class ResourceScheduleShift(models.Model):
         for rec in self:
             rec._update_default_area()
 
+    def datetimes_naive_utc(self):
+
+        res = [shift._datetimes_naive_utc() for shift in self]
+        return res
+
+    def _datetimes_naive_utc(self):
+
+        self.ensure_one()
+        return (self.datetime_start, self.datetime_end, self)
+
+    def datetimes_naive_tz(self):
+
+        res = [shift._datetimes_naive_tz() for shift in self]
+        return res
+
+    def _datetimes_naive_tz(self):
+
+        self.ensure_one()
+        ltz = timezone(self.tz)
+        return (
+            utc.localize(self.datetime_start, is_dst=False)
+            .astimezone(ltz)
+            .replace(tzinfo=None),
+            utc.localize(self.datetime_end, is_dst=False)
+            .astimezone(ltz)
+            .replace(tzinfo=None),
+            self,
+        )
+
     @api.model
     def localize_dt(self, dt, tz, reverse=False):
         """

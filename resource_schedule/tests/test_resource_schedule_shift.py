@@ -1135,3 +1135,36 @@ class TestResourceScheduleShift(common.SavepointCase):
         self.assertFalse(
             punches[0].check_out, "Wednesday's check-out time hasn't arrived yet"
         )
+
+    def test_datetimes(self):
+
+        # when writing directly to DB it is assumed the datetime is already in UTC
+        dtStart = datetime.combine(
+            date.today(), datetime.strptime("0530", "%H%M").time()
+        )
+        dtEnd = datetime.combine(date.today(), datetime.strptime("1330", "%H%M").time())
+        self.employee.resource_id.tz = "Africa/Addis_Ababa"
+        shift = self.ScheduleShift.create(
+            {
+                "resource_id": self.employee.resource_id.id,
+                "calendar_id": self.default_calendar.id,
+                "datetime_start": dtStart,
+                "datetime_end": dtEnd,
+            }
+        )
+
+        self.assertEqual(
+            shift.tz,
+            "Africa/Addis_Ababa",
+            "The shift has the correct timezone",
+        )
+        self.assertEqual(
+            shift.datetimes_naive_utc(),
+            [(dtStart, dtEnd, shift)],
+            "The start and end shift times are identical to those supplied",
+        )
+        self.assertEqual(
+            shift.datetimes_naive_tz(),
+            [(dtStart + timedelta(hours=3), dtEnd + timedelta(hours=3), shift)],
+            "The start and end shift times have been converted to the timezone",
+        )
