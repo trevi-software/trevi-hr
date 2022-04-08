@@ -109,3 +109,60 @@ class TestPolicyCommon(common.SavepointCase):
         else:
             res = utc.localize(dt, is_dst=False).astimezone(local_tz)
         return res
+
+    def setup_pg(self, line_ids, tz="UTC"):
+
+        p = self.Policy.create(
+            {
+                "name": "P1",
+                "date": date.today(),
+                "tz": tz,
+                "line_ids": line_ids,
+            }
+        )
+        pg = self.PolicyGroup.create(
+            {
+                "name": "PGroup",
+                "rounding_policy_ids": [(6, 0, [p.id])],
+            }
+        )
+        self.test_contract.policy_group_id = pg
+
+        self.assertGreater(
+            len(self.test_employee.resource_id.scheduled_shift_ids),
+            0,
+            "Shifts have been created on contract creation",
+        )
+
+        return (p, pg)
+
+    def set_in_times(self, strClock, strCheck):
+        clock_in = self.localize_dt(
+            self.make_datetime(date.today(), strClock),
+            self.test_employee.resource_id.tz,
+            reverse=True,
+        )
+        check_in = self.localize_dt(
+            self.make_datetime(date.today(), strCheck),
+            self.test_employee.resource_id.tz,
+            reverse=True,
+        )
+        return (clock_in, check_in)
+
+    def set_out_times(self, strIn, strClock, strCheck):
+        check_in = self.localize_dt(
+            self.make_datetime(date.today(), strIn),
+            self.test_employee.resource_id.tz,
+            reverse=True,
+        )
+        clock_out = self.localize_dt(
+            self.make_datetime(date.today(), strClock),
+            self.test_employee.resource_id.tz,
+            reverse=True,
+        )
+        check_out = self.localize_dt(
+            self.make_datetime(date.today(), strCheck),
+            self.test_employee.resource_id.tz,
+            reverse=True,
+        )
+        return (check_in, clock_out, check_out)
