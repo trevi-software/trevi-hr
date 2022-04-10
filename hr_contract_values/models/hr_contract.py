@@ -45,6 +45,7 @@ class ContractInit(models.Model):
         default=lambda self: self.env.company,
         groups="base.group_multi_company",
     )
+    contract_type = fields.Many2one("hr.payroll.structure.type")
 
     def lock(self):
         for record in self:
@@ -139,9 +140,19 @@ class HrContract(models.Model):
             res = dEnd.strftime(OE_DFORMAT)
         return res
 
+    @api.model
+    def _get_structure_type(self):
+
+        res = False
+        init = self.get_latest_initial_values()
+        if init is not None and init.contract_type:
+            res = init.contract_type
+        return res
+
     wage = fields.Monetary(default=_get_wage)
     trial_date_start = fields.Date(default=_get_trial_date_start)
     trial_date_end = fields.Date(default=_get_trial_date_end)
+    structure_type_id = fields.Many2one(default=_get_structure_type)
 
     @api.model
     def create(self, vals):
