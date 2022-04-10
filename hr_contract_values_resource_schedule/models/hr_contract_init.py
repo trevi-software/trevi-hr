@@ -12,6 +12,5 @@ class ContractInit(models.Model):
     resource_calendar_id = fields.Many2one(
         "resource.calendar",
         "Working Hours",
-        readonly=True,
         states={"draft": [("readonly", False)]},
     )
