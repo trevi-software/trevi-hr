@@ -24,13 +24,13 @@
                     <header>
                         <button
                             name="lock"
-                            icon="fa fa-lock"
+                            class="fa fa-lock"
                             type="object"
                             string="Lock"
                         />
                         <button
                             name="unlock"
-                            icon="fa fa-unlock"
+                            class="fa fa-unlock"
                             type="object"
                             string="Unlock"
                         />
