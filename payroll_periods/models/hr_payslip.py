@@ -123,7 +123,7 @@ class HrPayslip(models.Model):
 
         for payslip in self:
 
-            baselocaldict = self._get_baselocaldict_hook()
+            baselocaldict = payslip._get_baselocaldict_hook()
             employee = payslip.employee_id
             contract = employee.contract_id
             localdict = dict(baselocaldict, employee=employee, contract=contract)
@@ -136,6 +136,6 @@ class HrPayslip(models.Model):
                         "slip_id": payslip.id,
                         "rule_id": rule.id,
                     }
-                    self.env["hr.payslip.exception"].create(val)
+                    payslip.env["hr.payslip.exception"].create(val)
 
         return res
