@@ -22,5 +22,8 @@
         "security/ir_rule.xml",
         "views/hr_contract_view.xml",
     ],
+    "demo": [
+        "data/hr_contract_values_demo.xml",
+    ],
     "installable": True,
 }
