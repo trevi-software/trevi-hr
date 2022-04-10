@@ -20,5 +20,8 @@
         "security/ir.model.access.csv",
         "views/hr_policy_group_view.xml",
     ],
+    "demo": [
+        "data/hr_payroll_policy_demo.xml",
+    ],
     "installable": True,
 }

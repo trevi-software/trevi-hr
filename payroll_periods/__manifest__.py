@@ -29,5 +29,8 @@
         "views/hr_payslip_exception_view.xml",
         "views/hr_payslip_view.xml",
     ],
+    "demo": [
+        "data/hr_payroll_period_demo.xml",
+    ],
     "installable": True,
 }
