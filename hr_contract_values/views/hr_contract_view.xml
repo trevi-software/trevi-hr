@@ -10,6 +10,7 @@
                     <field name="name" />
                     <field name="date" />
                     <field name="trial_period" />
+                    <field name="contract_type" />
                     <field name="locked" />
                     <field name="company_id" groups="base.group_multi_company" />
                 </tree>
@@ -49,6 +50,7 @@
                             />
                         </group>
                         <group name="grp2">
+                            <field name="contract_type" />
                         </group>
                     </group>
                     <group string="Initial Wages">
