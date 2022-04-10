@@ -21,6 +21,7 @@ class TestSchedule(common.SavepointCase):
         cls.Exception = cls.env["hr.payslip.exception"]
         cls.exRuleCrit = cls.env.ref("payroll_periods.payslip_exception_third")
         cls.eeJohn = cls.env["hr.employee"].create({"name": "EE John"})
+        cls.eeSally = cls.env["hr.employee"].create({"name": "EE Sally"})
         # Payroll Manager user
         cls.userPM = new_test_user(
             cls.env,
@@ -335,3 +336,34 @@ class TestSchedule(common.SavepointCase):
 
         self.assertEqual(1, slip.get_salary_line_total("NET"))
         self.assertNotEqual(id_old, slip.id)
+
+    def test_run_multiple_payslips(self):
+        """Running more than one payslip at a time"""
+
+        start = datetime(2021, 1, 1)
+        end = datetime(2021, 1, 31, 23, 59, 59)
+        pps = self.create_payroll_schedule("manual", start.date())
+        cc = self.create_contract(
+            self.eeJohn.id, "draft", "done", start.date(), pps_id=pps.id
+        )
+        cc.signal_confirm()
+        cc2 = self.create_contract(
+            self.eeSally.id, "draft", "done", start.date(), pps_id=pps.id
+        )
+        cc2.signal_confirm()
+        pp = self.create_payroll_period(pps.id, start, end)
+        run = self.Run.create(
+            {
+                "name": "Run A",
+                "date_start": start.date(),
+                "date_end": end.date(),
+                "period_id": pp.id,
+            }
+        )
+        slip = pp.create_payslip(self.eeJohn.id, run_id=run.id)
+        slip2 = pp.create_payslip(self.eeSally.id, run_id=run.id)
+        slips = slip + slip2
+        slips.compute_sheet()
+
+        self.assertEqual(1, slip.get_salary_line_total("NET"))
+        self.assertEqual(1, slip2.get_salary_line_total("NET"))
