@@ -18,5 +18,8 @@
     "data": [
         "views/hr_contract_init_views.xml",
     ],
+    "demo": [
+        "data/hr_contract_values_demo.xml",
+    ],
     "installable": True,
 }
