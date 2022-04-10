@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="initwage_2000" model="hr.contract.init.wage">
+            <field name="starting_wage">2000</field>
+            <field name="job_id" ref="hr.job_trainee" />
+            <field name="is_default" eval="True" />
+        </record>
+
+        <record id="initwage_5000" model="hr.contract.init.wage">
+            <field name="starting_wage">5000</field>
+            <field name="job_id" ref="hr.job_developer" />
+        </record>
+
+        <record id="default_europe" model="hr.contract.init">
+            <field name="name">Default Contract values for Europe</field>
+            <field name="date" eval="datetime.now().strftime('%Y-1-1')" />
+            <field name="trial_period">90</field>
+            <field name="contract_type" ref="hr_contract.structure_type_employee" />
+            <field
+                name="wage_ids"
+                eval="[(6, 0, [ref('initwage_2000'), ref('initwage_5000')])]"
+            />
+        </record>
+
+    </data>
+</odoo>
