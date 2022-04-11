@@ -117,31 +117,31 @@ class TestGroupPayrollManager(common.SavepointCase):
         with self.assertRaises(AccessError):
             contract.with_user(self.userPM.id).unlink()
 
-    def test_hr_job_read(self):
-        """Has read access to hr.job"""
+    # def test_hr_job_read(self):
+    #     """Has read access to hr.job"""
 
-        job = self.HrJob.create({"name": "Job1"})
-        try:
-            job.with_user(self.userPM.id).read([])
-        except AccessError:
-            self.fail("raised an AccessError Exception")
+    #     job = self.HrJob.create({"name": "Job1"})
+    #     try:
+    #         job.with_user(self.userPM.id).read([])
+    #     except AccessError:
+    #         self.fail("raised an AccessError Exception")
 
-    def test_hr_job_write_fails(self):
-        """Write access fails"""
+    # def test_hr_job_write_fails(self):
+    #     """Write access fails"""
 
-        job = self.HrEmployee.create({"name": "Job1"})
-        with self.assertRaises(AccessError):
-            job.with_user(self.userPM.id).name = "JOb2"
+    #     job = self.HrEmployee.create({"name": "Job1"})
+    #     with self.assertRaises(AccessError):
+    #         job.with_user(self.userPM.id).name = "JOb2"
 
-    def test_hr_job_create_fails(self):
-        """Create access fails"""
+    # def test_hr_job_create_fails(self):
+    #     """Create access fails"""
 
-        with self.assertRaises(AccessError):
-            self.HrJob.with_user(self.userPM.id).create({"name": "Job1"})
+    #     with self.assertRaises(AccessError):
+    #         self.HrJob.with_user(self.userPM.id).create({"name": "Job1"})
 
-    def test_hr_job_unlink_fails(self):
-        """Unlink access fails"""
+    # def test_hr_job_unlink_fails(self):
+    #     """Unlink access fails"""
 
-        job = self.HrJob.create({"name": "Job1"})
-        with self.assertRaises(AccessError):
-            job.with_user(self.userPM.id).unlink()
+    #     job = self.HrJob.create({"name": "Job1"})
+    #     with self.assertRaises(AccessError):
+    #         job.with_user(self.userPM.id).unlink()

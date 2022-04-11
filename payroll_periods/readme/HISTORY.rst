@@ -1,3 +1,7 @@
+14.0.1.1.3 (2022-04-10)
+~~~~~~~~~~~~~~~~~~~~~~~
+* [FIX] Fixed a bug that prevented multiple payslips being computed at once
+
 14.0.1.1.2 (2022-01-12)
 ~~~~~~~~~~~~~~~~~~~~~~~
 * [ADD] Allow users to view their own (and subordinates) payslips

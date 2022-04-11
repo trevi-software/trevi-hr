@@ -19,5 +19,8 @@
         "security/ir.model.access.csv",
         "views/hr_contract_init_view.xml",
     ],
+    "demo": [
+        "data/hr_contract_values_demo.xml",
+    ],
     "installable": True,
 }

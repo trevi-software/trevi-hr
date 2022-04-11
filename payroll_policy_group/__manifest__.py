@@ -5,7 +5,7 @@
 {
     "name": "Payroll Policy Groups",
     "summary": "Group payroll policies and assign them to contracts",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.0.1",
     "category": "Payroll",
     "author": "TREVI Software, Michael Telahun Makonnen",
     "license": "AGPL-3",
@@ -19,6 +19,9 @@
     "data": [
         "security/ir.model.access.csv",
         "views/hr_policy_group_view.xml",
+    ],
+    "demo": [
+        "data/hr_payroll_policy_demo.xml",
     ],
     "installable": True,
 }

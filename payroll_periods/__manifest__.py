@@ -5,7 +5,7 @@
 {
     "name": "Payroll Period",
     "summary": "Configurable payroll schedules.",
-    "version": "14.0.1.1.2",
+    "version": "14.0.1.1.3",
     "category": "Payroll",
     "images": ["static/src/img/main_screenshot.png"],
     "author": "TREVI Software, Michael Telahun Makonnen",
@@ -28,6 +28,9 @@
         "views/hr_payslip_exception_rule_view.xml",
         "views/hr_payslip_exception_view.xml",
         "views/hr_payslip_view.xml",
+    ],
+    "demo": [
+        "data/hr_payroll_period_demo.xml",
     ],
     "installable": True,
 }

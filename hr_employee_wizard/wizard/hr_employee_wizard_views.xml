@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="new_labour_form" model="ir.ui.view">
+            <field name="name">hr.employee.wizard.new.form</field>
+            <field name="model">hr.employee.wizard.new</field>
+            <field name="arch" type="xml">
+                <form string="New Employee Recruitment">
+                    <header>
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <newline />
+                    <group>
+                        <group>
+                            <h2>
+                                <field name="company_id" nolabel="1" />
+                            </h2>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Personal Info" states="personal,review">
+                            <group>
+                                <group name="personal_1">
+                                    <field name="gender" />
+                                    <field name="birth_date" />
+                                    <field name="education" />
+                                    <field name="id_no" />
+                                    <field name="mobile" />
+                                    <field name="telephone" />
+                                </group>
+                                <group name="personal_2">
+                                    <field name="street" />
+                                    <field name="city" />
+                                    <field name="state_id" />
+                                    <field name="country_id" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Contract" states="contract,review">
+                            <group>
+                                <group string="Job">
+                                    <field
+                                        name="job_id"
+                                        domain="[('company_id','=',company_id)]"
+                                        attrs="{'required': [('state', '!=', 'personal')]}"
+                                    />
+                                    <field
+                                        name="wage"
+                                        attrs="{'required': [('state', '!=', 'personal')]}"
+                                    />
+                                    <field
+                                        name="struct_id"
+                                        attrs="{'required': [('state', '!=', 'personal')]}"
+                                    />
+                                </group>
+                                <group string="Extra">
+                                    <field
+                                        name="department_id"
+                                        domain="[('company_id','=',company_id)]"
+                                    />
+                                    <field
+                                        name="pps_id"
+                                        attrs="{'required': [('state', '!=', 'personal')]}"
+                                    />
+                                    <field
+                                        name="policy_group_id"
+                                        attrs="{'required': [('state', '!=', 'personal')]}"
+                                    />
+                                    <field
+                                        name="calendar_id"
+                                        attrs="{'required': [('state', '!=', 'personal')]}"
+                                    />
+                                </group>
+                            </group>
+                            <group>
+                                <group>
+                                    <label
+                                        for="date_start"
+                                        string="Contract Duration"
+                                    />
+                                    <div>
+                                        <field
+                                            name="date_start"
+                                            class="oe_inline"
+                                            attrs="{'required': [('state', '!=', 'personal')]}"
+                                        /> - <field name="date_end" class="oe_inline" />
+                                    </div>
+                                    <label
+                                        for="trial_date_start"
+                                        string="Trial Period"
+                                    />
+                                    <div>
+                                        <field
+                                            name="trial_date_start"
+                                            class="oe_inline"
+                                        /> - <field
+                                            name="trial_date_end"
+                                            class="oe_inline"
+                                        />
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Benefits" states="benefits,review">
+                            <group string="Additional Benefits">
+                                <field
+                                    name="new_benefit_ids"
+                                    nolabel="1"
+                                    context="{'csdate': date_start}"
+                                >
+                                    <tree string="Additional Benefits">
+                                        <field name="benefit_id" />
+                                        <field name="effective_date" />
+                                        <field name="adv_override" />
+                                        <field name="adv_amount" />
+                                        <field name="prm_override" />
+                                        <field name="prm_amount" />
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button
+                            name="state_contract"
+                            type="object"
+                            states="personal"
+                            class="oe_highlight"
+                            string="Next"
+                        />
+                        <button
+                            name="state_benefits"
+                            type="object"
+                            states="contract"
+                            class="oe_highlight"
+                            string="Next"
+                        />
+                        <button
+                            name="state_review"
+                            type="object"
+                            states="benefits"
+                            class="oe_highlight"
+                            string="Review"
+                        />
+                        <button
+                            name="create_applicant"
+                            type="object"
+                            states="review"
+                            class="oe_highlight"
+                            string="Start Recruitment"
+                        />
+                        <button
+                            name="hire_applicant"
+                            type="object"
+                            states="review"
+                            class="oe_highlight"
+                            string="Hire"
+                        />
+                        <button
+                            name="cancel_wizard"
+                            type="object"
+                            states="personal,contract,benefits,review"
+                            string="View New Hires"
+                        />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_new_labour" model="ir.actions.act_window">
+            <field name="name">New Recruitment</field>
+            <field name="res_model">hr.employee.wizard.new</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="new_labour_form" />
+            <field name="target">new</field>
+        </record>
+
+        <record id="view_benefit" model="ir.ui.view">
+            <field name="name">hr.employee.wizard.benefit.form</field>
+            <field name="model">hr.employee.wizard.benefit</field>
+            <field name="arch" type="xml">
+                <form string="New Hire Benefit">
+                    <group>
+                        <group>
+                            <field name="benefit_id" />
+                            <field name="adv_override" />
+                            <field name="prm_override" />
+                        </group>
+                        <group>
+                            <label for="effective_date" string="Duration" />
+                            <div>
+                                <field
+                                    name="effective_date"
+                                    class="oe_inline"
+                                /> - <field name="end_date" class="oe_inline" />
+                            </div>
+                            <field
+                                name="adv_amount"
+                                attrs="{'readonly': [('adv_override', '=', False)]}"
+                            />
+                            <field
+                                name="prm_amount"
+                                attrs="{'readonly': [('prm_override', '=', False)]}"
+                            />
+                            <field
+                                name="prm_total"
+                                attrs="{'readonly': [('prm_override', '=', False)]}"
+                            />
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

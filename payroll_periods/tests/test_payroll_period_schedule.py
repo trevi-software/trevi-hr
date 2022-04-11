@@ -103,10 +103,10 @@ class TestSchedule(common.SavepointCase):
         )
 
         # Create schedule and run cron to create the first periods
-        self.create_payroll_schedule("monthly", today)
+        pps = self.create_payroll_schedule("monthly", today)
         self.apply_create_cron()
 
-        listPP = self.Period.search([])
+        listPP = self.Period.search([]).filtered(lambda p: p.schedule_id == pps)
         self.assertEqual(3, len(listPP))
 
         self.assertEqual(mo1, listPP[0].date_start)
