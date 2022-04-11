@@ -1,0 +1,240 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_contract_values
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_contract_values
+#: code:addons/hr_contract_values/models/hr_contract_wage.py:0
+#: model:ir.model.constraint,message:hr_contract_values.constraint_hr_contract_init_wage_unique_job_cinit
+#, python-format
+msgid ""
+"A Job Position cannot be referenced more than once ina Contract Settings "
+"record."
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__active
+msgid "Active"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__company_id
+msgid "Company"
+msgstr ""
+
+#. module: hr_contract_values
+#: model_terms:ir.ui.view,arch_db:hr_contract_values.view_contract_init_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_values.view_contract_init_tree
+msgid "Contract Initial Values"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__contract_init_id
+msgid "Contract Settings"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.actions.act_window,name:hr_contract_values.open_contract_init
+#: model:ir.ui.menu,name:hr_contract_values.menu_hr_contract_init
+msgid "Contract Starting Values"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__contract_type
+msgid "Contract Type"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__create_uid
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__create_date
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__display_name
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__date
+msgid "Effective Date"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model,name:hr_contract_values.model_hr_contract
+msgid "Employee Contract"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,help:hr_contract_values.field_hr_contract__wage
+msgid "Employee's monthly gross wage."
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,help:hr_contract_values.field_hr_contract__trial_date_end
+msgid "End date of the trial period (if there is one)."
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract__trial_date_end
+msgid "End of Trial Period"
+msgstr ""
+
+#. module: hr_contract_values
+#: code:addons/hr_contract_values/models/hr_contract_wage.py:0
+#, python-format
+msgid "ErrorYou may not a delete a record that is not in a \"Draft\" state"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract__id
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__id
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__id
+msgid "ID"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model,name:hr_contract_values.model_hr_contract_init
+msgid "Initial Contract Settings"
+msgstr ""
+
+#. module: hr_contract_values
+#: model_terms:ir.ui.view,arch_db:hr_contract_values.view_contract_init_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_values.view_init_wage_tree
+msgid "Initial Wages"
+msgstr ""
+
+#. module: hr_contract_values
+#: model_terms:ir.ui.view,arch_db:hr_contract_values.view_init_wage_form
+msgid "Intial Wages"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__job_id
+msgid "Job"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract____last_update
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init____last_update
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__write_uid
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__write_date
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,help:hr_contract_values.field_hr_contract_init__trial_period
+msgid "Length of Trial Period, in days"
+msgstr ""
+
+#. module: hr_contract_values
+#: model_terms:ir.ui.view,arch_db:hr_contract_values.view_contract_init_form
+msgid "Lock"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__locked
+msgid "Locked"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__name
+msgid "Name"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract__structure_type_id
+msgid "Salary Structure Type"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__starting_wage
+msgid "Starting Wage"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model,name:hr_contract_values.model_hr_contract_init_wage
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__wage_ids
+msgid "Starting Wages"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__category_ids
+msgid "Tags"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract__trial_date_start
+msgid "Trial Date Start"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__trial_period
+msgid "Trial Period"
+msgstr ""
+
+#. module: hr_contract_values
+#: model_terms:ir.ui.view,arch_db:hr_contract_values.view_contract_init_form
+msgid "Unlock"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__is_default
+msgid "Use as Default"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,help:hr_contract_values.field_hr_contract_init_wage__is_default
+msgid "Use as default wage"
+msgstr ""
+
+#. module: hr_contract_values
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract__wage
+msgid "Wage"
+msgstr ""
+
+#. module: hr_contract_values
+#: code:addons/hr_contract_values/models/hr_contract.py:0
+#, python-format
+msgid "You may not delete a record that is locked. You must unlock it first."
+msgstr ""
+
+#. module: hr_contract_values
+#: code:addons/hr_contract_values/models/hr_contract.py:0
+#, python-format
+msgid "You may not update a record that is locked. You must unlock it first."
+msgstr ""
