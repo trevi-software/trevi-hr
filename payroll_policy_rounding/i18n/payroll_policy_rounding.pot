@@ -1,0 +1,227 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payroll_policy_rounding
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payroll_policy_rounding
+#: model:ir.model,name:payroll_policy_rounding.model_hr_attendance
+msgid "Attendance"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model_terms:ir.ui.view,arch_db:payroll_policy_rounding.rounding_policy_view_tree
+msgid "Attendance Rounding Policies"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model,name:payroll_policy_rounding.model_hr_policy_rounding
+#: model_terms:ir.ui.view,arch_db:payroll_policy_rounding.rounding_policy_view_form
+msgid "Attendance Rounding Policy"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model,name:payroll_policy_rounding.model_hr_policy_line_rounding
+msgid "Attendance Rounding Policy Line"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_line_rounding__attendance_type
+msgid "Attendance Type"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: code:addons/payroll_policy_rounding/models/hr_policy_rounding.py:0
+#: model:ir.model.constraint,message:payroll_policy_rounding.constraint_hr_policy_line_rounding_uniq_id_att_type
+#, python-format
+msgid "Attendance types must be unique per rounding policy line"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields.selection,name:payroll_policy_rounding.selection__hr_policy_line_rounding__round_type__avg
+msgid "Average"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: code:addons/payroll_policy_rounding/models/hr_employee.py:0
+#, python-format
+msgid ""
+"Cannot perform check out on %(empl_name)s, could not find corresponding "
+"check in. Your attendances have probably been modified manually by human "
+"resources."
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_attendance__clock_in
+#: model_terms:ir.ui.view,arch_db:payroll_policy_rounding.view_attendance_filter
+msgid "Clock In"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_attendance__clock_out
+#: model_terms:ir.ui.view,arch_db:payroll_policy_rounding.view_attendance_filter
+msgid "Clock Out"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_line_rounding__create_uid
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_rounding__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_line_rounding__create_date
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_rounding__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_attendance__display_name
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_group__display_name
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_line_rounding__display_name
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_rounding__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields.selection,name:payroll_policy_rounding.selection__hr_policy_line_rounding__round_type__down
+msgid "Down"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_rounding__date
+msgid "Effective Date"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model,name:payroll_policy_rounding.model_hr_employee
+msgid "Employee"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_line_rounding__grace
+msgid "Grace Period"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model,name:payroll_policy_rounding.model_hr_policy_group
+msgid "HR Policy Group"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_attendance__id
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_employee__id
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_group__id
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_line_rounding__id
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_rounding__id
+msgid "ID"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_attendance____last_update
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_employee____last_update
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_group____last_update
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_line_rounding____last_update
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_rounding____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_line_rounding__write_uid
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_rounding__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_line_rounding__write_date
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_rounding__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_rounding__name
+#: model_terms:ir.ui.view,arch_db:payroll_policy_rounding.rounding_policy_view_form
+msgid "Name"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_line_rounding__policy_id
+msgid "Policy"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_rounding__line_ids
+msgid "Policy Lines"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_line_rounding__preauth_ot
+msgid "Pre-authorized OT"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_line_rounding__round_interval
+msgid "Round Interval"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_line_rounding__round_type
+msgid "Round Type"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model_terms:ir.ui.view,arch_db:payroll_policy_rounding.rounding_policy_view_form
+msgid "Rounding Lines"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.actions.act_window,name:payroll_policy_rounding.open_rounding_policy
+#: model:ir.ui.menu,name:payroll_policy_rounding.menu_hr_rounding_policy
+msgid "Rounding Policies"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_group__rounding_policy_ids
+msgid "Rounding Policy"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model_terms:ir.ui.view,arch_db:payroll_policy_rounding.rounding_policy_line_form_view
+msgid "Rounding Policy Line"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.actions.act_window,name:payroll_policy_rounding.open_rounding_policy_line
+#: model_terms:ir.ui.view,arch_db:payroll_policy_rounding.rounding_policy_line_tree_view
+msgid "Rounding Policy Lines"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields.selection,name:payroll_policy_rounding.selection__hr_policy_line_rounding__attendance_type__in
+msgid "Sign-in"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields.selection,name:payroll_policy_rounding.selection__hr_policy_line_rounding__attendance_type__out
+msgid "Sign-out"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields,field_description:payroll_policy_rounding.field_hr_policy_rounding__tz
+msgid "Time Zone"
+msgstr ""
+
+#. module: payroll_policy_rounding
+#: model:ir.model.fields.selection,name:payroll_policy_rounding.selection__hr_policy_line_rounding__round_type__up
+msgid "Up"
+msgstr ""
