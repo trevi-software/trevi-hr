@@ -27,12 +27,15 @@ addon | version | summary
 [hr_benefit](hr_benefit/) | 14.0.1.0.1 | Assign benefits and deductables to employees
 [hr_benefit_payroll](hr_benefit_payroll/) | 14.0.1.0.0 | Access benefits in payroll through salary rules.
 [hr_contract_status](hr_contract_status/) | 14.0.1.0.1 | Workflows and notifications on employee contracts.
+[hr_contract_status_benefit](hr_contract_status_benefit/) | 14.0.1.0.0 | Link hr_contract_status with hr_benefit
 [hr_contract_values](hr_contract_values/) | 14.0.1.0.0 | Contracts - Initial Settings
 [hr_contract_values_payroll](hr_contract_values_payroll/) | 14.0.1.1.0 | Contract Payroll Structure Initial Settings
 [hr_contract_values_resource_schedule](hr_contract_values_resource_schedule/) | 14.0.1.0.0 | Set working hours in default contract values.
 [hr_employee_seniority_months](hr_employee_seniority_months/) | 14.0.1.0.0 | Calculate an employee's months of employment
 [hr_employee_status](hr_employee_status/) | 14.0.1.0.2 | Track the HR status of employees
+[hr_employee_status_benefit](hr_employee_status_benefit/) | 14.0.1.0.0 | Link between hr_employee_status and hr_benefit
 [hr_employee_status_payroll](hr_employee_status_payroll/) | 14.0.1.0.0 | Adds access records to employee separation records
+[hr_employee_wizard](hr_employee_wizard/) | 14.0.1.0.0 | Streamline the creation of a new employee record
 [hr_job_change_state](hr_job_change_state/) | 14.0.1.0.0 | Change State of Jobs
 [hr_job_transfer](hr_job_transfer/) | 14.0.1.0.0 | Departmental Transfer
 [hr_jobs_hierarchy](hr_jobs_hierarchy/) | 14.0.1.0.0 | Job Hierarchy
@@ -46,10 +49,10 @@ addon | version | summary
 [payroll_period_contract_values](payroll_period_contract_values/) | 14.0.1.0.0 | Links payroll period schedules with employee contracts.
 [payroll_period_payslip_amendment](payroll_period_payslip_amendment/) | 14.0.1.0.0 | Link payslip amendments with a payroll period.
 [payroll_period_processing](payroll_period_processing/) | 14.0.1.0.0 | Payroll period processing wizard
-[payroll_periods](payroll_periods/) | 14.0.1.1.2 | Configurable payroll schedules.
+[payroll_periods](payroll_periods/) | 14.0.1.1.3 | Configurable payroll schedules.
 [payroll_policy_absence](payroll_policy_absence/) | 14.0.1.0.0 | Define properties of an employee absense policy for payroll.
 [payroll_policy_accrual](payroll_policy_accrual/) | 14.0.1.0.0 | Automatically or manually accrue to time banks to be withdrawn later
-[payroll_policy_group](payroll_policy_group/) | 14.0.1.0.0 | Group payroll policies and assign them to contracts
+[payroll_policy_group](payroll_policy_group/) | 14.0.1.0.1 | Group payroll policies and assign them to contracts
 [payroll_policy_ot](payroll_policy_ot/) | 14.0.1.0.0 | Assign over-time policies to a policy group
 [payroll_policy_presence](payroll_policy_presence/) | 14.0.1.0.0 | Define properties of an employee presence policy
 [payroll_policy_rounding](payroll_policy_rounding/) | 14.0.1.0.0 | Define attendance check-in and check-out rounding policies
