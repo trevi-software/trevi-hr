@@ -43,6 +43,8 @@ class TestContractInit(common.SavepointCase):
     def test_load_latest_values(self):
         """Initial values are loaded from the latest values"""
 
+        countInits = self.HrContractInit.search_count([])
+
         # Create two init values
         self.HrContractInit.create(
             {
@@ -68,7 +70,7 @@ class TestContractInit(common.SavepointCase):
         )
         delta = (contract.trial_date_end - contract.trial_date_start).days
         cInits = self.HrContractInit.search([])
-        self.assertEqual(2, len(cInits))
+        self.assertEqual(countInits + 2, len(cInits))
         self.assertEqual(delta, rightInit.trial_period)
 
     def test_delete_locked(self):

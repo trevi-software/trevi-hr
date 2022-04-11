@@ -23,6 +23,7 @@ class TestContractInit(common.SavepointCase):
 
         psA = self.HrPayrollStruct.create({"name": "S A", "code": "A"})
         psB = self.HrPayrollStruct.create({"name": "S B", "code": "B"})
+        countInits = self.HrContractInit.search_count([])
 
         # Create two init values
         self.HrContractInit.create(
@@ -50,5 +51,5 @@ class TestContractInit(common.SavepointCase):
             }
         )
         cInits = self.HrContractInit.search([])
-        self.assertEqual(2, len(cInits))
+        self.assertEqual(countInits + 2, len(cInits))
         self.assertEqual(psB.id, contract.struct_id.id)

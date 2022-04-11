@@ -904,3 +904,32 @@ class TestHrAttendance(common.TestPolicyCommon):
         self.assertEqual(
             att.clock_out, clock_out, "The clock-out time contains the original time"
         )
+
+    def test_create_no_shifts(self):
+
+        line_ids = [
+            (
+                0,
+                0,
+                {"attendance_type": "in", "round_type": "down", "round_interval": 5},
+            ),
+        ]
+        self.setup_pg(line_ids)
+        self.test_employee.resource_id.scheduled_shift_ids.unlink()
+
+        # Punch in
+        clock_in, _check_in = self.set_in_times("13:33", "13:30")
+        att = self.HrAttendance.create(
+            {
+                "employee_id": self.test_employee.id,
+                "clock_in": clock_in,
+            }
+        )
+        self.assertEqual(
+            att.check_in,
+            clock_in,
+            "The check-in is the clock-in time",
+        )
+        self.assertEqual(
+            att.clock_in, clock_in, "The clock-in time contains the original time"
+        )

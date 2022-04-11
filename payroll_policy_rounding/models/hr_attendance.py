@@ -83,6 +83,7 @@ class HrAttendance(models.Model):
         if res.get("clock_in", False) and not res.get("check_in", False):
             rp = None
             dt = fields.Datetime.from_string(res["clock_in"])
+            res.update({"check_in": res["clock_in"]})
             contract = self.get_contract_by_date(employee_id, dt.date())
             if contract:
                 rp = PolicyRounding.get_latest_policy(
@@ -94,17 +95,16 @@ class HrAttendance(models.Model):
                         employee_id, "sign_in", dt, contract
                     )
                 )
-                if shift_record:
+                if shift_record and shift_record[2]:
                     res.update({"schedule_shift_id": shift_record[2].id})
                     new_time = rp.process_rounding_policy(dt, "sign_in", shift_record)
                     if new_time:
                         res.update({"check_in": new_time})
-            else:
-                res.update({"check_in": res["clock_in"]})
 
         if res.get("clock_out", False) and not res.get("check_out", False):
             rp = None
             dt = fields.Datetime.from_string(res["clock_out"])
+            res.update({"check_out": res["clock_out"]})
             contract = self.get_contract_by_date(employee_id, dt.date())
             if contract:
                 rp = PolicyRounding.get_latest_policy(
@@ -114,14 +114,11 @@ class HrAttendance(models.Model):
                 shift_record = self._get_schedule_by_approximation(
                     employee_id, "sign_out", dt, contract
                 )
-                res.update({"schedule_shift_id": shift_record[2].id})
-                if shift_record:
+                if shift_record and shift_record[2]:
                     res.update({"schedule_shift_id": shift_record[2].id})
                     new_time = rp.process_rounding_policy(dt, "sign_out", shift_record)
                     if new_time:
                         res.update({"check_out": new_time})
-            else:
-                res.update({"check_out": res["clock_out"]})
 
         return res
 
