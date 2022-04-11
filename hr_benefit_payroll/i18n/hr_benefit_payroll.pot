@@ -1,0 +1,297 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_benefit_payroll
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_premium_payment__amount
+msgid "Amount"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_line__benefit_id
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_salary_rule__benefit_id
+msgid "Benefit"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model,name:hr_benefit_payroll.model_hr_benefit_policy
+msgid "Benefit Enrollment"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip__premium_payment_ids
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_hr_payslip_form
+msgid "Benefit Premium Payments"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model,name:hr_benefit_payroll.model_hr_benefit_premium_payment
+msgid "Benefit premium payment"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip__benefit_line_ids
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_hr_payslip_form
+msgid "Benefits"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_premium_payments_form
+msgid "Cancel"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields.selection,name:hr_benefit_payroll.selection__hr_benefit_premium_payment__state__cancel
+msgid "Cancelled"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit__code
+msgid "Code"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_premium_payment__create_uid
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_premium_payment__create_date
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_premium_payment__date
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_premium_payments_filter
+msgid "Date"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_premium_payments_form
+msgid "Decline"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit__deductions
+msgid "Deductions"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit__name
+msgid "Description"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit__display_name
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_policy__display_name
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_premium_payment__display_name
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip__display_name
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit__display_name
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_salary_rule__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields.selection,name:hr_benefit_payroll.selection__hr_benefit_premium_payment__state__done
+msgid "Done"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields.selection,name:hr_benefit_payroll.selection__hr_benefit_premium_payment__state__draft
+msgid "Draft"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit__earnings
+msgid "Earnings"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_premium_payment__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_premium_payments_filter
+msgid "Employee"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model,name:hr_benefit_payroll.model_hr_benefit
+msgid "Employee Benefit"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: code:addons/hr_benefit_payroll/models/hr_payslip.py:0
+#, python-format
+msgid ""
+"Error creating benefit premium payment records!Unable to find a valid benefit policy:\n"
+"Employee: %s\n"
+"Benefit: %s"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_premium_payments_filter
+msgid "Group By..."
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit__id
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_policy__id
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_premium_payment__id
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip__id
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit__id
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_salary_rule__id
+msgid "ID"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit____last_update
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_policy____last_update
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_premium_payment____last_update
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip____last_update
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit____last_update
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_salary_rule____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_premium_payment__write_uid
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_premium_payment__write_date
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit__link2payroll
+msgid "Link to Payroll"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_premium_payments_filter
+msgid "My Payments"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model,name:hr_benefit_payroll.model_hr_payslip
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit__payslip_id
+msgid "Pay Slip"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit__ppf
+msgid "Payroll Period Factor"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_premium_payment__payslip_id
+msgid "Payslip"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model,name:hr_benefit_payroll.model_hr_payslip_benefit
+msgid "Payslip Benefits"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields.selection,name:hr_benefit_payroll.selection__hr_benefit_premium_payment__state__pending
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_premium_payments_form
+msgid "Pending"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: code:addons/hr_benefit_payroll/models/benefit_premium_payment.py:0
+#, python-format
+msgid ""
+"Permission DeniedYou may not delete a premium payment that is past the \"draft\" stage.\n"
+"Policy: %s\n"
+"Payment Date: %s"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_premium_payment__policy_id
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_premium_payments_filter
+msgid "Policy"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_premium_payments_form
+msgid "Premium Payment"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.actions.act_window,name:hr_benefit_payroll.open_premium_payments_view
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_policy__premium_payment_ids
+#: model:ir.ui.menu,name:hr_benefit_payroll.menu_premium_payments
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_benefits_policy_form
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_premium_payments_tree
+msgid "Premium Payments"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_line__has_premium_payment
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_salary_rule__has_premium_payment
+msgid "Premium payment?"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_benefits_policy_form
+msgid "Premiums"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit__qty
+msgid "Quantity"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model,name:hr_benefit_payroll.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_premium_payments_filter
+msgid "Search All Payments"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_premium_payment__state
+msgid "State"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,help:hr_benefit_payroll.field_hr_payslip_benefit__code
+msgid "The code used in the salary rules"
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,help:hr_benefit_payroll.field_hr_payslip_benefit__qty
+msgid "The number of policies of this benefit that apply to this payslip."
+msgstr ""
+
+#. module: hr_benefit_payroll
+#: model:ir.model.fields,help:hr_benefit_payroll.field_hr_payslip_benefit__ppf
+msgid ""
+"The percentage of this benefit applied to the payslip. Directly related to "
+"the percentage of the contract that applies to the payslip."
+msgstr ""
