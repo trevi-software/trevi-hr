@@ -127,6 +127,10 @@ class RecruitmentTestCase(TransactionCase):
             ee.address_home_id.id,
             "The employee home address is correct",
         )
+        self.assertEqual(ee.gender, "male", "Gender field set according to wizard")
+        self.assertEqual(
+            ee.birthday, date(1990, 1, 1), "Gender field set according to wizard"
+        )
         self.assertEqual(ee.job_title, wizard.job_id.name, "The job title is correct")
 
         c = self.Contract.search([("employee_id", "=", ee.id)])
