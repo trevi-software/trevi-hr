@@ -26,6 +26,14 @@ This module keeps track of employee seniority by calculating the number of month
 .. contents::
    :local:
 
+Changelog
+=========
+
+14.0.1.0.1 (2022-04-12)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] A mistake in the code that prevented employee tree views from working was fixed
+
 Bug Tracker
 ===========
 
