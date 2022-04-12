@@ -55,7 +55,7 @@ class RecruitmentTestCase(TransactionCase):
             "country_id": self.country.id,
             "telephone": "123456789",
             "mobile": "09124578",
-            "education": "none",
+            "education": "graduate",
             "job_id": self.job.id,
             "department_id": self.department.id,
             "struct_id": self.structure.id,
@@ -126,6 +126,10 @@ class RecruitmentTestCase(TransactionCase):
             ee.applicant_id.partner_id.address_get(["contact"])["contact"],
             ee.address_home_id.id,
             "The employee home address is correct",
+        )
+        self.assertEqual(ee.gender, "male", "Gender field set according to wizard")
+        self.assertEqual(
+            ee.birthday, date(1990, 1, 1), "Gender field set according to wizard"
         )
         self.assertEqual(ee.job_title, wizard.job_id.name, "The job title is correct")
 
