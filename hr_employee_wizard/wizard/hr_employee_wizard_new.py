@@ -259,6 +259,23 @@ class NewLabour(models.TransientModel):
             "context": self.env.context,
         }
 
+    def _get_employee_values(self, context):
+
+        return {
+            "name": context["default_name"],
+            "job_id": context["default_job_id"],
+            "job_title": context["default_job_title"],
+            "address_home_id": context["default_address_home_id"],
+            "department_id": context["default_department_id"],
+            "address_id": context["default_address_id"],
+            "work_email": context["default_work_email"],
+            "work_phone": context["default_work_phone"],
+            "applicant_id": context["default_applicant_id"],
+            "gender": context["default_gender"],
+            "birthday": context["default_birthday"],
+            "certificate": context["default_education"],
+        }
+
     def hire_applicant(self):
 
         if not self.name or not self.birth_date or not self.gender:
@@ -283,17 +300,7 @@ class NewLabour(models.TransientModel):
 
         # Create employee
         dict_act_window = applicant.create_employee_from_applicant()
-        employee_values = {
-            "name": dict_act_window["context"]["default_name"],
-            "job_id": dict_act_window["context"]["default_job_id"],
-            "job_title": dict_act_window["context"]["default_job_title"],
-            "address_home_id": dict_act_window["context"]["default_address_home_id"],
-            "department_id": dict_act_window["context"]["default_department_id"],
-            "address_id": dict_act_window["context"]["default_address_id"],
-            "work_email": dict_act_window["context"]["default_work_email"],
-            "work_phone": dict_act_window["context"]["default_work_phone"],
-            "applicant_id": dict_act_window["context"]["default_applicant_id"],
-        }
+        employee_values = self._get_employee_values(dict_act_window["context"])
         ee = self.env["hr.employee"].create(employee_values)
 
         # Create contract
