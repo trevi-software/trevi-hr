@@ -15,14 +15,12 @@ class HrApplicant(models.Model):
     birth_date = fields.Date()
     education = fields.Selection(
         selection=[
-            ("none", "No Formal Education"),
-            ("primary", "Primary School"),
-            ("secondary", "Secondary School"),
-            ("diploma", "Diploma"),
-            ("degree1", "First Degree"),
-            ("masters", "Masters Degree"),
-            ("phd", "PhD"),
-        ]
+            ("graduate", "Graduate"),
+            ("bachelor", "Bachelor"),
+            ("master", "Master"),
+            ("doctor", "Doctor"),
+            ("other", "Other"),
+        ],
     )
 
     def create_employee_from_applicant(self):
@@ -31,10 +29,10 @@ class HrApplicant(models.Model):
 
         for applicant in self:
             vals = {
-                "gender": applicant.gender == "f" and "female" or "male",
-                "birthday": applicant.birth_date,
-                "education": applicant.education,
+                "default_gender": applicant.gender == "f" and "female" or "male",
+                "default_birthday": applicant.birth_date,
+                "default_education": applicant.education,
             }
-            applicant.emp_id.write(vals)
+            res["context"].update(vals)
 
         return res

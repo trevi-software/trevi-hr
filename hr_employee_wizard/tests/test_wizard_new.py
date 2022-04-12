@@ -55,7 +55,7 @@ class RecruitmentTestCase(TransactionCase):
             "country_id": self.country.id,
             "telephone": "123456789",
             "mobile": "09124578",
-            "education": "none",
+            "education": "graduate",
             "job_id": self.job.id,
             "department_id": self.department.id,
             "struct_id": self.structure.id,

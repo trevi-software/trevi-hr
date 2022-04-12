@@ -99,15 +99,13 @@ class NewLabour(models.TransientModel):
     mobile = fields.Char()
     education = fields.Selection(
         selection=[
-            ("none", "No Formal Education"),
-            ("primary", "Primary School"),
-            ("secondary", "Secondary School"),
-            ("diploma", "Diploma"),
-            ("degree1", "University Degree"),
-            ("masters", "Masters Degree"),
-            ("phd", "PhD"),
+            ("graduate", "Graduate"),
+            ("bachelor", "Bachelor"),
+            ("master", "Master"),
+            ("doctor", "Doctor"),
+            ("other", "Other"),
         ],
-        default="none",
+        default="other",
     )
 
     # Contract Details
