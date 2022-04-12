@@ -34,6 +34,12 @@ msgid "Applied Job"
 msgstr ""
 
 #. module: hr_employee_wizard
+#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_applicant__education__bachelor
+#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_employee_wizard_new__education__bachelor
+msgid "Bachelor"
+msgstr ""
+
+#. module: hr_employee_wizard
 #: model:ir.model.fields,help:hr_employee_wizard.field_hr_employee_wizard_new__wage
 msgid "Basic Salary of the employee"
 msgstr ""
@@ -99,16 +105,16 @@ msgid "Department"
 msgstr ""
 
 #. module: hr_employee_wizard
-#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_applicant__education__diploma
-#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_employee_wizard_new__education__diploma
-msgid "Diploma"
-msgstr ""
-
-#. module: hr_employee_wizard
 #: model:ir.model.fields,field_description:hr_employee_wizard.field_hr_applicant__display_name
 #: model:ir.model.fields,field_description:hr_employee_wizard.field_hr_employee_wizard_benefit__display_name
 #: model:ir.model.fields,field_description:hr_employee_wizard.field_hr_employee_wizard_new__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: hr_employee_wizard
+#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_applicant__education__doctor
+#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_employee_wizard_new__education__doctor
+msgid "Doctor"
 msgstr ""
 
 #. module: hr_employee_wizard
@@ -150,14 +156,15 @@ msgid "Female"
 msgstr ""
 
 #. module: hr_employee_wizard
-#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_applicant__education__degree1
-msgid "First Degree"
-msgstr ""
-
-#. module: hr_employee_wizard
 #: model:ir.model.fields,field_description:hr_employee_wizard.field_hr_applicant__gender
 #: model:ir.model.fields,field_description:hr_employee_wizard.field_hr_employee_wizard_new__gender
 msgid "Gender"
+msgstr ""
+
+#. module: hr_employee_wizard
+#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_applicant__education__graduate
+#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_employee_wizard_new__education__graduate
+msgid "Graduate"
 msgstr ""
 
 #. module: hr_employee_wizard
@@ -212,9 +219,9 @@ msgid ""
 msgstr ""
 
 #. module: hr_employee_wizard
-#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_applicant__education__masters
-#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_employee_wizard_new__education__masters
-msgid "Masters Degree"
+#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_applicant__education__master
+#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_employee_wizard_new__education__master
+msgid "Master"
 msgstr ""
 
 #. module: hr_employee_wizard
@@ -264,14 +271,14 @@ msgid "Next"
 msgstr ""
 
 #. module: hr_employee_wizard
-#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_applicant__education__none
-#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_employee_wizard_new__education__none
-msgid "No Formal Education"
+#: model:ir.model.fields,field_description:hr_employee_wizard.field_hr_employee_wizard_new__id_no
+msgid "Official ID"
 msgstr ""
 
 #. module: hr_employee_wizard
-#: model:ir.model.fields,field_description:hr_employee_wizard.field_hr_employee_wizard_new__id_no
-msgid "Official ID"
+#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_applicant__education__other
+#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_employee_wizard_new__education__other
+msgid "Other"
 msgstr ""
 
 #. module: hr_employee_wizard
@@ -300,12 +307,6 @@ msgid "Personal Info"
 msgstr ""
 
 #. module: hr_employee_wizard
-#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_applicant__education__phd
-#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_employee_wizard_new__education__phd
-msgid "PhD"
-msgstr ""
-
-#. module: hr_employee_wizard
 #: model:ir.model.fields,field_description:hr_employee_wizard.field_hr_employee_wizard_new__policy_group_id
 msgid "Policy Group"
 msgstr ""
@@ -321,12 +322,6 @@ msgid "Premium Total"
 msgstr ""
 
 #. module: hr_employee_wizard
-#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_applicant__education__primary
-#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_employee_wizard_new__education__primary
-msgid "Primary School"
-msgstr ""
-
-#. module: hr_employee_wizard
 #: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_employee_wizard_new__state__review
 #: model_terms:ir.ui.view,arch_db:hr_employee_wizard.new_labour_form
 msgid "Review"
@@ -335,12 +330,6 @@ msgstr ""
 #. module: hr_employee_wizard
 #: model:ir.model.fields,field_description:hr_employee_wizard.field_hr_employee_wizard_new__struct_id
 msgid "Salary Structure"
-msgstr ""
-
-#. module: hr_employee_wizard
-#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_applicant__education__secondary
-#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_employee_wizard_new__education__secondary
-msgid "Secondary School"
 msgstr ""
 
 #. module: hr_employee_wizard
@@ -386,11 +375,6 @@ msgstr ""
 #. module: hr_employee_wizard
 #: model:ir.model.fields,field_description:hr_employee_wizard.field_hr_employee_wizard_new__trial_date_start
 msgid "Trial Start Date"
-msgstr ""
-
-#. module: hr_employee_wizard
-#: model:ir.model.fields.selection,name:hr_employee_wizard.selection__hr_employee_wizard_new__education__degree1
-msgid "University Degree"
 msgstr ""
 
 #. module: hr_employee_wizard
