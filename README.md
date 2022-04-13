@@ -48,7 +48,7 @@ addon | version | summary
 [payroll_period_base_lock](payroll_period_base_lock/) | 14.0.1.0.0 | Adds a base lock field to a payroll period.
 [payroll_period_contract_values](payroll_period_contract_values/) | 14.0.1.0.0 | Links payroll period schedules with employee contracts.
 [payroll_period_payslip_amendment](payroll_period_payslip_amendment/) | 14.0.1.0.0 | Link payslip amendments with a payroll period.
-[payroll_period_processing](payroll_period_processing/) | 14.0.1.0.0 | Payroll period processing wizard
+[payroll_period_processing](payroll_period_processing/) | 14.0.1.2.0 | Payroll period processing wizard
 [payroll_periods](payroll_periods/) | 14.0.1.1.3 | Configurable payroll schedules.
 [payroll_policy_absence](payroll_policy_absence/) | 14.0.1.0.0 | Define properties of an employee absense policy for payroll.
 [payroll_policy_accrual](payroll_policy_accrual/) | 14.0.1.0.0 | Automatically or manually accrue to time banks to be withdrawn later
@@ -60,7 +60,6 @@ addon | version | summary
 [res_currency_denomination](res_currency_denomination/) | 14.0.1.0.0 | Currency Denominations
 [resource_schedule](resource_schedule/) | 14.0.1.0.0 | Easily create, manage, and track employee shift planning.
 [trevi_hr_job_categories](trevi_hr_job_categories/) | 14.0.1.0.0 | Job Categories
-[trevi_hr_public_holidays](trevi_hr_public_holidays/) | 14.0.1.0.0 | Public Holidays
 [trevi_hr_usability](trevi_hr_usability/) | 14.0.1.0.0 | Simplify Employee Records.
 
 [//]: # (end addons)
