@@ -31,7 +31,7 @@ addon | version | summary
 [hr_contract_values](hr_contract_values/) | 14.0.1.0.0 | Contracts - Initial Settings
 [hr_contract_values_payroll](hr_contract_values_payroll/) | 14.0.1.1.0 | Contract Payroll Structure Initial Settings
 [hr_contract_values_resource_schedule](hr_contract_values_resource_schedule/) | 14.0.1.0.0 | Set working hours in default contract values.
-[hr_employee_seniority_months](hr_employee_seniority_months/) | 14.0.1.0.0 | Calculate an employee's months of employment
+[hr_employee_seniority_months](hr_employee_seniority_months/) | 14.0.1.0.1 | Calculate an employee's months of employment
 [hr_employee_status](hr_employee_status/) | 14.0.1.0.2 | Track the HR status of employees
 [hr_employee_status_benefit](hr_employee_status_benefit/) | 14.0.1.0.0 | Link between hr_employee_status and hr_benefit
 [hr_employee_status_payroll](hr_employee_status_payroll/) | 14.0.1.0.0 | Adds access records to employee separation records
