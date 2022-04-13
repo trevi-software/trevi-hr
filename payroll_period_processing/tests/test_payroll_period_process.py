@@ -79,18 +79,21 @@ class TestProcessing(common.SavepointCase):
         cls.hrMgr = new_test_user(
             cls.env,
             login="hel",
-            groups="base.group_user,hr.group_hr_manager",
+            groups="base.group_user,hr_holidays.group_hr_holidays_manager",
             name="HR Officer",
             email="ric@example.com",
         )
         cls.new_year = date(2021, 9, 11)
+        cls.holidays = cls.HolidayPublic.with_user(cls.hrMgr).create({"year": 2021})
         cls.holidayLine = cls.HolidayPublicLine.with_user(cls.hrMgr).create(
             [
-                {"name": "New Year", "date": cls.new_year, "variable": False},
+                {
+                    "name": "New Year",
+                    "date": cls.new_year,
+                    "variable_date": False,
+                    "year_id": cls.holidays.id,
+                },
             ]
-        )
-        cls.holidays = cls.HolidayPublic.with_user(cls.hrMgr).create(
-            {"year": "2021", "line_ids": [(6, 0, [cls.holidayLine.id])]}
         )
 
     def create_payroll_schedule(self, stype=False, initial_date=False):

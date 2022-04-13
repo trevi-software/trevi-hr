@@ -5,7 +5,7 @@
 {
     "name": "Payroll Period Processing",
     "summary": "Payroll period processing wizard",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.2.0",
     "category": "Payroll",
     "images": ["static/src/img/main_screenshot.png"],
     "license": "AGPL-3",
@@ -14,7 +14,7 @@
     "depends": [
         "hr",
         "hr_holidays",
-        "trevi_hr_public_holidays",
+        "hr_holidays_public",
         "payroll",
         "payroll_periods",
         "payroll_register",

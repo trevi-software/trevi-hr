@@ -40,6 +40,14 @@ To use this module:
 #. Click on the "Back" button to return to any previous check screens
 #. At any time you can click on the "Generate Payslips" button to generate the payroll
 
+Changelog
+=========
+
+14.0.1.2.0 (2022-04-13)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* This module now depends on hr_holidays_public from OCA and not on trevi_hr_public_holidays
+
 Bug Tracker
 ===========
 
