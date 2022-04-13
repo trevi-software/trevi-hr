@@ -14,7 +14,7 @@
     "depends": [
         "hr",
         "hr_holidays",
-        "trevi_hr_public_holidays",
+        "hr_holidays_public",
         "payroll",
         "payroll_periods",
         "payroll_register",

@@ -81,8 +81,6 @@ class ProcessingWizard(models.TransientModel):
         string="Public Holidays",
         comodel_name="hr.holidays.public.line",
         relation="hr_payroll_processing_hol_rel",
-        column1="wizard_id",
-        column2="holiday_id",
         readonly=True,
     )
 
