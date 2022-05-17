@@ -1,0 +1,254 @@
+# Copyright (C) 2022 Trevi Software (https://trevi.et)
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+
+from datetime import date
+
+from dateutil.relativedelta import relativedelta
+
+from . import common
+
+
+class TestHrPayslip(common.TestHrPayslip):
+    def setUp(self):
+        super().setUp()
+
+        self.env["ir.config_parameter"].set_param(
+            "payroll_payslip_dictionary.monthly_max_working_days", "30"
+        )
+        self.env["ir.config_parameter"].set_param(
+            "payroll_payslip_dictionary.working_days_calculation", "resource_calendar"
+        )
+
+    def tearDown(self):
+        super().tearDown()
+
+        self.env["ir.config_parameter"].set_param(
+            "payroll_payslip_dictionary.monthly_max_working_days", "30"
+        )
+        self.env["ir.config_parameter"].set_param(
+            "payroll_payslip_dictionary.working_days_calculation", "resource_calendar"
+        )
+
+    def test_contract_ppf_no_end_date(self):
+
+        # I create a contract for "Richard"
+        start = date(2022, 4, 1)
+        end = date(2022, 4, 30)
+        self.create_contract(
+            start - relativedelta(years=1), False, self.richard_emp, 5000.0
+        )
+
+        self.apply_contract_cron()
+
+        # I create an employee Payslip and process it
+        richard_payslip = self.create_payslip(start, end, self.richard_emp)
+        richard_payslip.compute_sheet()
+
+        line = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        self.assertTrue(len(line) == 1, "I found the BASIC salary line")
+        self.assertEqual(
+            line[0].amount,
+            5000.00,
+            "The calculated amount is EQUAL to the employee's monthly wage",
+        )
+
+    def test_contract_ppf_exact_end_date30(self):
+
+        # I create a contract for "Richard"
+        start = date(2022, 4, 1)
+        end = date(2022, 4, 30)
+        self.create_contract(start, end, self.richard_emp, 5000.0)
+
+        self.apply_contract_cron()
+
+        # I create an employee Payslip and process it
+        richard_payslip = self.create_payslip(start, end, self.richard_emp)
+        richard_payslip.compute_sheet()
+
+        line = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        self.assertTrue(len(line) == 1, "I found the BASIC salary line")
+        self.assertEqual(
+            line[0].amount,
+            5000.00,
+            "The calculated amount is EQUAL to the employee's salary",
+        )
+
+    def test_contract_ppf_exact_end_date31(self):
+
+        # I create a contract for "Richard"
+        start = date(2022, 3, 1)
+        end = date(2022, 3, 31)
+        self.create_contract(start, end, self.richard_emp, 5000.0)
+
+        self.apply_contract_cron()
+
+        # I create an employee Payslip and process it
+        richard_payslip = self.create_payslip(start, end, self.richard_emp)
+        richard_payslip.compute_sheet()
+
+        line = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        self.assertTrue(len(line) == 1, "I found the BASIC salary line")
+        self.assertEqual(
+            line[0].amount,
+            5000.00,
+            "The calculated amount is EQUAL to the employee's salary",
+        )
+
+    def test_contract_ppf_half(self):
+
+        # I create a contract for "Richard"
+        start = date(2022, 4, 1)
+        end = date(2022, 4, 30)
+        self.create_contract(
+            start, start + relativedelta(days=14), self.richard_emp, 5000.0
+        )
+
+        self.apply_contract_cron()
+
+        # I create an employee Payslip and process it
+        richard_payslip = self.create_payslip(start, end, self.richard_emp)
+        richard_payslip.compute_sheet()
+
+        line = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        self.assertTrue(len(line) == 1, "I found the BASIC salary line")
+        self.assertEqual(
+            line[0].amount,
+            2619.00,
+            "The calculated amount is 0.5238 the employee's monthly wage",
+        )
+
+    def test_contract_ppf_2contracts(self):
+
+        # I create a contract for "Richard"
+        start = date(2022, 4, 1)
+        end = date(2022, 4, 30)
+        self.create_contract(
+            start, start + relativedelta(days=14), self.richard_emp, 5000.0
+        )
+
+        # I create a second contract for "Richard"
+        start2 = date(2022, 4, 16)
+        self.create_contract(
+            start2, False, self.richard_emp, 10000.0, "2nd Contract for Richard"
+        )
+
+        self.apply_contract_cron()
+
+        # I create an employee Payslip and process it
+        richard_payslip = self.create_payslip(start, end, self.richard_emp)
+        richard_payslip.compute_sheet()
+
+        lines = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        self.assertTrue(len(lines) == 2, "I found the BASIC salary lines")
+
+        sum_amounts = sum([line.amount for line in lines])
+        self.assertEqual(
+            sum_amounts,
+            7381.00,
+            "The calculated amount is 0.5238 * first wage + 0.4762 * second wage",
+        )
+
+    def test_contract_ppf_days_less_than_payroll_days(self):
+
+        # I create a contract for "Richard" of 10 days (in the period)
+        pay_start = date(2022, 4, 1)
+        pay_end = date(2022, 4, 30)
+        c1_start = date(2022, 3, 30)
+        c1_end = date(2022, 4, 10)
+        self.create_contract(c1_start, c1_end, self.richard_emp, 5000.0)
+
+        # I create a second contract for "Richard" of another 10 days
+        c2_start = date(2022, 4, 11)
+        c2_end = date(2022, 4, 20)
+        self.create_contract(
+            c2_start, c2_end, self.richard_emp, 15000.0, "2nd Contract for Richard"
+        )
+
+        self.apply_contract_cron()
+
+        # I create an employee Payslip and process it
+        richard_payslip = self.create_payslip(pay_start, pay_end, self.richard_emp)
+        richard_payslip.compute_sheet()
+
+        lines = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        self.assertTrue(len(lines) == 2, "I found the BASIC salary lines")
+
+        sum_amounts = sum([line.amount for line in lines])
+        self.assertEqual(
+            sum_amounts,
+            7143.50,
+            "The calculated amount is 0.2857 first wage + 0.3810 of second wage",
+        )
+
+    def test_contract_ppf_february(self):
+
+        # I create a contract for "Richard"
+        start = date(2022, 2, 1)
+        end = date(2022, 2, 15)
+        month_end = date(2022, 2, 28)
+        self.create_contract(start, end, self.richard_emp, 5000.0)
+
+        # I create a second contract for "Richard"
+        start2 = date(2022, 2, 16)
+        self.create_contract(
+            start2, month_end, self.richard_emp, 10000.0, "2nd Contract for Richard"
+        )
+
+        self.apply_contract_cron()
+
+        # I create an employee Payslip and process it
+        richard_payslip = self.create_payslip(start, month_end, self.richard_emp)
+        richard_payslip.compute_sheet()
+
+        lines = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        self.assertTrue(len(lines) == 2, "I found the BASIC salary lines")
+
+        sum_amounts = sum([line.amount for line in lines])
+        self.assertEqual(
+            sum_amounts,
+            7250.00,
+            "The calculated amount is 0.55 x first wage + 0.45 * second wage",
+        )
+
+    def test_contract_ppf_march(self):
+
+        # I create a contract for "Richard" with 11 working days
+        start = date(2022, 3, 1)
+        end = date(2022, 3, 15)
+        month_end = date(2022, 3, 31)
+        cc = self.create_contract(start, end, self.richard_emp, 5000.0)
+        self.assertEqual(
+            cc.resource_calendar_id,
+            self.resource_calendar_std,
+            "There is a resource calendar attached to the contract",
+        )
+
+        # I create a second contract for "Richard" with 12 working days
+        start2 = date(2022, 3, 16)
+        self.create_contract(
+            start2, month_end, self.richard_emp, 10000.0, "2nd Contract for Richard"
+        )
+
+        self.apply_contract_cron()
+
+        # For 5 days/week I change the monthly workding days to 20 and salary conversion
+        self.env["ir.config_parameter"].set_param(
+            "payroll_payslip_dictionary.monthly_max_working_days", "20"
+        )
+        self.env["ir.config_parameter"].set_param(
+            "payroll_payslip_dictionary.salary_hourly_conversion", "working_days"
+        )
+
+        # I create an employee Payslip with 23 working days and process it
+        richard_payslip = self.create_payslip(start, month_end, self.richard_emp)
+        richard_payslip.compute_sheet()
+
+        lines = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        self.assertEqual(len(lines), 2, "I found the BASIC salary lines")
+
+        sum_amounts = sum([line.amount for line in lines])
+        self.assertEqual(
+            sum_amounts,
+            7608.50,
+            "The calculated amount is 0.4783 x first wage + 0.5217 * second wage",
+        )
