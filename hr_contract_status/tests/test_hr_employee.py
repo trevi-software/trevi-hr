@@ -90,3 +90,20 @@ class TestContract(common.SavepointCase):
 
         self.assertIn(cc1, contracts, "Contract 1 (closed) is in list of contracts")
         self.assertIn(cc1, contracts, "Contract 2 (open) is in list of contracts")
+
+    def test_get_trial_contract(self):
+        """_get_contracts() returns 'trial' contracts"""
+
+        start = datetime.now().date()
+        contract = self.create_contract(start, trial_end=start + relativedelta(days=30))
+        contract.signal_confirm()
+
+        self.assertEqual(contract.state, "trial", "The contract is in 'trial' state")
+
+        clist = self.employee._get_contracts(
+            date_from=start, date_to=start + relativedelta(days=30)
+        )
+
+        self.assertIn(
+            contract, clist, "Trial contract is returned in list of contracts"
+        )
