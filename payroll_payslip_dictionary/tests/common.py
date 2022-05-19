@@ -53,6 +53,7 @@ class TestHrPayslip(common.TransactionCase):
                 "employee_id": employee.id,
                 "struct_id": self.payroll_structure.id,
                 "kanban_state": "done",
+                "resource_calendar_id": self.resource_calendar_std.id,
             }
         )
 

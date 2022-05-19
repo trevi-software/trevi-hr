@@ -15,10 +15,10 @@ class HrPayslip(models.Model):
 
     _inherit = "hr.payslip"
 
-    def get_localdict(self, payslip, contract_ids):
+    def get_localdict(self, contracts):
         return {}
 
-    def get_contractdict(self, payslip, contract, contract_ids):
+    def get_contractdict(self, contract, contracts):
         return {}
 
     # Patch _get_payslip_lines() from https://github.com/OCA/payroll/tree/14.0/payroll
@@ -65,13 +65,15 @@ class HrPayslip(models.Model):
         for input_line in payslip.input_line_ids:
             inputs_dict[input_line.code] = input_line
 
+        contracts = self.env["hr.contract"].browse(contract_ids)
+        payslip = self.browse(payslip_id)
         categories = BrowsableObject(payslip.employee_id.id, {}, self.env)
         inputs = InputLine(payslip.employee_id.id, inputs_dict, self.env)
         worked_days = WorkedDays(payslip.employee_id.id, worked_days_dict, self.env)
         payslips = Payslips(payslip.employee_id.id, payslip, self.env)
         rules = BrowsableObject(payslip.employee_id.id, rules_dict, self.env)
         dictionaries = BrowsableObject(
-            payslip.employee_id.id, self.get_localdict(payslip, contract_ids), self.env
+            payslip.employee_id.id, payslip.get_localdict(contracts), self.env
         )
         this_contract = BrowsableObject(payslip.employee_id.id, contract_dict, self.env)
 
@@ -87,7 +89,6 @@ class HrPayslip(models.Model):
 
         # get the ids of the structures on the contracts and their parent id
         # as well
-        contracts = self.env["hr.contract"].browse(contract_ids)
         if len(contracts) == 1 and payslip.struct_id:
             structure_ids = list(set(payslip.struct_id._get_parent_structure().ids))
         else:
@@ -102,7 +103,7 @@ class HrPayslip(models.Model):
 
         for contract in contracts:
             employee = contract.employee_id
-            contract_dict = self.get_contractdict(payslip, contract, contract_ids)
+            contract_dict = payslip.get_contractdict(contract, contracts)
             baselocaldict["this_contract"] = BrowsableObject(
                 payslip.employee_id.id, contract_dict, self.env
             )
