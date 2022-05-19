@@ -5,7 +5,7 @@
 from calendar import monthrange
 from datetime import timedelta
 
-from odoo import api, models
+from odoo import SUPERUSER_ID, api, models
 
 
 # Used to allow nested dicts to be accessed with '.' (dot) notation
@@ -34,7 +34,7 @@ class HrPayslip(models.Model):
             * number of working days per month
         """
 
-        IrConfig = self.env["ir.config_parameter"]
+        IrConfig = self.env["ir.config_parameter"].with_user(SUPERUSER_ID)
         daily_max_regular_hours = int(
             IrConfig.get_param("payroll_payslip_dictionary.daily_max_regular_hours")
         )
@@ -133,11 +133,9 @@ class HrPayslip(models.Model):
 
         return (contract_days, other_max_days)
 
-    def _partial_payroll_factor(self, contract, contract_ids=None):
+    def _partial_payroll_factor(self, contract, contracts):
 
         self.ensure_one()
-        if contract_ids is None:
-            contract_ids = []
 
         dcEnd = self._get_end_date(contract)
 
@@ -158,7 +156,8 @@ class HrPayslip(models.Model):
 
         # Get number of working days in pay period
         #
-        wd_calculation = self.env["ir.config_parameter"].get_param(
+        IrConfig = self.env["ir.config_parameter"].with_user(SUPERUSER_ID)
+        wd_calculation = IrConfig.get_param(
             "payroll_payslip_dictionary.working_days_calculation"
         )
         if wd_calculation == "resource_calendar" and contract.resource_calendar_id:
@@ -184,7 +183,7 @@ class HrPayslip(models.Model):
         # differ from total_days calculated above if, for example, the maximum
         # working days in multiple contracts add up less than the defaults.
         #
-        if len(contract_ids) > 1 and contracts_total < total_days:
+        if len(contracts) > 1 and contracts_total < total_days:
             total_days = contracts_total
 
         # Adjust the contract days to the calculation that gives the most days
@@ -195,7 +194,7 @@ class HrPayslip(models.Model):
 
         return float(contract_days) / float(total_days)
 
-    def get_dictionary(self, employee, contract_ids=None):
+    def get_dictionary(self, contracts):
         """
         @return: returns a dictionary containing:
             * max_weekly_hours  - the number of weekly working hours
@@ -212,8 +211,6 @@ class HrPayslip(models.Model):
         """
 
         self.ensure_one()
-        if contract_ids is None:
-            contract_ids = []
         res = {
             "max_weekly_hours": 0,
             "max_working_days": 0,
@@ -236,10 +233,11 @@ class HrPayslip(models.Model):
         # Calculate maximum values
         max_weekly_hours = 0
         max_working_days = 0
-        wd_calculation = self.env["ir.config_parameter"].get_param(
+        IrConfig = self.env["ir.config_parameter"].with_user(SUPERUSER_ID)
+        wd_calculation = IrConfig.get_param(
             "payroll_payslip_dictionary.working_days_calculation"
         )
-        contract = self.env["hr.contract"].browse(contract_ids[0])
+        contract = contracts[0]
         if wd_calculation == "resource_calendar" and contract.resource_calendar_id:
             daily_hrs, max_weekly_hours, max_working_days = self._get_working_calendar(
                 contract
@@ -254,8 +252,8 @@ class HrPayslip(models.Model):
         res["max_working_hours"] = max_working_days * daily_hrs
 
         # Calculate seniority
-        if employee:
-            res["seniority"] = employee.get_months_service_to_date(self.date_to)
+        if self.employee_id:
+            res["seniority"] = self.employee_id.get_months_service_to_date(self.date_to)
 
         # Calculate net amount of previous payslip
         ps_ids = self.env["hr.payslip"].search(
@@ -266,9 +264,7 @@ class HrPayslip(models.Model):
 
         if len(ps_ids) > 0:
             # Get payroll code of Net salary rule
-            code_net = self.env["ir.config_parameter"].get_param(
-                "payroll_payslip_dictionary.payroll_code_net"
-            )
+            code_net = IrConfig.get_param("payroll_payslip_dictionary.payroll_code_net")
 
             ps = ps_ids[0]
             res["PREVPS"].exists = 1
@@ -279,14 +275,14 @@ class HrPayslip(models.Model):
             res["PREVPS"].net = total
 
         ppf_total = 0
-        for c in self.env["hr.contract"].browse(contract_ids):
-            ppf_total += self._partial_payroll_factor(c, contract_ids=contract_ids)
-        res["CONTRACTS"].qty = len(contract_ids)
+        for c in contracts:
+            ppf_total += self._partial_payroll_factor(c, contracts)
+        res["CONTRACTS"].qty = len(contracts.ids)
         res["CONTRACTS"].cummulative_ppf = ppf_total > 1 and 1 or ppf_total
 
         return res
 
-    def get_contract_dictionary(self, payslip, contract, contract_ids):
+    def get_contract_dictionary(self, contract, contracts):
         """
         @return: returns a dictionary containing:
             * ppf - payroll period factor: the percentage of the pay period
@@ -296,27 +292,33 @@ class HrPayslip(models.Model):
             * daily_wage  - the wage on the contract converted to a daily rate
         """
 
+        self.ensure_one()
+        IrConfig = self.env["ir.config_parameter"].with_user(SUPERUSER_ID)
         res = {"ppf": 0, "hourly_wage": 0.0, "daily_wage": 0.0}
 
         # Calculate percentage of pay period in which contract lies
         if contract:
             payroll_decimal_places = 2
             decimal_places = 4
-            payroll_ref = self.env.ref("payroll.decimal_payroll")
+            payroll_ref = self.with_user(SUPERUSER_ID).env.ref(
+                "payroll.decimal_payroll"
+            )
             if payroll_ref:
                 payroll_decimal_places = payroll_ref.digits
-            payroll_rate_ref = self.env.ref("payroll.decimal_payroll_rate")
+            payroll_rate_ref = self.with_user(SUPERUSER_ID).env.ref(
+                "payroll.decimal_payroll_rate"
+            )
             if payroll_rate_ref:
                 decimal_places = payroll_rate_ref.digits
             res["ppf"] = round(
-                self._partial_payroll_factor(contract, contract_ids=contract_ids),
+                self._partial_payroll_factor(contract, contracts),
                 decimal_places,
             )
 
             # Calculate hourly and daily rates
             daily_hrs = 0
             total_days = 0
-            wd_calculation = self.env["ir.config_parameter"].get_param(
+            wd_calculation = IrConfig.get_param(
                 "payroll_payslip_dictionary.working_days_calculation"
             )
             if wd_calculation == "resource_calendar" and contract.resource_calendar_id:
@@ -337,14 +339,14 @@ class HrPayslip(models.Model):
 
         return res
 
-    def get_localdict(self, payslip, contract_ids):
+    def get_localdict(self, contracts):
 
-        res = super().get_localdict(payslip, contract_ids)
-        res.update(self.get_dictionary(payslip.employee_id, contract_ids))
+        res = super().get_localdict(contracts)
+        res.update(self.get_dictionary(contracts))
         return res
 
-    def get_contractdict(self, payslip, contract, contract_ids):
+    def get_contractdict(self, contract, contracts):
 
-        res = super().get_contractdict(payslip, contract, contract_ids)
-        res.update(self.get_contract_dictionary(payslip, contract, contract_ids))
+        res = super().get_contractdict(contract, contracts)
+        res.update(self.get_contract_dictionary(contract, contracts))
         return res
