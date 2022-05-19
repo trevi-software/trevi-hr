@@ -162,7 +162,7 @@ class HrContract(models.Model):
             contract.trial_ending = False
 
         # Contract is expiring
-        contracts = self.search(
+        self.search(
             [
                 ("state", "=", "open"),
                 ("kanban_state", "!=", "blocked"),
@@ -229,7 +229,6 @@ class HrContract(models.Model):
                 rec.state = "trial"
             else:
                 rec.state = "open"
-        return
 
     def signal_close(self):
         for c in self:
@@ -237,7 +236,6 @@ class HrContract(models.Model):
             if not c.date_end or c.date_end >= date.today():
                 vals.update({"date_end": date.today()})
             c.write(vals)
-        return
 
     def write(self, vals):
         if vals.get("state") == "trial":
