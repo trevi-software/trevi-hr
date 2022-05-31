@@ -7,6 +7,10 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+from odoo.addons.payroll_payslip_dictionary.models.hr_payslip import (
+    BasicBrowsableObject,
+)
+
 
 class HrPayslip(models.Model):
 
@@ -223,4 +227,38 @@ class HrPayslip(models.Model):
         payments = self.mapped("premium_payment_ids")
         payments.set_cancel()
 
+        return res
+
+    def get_benefits_dictionary(self, contracts):
+        """
+        @return: returns a dictionary containing:
+            * dictionaries.<CODE>.qty        - the number policies for this benefit
+            * dictionaries.<CODE>.ppf        - the ppf of policy with respect to payslip
+            * dictionaries.<CODE>.deductions - the amount to deduct or 0
+            * dictionaries.<CODE>.earnings   - the earning amount or 0
+        """
+
+        self.ensure_one()
+        res = {}
+
+        for line in self.benefit_line_ids:
+            res.update(
+                {
+                    line.code: BasicBrowsableObject(
+                        {
+                            "qty": line.qty,
+                            "ppf": line.ppf,
+                            "deductions": line.deductions,
+                            "earnings": line.earnings,
+                        }
+                    )
+                }
+            )
+
+        return res
+
+    def get_localdict(self, contracts):
+
+        res = super().get_localdict(contracts)
+        res.update(self.get_benefits_dictionary(contracts))
         return res
