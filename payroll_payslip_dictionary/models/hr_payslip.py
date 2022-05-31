@@ -11,13 +11,18 @@ from odoo import SUPERUSER_ID, api, models
 # Used to allow nested dicts to be accessed with '.' (dot) notation
 class BasicBrowsableObject(object):
     def __init__(self, vals_dict):
-        self.__dict__ = vals_dict
+        self.values = vals_dict
 
     def __getattr__(self, attr):
-        return attr in self.__dict__ and self.__dict__.__getitem__(attr) or 0.0
+        return attr in self.values and self.values.__getitem__(attr) or 0.0
 
     def __setattr__(self, attr, value):
-        self.__dict__[attr] = value
+        if attr == "values":
+            return super().__setattr__(attr, value)
+        self.__dict__["values"][attr] = value
+
+    def __str__(self):
+        return str(self.values)
 
 
 class HrPayslip(models.Model):
