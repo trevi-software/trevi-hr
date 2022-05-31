@@ -132,7 +132,7 @@ class HrPayslip(models.Model):
             deltaSlip += 1
             d += timedelta(days=+1)
 
-        # Test for installation of hr_payroll_period
+        # Test for installation of payroll_period
         if hasattr(contracts[0], "annual_pay_periods"):
             app = contracts[0].annual_pay_periods
         else:
