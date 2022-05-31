@@ -9,6 +9,23 @@
             <field name="inherit_id" ref="payroll.hr_payslip_view_form" />
             <field name="arch" type="xml">
                 <data>
+                    <xpath
+                        expr="/form/sheet/notebook/page/field[@name='worked_days_line_ids']"
+                        position="after"
+                    >
+                        <group string="Benefits">
+                            <field name="benefit_line_ids" nolabel="1">
+                                <tree string="Payslip Benefit Lines">
+                                    <field name="name" />
+                                    <field name="code" />
+                                    <field name="qty" />
+                                    <field name="ppf" />
+                                    <field name="earnings" />
+                                    <field name="deductions" />
+                                </tree>
+                            </field>
+                        </group>
+                    </xpath>
                     <xpath expr="/form/sheet/notebook" position="inside">
                         <page name="benefits" string="Benefits">
                             <group string="Benefit Premium Payments">
