@@ -235,6 +235,10 @@ class HrPayslip(models.Model):
             ),
         }
 
+        if len(contracts) == 0:
+            return res
+        contract = contracts[0]
+
         # Calculate maximum values
         max_weekly_hours = 0
         max_working_days = 0
@@ -242,7 +246,6 @@ class HrPayslip(models.Model):
         wd_calculation = IrConfig.get_param(
             "payroll_payslip_dictionary.working_days_calculation"
         )
-        contract = contracts[0]
         if wd_calculation == "resource_calendar" and contract.resource_calendar_id:
             daily_hrs, max_weekly_hours, max_working_days = self._get_working_calendar(
                 contract
