@@ -14,6 +14,7 @@
     "depends": [
         "hr_benefit",
         "payroll",
+        "payroll_payslip_dictionary",
     ],
     "data": [
         "security/ir.model.access.csv",
