@@ -22,13 +22,12 @@ class PolicyPresence(models.Model):
         inverse_name="policy_id",
     )
 
-    def get_codes(self, idx):
+    def get_codes(self):
 
-        res = {}
+        res = []
         for policy in self:
-            res[policy.id] = []
             for line in policy.line_ids:
-                res[policy.id].append(
+                res.append(
                     (
                         line.code,
                         line.name,
