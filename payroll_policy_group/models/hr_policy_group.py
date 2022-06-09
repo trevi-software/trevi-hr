@@ -28,7 +28,6 @@ class ContractInit(models.Model):
 
 class HrContract(models.Model):
 
-    _name = "hr.contract"
     _inherit = "hr.contract"
 
     @api.model
