@@ -21,13 +21,10 @@ class PolicyAbsence(models.Model):
 
     def get_codes(self):
 
-        res = {}
+        res = []
         for policy in self:
-            res[policy.id] = []
             [
-                res[policy.id].append(
-                    (line.code, line.name, line.type, line.rate, line.use_awol)
-                )
+                res.append((line.code, line.name, line.type, line.rate, line.use_awol))
                 for line in policy.line_ids
             ]
         return res
