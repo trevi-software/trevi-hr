@@ -21,11 +21,10 @@ class PolicyOt(models.Model):
 
     def get_codes(self):
 
-        res = {}
+        res = []
         for policy in self:
-            res[policy.id] = []
             for line in policy.line_ids:
-                res[policy.id].append(
+                res.append(
                     (
                         line.code,
                         line.name,
@@ -40,52 +39,47 @@ class PolicyOt(models.Model):
                 )
         return res
 
-    def daily_codes(self, idx):
+    def daily_codes(self):
 
-        res = {}
+        res = []
         for policy in self:
-            res[policy.id] = []
             for line in policy.line_ids:
                 if line.type == "daily":
-                    res[policy.id].append((line.code, line.name))
+                    res.append((line.code, line.name))
         return res
 
-    def restday_codes(self, idx):
+    def restday_codes(self):
 
-        res = {}
+        res = []
         for policy in self:
-            res[policy.id] = []
             for line in policy.line_ids:
                 if line.type == "weekly" and line.weekly_working_days > 0:
-                    res[policy.id].append((line.code, line.name))
+                    res.append((line.code, line.name))
         return res
 
-    def restday2_codes(self, idx):
+    def restday2_codes(self):
 
-        res = {}
+        res = []
         for policy in self:
-            res[policy.id] = []
             for line in policy.line_ids:
                 if line.type == "restday":
-                    res[policy.id].append((line.code, line.name))
+                    res.append((line.code, line.name))
         return res
 
-    def weekly_codes(self, idx):
+    def weekly_codes(self):
 
-        res = {}
+        res = []
         for policy in self:
-            res[policy.id] = []
             for line in policy.line_ids:
                 if line.type == "weekly" and line.weekly_working_days > 0:
-                    res[policy.id].append((line.code, line.name))
+                    res.append((line.code, line.name))
         return res
 
-    def holiday_codes(self, idx):
+    def holiday_codes(self):
 
-        res = {}
+        res = []
         for policy in self:
-            res[policy.id] = []
             for line in policy.line_ids:
                 if line.type == "holiday":
-                    res[policy.id].append((line.code, line.name))
+                    res.append((line.code, line.name))
         return res

@@ -16,6 +16,9 @@ class PolicyPresence(models.Model):
     work_hours_per_week = fields.Integer(
         string="Working Hours/Week", required=True, default=40
     )
+    work_days_per_week = fields.Integer(
+        string="Work Days/Week", default=6, help="Regular work days in a work week."
+    )
     line_ids = fields.One2many(
         string="Policy Lines",
         comodel_name="hr.policy.line.presence",

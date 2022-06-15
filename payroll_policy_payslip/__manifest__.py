@@ -13,6 +13,7 @@
     "depends": [
         "hr_accrual_bank",
         "hr_attendance",
+        "hr_attendance_day",
         "hr_holidays_public",
         "payroll",
         "payroll_policy_absence",

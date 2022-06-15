@@ -11,49 +11,6 @@ class TestPresencePolicy(common.TestHrPayslip):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.Attendance = cls.env["hr.attendance"]
-        cls.PublicHoliday = cls.env["hr.holidays.public"]
-        cls.PresencePolicy = cls.env["hr.policy.presence"]
-        cls.PresencePolicyLine = cls.env["hr.policy.line.presence"]
-        cls.presence_policy = cls.PresencePolicy.create(
-            {"name": "POLICY1", "date": date(2000, 1, 1)}
-        )
-        cls.PresencePolicyLine.create(
-            {
-                "name": "Presence Line - Normal workday",
-                "code": "PL1",
-                "type": "normal",
-                "active_after": 0.0,
-                "duration": 8.0 * 60,
-                "policy_id": cls.presence_policy.id,
-            }
-        )
-        cls.PresencePolicyLine.create(
-            {
-                "name": "Presence Line - Holiday",
-                "code": "HOL",
-                "type": "holiday",
-                "active_after": 0.0,
-                "duration": 8.0 * 60,
-                "rate": 2.0,
-                "policy_id": cls.presence_policy.id,
-            }
-        )
-        cls.PresencePolicyLine.create(
-            {
-                "name": "Presence Line - Rest day",
-                "code": "RST",
-                "type": "restday",
-                "active_after": 0.0,
-                "duration": 8.0 * 60,
-                "rate": 1.0,
-                "policy_id": cls.presence_policy.id,
-            }
-        )
-
-        # I put the presence policy in the policy group
-        cls.default_policy_group.presence_policy_ids = [(4, cls.presence_policy.id)]
-
         # Create a public holiday
         cls.public_holiday = cls.PublicHoliday.create(
             {
@@ -182,20 +139,30 @@ class TestPresencePolicy(common.TestHrPayslip):
         self.create_contract(contract_start, False, self.richard_emp, 5000.0)
         self.apply_contract_cron()
 
-        # I create attendance on a day off (Saturday April 9, 2022)
-        self.Attendance.create(
-            {
-                "employee_id": self.richard_emp.id,
-                "check_in": datetime.combine(
-                    start + timedelta(days=8),
-                    datetime.strptime("08:00", "%H:%M").time(),
-                ),
-                "check_out": datetime.combine(
-                    start + timedelta(days=8),
-                    datetime.strptime("16:00", "%H:%M").time(),
-                ),
-            }
-        )
+        # I create attendance for seven days in a row
+        monday = date(2022, 4, 4)
+        for day in range(0, 7):
+            self.Attendance.create(
+                {
+                    "employee_id": self.richard_emp.id,
+                    "check_in": self.localize_dt(
+                        datetime.combine(
+                            monday + timedelta(days=day),
+                            datetime.strptime("08:00", "%H:%M").time(),
+                        ),
+                        self.richard_emp.tz,
+                        reverse=True,
+                    ),
+                    "check_out": self.localize_dt(
+                        datetime.combine(
+                            monday + timedelta(days=day),
+                            datetime.strptime("16:00", "%H:%M").time(),
+                        ),
+                        self.richard_emp.tz,
+                        reverse=True,
+                    ),
+                }
+            )
 
         # I create an employee Payslip and process it
         richard_payslip = self.create_payslip(
@@ -209,7 +176,70 @@ class TestPresencePolicy(common.TestHrPayslip):
         self.assertEqual(
             line[0].amount,
             8.0,
-            "The number of worked rest day hours is 8",
+            "The number of worked rest day hours is 8 (1 day)",
+        )
+        self.assertEqual(
+            line[0].rate,
+            100,
+            "Rest day hours are accrued at the regular rate",
+        )
+
+    def test_worked_restday_weekend(self):
+
+        # I set the weekly working days to 5
+        self.presence_policy.work_days_per_week = 5
+
+        # I set the test rule to detect the number of rest day worked hours
+        self.test_rule.amount_python_compute = (
+            "result_rate = worked_days.RST.rate * 100 \n"
+            "result = worked_days.RST.number_of_hours"
+        )
+
+        # I create a contract for "Richard"
+        contract_start = date(2022, 1, 1)
+        start = date(2022, 4, 1)
+        end = date(2022, 4, 30)
+        self.create_contract(contract_start, False, self.richard_emp, 5000.0)
+        self.apply_contract_cron()
+
+        # I create attendance for eight days in a row
+        monday = date(2022, 4, 4)
+        for day in range(0, 8):
+            self.Attendance.create(
+                {
+                    "employee_id": self.richard_emp.id,
+                    "check_in": self.localize_dt(
+                        datetime.combine(
+                            monday + timedelta(days=day),
+                            datetime.strptime("08:00", "%H:%M").time(),
+                        ),
+                        self.richard_emp.tz,
+                        reverse=True,
+                    ),
+                    "check_out": self.localize_dt(
+                        datetime.combine(
+                            monday + timedelta(days=day),
+                            datetime.strptime("16:00", "%H:%M").time(),
+                        ),
+                        self.richard_emp.tz,
+                        reverse=True,
+                    ),
+                }
+            )
+
+        # I create an employee Payslip and process it
+        richard_payslip = self.create_payslip(
+            start, end, self.richard_emp, user=self.payroll_user
+        )
+        richard_payslip.onchange_employee()
+        richard_payslip.compute_sheet()
+
+        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        self.assertEqual(len(line), 1, "I found the Test line")
+        self.assertEqual(
+            line[0].amount,
+            16.0,
+            "The number of worked rest day hours is 16 (2 days)",
         )
         self.assertEqual(
             line[0].rate,

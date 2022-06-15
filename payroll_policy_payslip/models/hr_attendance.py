@@ -57,12 +57,7 @@ class HrAttendance(models.Model):
 
         res = []
         for check_in, check_out in punches_list:
-            if (
-                check_in >= ndtFrom
-                and check_in <= ndtTo
-                and check_out is False
-                or (check_out >= ndtFrom and check_out <= ndtTo)
-            ):
+            if check_in >= ndtFrom and check_in <= ndtTo:
                 res.append((check_in, check_out))
         return res
 
@@ -90,7 +85,7 @@ class HrAttendance(models.Model):
         #    - No dangling sign-in or sign-out
         #
 
-        # Convert datetime to tz aware datetime according to tz in pay period schedule,
+        # Convert datetime to tz aware datetime according to employee timezone,
         # then to UTC, and then to naive datetime for comparison with values in db.
         #
         employee = contract.employee_id
@@ -276,3 +271,55 @@ class HrAttendance(models.Model):
 
         print(f"total_hours_on_day returns: {worked_hours}")
         return worked_hours
+
+    def partial_hours_on_day(
+        self, contract, dDay, active_after, begin, stop, tz, punches_list=None
+    ):
+        """Calculate the number of hours worked between begin and stop hours, but
+        after active_after hours past the beginning of the first sign-in on specified date."""
+
+        # Since OpenERP stores datetime in db as UTC, but in naive format we have to do
+        # the following to compare our partial time to the time in db:
+        #    1. Make our partial time into a naive datetime
+        #    2. Localize the naive datetime to the timezone specified by our caller
+        #    3. Convert our localized datetime to UTC
+        #    4. Convert our UTC datetime back into naive datetime format
+        #
+        dtBegin = datetime.combine(dDay, datetime.strptime(f"{begin}", "%H:%M").time())
+        dtStop = datetime.combine(dDay, datetime.strptime(f"{stop}", "%H:%M").time())
+        if dtStop <= dtBegin:
+            dtStop += timedelta(days=1)
+        utcdtBegin = timezone(tz).localize(dtBegin, is_dst=False).astimezone(utc)
+        utcdtStop = timezone(tz).localize(dtStop, is_dst=False).astimezone(utc)
+        dtBegin = utcdtBegin.replace(tzinfo=None)
+        dtStop = utcdtStop.replace(tzinfo=None)
+
+        if punches_list is None:
+            punches_list = self.punches_list_init(contract, dDay, dDay)
+        sin, sout = self._get_normalized_punches(contract, dDay, punches_list)
+
+        worked_hours = 0
+        lead_hours = 0
+        for i in range(0, len(sin)):
+            start = sin[i]
+            end = sout[i]
+            if worked_hours == 0 and end <= dtBegin:
+                lead_hours += float((end - start).seconds) / 60.0 / 60.0
+            elif worked_hours == 0 and end > dtBegin:
+                if start < dtBegin:
+                    lead_hours += float((dtBegin - start).seconds) / 60.0 / 60.0
+                    start = dtBegin
+                if end > dtStop:
+                    end = dtStop
+                worked_hours = float((end - start).seconds) / 60.0 / 60.0
+            elif worked_hours > 0 and start < dtStop:
+                if end > dtStop:
+                    end = dtStop
+                worked_hours += float((end - start).seconds) / 60.0 / 60.0
+
+        if worked_hours == 0:
+            return 0
+        elif lead_hours >= active_after:
+            return worked_hours
+
+        return max(0, (worked_hours + lead_hours) - active_after)

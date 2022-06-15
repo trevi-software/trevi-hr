@@ -1,6 +1,10 @@
 # Copyright (C) 2022 Trevi Software (https://trevi.et)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
+from datetime import date
+
+from pytz import timezone, utc
+
 from odoo.tests import common, new_test_user
 
 
@@ -13,6 +17,10 @@ class TestHrPayslip(common.SavepointCase):
         cls.HrPayslip = cls.env["hr.payslip"]
         cls.Rule = cls.env["hr.salary.rule"]
         cls.PolicyGroup = cls.env["hr.policy.group"]
+        cls.Attendance = cls.env["hr.attendance"]
+        cls.PublicHoliday = cls.env["hr.holidays.public"]
+        cls.PresencePolicy = cls.env["hr.policy.presence"]
+        cls.PresencePolicyLine = cls.env["hr.policy.line.presence"]
 
         cls.resource_calendar_std = cls.env.ref("resource.resource_calendar_std")
         cls.payroll_structure = cls.env.ref("payroll.structure_base")
@@ -56,6 +64,46 @@ class TestHrPayslip(common.SavepointCase):
             {"name": "default policy group"}
         )
 
+        # Create a Presence Policy
+        cls.presence_policy = cls.PresencePolicy.create(
+            {"name": "POLICY1", "date": date(2000, 1, 1)}
+        )
+        cls.PresencePolicyLine.create(
+            {
+                "name": "Presence Line - Normal workday",
+                "code": "PL1",
+                "type": "normal",
+                "active_after": 0.0,
+                "duration": 8.0 * 60,
+                "policy_id": cls.presence_policy.id,
+            }
+        )
+        cls.PresencePolicyLine.create(
+            {
+                "name": "Presence Line - Holiday",
+                "code": "HOL",
+                "type": "holiday",
+                "active_after": 0.0,
+                "duration": 8.0 * 60,
+                "rate": 2.0,
+                "policy_id": cls.presence_policy.id,
+            }
+        )
+        cls.PresencePolicyLine.create(
+            {
+                "name": "Presence Line - Rest day",
+                "code": "RST",
+                "type": "restday",
+                "active_after": 0.0,
+                "duration": 8.0 * 60,
+                "rate": 1.0,
+                "policy_id": cls.presence_policy.id,
+            }
+        )
+
+        # I put the presence policy in the policy group
+        cls.default_policy_group.presence_policy_ids = [(4, cls.presence_policy.id)]
+
     def create_contract(self, start, end, employee, wage, name=False):
         return self.Contract.create(
             {
@@ -91,3 +139,18 @@ class TestHrPayslip(common.SavepointCase):
         self.env.ref(
             "hr_contract.ir_cron_data_contract_update_state"
         ).method_direct_trigger()
+
+    def localize_dt(self, dt, tz, reverse=False):
+        """
+        Localize naive dt from database (UTC) to timzezone tz. If reverse is True
+        a naive dt that is in timezone tz is converted to naive dt for storage in db.
+        """
+
+        local_tz = timezone(tz)
+        if not reverse:
+            res = utc.localize(dt, is_dst=False).astimezone(local_tz)
+        else:
+            res = (
+                local_tz.localize(dt, is_dst=False).astimezone(utc).replace(tzinfo=None)
+            )
+        return res
