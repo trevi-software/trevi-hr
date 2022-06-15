@@ -120,9 +120,8 @@ class HrPayslip(models.Model):
 
         nb_of_days = (date_to - date_from).days + 1
         presence_data = None
-        data2 = None
+        absence_data = None
         ot_data = None
-        data2 = None
         att_obj = self.env["hr.attendance"]
         for contract in contracts:
 
@@ -153,12 +152,14 @@ class HrPayslip(models.Model):
                 },
             }
             normal_working_hours = 0
+            awol_code = False
 
             # Short-circuit:
             # If the policy for the first day is the same as the one for the
             # last day assume that it will also be the same for the days in
             # between, and reuse the same policy instead of checking for every day.
             #
+            data2 = None
             presence_data = self.get_presence_policies(
                 contract.policy_group_id, date_from, presence_data
             )
@@ -168,6 +169,17 @@ class HrPayslip(models.Model):
             ].id == data2["policy"].id:
                 presence_data["_reuse"] = True
 
+            data2 = None
+            absence_data = self.get_absence_policies(
+                contract.policy_group_id, date_from, absence_data
+            )
+            data2 = self.get_absence_policies(contract.policy_group_id, date_to, data2)
+            if (absence_data["policy"] and data2["policy"]) and absence_data[
+                "policy"
+            ].id == data2["policy"].id:
+                absence_data["_reuse"] = True
+
+            data2 = None
             ot_data = self.get_ot_policies(contract.policy_group_id, date_from, ot_data)
             data2 = self.get_ot_policies(contract.policy_group_id, date_to, data2)
             if (ot_data["policy"] and data2["policy"]) and ot_data[
@@ -204,7 +216,7 @@ class HrPayslip(models.Model):
                     contract.policy_group_id, dToday, presence_data
                 )
                 presence_policy = presence_data["policy"]
-                presence_sequence = 2
+                presence_sequence = 50
 
                 for (
                     pcode,
@@ -248,6 +260,47 @@ class HrPayslip(models.Model):
 
                             presence_sequence += 1
 
+                # Get Absence data
+                #
+                absence_data = self.get_absence_policies(
+                    contract.policy_group_id, dToday, absence_data
+                )
+                absence_sequence = 100
+
+                for abcode, abname, abtype, abrate, useawol in absence_data["codes"]:
+                    if useawol:
+                        awol_code = abcode
+                    if abtype == "unpaid":
+                        abrate = 0
+                    elif abtype == "dock":
+                        abrate = -abrate
+
+                    if attendances.get(abcode, False):
+                        continue
+
+                    # If the leave has already been added by the parent class, only
+                    # modify the rate.
+                    #
+                    res_dict = False
+                    for r in res:
+                        if r["code"] == abcode:
+                            res_dict = r
+                            break
+
+                    if res_dict is not False:
+                        res_dict["rate"] = abrate
+                    else:
+                        attendances[abcode] = {
+                            "name": abname,
+                            "code": abcode,
+                            "sequence": absence_sequence,
+                            "number_of_days": 0.0,
+                            "number_of_hours": 0.0,
+                            "rate": abrate,
+                            "contract_id": contract.id,
+                        }
+                        absence_sequence += 1
+
                 # Get OT data
                 #
                 ot_data = self.get_ot_policies(
@@ -255,7 +308,7 @@ class HrPayslip(models.Model):
                 )
                 ot_policy = ot_data["policy"]
                 daily_ot = ot_data["daily"]
-                ot_sequence = 3
+                ot_sequence = 150
 
                 if ot_policy:
                     for (
@@ -469,6 +522,18 @@ class HrPayslip(models.Model):
                 else:
                     lsd.push(False)
 
+                if (
+                    awol_code
+                    and not public_holiday
+                    and dToday.weekday() not in rest_days["default"]
+                    and working_hours_on_day < normal_working_hours
+                ):
+                    hours_diff = normal_working_hours - working_hours_on_day
+                    attendances[awol_code]["number_of_days"] += (
+                        hours_diff > 0 and 1.0 or 0
+                    )
+                    attendances[awol_code]["number_of_hours"] += hours_diff
+
                 # Calculate total possible working hours in the month
                 if dToday.weekday() not in rest_days["default"]:
                     attendances["MAX"]["number_of_hours"] += normal_working_hours
@@ -515,6 +580,32 @@ class HrPayslip(models.Model):
 
         data["policy"] = policy
         data["codes"] = policy.get_codes()
+        return data
+
+    def _get_absence_policy(self, policy_group, dDay):
+        """Return an Absence policy with an effective date before dDay but
+        greater than all others"""
+
+        res = self._get_policy(policy_group, policy_group.absence_policy_ids, dDay)
+        if res is None:
+            res = self.env["hr.policy.absence"]
+        return res
+
+    def get_absence_policies(self, policy_group_id, day, data):
+
+        if data is None or not data["_reuse"]:
+            data = {
+                "policy": None,
+                "codes": False,
+                "_reuse": False,
+            }
+        elif data["_reuse"]:
+            return data
+
+        absence_policy = self._get_absence_policy(policy_group_id, day)
+
+        data["policy"] = absence_policy
+        data["codes"] = absence_policy.get_codes()
         return data
 
     @api.model
