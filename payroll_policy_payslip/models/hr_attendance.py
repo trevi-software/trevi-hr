@@ -49,7 +49,6 @@ class HrAttendance(models.Model):
         for a in attendances:
             res.append((a.check_in, a.check_out))
 
-        print(f"punches_list_init returns: {res}")
         return res
 
     @api.model
@@ -238,7 +237,6 @@ class HrAttendance(models.Model):
                         sin.append(check_in)
                         sout.append(check_out)
 
-        print(f"_get_normalized_punches returns:\nsin: {sin}\nsout:{sout}")
         return sin, sout
 
     def _on_day(self, contract, dDay, punches_list=None):
@@ -269,7 +267,6 @@ class HrAttendance(models.Model):
             end = sout[i]
             worked_hours += float((end - start).seconds) / 60.0 / 60.0
 
-        print(f"total_hours_on_day returns: {worked_hours}")
         return worked_hours
 
     def partial_hours_on_day(
