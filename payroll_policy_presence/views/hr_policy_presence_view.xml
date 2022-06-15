@@ -48,7 +48,6 @@
                             </group>
                             <group string="Accrual">
                                 <field name="accrual_policy_line_id" />
-                                <field name="accrual_rate" />
                                 <field name="accrual_min" />
                                 <field name="accrual_max" />
                             </group>

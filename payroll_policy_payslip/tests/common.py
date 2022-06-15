@@ -89,7 +89,7 @@ class TestHrPayslip(common.SavepointCase):
                 "policy_id": cls.presence_policy.id,
             }
         )
-        cls.PresencePolicyLine.create(
+        cls.restday_presence_line = cls.PresencePolicyLine.create(
             {
                 "name": "Presence Line - Rest day",
                 "code": "RST",

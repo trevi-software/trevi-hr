@@ -30,6 +30,5 @@ class PolicyLinePresence(models.Model):
     accrual_policy_line_id = fields.Many2one(
         string="Accrual Policy Line", comodel_name="hr.policy.line.accrual"
     )
-    accrual_rate = fields.Float(digits="Accruals")
     accrual_min = fields.Float(string="Minimum Accrual", digits="Accruals")
     accrual_max = fields.Float(string="Maximum Accrual", digits="Accruals")

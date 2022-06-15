@@ -434,21 +434,22 @@ class HrPayslip(models.Model):
                                     working_hours_on_day -= partial_hr
 
                                     # Process Accruals
-                                    accrued_hours = self._get_accrued_accrual(
-                                        partial_hr,
-                                        line.accrual_rate,
-                                        line.accrual_min,
-                                        line.accrual_max,
-                                    )
-                                    if (
-                                        fields.Float.compare(
-                                            accrued_hours, 0.0, precision_digits=2
+                                    if line.accrual_policy_line_id:
+                                        accrued_hours = self._get_accrued_accrual(
+                                            partial_hr,
+                                            line.accrual_policy_line_id.accrual_rate_hour,
+                                            line.accrual_min,
+                                            line.accrual_max,
                                         )
-                                        == 1
-                                    ):
-                                        self._add_accrued_hours(
-                                            line, attendances, accrued_hours
-                                        )
+                                        if (
+                                            fields.Float.compare(
+                                                accrued_hours, 0.0, precision_digits=2
+                                            )
+                                            == 1
+                                        ):
+                                            self._add_accrued_hours(
+                                                line, attendances, accrued_hours
+                                            )
 
                         for line in ot_policy.line_ids:
                             active_after_hrs = float(line.active_after) / 60.0
@@ -463,21 +464,23 @@ class HrPayslip(models.Model):
                                 attendances[line.code]["number_of_days"] += 1.0
 
                                 # Process Accruals
-                                accrued_hours = self._get_accrued_accrual(
-                                    hours_after_ot - (float(line.active_after) / 60.0),
-                                    line.accrual_rate,
-                                    line.accrual_min,
-                                    line.accrual_max,
-                                )
-                                if (
-                                    fields.Float.compare(
-                                        accrued_hours, 0.0, precision_digits=2
+                                if line.accrual_policy_line_id:
+                                    accrued_hours = self._get_accrued_accrual(
+                                        hours_after_ot
+                                        - (float(line.active_after) / 60.0),
+                                        line.accrual_policy_line_id.accrual_rate_hour,
+                                        line.accrual_min,
+                                        line.accrual_max,
                                     )
-                                    == 1
-                                ):
-                                    self._add_accrued_hours(
-                                        line, attendances, accrued_hours
-                                    )
+                                    if (
+                                        fields.Float.compare(
+                                            accrued_hours, 0.0, precision_digits=2
+                                        )
+                                        == 1
+                                    ):
+                                        self._add_accrued_hours(
+                                            line, attendances, accrued_hours
+                                        )
 
                     if not done:
                         for line in presence_policy.line_ids:
@@ -495,21 +498,22 @@ class HrPayslip(models.Model):
                                 )
 
                                 # Process Accruals
-                                accrued_hours = self._get_accrued_accrual(
-                                    normal_hours,
-                                    line.accrual_rate,
-                                    line.accrual_min,
-                                    line.accrual_max,
-                                )
-                                if (
-                                    fields.Float.compare(
-                                        accrued_hours, 0.0, precision_digits=2
+                                if line.accrual_policy_line_id:
+                                    accrued_hours = self._get_accrued_accrual(
+                                        normal_hours,
+                                        line.accrual_policy_line_id.accrual_rate_hour,
+                                        line.accrual_min,
+                                        line.accrual_max,
                                     )
-                                    == 1
-                                ):
-                                    self._add_accrued_hours(
-                                        line, attendances, accrued_hours
-                                    )
+                                    if (
+                                        fields.Float.compare(
+                                            accrued_hours, 0.0, precision_digits=2
+                                        )
+                                        == 1
+                                    ):
+                                        self._add_accrued_hours(
+                                            line, attendances, accrued_hours
+                                        )
 
                                 done = True
 
@@ -666,8 +670,9 @@ class HrPayslip(models.Model):
     ):
 
         if accrual_code not in attendances:
+            apl = self.env["hr.policy.line.accrual"].browse(accrual_policy_line_id)
             attendances[accrual_code] = {
-                "name": "Accrual Policy",
+                "name": apl.accrual_id.name,
                 "code": accrual_code,
                 "sequence": sequence,
                 "number_of_days": 0.0,
@@ -686,10 +691,7 @@ class HrPayslip(models.Model):
     ):
 
         acc_precision = 2
-        accrued = worked_hours * pol_acc_rate
-        if fields.Float.is_zero(accrued, precision_digits=acc_precision):
-            return 0
-
+        accrued = worked_hours
         if (
             not fields.Float.is_zero(pol_acc_min, precision_digits=acc_precision)
             and accrued < pol_acc_min
@@ -753,11 +755,18 @@ class HrPayslip(models.Model):
                 )
 
                 # Process Accruals
-                accrued_hours = self._get_accrued_accrual(
-                    holiday_hours, line.accrual_rate, line.accrual_min, line.accrual_max
-                )
-                if fields.Float.compare(accrued_hours, 0.0, precision_digits=2) == 1:
-                    self._add_accrued_hours(line, attendances, accrued_hours)
+                if line.accrual_policy_line_id:
+                    accrued_hours = self._get_accrued_accrual(
+                        holiday_hours,
+                        line.accrual_policy_line_id.accrual_rate_hour,
+                        line.accrual_min,
+                        line.accrual_max,
+                    )
+                    if (
+                        fields.Float.compare(accrued_hours, 0.0, precision_digits=2)
+                        == 1
+                    ):
+                        self._add_accrued_hours(line, attendances, accrued_hours)
 
                 hours -= holiday_hours
                 touched = True
@@ -770,11 +779,18 @@ class HrPayslip(models.Model):
                 attendances[line.code]["number_of_days"] += ot_hours > 0 and 1.0 or 0
 
                 # Process Accruals
-                accrued_hours = self._get_accrued_accrual(
-                    ot_hours, line.accrual_rate, line.accrual_min, line.accrual_max
-                )
-                if fields.Float.compare(accrued_hours, 0.0, precision_digits=2) == 1:
-                    self._add_accrued_hours(line, attendances, accrued_hours)
+                if line.accrual_policy_line_id:
+                    accrued_hours = self._get_accrued_accrual(
+                        ot_hours,
+                        line.accrual_policy_line_id.accrual_rate_hour,
+                        line.accrual_min,
+                        line.accrual_max,
+                    )
+                    if (
+                        fields.Float.compare(accrued_hours, 0.0, precision_digits=2)
+                        == 1
+                    ):
+                        self._add_accrued_hours(line, attendances, accrued_hours)
 
                 hours -= ot_hours
                 touched = True
@@ -813,11 +829,18 @@ class HrPayslip(models.Model):
                 attendances[line.code]["number_of_days"] += rd_hours > 0 and 1.0 or 0
 
                 # Process Accruals
-                accrued_hours = self._get_accrued_accrual(
-                    rd_hours, line.accrual_rate, line.accrual_min, line.accrual_max
-                )
-                if fields.Float.compare(accrued_hours, 0.0, precision_digits=2) == 1:
-                    self._add_accrued_hours(line, attendances, accrued_hours)
+                if line.accrual_policy_line_id:
+                    accrued_hours = self._get_accrued_accrual(
+                        rd_hours,
+                        line.accrual_policy_line_id.accrual_rate_hour,
+                        line.accrual_min,
+                        line.accrual_max,
+                    )
+                    if (
+                        fields.Float.compare(accrued_hours, 0.0, precision_digits=2)
+                        == 1
+                    ):
+                        self._add_accrued_hours(line, attendances, accrued_hours)
 
                 hours -= rd_hours
                 touched = True
@@ -830,11 +853,18 @@ class HrPayslip(models.Model):
                 attendances[line.code]["number_of_days"] += ot_hours > 0 and 1.0 or 0
 
                 # Process Accruals
-                accrued_hours = self._get_accrued_accrual(
-                    ot_hours, line.accrual_rate, line.accrual_min, line.accrual_max
-                )
-                if fields.Float.compare(accrued_hours, 0.0, precision_digits=2) == 1:
-                    self._add_accrued_hours(line, attendances, accrued_hours)
+                if line.accrual_policy_line_id:
+                    accrued_hours = self._get_accrued_accrual(
+                        ot_hours,
+                        line.accrual_policy_line_id.accrual_rate_hour,
+                        line.accrual_min,
+                        line.accrual_max,
+                    )
+                    if (
+                        fields.Float.compare(accrued_hours, 0.0, precision_digits=2)
+                        == 1
+                    ):
+                        self._add_accrued_hours(line, attendances, accrued_hours)
 
                 hours -= ot_hours
                 touched = True

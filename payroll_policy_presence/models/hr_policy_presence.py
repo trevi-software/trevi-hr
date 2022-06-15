@@ -39,7 +39,7 @@ class PolicyPresence(models.Model):
                         line.duration,
                         line.accrual_policy_line_id.id,
                         line.accrual_policy_line_id.code,
-                        line.accrual_rate,
+                        line.accrual_policy_line_id.accrual_rate_hour,
                         line.accrual_min,
                         line.accrual_max,
                     )
