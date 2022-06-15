@@ -67,6 +67,7 @@
                     <field name="name" />
                     <field name="date" />
                     <field name="work_hours_per_week" />
+                    <field name="work_days_per_week" />
                 </tree>
             </field>
         </record>
@@ -87,6 +88,7 @@
                             </group>
                             <group>
                                 <field name="work_hours_per_week" />
+                                <field name="work_days_per_week" />
                             </group>
                         </group>
                         <group string="Policy Lines">

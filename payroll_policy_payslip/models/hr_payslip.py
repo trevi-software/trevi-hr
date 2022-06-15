@@ -6,6 +6,34 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 
 
+class LastXDays:
+    """Last X Days
+    Keeps track of the days an employee worked/didn't work in the last X days.
+    """
+
+    def __init__(self, days=6):
+        self.limit = days
+        self.arr = []
+
+    def reset(self):
+        self.arr = []
+
+    def push(self, worked=False):
+        if len(self.arr) == (self.limit + 1):
+            self.arr.pop(0)
+        self.arr.append(worked)
+        return [v for v in self.arr]
+
+    def days_worked(self):
+        res = 0
+        for d in reversed(self.arr):
+            if d is True:
+                res += 1
+            else:
+                break
+        return res
+
+
 class HrPayslip(models.Model):
 
     _inherit = "hr.payslip"
@@ -23,6 +51,10 @@ class HrPayslip(models.Model):
             d += timedelta(days=1)
 
         return res
+
+    def attendance_dict_list(self, att_dict):
+
+        return att_dict["raw_list"]
 
     def attendance_dict_hours_on_day(self, d, attendance_dict):
 
@@ -52,8 +84,24 @@ class HrPayslip(models.Model):
         for d in daysofweek:
             if d not in resource_calendar.attendance_ids.mapped("dayofweek"):
                 res["default"].append(int(d))
-        print(f"get_days_off: {res}")
         return res
+
+    @api.model
+    def require_day_off(self, lsd, presence_policy):
+
+        work_days = 6
+        if presence_policy.work_days_per_week:
+            work_days = presence_policy.work_days_per_week
+
+        if lsd.days_worked() >= work_days:
+            return True
+
+        return False
+
+    @api.model
+    def consecutive_days_worked(self, lsd, presence_policy):
+
+        return lsd.days_worked()
 
     @api.model
     def get_worked_day_lines(self, contracts, date_from, date_to):
@@ -73,6 +121,9 @@ class HrPayslip(models.Model):
         nb_of_days = (date_to - date_from).days + 1
         presence_data = None
         data2 = None
+        ot_data = None
+        data2 = None
+        att_obj = self.env["hr.attendance"]
         for contract in contracts:
 
             # Get default set of rest days for this employee/contract
@@ -103,6 +154,11 @@ class HrPayslip(models.Model):
             }
             normal_working_hours = 0
 
+            # Short-circuit:
+            # If the policy for the first day is the same as the one for the
+            # last day assume that it will also be the same for the days in
+            # between, and reuse the same policy instead of checking for every day.
+            #
             presence_data = self.get_presence_policies(
                 contract.policy_group_id, date_from, presence_data
             )
@@ -111,6 +167,32 @@ class HrPayslip(models.Model):
                 "policy"
             ].id == data2["policy"].id:
                 presence_data["_reuse"] = True
+
+            ot_data = self.get_ot_policies(contract.policy_group_id, date_from, ot_data)
+            data2 = self.get_ot_policies(contract.policy_group_id, date_to, data2)
+            if (ot_data["policy"] and data2["policy"]) and ot_data[
+                "policy"
+            ].id == data2["policy"].id:
+                ot_data["_reuse"] = True
+
+            # Calculate the number of days worked in the last week before the
+            # start of this contract. Necessary to calculate Weekly Rest Day OT.
+            #
+            lsd = LastXDays()
+            if len(lsd.arr) == 0:
+                d = dTempPeriodFrom - timedelta(days=6)
+                while d < dTempPeriodFrom:
+                    att_count = att_obj.search_count(
+                        [
+                            ("employee_id", "=", contract.employee_id.id),
+                            ("day", "=", d.strftime("%Y-%m-%d")),
+                        ],
+                    )
+                    if att_count > 0:
+                        lsd.push(True)
+                    else:
+                        lsd.push(False)
+                    d += timedelta(days=1)
 
             for day in range(0, temp_nb_of_days):
                 dToday = dTempPeriodFrom + timedelta(days=day)
@@ -166,19 +248,66 @@ class HrPayslip(models.Model):
 
                             presence_sequence += 1
 
-                ot_policy = False
-                lsd = False
-
-                # Actual number of hours worked on the day. Based on attendance records.
-                working_hours_on_day = self.attendance_dict_hours_on_day(
-                    dToday, working_hours_dict
+                # Get OT data
+                #
+                ot_data = self.get_ot_policies(
+                    contract.policy_group_id, dToday, ot_data
                 )
+                ot_policy = ot_data["policy"]
+                daily_ot = ot_data["daily"]
+                ot_sequence = 3
+
+                if ot_policy:
+                    for (
+                        otcode,
+                        otname,
+                        _ottype,
+                        otrate,
+                        otacc_id,
+                        otacc_code,
+                        otaccrate,
+                        otaccmin,
+                        otaccmax,
+                    ) in ot_data["codes"]:
+                        if attendances.get(otcode, False):
+                            continue
+                        attendances[otcode] = {
+                            "name": otname,
+                            "code": otcode,
+                            "sequence": ot_sequence,
+                            "number_of_days": 0.0,
+                            "number_of_hours": 0.0,
+                            "rate": otrate,
+                            "contract_id": contract.id,
+                        }
+                        ot_sequence += 1
+
+                        # Create accrual input
+                        if otacc_id:
+                            if self._insert_accrual(
+                                contract.id,
+                                attendances,
+                                otacc_id,
+                                otacc_code,
+                                otaccrate,
+                                otaccmin,
+                                otaccmax,
+                                ot_sequence,
+                            ):
+
+                                ot_sequence += 1
 
                 # Is today a holiday?
                 public_holiday = self.holidays_list_contains(
                     dToday, public_holidays_list
                 )
 
+                # Actual number of hours worked on the day. Based on attendance records.
+                working_hours_on_day = self.attendance_dict_hours_on_day(
+                    dToday, working_hours_dict
+                )
+
+                push_lsd = True
                 if working_hours_on_day:
                     done = False
 
@@ -197,7 +326,7 @@ class HrPayslip(models.Model):
                             done = True
                         else:
                             working_hours_on_day = _hours
-                    elif dToday.weekday() in rest_days["default"]:
+                    elif self.require_day_off(lsd, presence_policy):
                         _hours, push_lsd = self._book_restday_hours(
                             contract,
                             presence_policy,
@@ -212,6 +341,90 @@ class HrPayslip(models.Model):
                             done = True
                         else:
                             working_hours_on_day = _hours
+
+                    if not done and daily_ot:
+
+                        # Do the OT between specified times (partial OT) first, so that it
+                        # doesn't get double-counted in the regular OT.
+                        #
+                        partial_hr = 0
+                        hours_after_ot = working_hours_on_day
+                        for line in ot_policy.line_ids:
+                            active_after_hrs = float(line.active_after) / 60.0
+                            if (
+                                line.type == "daily"
+                                and working_hours_on_day > active_after_hrs
+                                and line.active_start_time
+                            ):
+                                partial_hr = att_obj.partial_hours_on_day(
+                                    contract,
+                                    dToday,
+                                    active_after_hrs,
+                                    line.active_start_time,
+                                    line.active_end_time,
+                                    line.tz,
+                                    punches_list=self.attendance_dict_list(
+                                        working_hours_dict
+                                    ),
+                                )
+                                if (
+                                    fields.Float.compare(
+                                        partial_hr, 0.0, precision_digits=2
+                                    )
+                                    == 1
+                                ):
+                                    attendances[line.code][
+                                        "number_of_hours"
+                                    ] += partial_hr
+                                    attendances[line.code]["number_of_days"] += 1.0
+                                    hours_after_ot -= partial_hr
+                                    working_hours_on_day -= partial_hr
+
+                                    # Process Accruals
+                                    accrued_hours = self._get_accrued_accrual(
+                                        partial_hr,
+                                        line.accrual_rate,
+                                        line.accrual_min,
+                                        line.accrual_max,
+                                    )
+                                    if (
+                                        fields.Float.compare(
+                                            accrued_hours, 0.0, precision_digits=2
+                                        )
+                                        == 1
+                                    ):
+                                        self._add_accrued_hours(
+                                            line, attendances, accrued_hours
+                                        )
+
+                        for line in ot_policy.line_ids:
+                            active_after_hrs = float(line.active_after) / 60.0
+                            if (
+                                line.type == "daily"
+                                and hours_after_ot > active_after_hrs
+                                and not line.active_start_time
+                            ):
+                                attendances[line.code][
+                                    "number_of_hours"
+                                ] += hours_after_ot - (float(line.active_after) / 60.0)
+                                attendances[line.code]["number_of_days"] += 1.0
+
+                                # Process Accruals
+                                accrued_hours = self._get_accrued_accrual(
+                                    hours_after_ot - (float(line.active_after) / 60.0),
+                                    line.accrual_rate,
+                                    line.accrual_min,
+                                    line.accrual_max,
+                                )
+                                if (
+                                    fields.Float.compare(
+                                        accrued_hours, 0.0, precision_digits=2
+                                    )
+                                    == 1
+                                ):
+                                    self._add_accrued_hours(
+                                        line, attendances, accrued_hours
+                                    )
 
                     if not done:
                         for line in presence_policy.line_ids:
@@ -246,6 +459,15 @@ class HrPayslip(models.Model):
                                     )
 
                                 done = True
+
+                    if push_lsd:
+                        lsd.push(True)
+
+                        # If employee has worked 7 consecutive days reset counter
+                        if self.consecutive_days_worked(lsd, presence_policy) == 7:
+                            lsd.reset()
+                else:
+                    lsd.push(False)
 
                 # Calculate total possible working hours in the month
                 if dToday.weekday() not in rest_days["default"]:
@@ -293,6 +515,51 @@ class HrPayslip(models.Model):
 
         data["policy"] = policy
         data["codes"] = policy.get_codes()
+        return data
+
+    @api.model
+    def _get_ot_policy(self, policy_group, dDay):
+        """Return an OT policy with an effective date before dDay but
+        greater than all others"""
+
+        res = self._get_policy(policy_group, policy_group.ot_policy_ids, dDay)
+        if res is None:
+            res = self.env["hr.policy.ot"]
+        return res
+
+    @api.model
+    def get_ot_policies(self, policy_group_id, day, data):
+
+        if data is None or not data["_reuse"]:
+            data = {
+                "policy": None,
+                "daily": None,
+                "restday2": None,
+                "restday": None,
+                "weekly": None,
+                "holiday": None,
+                "codes": False,
+                "_reuse": False,
+            }
+        elif data["_reuse"]:
+            return data
+
+        ot_policy = self._get_ot_policy(policy_group_id, day)
+        data["policy"] = ot_policy
+        if not ot_policy:
+            return data
+        daily_ot = ot_policy and len(ot_policy.daily_codes()) > 0 or None
+        restday2_ot = ot_policy and len(ot_policy.restday2_codes()) > 0 or None
+        restday_ot = ot_policy and len(ot_policy.restday_codes()) > 0 or None
+        weekly_ot = ot_policy and len(ot_policy.weekly_codes()) > 0 or None
+        holiday_ot = ot_policy and len(ot_policy.holiday_codes()) > 0 or None
+
+        data["codes"] = ot_policy.get_codes()
+        data["daily"] = daily_ot
+        data["restday2"] = restday2_ot
+        data["restday"] = restday_ot
+        data["weekly"] = weekly_ot
+        data["holiday"] = holiday_ot
         return data
 
     @api.model
@@ -352,7 +619,7 @@ class HrPayslip(models.Model):
         attendances[policy_line.accrual_policy_line_id.code]["number_of_hours"] += hours
 
     @api.model
-    def _get_applied_time(self, worked_hours, pol_active_after, pol_duration=None):
+    def _get_applied_time(self, worked_hours, pol_active_after, pol_duration=False):
         """Returns worked time in hours according to pol_active_after and pol_duration."""
 
         applied_min = (worked_hours * 60) - pol_active_after
@@ -380,7 +647,8 @@ class HrPayslip(models.Model):
         worked_hours,
     ):
 
-        push_lsd = True
+        touched = False
+        push_lsd = False
         hours = worked_hours
 
         # Process normal working hours
@@ -402,31 +670,31 @@ class HrPayslip(models.Model):
                     self._add_accrued_hours(line, attendances, accrued_hours)
 
                 hours -= holiday_hours
+                touched = True
 
         # Process OT hours
-        # for line in ot_policy.line_ids:
-        #     if line.type == 'holiday':
-        #         ot_hours = self._get_applied_time(worked_hours, line.active_after)
-        #         attendances[line.code]['number_of_hours'] += ot_hours
-        #         attendances[line.code]['number_of_days'] += ot_hours > 0 and 1.0 or 0
+        for line in ot_policy.line_ids:
+            if line.type == "holiday":
+                ot_hours = self._get_applied_time(worked_hours, line.active_after)
+                attendances[line.code]["number_of_hours"] += ot_hours
+                attendances[line.code]["number_of_days"] += ot_hours > 0 and 1.0 or 0
 
-        #         # Process Accruals
-        #         accrued_hours = self._get_accrued_accrual(ot_hours,
-        #                                                   line.accrual_rate, line.accrual_min,
-        #                                                   line.accrual_max)
-        #         if fields.Float.compare(accrued_hours, 0.0, precision_digits=2) == 1:
-        #             self._add_accrued_hours(line, attendances, accrued_hours)
+                # Process Accruals
+                accrued_hours = self._get_accrued_accrual(
+                    ot_hours, line.accrual_rate, line.accrual_min, line.accrual_max
+                )
+                if fields.Float.compare(accrued_hours, 0.0, precision_digits=2) == 1:
+                    self._add_accrued_hours(line, attendances, accrued_hours)
 
-        #         hours -= ot_hours
-        #         done = True
+                hours -= ot_hours
+                touched = True
 
-        # if done and (dtDay.weekday() in rest_days or lsd.days_worked == 6):
-        #     # Mark this day as *not* worked so that subsequent days
-        #     # are not treated as over-time.
-        #     lsd.push(False)
-        #     push_lsd = False
+        if touched:
+            push_lsd = True
 
+        # make 'nearly zero' values zero
         hours = round(hours, 2)
+
         return hours, push_lsd
 
     def _book_restday_hours(
@@ -441,12 +709,13 @@ class HrPayslip(models.Model):
         worked_hours,
     ):
 
-        push_lsd = True
+        touched = False
+        push_lsd = False
         hours = worked_hours
 
         # Process normal working hours
         for line in presence_policy.line_ids:
-            if line.type == "restday" and dtDay.weekday() in rest_days:
+            if line.type == "restday" and self.require_day_off(lsd, presence_policy):
                 rd_hours = self._get_applied_time(
                     worked_hours, line.active_after, line.duration
                 )
@@ -461,29 +730,29 @@ class HrPayslip(models.Model):
                     self._add_accrued_hours(line, attendances, accrued_hours)
 
                 hours -= rd_hours
+                touched = True
 
         # Process OT hours
-        # for line in ot_policy.line_ids:
-        #     if line.type == 'restday' and dtDay.weekday() in rest_days:
-        #         ot_hours = self._get_applied_time(worked_hours, line.active_after)
-        #         attendances[line.code]['number_of_hours'] += ot_hours
-        #         attendances[line.code]['number_of_days'] += ot_hours > 0 and 1.0 or 0
+        for line in ot_policy.line_ids:
+            if line.type == "restday" and self.require_day_off(lsd, presence_policy):
+                ot_hours = self._get_applied_time(worked_hours, line.active_after)
+                attendances[line.code]["number_of_hours"] += ot_hours
+                attendances[line.code]["number_of_days"] += ot_hours > 0 and 1.0 or 0
 
-        #         # Process Accruals
-        #         accrued_hours = self._get_accrued_accrual(ot_hours,
-        #                                                   line.accrual_rate, line.accrual_min,
-        #                                                   line.accrual_max)
-        #         if float_compare(accrued_hours, 0.0, precision_digits=2) == 1:
-        #             self._add_accrued_hours(line, attendances, accrued_hours)
+                # Process Accruals
+                accrued_hours = self._get_accrued_accrual(
+                    ot_hours, line.accrual_rate, line.accrual_min, line.accrual_max
+                )
+                if fields.Float.compare(accrued_hours, 0.0, precision_digits=2) == 1:
+                    self._add_accrued_hours(line, attendances, accrued_hours)
 
-        #         hours -= ot_hours
-        #         done = True
+                hours -= ot_hours
+                touched = True
 
-        # if done and (dtDay.weekday() in rest_days or lsd.days_worked == 6):
-        #     # Mark this day as *not* worked so that subsequent days
-        #     # are not treated as over-time.
-        #     lsd.push(False)
-        #     push_lsd = False
+        if touched:
+            push_lsd = True
 
+        # make 'nearly zero' values zero
         hours = round(hours, 2)
+
         return hours, push_lsd
