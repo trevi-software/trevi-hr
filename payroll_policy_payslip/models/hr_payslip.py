@@ -544,7 +544,6 @@ class HrPayslip(models.Model):
             attendances = [value for _key, value in attendances.items()]
             res += attendances
 
-        print(f"Res: \n{res}")
         return res
 
     def _get_policy(self, policy_group, policy_ids, dDay):
