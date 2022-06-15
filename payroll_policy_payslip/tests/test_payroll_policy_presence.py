@@ -11,6 +11,48 @@ class TestPresencePolicy(common.TestHrPayslip):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.LeaveType = cls.env["hr.leave.type"]
+        cls.Accrual = cls.env["hr.accrual"]
+        cls.AccrualPolicy = cls.env["hr.policy.accrual"]
+        cls.AccrualPolicyLine = cls.env["hr.policy.line.accrual"]
+
+        cls.lt = cls.LeaveType.create({"name": "Rest-day Compensatory", "code": "ARD"})
+        cls.aa = cls.Accrual.create(
+            {"name": "Compensatory Rest day", "holiday_status_id": cls.lt.id}
+        )
+        cls.policy = cls.AccrualPolicy.create(
+            {
+                "name": "Compensatory Restday",
+                "date": date(2022, 1, 1),
+            }
+        )
+        cls.pl = cls.AccrualPolicyLine.create(
+            {
+                "name": "Compensatory Rest",
+                "code": "CRS",
+                "type": "hour",
+                "accrual_id": cls.aa.id,
+                "policy_id": cls.policy.id,
+                "accrual_rate_hour": 1.0,
+            }
+        )
+        cls.restday_presence_line.accrual_policy_line_id = cls.pl
+        cls.restday_presence_line.accrual_min = 8.0
+        cls.restday_presence_line.accrual_max = 8.0
+
+        # Create a salary rule for Accrual tests and add it to the salary structure
+        cls.accrual_test_rule = cls.Rule.create(
+            {
+                "name": "Accrual test rule",
+                "code": "ACRTEST",
+                "category_id": cls.env.ref("payroll.ALW").id,
+                "sequence": 6,
+                "amount_select": "code",
+                "amount_python_compute": "result = 0",
+            }
+        )
+        cls.payroll_structure.write({"rule_ids": [(4, cls.accrual_test_rule.id)]})
+
         # Create a public holiday
         cls.public_holiday = cls.PublicHoliday.create(
             {
@@ -131,6 +173,11 @@ class TestPresencePolicy(common.TestHrPayslip):
             "result_rate = worked_days.RST.rate * 100 \n"
             "result = worked_days.RST.number_of_hours"
         )
+        # I set the test rule to detect the number of accruals added
+        self.accrual_test_rule.amount_python_compute = (
+            "result_rate = worked_days.CRS.rate * 100 \n"
+            "result = worked_days.CRS.number_of_hours"
+        )
 
         # I create a contract for "Richard"
         contract_start = date(2022, 1, 1)
@@ -184,15 +231,36 @@ class TestPresencePolicy(common.TestHrPayslip):
             "Rest day hours are accrued at the regular rate",
         )
 
+        line = richard_payslip.line_ids.filtered(lambda l: l.code == "ACRTEST")
+        self.assertEqual(len(line), 1, "I found the Accrual Test line")
+        self.assertEqual(
+            line[0].amount,
+            8.0,
+            "The number of accrued hours is 8",
+        )
+        self.assertEqual(
+            line[0].rate,
+            100,
+            "Rest day hours are accrued at a 1:1 rate",
+        )
+
     def test_worked_restday_weekend(self):
 
         # I set the weekly working days to 5
         self.presence_policy.work_days_per_week = 5
 
+        # I adjust the accrual multiple to 2:1
+        self.pl.accrual_rate_hour = 2.0
+
         # I set the test rule to detect the number of rest day worked hours
         self.test_rule.amount_python_compute = (
             "result_rate = worked_days.RST.rate * 100 \n"
             "result = worked_days.RST.number_of_hours"
+        )
+        # I set the test rule to detect the number of accruals added
+        self.accrual_test_rule.amount_python_compute = (
+            "result_rate = worked_days.CRS.rate * 100 \n"
+            "result = worked_days.CRS.number_of_hours"
         )
 
         # I create a contract for "Richard"
@@ -245,4 +313,17 @@ class TestPresencePolicy(common.TestHrPayslip):
             line[0].rate,
             100,
             "Rest day hours are accrued at the regular rate",
+        )
+
+        line = richard_payslip.line_ids.filtered(lambda l: l.code == "ACRTEST")
+        self.assertEqual(len(line), 1, "I found the Accrual Test line")
+        self.assertEqual(
+            line[0].amount,
+            16.0,
+            "The number of accrued hours is 16",
+        )
+        self.assertEqual(
+            line[0].rate,
+            200,
+            "Rest day hours are accrued at a 2:1 rate",
         )
