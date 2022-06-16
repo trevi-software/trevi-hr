@@ -566,7 +566,10 @@ class HrPayslip(models.Model):
         """Return a Presence Policy with an effective date before dDay but
         greater than all others"""
 
-        return self._get_policy(policy_group, policy_group.presence_policy_ids, dDay)
+        res = self._get_policy(policy_group, policy_group.presence_policy_ids, dDay)
+        if res is None:
+            res = self.env["hr.policy.presence"]
+        return res
 
     def get_presence_policies(self, policy_group_id, day, data):
 
