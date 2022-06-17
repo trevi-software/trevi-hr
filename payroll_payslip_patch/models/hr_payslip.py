@@ -66,7 +66,6 @@ class HrPayslip(models.Model):
             inputs_dict[input_line.code] = input_line
 
         contracts = self.env["hr.contract"].browse(contract_ids)
-        payslip = self.browse(payslip_id)
         categories = BrowsableObject(payslip.employee_id.id, {}, self.env)
         inputs = InputLine(payslip.employee_id.id, inputs_dict, self.env)
         worked_days = WorkedDays(payslip.employee_id.id, worked_days_dict, self.env)
@@ -107,9 +106,6 @@ class HrPayslip(models.Model):
             baselocaldict["this_contract"] = BrowsableObject(
                 payslip.employee_id.id, contract_dict, self.env
             )
-            # baselocaldict["this_contract"].update({
-            #     "contract": self.get_contractdict(payslip, contract, contract_ids)
-            # })
             localdict = dict(baselocaldict, employee=employee, contract=contract)
             for rule in sorted_rules:
                 key = rule.code + "-" + str(contract.id)
