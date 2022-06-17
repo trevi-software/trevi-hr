@@ -65,6 +65,8 @@ class TestPayslip(TestPayslipBase):
             mock_payslip_line.amount, 1.0, "The mock payslip rule was evaluated"
         )
 
+        richard_payslip._revert_method("get_localdict")
+
     def test_contractdict(self):
 
         self.apply_contract_cron()
@@ -93,3 +95,5 @@ class TestPayslip(TestPayslipBase):
             1.0,
             "The mock payslip contract rule was evaluated",
         )
+
+        richard_payslip._revert_method("get_contractdict")
