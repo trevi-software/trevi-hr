@@ -16,7 +16,6 @@
         "hr_attendance_day",
         "hr_holidays_public",
         "payroll",
-        "payroll_payslip_hr_leave_type",
         "payroll_policy_absence",
         "payroll_policy_accrual",
         "payroll_policy_group",
