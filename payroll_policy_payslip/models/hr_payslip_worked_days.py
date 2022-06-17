@@ -8,5 +8,5 @@ class HrPayslipWorkedDays(models.Model):
 
     _inherit = "hr.payslip.worked_days"
 
-    rate = fields.Float("Rate", required=True, default=0.0, digits="Payroll Rate")
+    rate = fields.Float("Rate", default=0.0, digits="Payroll Rate")
     accrual_policy_line_id = fields.Many2one("hr.policy.line.accrual", "Accrual Policy")
