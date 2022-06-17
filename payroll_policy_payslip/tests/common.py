@@ -34,6 +34,7 @@ class TestHrPayslip(common.SavepointCase):
                 "country_id": cls.env.ref("base.be").id,
                 "department_id": cls.env.ref("hr.dep_rd").id,
                 "resource_calendar_id": cls.resource_calendar_std.id,
+                "tz": "Africa/Addis_Ababa",
             }
         )
 
