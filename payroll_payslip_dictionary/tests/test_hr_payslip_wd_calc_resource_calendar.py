@@ -42,6 +42,7 @@ class TestHrPayslip(common.TestHrPayslip):
 
         # I create an employee Payslip and process it
         richard_payslip = self.create_payslip(start, end, self.richard_emp)
+        richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
         line = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
