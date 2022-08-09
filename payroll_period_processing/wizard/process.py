@@ -219,9 +219,18 @@ class ProcessingWizard(models.TransientModel):
         this pay period's schedule.
         """
 
+        # DateTime in db is stored as naive UTC. Convert it to explicit UTC and then convert
+        # that into the time zone of the pay period schedule.
+        #
         period = self.payroll_period_id
-        date_start = period.date_start.date()
-        date_end = period.date_end.date()
+        local_tz = timezone(period.schedule_id.tz)
+        utcdt_start = utc.localize(period.date_start)
+        tzdt_start = utcdt_start.astimezone(local_tz)
+        utcdt_end = utc.localize(period.date_end)
+        tzdt_end = utcdt_end.astimezone(local_tz)
+
+        date_start = tzdt_start.date()
+        date_end = tzdt_end.date()
         previous_register = period.register_id
         contract_ids = period.schedule_id.contract_ids
 
