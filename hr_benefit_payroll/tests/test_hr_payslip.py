@@ -1,7 +1,7 @@
 # Copyright (C) 2021 Trevi Software (https://trevi.et)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from datetime import date
+from datetime import date, timedelta
 
 from odoo import fields
 
@@ -223,4 +223,37 @@ class TestBenefit(benefit_common.TestBenefitCommon):
             slip.benefit_line_ids[0].deductions,
             0,
             "Benefit line should show no dedections",
+        )
+
+    def test_benefit_policy_ppf(self):
+        """
+        Test for off-by-one error when calculating policy and payroll days.
+        29 / 30 as opposed to 30 / 31. Manifests as ppf calculation error.
+        """
+
+        start = date(2021, 1, 1)
+        end = date(2021, 1, 31)
+        self.benefit_create_vals.update({"link2payroll": True})
+        benefit = self.create_benefit(self.benefit_create_vals)
+        self.create_earning(benefit, start=start, allowance=100.00)
+        self.create_policy(self.eeJohn, benefit, start + timedelta(days=1))
+        self.create_contract(self.eeJohn.id, "draft", "done", start).signal_confirm()
+        slip = self.Payslip.create(
+            {
+                "employee_id": self.eeJohn.id,
+                "date_from": start,
+                "date_to": end,
+            }
+        )
+        slip.onchange_employee()
+
+        self.assertEqual(
+            len(slip.benefit_line_ids),
+            1,
+            "There should be only 1 benefit line attached to payslip",
+        )
+        self.assertEqual(
+            round(slip.benefit_line_ids[0].ppf, 4),
+            0.9677,
+            "Benefit should indicate PPF of 0.9677",
         )
