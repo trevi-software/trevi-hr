@@ -132,7 +132,7 @@ class HrPayslip(models.Model):
         dSlipEnd = date_to
         d = dSlipStart
         deltaSlip = 0
-        while d < dSlipEnd:
+        while d <= dSlipEnd:
             deltaSlip += 1
             d += timedelta(days=+1)
 
@@ -157,7 +157,7 @@ class HrPayslip(models.Model):
 
             d = dS
             deltaPol = 0
-            while d < dE:
+            while d <= dE:
                 deltaPol += 1
                 d += timedelta(days=+1)
 
