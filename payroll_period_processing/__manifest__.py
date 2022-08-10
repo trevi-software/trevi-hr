@@ -5,7 +5,7 @@
 {
     "name": "Payroll Period Processing",
     "summary": "Payroll period processing wizard",
-    "version": "14.0.1.2.0",
+    "version": "14.0.1.2.1",
     "category": "Payroll",
     "images": ["static/src/img/main_screenshot.png"],
     "license": "AGPL-3",
