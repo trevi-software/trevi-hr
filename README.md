@@ -26,7 +26,7 @@ addon | version | maintainers | summary
 [hr_accrual_bank](hr_accrual_bank/) | 14.0.1.0.0 |  | Basic framework for recording accruals to a time bank
 [hr_attendance_day](hr_attendance_day/) | 14.0.1.0.0 |  | Attach a localized date to an attendace record
 [hr_benefit](hr_benefit/) | 14.0.1.0.1 |  | Assign benefits and deductables to employees
-[hr_benefit_payroll](hr_benefit_payroll/) | 14.0.1.0.0 |  | Access benefits in payroll through salary rules.
+[hr_benefit_payroll](hr_benefit_payroll/) | 14.0.1.0.1 |  | Access benefits in payroll through salary rules.
 [hr_contract_status](hr_contract_status/) | 14.0.1.0.1 |  | Workflows and notifications on employee contracts.
 [hr_contract_status_benefit](hr_contract_status_benefit/) | 14.0.1.0.0 |  | Link hr_contract_status with hr_benefit
 [hr_contract_values](hr_contract_values/) | 14.0.1.0.0 |  | Contracts - Initial Settings
@@ -48,6 +48,7 @@ addon | version | maintainers | summary
 [payroll_payslip_dictionary](payroll_payslip_dictionary/) | 14.0.1.0.0 |  | Dictionary of values that can be used in payslip calculations
 [payroll_payslip_hr_leave_type](payroll_payslip_hr_leave_type/) | 14.0.1.0.0 |  | Use time-off codes (instead of names) in payslip rules
 [payroll_payslip_patch](payroll_payslip_patch/) | 14.0.1.0.0 |  | Miscellaneous source code patches to payslip handling
+[payroll_payslip_report](payroll_payslip_report/) | 14.0.1.0.0 |  | Comprehensive payslip report by department.
 [payroll_period_account](payroll_period_account/) | 14.0.1.0.0 |  | Links payroll periods to accounting
 [payroll_period_base_lock](payroll_period_base_lock/) | 14.0.1.0.0 |  | Adds a base lock field to a payroll period.
 [payroll_period_contract_values](payroll_period_contract_values/) | 14.0.1.0.0 |  | Links payroll period schedules with employee contracts.
