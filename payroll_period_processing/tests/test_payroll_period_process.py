@@ -282,3 +282,12 @@ class TestProcessing(common.SavepointCase):
             start.date(),
             "Start date of payslip batch is adjusted for timezone",
         )
+
+        self.assertTrue(len(register.run_ids) > 0)
+        self.assertTrue(len(register.run_ids[0].slip_ids) > 0)
+        payslip = register.run_ids[0].slip_ids[0]
+        self.assertEqual(
+            payslip.date_from,
+            start.date(),
+            "Start date of payslip batch is adjusted for timezone",
+        )
