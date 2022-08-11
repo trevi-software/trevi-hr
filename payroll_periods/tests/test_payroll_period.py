@@ -4,6 +4,7 @@
 from datetime import date, datetime
 
 from dateutil.relativedelta import relativedelta
+from pytz import timezone, utc
 
 from odoo.exceptions import ValidationError
 from odoo.tests import common, new_test_user
@@ -231,13 +232,21 @@ class TestSchedule(common.SavepointCase):
         self.assertEqual("payment", pp.state)
 
     def test_create_payslip_dates(self):
-        """Payslip date_from -> date_to = same as payroll period"""
+        """Payslip date_from -> date_to = same as payroll period adj. for tz"""
 
         start = datetime(2021, 1, 1)
         end = datetime(2021, 1, 31, 23, 59, 59)
         self.create_contract(self.eeJohn.id, "draft", "done", start)
         pps = self.create_payroll_schedule("manual", start.date())
-        pp = self.create_payroll_period(pps.id, start, end)
+        tz_local = timezone(pps.tz)
+        tz_start = tz_local.localize(start, is_dst=False)
+        tz_end = tz_local.localize(end, is_dst=False)
+        utc_start = tz_start.astimezone(utc)
+        utc_end = tz_end.astimezone(utc)
+        pp = self.create_payroll_period(
+            pps.id, utc_start.replace(tzinfo=None), utc_end.replace(tzinfo=None)
+        )
+
         run = self.Run.create(
             {
                 "name": "Run A",
@@ -248,8 +257,10 @@ class TestSchedule(common.SavepointCase):
         )
         slip = pp.create_payslip(self.eeJohn.id, run_id=run.id)
 
-        self.assertEqual(pp.date_start.date(), slip.date_from)
-        self.assertEqual(pp.date_end.date(), slip.date_to)
+        self.assertEqual(pp.date_start.date(), date(2020, 12, 31))
+        self.assertEqual(pp.date_end.date(), date(2021, 1, 31))
+        self.assertEqual(slip.date_from, date(2021, 1, 1))
+        self.assertEqual(slip.date_to, date(2021, 1, 31))
 
     def test_create_payslip_dates_two_contract(self):
         """Payslip with 2 contracts: date_from -> date_to = sum of both"""
