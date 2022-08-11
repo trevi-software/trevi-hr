@@ -249,9 +249,13 @@ class HrPayrollPeriod(models.Model):
     def create_payslip(self, employee_id, run_id=False):
 
         self.ensure_one()
+        local_tz = timezone(self.schedule_id.tz)
+        utc_pstart, utc_pend = self.get_utc_times(self)
+        tz_pstart = utc_pstart.astimezone(local_tz)
+        tz_pend = utc_pend.astimezone(local_tz)
         annual_pay_periods = self.schedule_id.annual_pay_periods
-        dPeriodStart = self.date_start.date()
-        dPeriodEnd = self.date_end.date()
+        dPeriodStart = tz_pstart.date()
+        dPeriodEnd = tz_pend.date()
         Payslip = self.env["hr.payslip"]
         ee = self.env["hr.employee"].browse(employee_id)
         (
