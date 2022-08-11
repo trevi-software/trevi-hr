@@ -53,8 +53,8 @@ addon | version | maintainers | summary
 [payroll_period_base_lock](payroll_period_base_lock/) | 14.0.1.0.0 |  | Adds a base lock field to a payroll period.
 [payroll_period_contract_values](payroll_period_contract_values/) | 14.0.1.0.0 |  | Links payroll period schedules with employee contracts.
 [payroll_period_payslip_amendment](payroll_period_payslip_amendment/) | 14.0.1.0.0 |  | Link payslip amendments with a payroll period.
-[payroll_period_processing](payroll_period_processing/) | 14.0.1.2.0 |  | Payroll period processing wizard
-[payroll_periods](payroll_periods/) | 14.0.1.1.3 |  | Configurable payroll schedules.
+[payroll_period_processing](payroll_period_processing/) | 14.0.1.2.1 |  | Payroll period processing wizard
+[payroll_periods](payroll_periods/) | 14.0.1.1.4 |  | Configurable payroll schedules.
 [payroll_policy_absence](payroll_policy_absence/) | 14.0.1.0.0 |  | Define properties of an employee absense policy for payroll.
 [payroll_policy_accrual](payroll_policy_accrual/) | 14.0.1.0.0 |  | Automatically or manually accrue to time banks to be withdrawn later
 [payroll_policy_group](payroll_policy_group/) | 14.0.1.0.1 |  | Group payroll policies and assign them to contracts
