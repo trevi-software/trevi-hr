@@ -34,7 +34,7 @@ class TestHrPayslip(common.TestHrPayslip):
     def test_seniority(self):
 
         # I set the test rule to detect seniority in dictionary
-        self.test_rule.amount_python_compute = "result = dictionaries.seniority"
+        self.test_rule.amount_python_compute = "result = payroll.seniority"
 
         # I create a contract for "Richard"
         contract_start = date(2022, 1, 1)
@@ -59,7 +59,7 @@ class TestHrPayslip(common.TestHrPayslip):
     def test_dictionary_max_hrs(self):
 
         # I set the test rule to detect seniority in dictionary
-        self.test_rule.amount_python_compute = "result = dictionaries.max_working_hours"
+        self.test_rule.amount_python_compute = "result = payroll.max_working_hours"
 
         # I create a contract for "Richard"
         contract_start = date(2022, 1, 1)
@@ -91,7 +91,7 @@ class TestHrPayslip(common.TestHrPayslip):
     def test_dictionary_max_days(self):
 
         # I set the test rule to detect seniority in dictionary
-        self.test_rule.amount_python_compute = "result = dictionaries.max_working_days"
+        self.test_rule.amount_python_compute = "result = payroll.max_working_days"
 
         # I create a contract for "Richard"
         contract_start = date(2022, 1, 1)
@@ -123,7 +123,7 @@ class TestHrPayslip(common.TestHrPayslip):
     def test_dictionary_weekly_hrs(self):
 
         # I set the test rule to detect seniority in dictionary
-        self.test_rule.amount_python_compute = "result = dictionaries.max_weekly_hours"
+        self.test_rule.amount_python_compute = "result = payroll.max_weekly_hours"
 
         # I create a contract for "Richard"
         contract_start = date(2022, 1, 1)
@@ -155,7 +155,7 @@ class TestHrPayslip(common.TestHrPayslip):
     def test_contract_qty(self):
 
         # I set the test rule to detect seniority in dictionary
-        self.test_rule.amount_python_compute = "result = dictionaries.CONTRACTS.qty"
+        self.test_rule.amount_python_compute = "result = payroll.contracts.count"
 
         # I create a contract for "Richard"
         contract_start = date(2022, 1, 1)
@@ -179,14 +179,16 @@ class TestHrPayslip(common.TestHrPayslip):
         line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
         self.assertEqual(len(line), 2, "I found the Test lines")
         self.assertEqual(
-            line[0].amount, 2.0, "The calculated dictionary value 'CONTRACTS.qty' is 2"
+            line[0].amount,
+            2.0,
+            "The calculated dictionary value 'payroll.contracts.qty' is 2",
         )
 
     def test_contract_cummulative_ppf(self):
 
         # I set the test rule to detect seniority in dictionary
         self.test_rule.amount_python_compute = (
-            "result = dictionaries.CONTRACTS.cummulative_ppf"
+            "result = payroll.contracts.cummulative_ppf"
         )
 
         # I create a contract for "Richard"
@@ -213,14 +215,14 @@ class TestHrPayslip(common.TestHrPayslip):
         self.assertEqual(
             line[0].amount,
             1.0,
-            "The calculated dictionary value 'CONTRACTS.cumulative_ppf' is 1",
+            "The calculated dictionary value 'payroll.contracts.cumulative_ppf' is 1",
         )
 
     def test_contract_cummulative_ppf_half(self):
 
         # I set the test rule to detect seniority in dictionary
         self.test_rule.amount_python_compute = (
-            "result = dictionaries.CONTRACTS.cummulative_ppf"
+            "result = payroll.contracts.cummulative_ppf"
         )
 
         # I create a contract for "Richard"
@@ -241,13 +243,13 @@ class TestHrPayslip(common.TestHrPayslip):
         self.assertEqual(
             line[0].amount,
             0.5,
-            "The calculated dictionary value 'CONTRACTS.cumulative_ppf' is 0.5",
+            "The calculated dictionary value 'payroll.contracts.cumulative_ppf' is 0.5",
         )
 
     def test_contract_hourly_wage(self):
 
         # I set the test rule to detect seniority in dictionary
-        self.test_rule.amount_python_compute = "result = this_contract.hourly_wage"
+        self.test_rule.amount_python_compute = "result = current_contract.hourly_wage"
 
         # I create a contract for "Richard"
         start = date(2022, 4, 1)
@@ -268,13 +270,13 @@ class TestHrPayslip(common.TestHrPayslip):
         self.assertEqual(
             res,
             0,
-            "The calculated dictionary value 'this_contract.hourly_wage' is 20.83",
+            "The calculated dictionary value 'current_contract.hourly_wage' is 20.83",
         )
 
     def test_contract_daily_wage(self):
 
         # I set the test rule to detect seniority in dictionary
-        self.test_rule.amount_python_compute = "result = this_contract.daily_wage"
+        self.test_rule.amount_python_compute = "result = current_contract.daily_wage"
 
         # I create a contract for "Richard"
         start = date(2022, 4, 1)
@@ -295,13 +297,13 @@ class TestHrPayslip(common.TestHrPayslip):
         self.assertEqual(
             res,
             0,
-            "The calculated dictionary value 'this_contract.daily_wage' is 166.67",
+            "The calculated dictionary value 'current_contract.daily_wage' is 166.67",
         )
 
     def test_contract_prevps(self):
 
         # I set the test rule to detect seniority in dictionary
-        self.test_rule.amount_python_compute = "result = dictionaries.PREVPS.exists"
+        self.test_rule.amount_python_compute = "result = payroll.PREVPS.exists"
 
         # I set a second test rule that I will use to check previous payslip amount
         self.test_rule = self.Rule.create(
@@ -311,7 +313,7 @@ class TestHrPayslip(common.TestHrPayslip):
                 "category_id": self.ref("payroll.ALW"),
                 "sequence": 5,
                 "amount_select": "code",
-                "amount_python_compute": "result = dictionaries.PREVPS.net",
+                "amount_python_compute": "result = payroll.PREVPS.net",
             }
         )
         self.payroll_structure.write({"rule_ids": [(4, self.test_rule.id)]})

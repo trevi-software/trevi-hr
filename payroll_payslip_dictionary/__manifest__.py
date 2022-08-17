@@ -15,7 +15,6 @@
         "hr_contract",
         "hr_employee_seniority_months",
         "payroll",
-        "payroll_payslip_patch",
     ],
     "data": [
         "views/res_config_settings_views.xml",

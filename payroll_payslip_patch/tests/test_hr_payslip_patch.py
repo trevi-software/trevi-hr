@@ -71,7 +71,7 @@ class TestPayslip(TestPayslipBase):
 
         self.apply_contract_cron()
         self.mock_rule.amount_python_compute = (
-            "result = (this_contract.my_mock_value is True) and 1.0 or 0.0"
+            "result = (current_contract.my_mock_value is True) and 1.0 or 0.0"
         )
 
         # I create an employee Payslip

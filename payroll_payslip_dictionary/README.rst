@@ -13,15 +13,18 @@ Payslip Dictionary
 .. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
-.. |badge3| image:: https://img.shields.io/badge/github-trevi-software%2Ftrevi--hr-lightgray.png?logo=github
-    :target: https://github.com/trevi-software/trevi-hr/tree/14.0/payroll_payslip_dictionary
-    :alt: trevi-software/trevi-hr
+.. |badge3| image:: https://img.shields.io/badge/github-OCA%2Ftrevi--hr-lightgray.png?logo=github
+    :target: https://github.com/OCA/trevi-hr/tree/14.0/payroll_payslip_dictionary
+    :alt: OCA/trevi-hr
+.. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
+    :target: https://translation.odoo-community.org/projects/trevi-hr-14-0/trevi-hr-14-0-payroll_payslip_dictionary
+    :alt: Translate me on Weblate
 
-|badge1| |badge2| |badge3| 
+|badge1| |badge2| |badge3| |badge4| 
 
-This module provides additional values (dictionaries) that can be used in salary rules. These values are
-available to salary rules in two objects called "dictionaries" and "this_contract". The values under
-"dictionaries" are calculated once during payslip processing. The values under "this_contract" are
+This module provides additional values that can be used in salary rules. These values are
+available to salary rules in two objects called "payroll" and "current_contract". The values under
+"payroll" are calculated once during payslip processing. The values under "current_contract" are
 calculated just before each contract in the payslip is processed.
 
 **Table of contents**
@@ -33,15 +36,14 @@ Usage
 =====
 
 The new values provided by this module are:
-* dictionaries.max_weekly_hours - the maximum number of weekly work hours
-* dictionaries.max_working_days - the maximum number of working days in the period
-* dictionaries.max_working_hours - the maximum number of working days in the period
-* dictionaries.seniority - the length of employment calculated in months
-* dictionaries.CONTRACTS.qty - the number of contracts open during this period
-* dictionaries.CONTRACTS.cummulative_ppf - the sum of the payroll period factors of all the contracts
-* this_contract.ppf - the payroll period factor for the contract being processed
-* this_contract.daily_wage - the wage on the contract being processed converted to a daily wage
-* this_contract.hourly_wage - the wage on the contract being processed converted to an hourly wage
+* payroll.max_weekly_hours - the maximum number of weekly work hours
+* payroll.max_working_days - the maximum number of working days in the period
+* payroll.max_working_hours - the maximum number of working days in the period
+* payroll.seniority - the length of employment calculated in months
+* payroll.contracts.cummulative_ppf - the sum of the payroll period factors of all the contracts
+* current_contract.ppf - the payroll period factor for the contract being processed
+* current_contract.daily_wage - the wage on the contract being processed converted to a daily wage
+* current_contract.hourly_wage - the wage on the contract being processed converted to an hourly wage
 
 The payroll period factor is a decimal denoting the validity period of the contract between the
 start and end dates of the payslip. A factor of 1 means the contract covers the entire
@@ -53,10 +55,10 @@ cummulative_ppf is the sum of all the indvidual contracts' ppf.
 Bug Tracker
 ===========
 
-Bugs are tracked on `GitHub Issues <https://github.com/trevi-software/trevi-hr/issues>`_.
+Bugs are tracked on `GitHub Issues <https://github.com/OCA/trevi-hr/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed
-`feedback <https://github.com/trevi-software/trevi-hr/issues/new?body=module:%20payroll_payslip_dictionary%0Aversion:%2014.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/trevi-hr/issues/new?body=module:%20payroll_payslip_dictionary%0Aversion:%2014.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -77,6 +79,16 @@ Other credits
 Maintainers
 ~~~~~~~~~~~
 
-This module is part of the `trevi-software/trevi-hr <https://github.com/trevi-software/trevi-hr/tree/14.0/payroll_payslip_dictionary>`_ project on GitHub.
+This module is maintained by the OCA.
 
-You are welcome to contribute.
+.. image:: https://odoo-community.org/logo.png
+   :alt: Odoo Community Association
+   :target: https://odoo-community.org
+
+OCA, or the Odoo Community Association, is a nonprofit organization whose
+mission is to support the collaborative development of Odoo features and
+promote its widespread use.
+
+This module is part of the `OCA/trevi-hr <https://github.com/OCA/trevi-hr/tree/14.0/payroll_payslip_dictionary>`_ project on GitHub.
+
+You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.

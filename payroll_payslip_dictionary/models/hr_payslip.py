@@ -7,22 +7,7 @@ from datetime import timedelta
 
 from odoo import SUPERUSER_ID, api, models
 
-
-# Used to allow nested dicts to be accessed with '.' (dot) notation
-class BasicBrowsableObject(object):
-    def __init__(self, vals_dict):
-        self.values = vals_dict
-
-    def __getattr__(self, attr):
-        return attr in self.values and self.values.__getitem__(attr) or 0.0
-
-    def __setattr__(self, attr, value):
-        if attr == "values":
-            return super().__setattr__(attr, value)
-        self.__dict__["values"][attr] = value
-
-    def __str__(self):
-        return str(self.values)
+from odoo.addons.payroll.models.hr_payslip import BaseBrowsableObject
 
 
 class HrPayslip(models.Model):
@@ -215,28 +200,20 @@ class HrPayslip(models.Model):
                                   period
         """
 
-        self.ensure_one()
-        res = {
+        payroll_dict = {
             "max_weekly_hours": 0,
             "max_working_days": 0,
             "max_working_hours": 0,
             "seniority": 0,
-            "PREVPS": BasicBrowsableObject(
+            "PREVPS": BaseBrowsableObject(
                 {
                     "exists": 0,
                     "net": 0,
                 }
             ),
-            "CONTRACTS": BasicBrowsableObject(
-                {
-                    "qty": 0,
-                    "cummulative_ppf": 0,
-                }
-            ),
         }
-
         if len(contracts) == 0:
-            return res
+            return payroll_dict
         contract = contracts[0]
 
         # Calculate maximum values
@@ -255,13 +232,15 @@ class HrPayslip(models.Model):
             max_working_days = monthrange(self.date_from.year, self.date_from.month)[1]
         else:
             daily_hrs, max_weekly_hours, max_working_days = self._get_working_defaults()
-        res["max_weekly_hours"] = max_weekly_hours
-        res["max_working_days"] = max_working_days
-        res["max_working_hours"] = max_working_days * daily_hrs
+        payroll_dict["max_weekly_hours"] = max_weekly_hours
+        payroll_dict["max_working_days"] = max_working_days
+        payroll_dict["max_working_hours"] = max_working_days * daily_hrs
 
         # Calculate seniority
         if self.employee_id:
-            res["seniority"] = self.employee_id.get_months_service_to_date(self.date_to)
+            payroll_dict["seniority"] = self.employee_id.get_months_service_to_date(
+                self.date_to
+            )
 
         # Calculate net amount of previous payslip
         ps_ids = self.env["hr.payslip"].search(
@@ -275,27 +254,21 @@ class HrPayslip(models.Model):
             code_net = IrConfig.get_param("payroll_payslip_dictionary.payroll_code_net")
 
             ps = ps_ids[0]
-            res["PREVPS"].exists = 1
+            payroll_dict["PREVPS"].exists = 1
             total = 0
             for line in ps.line_ids:
                 if line.salary_rule_id.code == code_net:
                     total += line.total
-            res["PREVPS"].net = total
+            payroll_dict["PREVPS"].net = total
 
-        ppf_total = 0
-        for c in contracts:
-            ppf_total += self._partial_payroll_factor(c, contracts)
-        res["CONTRACTS"].qty = len(contracts.ids)
-        res["CONTRACTS"].cummulative_ppf = ppf_total > 1 and 1 or ppf_total
-
-        return res
+        return payroll_dict
 
     def get_contract_dictionary(self, contract, contracts):
         """
         @return: returns a dictionary containing:
             * ppf - payroll period factor: the percentage of the pay period
                     for the contract. A value of 1 means the contract covers
-                    the entire payslip period.
+                    the entire payroll period.
             * hourly_wage - the wage on the contract converted to an hourly rate
             * daily_wage  - the wage on the contract converted to a daily rate
         """
@@ -347,14 +320,35 @@ class HrPayslip(models.Model):
 
         return res
 
-    def get_localdict(self, contracts):
-
-        res = super().get_localdict(contracts)
-        res.update(self.get_dictionary(contracts))
+    def get_contract_dict(self, contract, contracts):
+        """Refer in salary rules as:
+        * current_contract.ppf
+        * current_contract.daily_wage
+        * current_contract.hourly_wage
+        """
+        res = super().get_contract_dict(contract, contracts)
+        res.update(self.get_contract_dictionary(contract, contracts))
         return res
 
-    def get_contractdict(self, contract, contracts):
+    def _init_payroll_dict_contracts(self):
+        res = super()._init_payroll_dict_contracts()
+        res.update({"cummulative_ppf": 0})
+        return res
 
-        res = super().get_contractdict(contract, contracts)
-        res.update(self.get_contract_dictionary(contract, contracts))
+    def get_payroll_dict(self, contracts):
+        """Refer in salary rules as:
+        * payroll.contracts.cummulative_ppf
+        * payroll.max_weekly_hours
+        * payroll.max_working_days
+        * payroll.max_working_hours
+        * payroll.seniority
+        * payroll.PREVPS.exists
+        * payroll.PREVPS.net
+        """
+        res = super().get_payroll_dict(contracts)
+        res.update(self.get_dictionary(contracts))
+        ppf_total = 0
+        for c in contracts:
+            ppf_total += self._partial_payroll_factor(c, contracts)
+        res["contracts"].cummulative_ppf = ppf_total > 1 and 1 or ppf_total
         return res

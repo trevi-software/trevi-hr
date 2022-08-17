@@ -16,7 +16,7 @@ class TestHrPayslip(common.TransactionCase):
         self.payroll_structure = self.env.ref("payroll.structure_base")
         self.basic_salary_rule = self.env.ref("payroll.hr_rule_basic")
         self.basic_salary_rule.amount_python_compute = (
-            "result = contract.wage * this_contract.ppf"
+            "result = contract.wage * current_contract.ppf"
         )
 
         # I create a new employee "Richard"
