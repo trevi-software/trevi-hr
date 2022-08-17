@@ -45,9 +45,9 @@ addon | version | maintainers | summary
 [ir_module_category_payroll](ir_module_category_payroll/) | 14.0.1.0.0 |  | Creates Payroll module category
 [payroll_payslip_amendment](payroll_payslip_amendment/) | 14.0.1.0.0 |  | Add amendments to current and future pay slips
 [payroll_payslip_amendment_contract_status](payroll_payslip_amendment_contract_status/) | 14.0.1.0.0 |  | Link payslip amendments with the employee contract state.
-[payroll_payslip_dictionary](payroll_payslip_dictionary/) | 14.0.1.0.0 |  | Dictionary of values that can be used in payslip calculations
+[payroll_payslip_dictionary](payroll_payslip_dictionary/) | 14.0.1.1.0 |  | Dictionary of values that can be used in payslip calculations
 [payroll_payslip_hr_leave_type](payroll_payslip_hr_leave_type/) | 14.0.1.0.0 |  | Use time-off codes (instead of names) in payslip rules
-[payroll_payslip_patch](payroll_payslip_patch/) | 14.0.1.0.0 |  | Miscellaneous source code patches to payslip handling
+[payroll_payslip_patch](payroll_payslip_patch/) | 14.0.2.0.0 |  | Miscellaneous source code patches to payslip handling
 [payroll_payslip_report](payroll_payslip_report/) | 14.0.1.0.0 |  | Comprehensive payslip report by department.
 [payroll_period_account](payroll_period_account/) | 14.0.1.0.0 |  | Links payroll periods to accounting
 [payroll_period_base_lock](payroll_period_base_lock/) | 14.0.1.0.0 |  | Adds a base lock field to a payroll period.
