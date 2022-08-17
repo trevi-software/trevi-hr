@@ -4,7 +4,7 @@
 {
     "name": "Payslip Patch",
     "summary": "Miscellaneous source code patches to payslip handling",
-    "version": "14.0.1.0.0",
+    "version": "14.0.2.0.0",
     "category": "Payroll",
     "images": ["static/src/img/main_screenshot.png"],
     "author": "TREVI Software, Michael Telahun Makonnen",

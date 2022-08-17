@@ -52,6 +52,15 @@ covered by the contract. In this case if the payslip is for the period from Apri
 and the employee's contract ends on April 15 then the payroll period factor will be 0.5. The
 cummulative_ppf is the sum of all the indvidual contracts' ppf.
 
+Changelog
+=========
+
+14.0.1.1.0 (2022-08-17)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Some functionality from this repo was incorporated into OCA/Payroll. As a result
+  accomodate changes in the dictionary naming scheme.
+
 Bug Tracker
 ===========
 
