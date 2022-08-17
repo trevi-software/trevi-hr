@@ -26,7 +26,7 @@ addon | version | maintainers | summary
 [hr_accrual_bank](hr_accrual_bank/) | 14.0.1.0.0 |  | Basic framework for recording accruals to a time bank
 [hr_attendance_day](hr_attendance_day/) | 14.0.1.0.0 |  | Attach a localized date to an attendace record
 [hr_benefit](hr_benefit/) | 14.0.1.0.1 |  | Assign benefits and deductables to employees
-[hr_benefit_payroll](hr_benefit_payroll/) | 14.0.1.0.1 |  | Access benefits in payroll through salary rules.
+[hr_benefit_payroll](hr_benefit_payroll/) | 14.0.1.2.1 |  | Access benefits in payroll through salary rules.
 [hr_contract_status](hr_contract_status/) | 14.0.1.0.1 |  | Workflows and notifications on employee contracts.
 [hr_contract_status_benefit](hr_contract_status_benefit/) | 14.0.1.0.0 |  | Link hr_contract_status with hr_benefit
 [hr_contract_values](hr_contract_values/) | 14.0.1.0.0 |  | Contracts - Initial Settings
