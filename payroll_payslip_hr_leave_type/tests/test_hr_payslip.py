@@ -68,6 +68,11 @@ class TestHrPayslip(TestPayslipBase):
             self.richard_emp.contract_id.state, "open", "Contract is in 'open' state"
         )
 
+        # Set system parameter
+        self.env["ir.config_parameter"].sudo().set_param(
+            "payroll.leaves_positive", True
+        )
+
         # Create a leave request
         lv_from = datetime.combine(datetime.today(), time.min)
         lv_to = datetime.combine(datetime.today(), time.max)

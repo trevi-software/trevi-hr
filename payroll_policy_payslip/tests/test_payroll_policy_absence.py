@@ -192,6 +192,11 @@ class TestAbsencePolicy(common.TestHrPayslip):
 
     def test_leave_dock(self):
 
+        # Set system parameter
+        self.env["ir.config_parameter"].sudo().set_param(
+            "payroll.leaves_positive", True
+        )
+
         # Create a leave request
         lv = self.LeaveRequest.create(
             {
