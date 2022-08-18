@@ -1,0 +1,100 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payroll_policy_payslip
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payroll_policy_payslip
+#: model:ir.model.fields,field_description:payroll_policy_payslip.field_hr_payslip_worked_days__accrual_policy_line_id
+msgid "Accrual Policy"
+msgstr ""
+
+#. module: payroll_policy_payslip
+#: model:ir.model,name:payroll_policy_payslip.model_hr_attendance
+msgid "Attendance"
+msgstr ""
+
+#. module: payroll_policy_payslip
+#: code:addons/payroll_policy_payslip/models/hr_attendance.py:0
+#: code:addons/payroll_policy_payslip/models/hr_attendance.py:0
+#, python-format
+msgid "Attendance Error!"
+msgstr ""
+
+#. module: payroll_policy_payslip
+#: model:ir.model.fields,field_description:payroll_policy_payslip.field_hr_attendance__display_name
+#: model:ir.model.fields,field_description:payroll_policy_payslip.field_hr_payslip__display_name
+#: model:ir.model.fields,field_description:payroll_policy_payslip.field_hr_payslip_worked_days__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payroll_policy_payslip
+#: code:addons/payroll_policy_payslip/models/hr_attendance.py:0
+#, python-format
+msgid ""
+"Employee: %s\n"
+"Sign-in(s): %s\n"
+"Sign-out(s): %s"
+msgstr ""
+
+#. module: payroll_policy_payslip
+#: model:ir.model.fields,field_description:payroll_policy_payslip.field_hr_attendance__id
+#: model:ir.model.fields,field_description:payroll_policy_payslip.field_hr_payslip__id
+#: model:ir.model.fields,field_description:payroll_policy_payslip.field_hr_payslip_worked_days__id
+msgid "ID"
+msgstr ""
+
+#. module: payroll_policy_payslip
+#: model:ir.model.fields,field_description:payroll_policy_payslip.field_hr_attendance____last_update
+#: model:ir.model.fields,field_description:payroll_policy_payslip.field_hr_payslip____last_update
+#: model:ir.model.fields,field_description:payroll_policy_payslip.field_hr_payslip_worked_days____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: payroll_policy_payslip
+#: code:addons/payroll_policy_payslip/models/hr_payslip.py:0
+#, python-format
+msgid "Maximum Possible Working Hours"
+msgstr ""
+
+#. module: payroll_policy_payslip
+#: code:addons/payroll_policy_payslip/models/hr_attendance.py:0
+#, python-format
+msgid "Number of Sign-in and Sign-out records do not match!"
+msgstr ""
+
+#. module: payroll_policy_payslip
+#: model:ir.model,name:payroll_policy_payslip.model_hr_payslip
+msgid "Pay Slip"
+msgstr ""
+
+#. module: payroll_policy_payslip
+#: model:ir.model,name:payroll_policy_payslip.model_hr_payslip_worked_days
+msgid "Payslip Worked Days"
+msgstr ""
+
+#. module: payroll_policy_payslip
+#: model:ir.model.fields,field_description:payroll_policy_payslip.field_hr_payslip_worked_days__rate
+msgid "Rate"
+msgstr ""
+
+#. module: payroll_policy_payslip
+#: code:addons/payroll_policy_payslip/models/hr_attendance.py:0
+#, python-format
+msgid "There is a sign-in with no corresponding sign-out for %s on %s"
+msgstr ""
+
+#. module: payroll_policy_payslip
+#: code:addons/payroll_policy_payslip/models/hr_attendance.py:0
+#, python-format
+msgid "There is not a final sign-out record for %s on %s"
+msgstr ""
