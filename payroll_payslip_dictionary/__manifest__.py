@@ -17,6 +17,7 @@
         "payroll",
     ],
     "data": [
+        "data/payroll_payslip_dictionary.xml",
         "views/res_config_settings_views.xml",
     ],
     "demo": ["demo/payroll_demo.xml"],

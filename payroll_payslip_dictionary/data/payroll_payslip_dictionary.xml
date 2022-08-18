@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="config_working_days_calculation" model="ir.config_parameter">
+            <field
+                name="key"
+            >payroll_payslip_dictionary.working_days_calculation</field>
+            <field name="value">resource_calendar</field>
+        </record>
+
+    </data>
+</odoo>

@@ -5,7 +5,7 @@
         <function
             model="ir.config_parameter"
             name="set_param"
-            eval="('payroll_payslip_dictionary.working_days_calculation', 'defaults')"
+            eval="('payroll_payslip_dictionary.working_days_calculation', 'resource_calendar')"
         />
         <function
             model="ir.config_parameter"
