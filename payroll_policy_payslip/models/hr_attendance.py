@@ -75,6 +75,136 @@ class HrAttendance(models.Model):
         return 0
 
     @api.model
+    def _check_punches_crossover_yesterday(
+        self, dtRollover, ot_max_rollover_gap, sin, sout
+    ):
+        if (len(sout) - len(sin)) == 0:
+
+            if len(sout) > 0:
+                dtSout = sout[0]
+                dtSin = sin[0]
+                if dtSout > dtRollover and (dtSout < dtSin):
+                    sin = [dtRollover] + sin
+                elif dtSout < dtSin:
+                    sout = sout[1:]
+                    # There may be another session that starts within the rollover period
+                    if (
+                        dtSin < dtRollover
+                        and float((dtSin - dtSout).seconds) / 60.0
+                        >= ot_max_rollover_gap
+                    ):
+                        sin = sin[1:]
+                        sout = sout[1:]
+            else:
+                return [], []
+        elif (len(sout) - len(sin)) == 1:
+            dtSout = sout[0]
+            if dtSout > dtRollover:
+                sin = [dtRollover] + sin
+            else:
+                sout = sout[1:]
+                # There may be another session that starts within the rollover period
+                dtSin = False
+                if len(sin) > 0:
+                    dtSin = sin[0]
+                if (
+                    dtSin
+                    and dtSin < dtRollover
+                    and float((dtSin - dtSout).seconds) / 60.0 >= ot_max_rollover_gap
+                ):
+                    sin = sin[1:]
+                    sout = sout[1:]
+        return (sin, sout)
+
+    @api.model
+    def _check_punches_crossover_from_midnight(
+        self, ot_max_rollover_gap, ndtDay, punches_list, sin, sout
+    ):
+        if len(sout) > 0:
+            ndtSin = sin[0]
+            if (ndtSin - timedelta(minutes=ot_max_rollover_gap)) <= ndtDay:
+                my_list4 = self.punches_list_search(
+                    ndtDay + timedelta(hours=-24),
+                    ndtDay + timedelta(seconds=-1),
+                    punches_list,
+                )
+                if len(my_list4) > 0 and (my_list4[-1][1] is not False):
+                    ndtSout = my_list4[-1][0]
+                    if ndtSin <= ndtSout + timedelta(minutes=ot_max_rollover_gap):
+                        sin = sin[1:]
+                        sout = sout[1:]
+        return (sin, sout)
+
+    @api.model
+    def _check_punches_crossover_tomorrow(
+        self,
+        contract,
+        dDay,
+        dtRollover,
+        ot_max_rollover_gap,
+        ndtDayEnd,
+        punches_list,
+        sin,
+        sout,
+    ):
+        if (len(sin) - len(sout)) == 1:
+
+            employee = contract.employee_id
+            my_list2 = self.punches_list_search(
+                ndtDayEnd + timedelta(seconds=+1),
+                ndtDayEnd + timedelta(days=1),
+                punches_list,
+            )
+            if len(my_list2) == 0:
+                raise exceptions.ValidationError(
+                    _("Attendance Error!"),
+                    _("There is not a final sign-out record for %s on %s")
+                    % (employee.name, dDay),
+                )
+
+            check_in, check_out = my_list2[0]
+            if check_out is not False:
+                dtSout = check_out
+                if dtSout > dtRollover:
+                    sout.append(dtRollover)
+                else:
+                    sout.append(check_out)
+                    # There may be another session within the OT max. rollover gap
+                    if len(my_list2) > 1:
+                        dtSin = check_in
+                        if float((dtSin - dtSout).seconds) / 60.0 < ot_max_rollover_gap:
+                            sin.append(my_list2[1][0])
+                            sout.append(my_list2[1][1])
+
+            else:
+                raise exceptions.ValidationError(
+                    _("Attendance Error!"),
+                    _("There is a sign-in with no corresponding sign-out for %s on %s")
+                    % (employee.name, dDay),
+                )
+        return (sin, sout)
+
+    @api.model
+    def _check_punches_crossover_past_midnight(
+        self, ot_max_rollover_gap, ndtDayEnd, punches_list, sin, sout
+    ):
+        if len(sout) > 0:
+            ndtSout = sout[-1]
+            if (ndtDayEnd - timedelta(minutes=ot_max_rollover_gap)) <= ndtSout:
+                my_list3 = self.punches_list_search(
+                    ndtDayEnd + timedelta(seconds=+1),
+                    ndtDayEnd + timedelta(hours=+24),
+                    punches_list,
+                )
+                if len(my_list3) > 0:
+                    check_in, check_out = my_list3[0]
+                    ndtSin = check_in
+                    if ndtSin <= ndtSout + timedelta(minutes=ot_max_rollover_gap):
+                        sin.append(check_in)
+                        sout.append(check_out)
+        return (sin, sout)
+
+    @api.model
     def _get_normalized_punches(self, contract, dDay, punches_list):
         """Returns a tuple containing two lists: in punches, and
         corresponding out punches"""
@@ -121,59 +251,16 @@ class HrAttendance(models.Model):
         dtRollover = (
             self._calculate_rollover(utcdtDay, ot_max_rollover_hours)
         ).replace(tzinfo=None)
-        if (len(sout) - len(sin)) == 0:
-
-            if len(sout) > 0:
-                dtSout = sout[0]
-                dtSin = sin[0]
-                if dtSout > dtRollover and (dtSout < dtSin):
-                    sin = [dtRollover] + sin
-                elif dtSout < dtSin:
-                    sout = sout[1:]
-                    # There may be another session that starts within the rollover period
-                    if (
-                        dtSin < dtRollover
-                        and float((dtSin - dtSout).seconds) / 60.0
-                        >= ot_max_rollover_gap
-                    ):
-                        sin = sin[1:]
-                        sout = sout[1:]
-            else:
-                return [], []
-        elif (len(sout) - len(sin)) == 1:
-            dtSout = sout[0]
-            if dtSout > dtRollover:
-                sin = [dtRollover] + sin
-            else:
-                sout = sout[1:]
-                # There may be another session that starts within the rollover period
-                dtSin = False
-                if len(sin) > 0:
-                    dtSin = sin[0]
-                if (
-                    dtSin
-                    and dtSin < dtRollover
-                    and float((dtSin - dtSout).seconds) / 60.0 >= ot_max_rollover_gap
-                ):
-                    sin = sin[1:]
-                    sout = sout[1:]
+        sin, sout = self._check_punches_crossover_yesterday(
+            dtRollover, ot_max_rollover_gap, sin, sout
+        )
 
         # If the first sign-in was within the rollover gap *AT* midnight check to
         # see if there are any sessions within the rollover gap before it.
         #
-        if len(sout) > 0:
-            ndtSin = sin[0]
-            if (ndtSin - timedelta(minutes=ot_max_rollover_gap)) <= ndtDay:
-                my_list4 = self.punches_list_search(
-                    ndtDay + timedelta(hours=-24),
-                    ndtDay + timedelta(seconds=-1),
-                    punches_list,
-                )
-                if len(my_list4) > 0 and (my_list4[-1][1] is not False):
-                    ndtSout = my_list4[-1][0]
-                    if ndtSin <= ndtSout + timedelta(minutes=ot_max_rollover_gap):
-                        sin = sin[1:]
-                        sout = sout[1:]
+        sin, sout = self._check_punches_crossover_from_midnight(
+            ot_max_rollover_gap, ndtDay, punches_list, sin, sout
+        )
 
         # CHECKS AT THE END OF THE DAY
         # Include sessions from tomorrow that should be included in today's attendance.
@@ -184,58 +271,23 @@ class HrAttendance(models.Model):
         dtRollover = (
             self._calculate_rollover(ndtDay + timedelta(days=1), ot_max_rollover_hours)
         ).replace(tzinfo=None)
-        if (len(sin) - len(sout)) == 1:
-
-            my_list2 = self.punches_list_search(
-                ndtDayEnd + timedelta(seconds=+1),
-                ndtDayEnd + timedelta(days=1),
-                punches_list,
-            )
-            if len(my_list2) == 0:
-                raise exceptions.ValidationError(
-                    _("Attendance Error!"),
-                    _("There is not a final sign-out record for %s on %s")
-                    % (employee.name, dDay),
-                )
-
-            check_in, check_out = my_list2[0]
-            if check_out is not False:
-                dtSout = check_out
-                if dtSout > dtRollover:
-                    sout.append(dtRollover)
-                else:
-                    sout.append(check_out)
-                    # There may be another session within the OT max. rollover gap
-                    if len(my_list2) > 1:
-                        dtSin = check_in
-                        if float((dtSin - dtSout).seconds) / 60.0 < ot_max_rollover_gap:
-                            sin.append(my_list2[1][0])
-                            sout.append(my_list2[1][1])
-
-            else:
-                raise exceptions.ValidationError(
-                    _("Attendance Error!"),
-                    _("There is a sign-in with no corresponding sign-out for %s on %s")
-                    % (employee.name, dDay),
-                )
+        sin, sout = self._check_punches_crossover_tomorrow(
+            contract,
+            dDay,
+            dtRollover,
+            ot_max_rollover_gap,
+            ndtDayEnd,
+            punches_list,
+            sin,
+            sout,
+        )
 
         # If the last sign-out was within the rollover gap *BEFORE* midnight check to
         # see if there are any sessions within the rollover gap after it.
         #
-        if len(sout) > 0:
-            ndtSout = sout[-1]
-            if (ndtDayEnd - timedelta(minutes=ot_max_rollover_gap)) <= ndtSout:
-                my_list3 = self.punches_list_search(
-                    ndtDayEnd + timedelta(seconds=+1),
-                    ndtDayEnd + timedelta(hours=+24),
-                    punches_list,
-                )
-                if len(my_list3) > 0:
-                    check_in, check_out = my_list3[0]
-                    ndtSin = check_in
-                    if ndtSin <= ndtSout + timedelta(minutes=ot_max_rollover_gap):
-                        sin.append(check_in)
-                        sout.append(check_out)
+        sin, sout = self._check_punches_crossover_past_midnight(
+            ot_max_rollover_gap, ndtDayEnd, punches_list, sin, sout
+        )
 
         return sin, sout
 
