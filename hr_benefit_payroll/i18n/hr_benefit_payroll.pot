@@ -203,6 +203,11 @@ msgid "Payslip"
 msgstr ""
 
 #. module: hr_benefit_payroll
+#: model_terms:ir.ui.view,arch_db:hr_benefit_payroll.view_hr_payslip_form
+msgid "Payslip Benefit Lines"
+msgstr ""
+
+#. module: hr_benefit_payroll
 #: model:ir.model,name:hr_benefit_payroll.model_hr_payslip_benefit
 msgid "Payslip Benefits"
 msgstr ""
