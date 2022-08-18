@@ -24,11 +24,6 @@ msgid "Accrual Policy Line"
 msgstr ""
 
 #. module: payroll_policy_presence
-#: model:ir.model.fields,field_description:payroll_policy_presence.field_hr_policy_line_presence__accrual_rate
-msgid "Accrual Rate"
-msgstr ""
-
-#. module: payroll_policy_presence
 #: model:ir.model.fields,field_description:payroll_policy_presence.field_hr_policy_line_presence__active_after
 msgid "Active After"
 msgstr ""
@@ -192,6 +187,11 @@ msgid "Rate"
 msgstr ""
 
 #. module: payroll_policy_presence
+#: model:ir.model.fields,help:payroll_policy_presence.field_hr_policy_presence__work_days_per_week
+msgid "Regular work days in a work week."
+msgstr ""
+
+#. module: payroll_policy_presence
 #: model:ir.model.fields.selection,name:payroll_policy_presence.selection__hr_policy_line_presence__type__restday
 msgid "Rest Days"
 msgstr ""
@@ -204,6 +204,11 @@ msgstr ""
 #. module: payroll_policy_presence
 #: model:ir.model.fields,help:payroll_policy_presence.field_hr_policy_line_presence__code
 msgid "Use this code in the salary rules."
+msgstr ""
+
+#. module: payroll_policy_presence
+#: model:ir.model.fields,field_description:payroll_policy_presence.field_hr_policy_presence__work_days_per_week
+msgid "Work Days/Week"
 msgstr ""
 
 #. module: payroll_policy_presence
