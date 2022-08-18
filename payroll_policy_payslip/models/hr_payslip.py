@@ -99,6 +99,329 @@ class HrPayslip(models.Model):
         return False
 
     @api.model
+    def setup_worked_days_presence(
+        self, contract, today, normal_working_hours, presence_data, attendances
+    ):
+
+        # Get Presence policy data. Unless the policy changed mid-period
+        # this should keep returning the same data (w/out hitting db).
+        presence_data = self.get_presence_policies(
+            contract.policy_group_id, today, presence_data
+        )
+        presence_policy = presence_data["policy"]
+        presence_sequence = 50
+        for (
+            pcode,
+            pname,
+            ptype,
+            prate,
+            pduration,
+            pacc_id,
+            pacc_code,
+            paccrate,
+            paccmin,
+            paccmax,
+        ) in presence_data["codes"]:
+            if attendances.get(pcode, False):
+                continue
+            if ptype == "normal":
+                normal_working_hours += float(pduration) / 60.0
+            attendances[pcode] = {
+                "name": pname,
+                "code": pcode,
+                "sequence": presence_sequence,
+                "number_of_days": 0.0,
+                "number_of_hours": 0.0,
+                "rate": prate,
+                "contract_id": contract.id,
+            }
+            presence_sequence += 1
+
+            # Create accrual input
+            if pacc_id:
+                if self._insert_accrual(
+                    contract.id,
+                    attendances,
+                    pacc_id,
+                    pacc_code,
+                    paccrate,
+                    paccmin,
+                    paccmax,
+                    presence_sequence,
+                ):
+
+                    presence_sequence += 1
+        return (presence_policy, normal_working_hours, presence_data, attendances)
+
+    @api.model
+    def _set_abrate(self, abtype, abrate):
+        res = abrate
+        if abtype == "unpaid":
+            res = 0
+        elif abtype == "dock":
+            res = -abrate
+        return res
+
+    @api.model
+    def setup_worked_days_absence(
+        self, contract, today, absence_data, attendances, super_res
+    ):
+
+        # Get Absence data
+        #
+        absence_data = self.get_absence_policies(
+            contract.policy_group_id, today, absence_data
+        )
+        absence_sequence = 100
+        awol_code = False
+        for abcode, abname, abtype, abrate, useawol in absence_data["codes"]:
+            if useawol:
+                awol_code = abcode
+            abrate = self._set_abrate(abtype, abrate)
+
+            if attendances.get(abcode, False):
+                continue
+
+            # If the leave has already been added by the parent class, only
+            # modify the rate.
+            #
+            res_dict = False
+            for r in super_res:
+                if r["code"] == abcode:
+                    res_dict = r
+                    break
+
+            if res_dict is not False:
+                res_dict["rate"] = abrate
+            else:
+                attendances[abcode] = {
+                    "name": abname,
+                    "code": abcode,
+                    "sequence": absence_sequence,
+                    "number_of_days": 0.0,
+                    "number_of_hours": 0.0,
+                    "rate": abrate,
+                    "contract_id": contract.id,
+                }
+                absence_sequence += 1
+        return (awol_code, absence_data, attendances, super_res)
+
+    @api.model
+    def setup_worked_days_ot(self, contract, today, ot_data, attendances):
+
+        # Get OT data
+        #
+        ot_data = self.get_ot_policies(contract.policy_group_id, today, ot_data)
+        ot_policy = ot_data["policy"]
+        daily_ot = ot_data["daily"]
+        ot_sequence = 150
+
+        if ot_policy:
+            for (
+                otcode,
+                otname,
+                _ottype,
+                otrate,
+                otacc_id,
+                otacc_code,
+                otaccrate,
+                otaccmin,
+                otaccmax,
+            ) in ot_data["codes"]:
+                if attendances.get(otcode, False):
+                    continue
+                attendances[otcode] = {
+                    "name": otname,
+                    "code": otcode,
+                    "sequence": ot_sequence,
+                    "number_of_days": 0.0,
+                    "number_of_hours": 0.0,
+                    "rate": otrate,
+                    "contract_id": contract.id,
+                }
+                ot_sequence += 1
+
+                # Create accrual input
+                if otacc_id:
+                    if self._insert_accrual(
+                        contract.id,
+                        attendances,
+                        otacc_id,
+                        otacc_code,
+                        otaccrate,
+                        otaccmin,
+                        otaccmax,
+                        ot_sequence,
+                    ):
+
+                        ot_sequence += 1
+        return (ot_policy, daily_ot, ot_data, attendances)
+
+    @api.model
+    def check_and_process_public_holiday(
+        self,
+        contract,
+        today,
+        public_holiday,
+        lsd,
+        presence_policy,
+        ot_policy,
+        attendances,
+        rest_days,
+        working_hours_on_day,
+    ):
+
+        done = False
+        push_lsd = True
+        if public_holiday:
+            _hours, push_lsd = self._book_holiday_hours(
+                contract,
+                presence_policy,
+                ot_policy,
+                attendances,
+                today,
+                rest_days["default"],
+                lsd,
+                working_hours_on_day,
+            )
+            if _hours == 0:
+                done = True
+            else:
+                working_hours_on_day = _hours
+        elif self.require_day_off(lsd, presence_policy):
+            _hours, push_lsd = self._book_restday_hours(
+                contract,
+                presence_policy,
+                ot_policy,
+                attendances,
+                today,
+                rest_days["default"],
+                lsd,
+                working_hours_on_day,
+            )
+            if _hours == 0:
+                done = True
+            else:
+                working_hours_on_day = _hours
+        return (working_hours_on_day, push_lsd, done)
+
+    @api.model
+    def check_and_process_ot(
+        self,
+        contract,
+        today,
+        ot_policy,
+        working_hours_dict,
+        attendances,
+        working_hours_on_day,
+    ):
+
+        # Do the OT between specified times (partial OT) first, so that it
+        # doesn't get double-counted in the regular OT.
+        #
+        att_obj = self.env["hr.attendance"]
+        partial_hr = 0
+        hours_after_ot = working_hours_on_day
+        for line in ot_policy.line_ids:
+            active_after_hrs = float(line.active_after) / 60.0
+            if (
+                line.type == "daily"
+                and working_hours_on_day > active_after_hrs
+                and line.active_start_time
+            ):
+                partial_hr = att_obj.partial_hours_on_day(
+                    contract,
+                    today,
+                    active_after_hrs,
+                    line.active_start_time,
+                    line.active_end_time,
+                    line.tz,
+                    punches_list=self.attendance_dict_list(working_hours_dict),
+                )
+                if fields.Float.compare(partial_hr, 0.0, precision_digits=2) == 1:
+                    attendances[line.code]["number_of_hours"] += partial_hr
+                    attendances[line.code]["number_of_days"] += 1.0
+                    hours_after_ot -= partial_hr
+                    working_hours_on_day -= partial_hr
+
+                    # Process Accruals
+                    if line.accrual_policy_line_id:
+                        accrued_hours = self._get_accrued_accrual(
+                            partial_hr,
+                            line.accrual_policy_line_id.accrual_rate_hour,
+                            line.accrual_min,
+                            line.accrual_max,
+                        )
+                        if (
+                            fields.Float.compare(accrued_hours, 0.0, precision_digits=2)
+                            == 1
+                        ):
+                            self._add_accrued_hours(line, attendances, accrued_hours)
+
+        for line in ot_policy.line_ids:
+            active_after_hrs = float(line.active_after) / 60.0
+            if (
+                line.type == "daily"
+                and hours_after_ot > active_after_hrs
+                and not line.active_start_time
+            ):
+                attendances[line.code]["number_of_hours"] += hours_after_ot - (
+                    float(line.active_after) / 60.0
+                )
+                attendances[line.code]["number_of_days"] += 1.0
+
+                # Process Accruals
+                if line.accrual_policy_line_id:
+                    accrued_hours = self._get_accrued_accrual(
+                        hours_after_ot - (float(line.active_after) / 60.0),
+                        line.accrual_policy_line_id.accrual_rate_hour,
+                        line.accrual_min,
+                        line.accrual_max,
+                    )
+                    if (
+                        fields.Float.compare(accrued_hours, 0.0, precision_digits=2)
+                        == 1
+                    ):
+                        self._add_accrued_hours(line, attendances, accrued_hours)
+
+        return (working_hours_on_day, attendances)
+
+    @api.model
+    def check_and_process_standard(
+        self, contract, today, presence_policy, attendances, working_hours_on_day
+    ):
+
+        done = False
+        for line in presence_policy.line_ids:
+            if line.type == "normal":
+                normal_hours = self._get_applied_time(
+                    working_hours_on_day,
+                    line.active_after,
+                    line.duration,
+                )
+                attendances[line.code]["number_of_hours"] += normal_hours
+                attendances[line.code]["number_of_days"] += (
+                    normal_hours > 0 and 1.0 or 0
+                )
+
+                # Process Accruals
+                if line.accrual_policy_line_id:
+                    accrued_hours = self._get_accrued_accrual(
+                        normal_hours,
+                        line.accrual_policy_line_id.accrual_rate_hour,
+                        line.accrual_min,
+                        line.accrual_max,
+                    )
+                    if (
+                        fields.Float.compare(accrued_hours, 0.0, precision_digits=2)
+                        == 1
+                    ):
+                        self._add_accrued_hours(line, attendances, accrued_hours)
+
+                done = True
+        return (working_hours_on_day, attendances, done)
+
+    @api.model
     def consecutive_days_worked(self, lsd, presence_policy):
 
         return lsd.days_worked()
@@ -122,7 +445,6 @@ class HrPayslip(models.Model):
         presence_data = None
         absence_data = None
         ot_data = None
-        att_obj = self.env["hr.attendance"]
         for contract in contracts:
 
             # Get default set of rest days for this employee/contract
@@ -154,201 +476,43 @@ class HrPayslip(models.Model):
             normal_working_hours = 0
             awol_code = False
 
-            # Short-circuit:
-            # If the policy for the first day is the same as the one for the
-            # last day assume that it will also be the same for the days in
-            # between, and reuse the same policy instead of checking for every day.
-            #
-            data2 = None
-            presence_data = self.get_presence_policies(
-                contract.policy_group_id, date_from, presence_data
+            # Initialize policy structures. If the policies didn't change mid-period then
+            # this is the only time in this contract that it hits the db even though it's
+            # called again for every day in the period.
+            presence_data = self.get_presence_data(
+                contract, date_from, date_to, presence_data
             )
-            data2 = self.get_presence_policies(contract.policy_group_id, date_to, data2)
-            if (presence_data["policy"] and data2["policy"]) and presence_data[
-                "policy"
-            ].id == data2["policy"].id:
-                presence_data["_reuse"] = True
-
-            data2 = None
-            absence_data = self.get_absence_policies(
-                contract.policy_group_id, date_from, absence_data
+            absence_data = self.get_absence_data(
+                contract, date_from, date_to, absence_data
             )
-            data2 = self.get_absence_policies(contract.policy_group_id, date_to, data2)
-            if (absence_data["policy"] and data2["policy"]) and absence_data[
-                "policy"
-            ].id == data2["policy"].id:
-                absence_data["_reuse"] = True
-
-            data2 = None
-            ot_data = self.get_ot_policies(contract.policy_group_id, date_from, ot_data)
-            data2 = self.get_ot_policies(contract.policy_group_id, date_to, data2)
-            if (ot_data["policy"] and data2["policy"]) and ot_data[
-                "policy"
-            ].id == data2["policy"].id:
-                ot_data["_reuse"] = True
-
-            # Calculate the number of days worked in the last week before the
-            # start of this contract. Necessary to calculate Weekly Rest Day OT.
-            #
-            lsd = LastXDays()
-            if len(lsd.arr) == 0:
-                d = dTempPeriodFrom - timedelta(days=6)
-                while d < dTempPeriodFrom:
-                    att_count = att_obj.search_count(
-                        [
-                            ("employee_id", "=", contract.employee_id.id),
-                            ("day", "=", d.strftime("%Y-%m-%d")),
-                        ],
-                    )
-                    if att_count > 0:
-                        lsd.push(True)
-                    else:
-                        lsd.push(False)
-                    d += timedelta(days=1)
+            ot_data = self.get_ot_data(contract, date_from, date_to, ot_data)
+            lsd = self.init_last_week_worked(contract, dTempPeriodFrom)
 
             for day in range(0, temp_nb_of_days):
                 dToday = dTempPeriodFrom + timedelta(days=day)
                 rest_days = contract_days_off
 
-                # Get Presence policy data
-                #
-                presence_data = self.get_presence_policies(
-                    contract.policy_group_id, dToday, presence_data
+                (
+                    presence_policy,
+                    normal_working_hours,
+                    presence_data,
+                    attendances,
+                ) = self.setup_worked_days_presence(
+                    contract, dToday, normal_working_hours, presence_data, attendances
                 )
-                presence_policy = presence_data["policy"]
-                presence_sequence = 50
 
-                for (
-                    pcode,
-                    pname,
-                    ptype,
-                    prate,
-                    pduration,
-                    pacc_id,
-                    pacc_code,
-                    paccrate,
-                    paccmin,
-                    paccmax,
-                ) in presence_data["codes"]:
-                    if attendances.get(pcode, False):
-                        continue
-                    if ptype == "normal":
-                        normal_working_hours += float(pduration) / 60.0
-                    attendances[pcode] = {
-                        "name": pname,
-                        "code": pcode,
-                        "sequence": presence_sequence,
-                        "number_of_days": 0.0,
-                        "number_of_hours": 0.0,
-                        "rate": prate,
-                        "contract_id": contract.id,
-                    }
-                    presence_sequence += 1
-
-                    # Create accrual input
-                    if pacc_id:
-                        if self._insert_accrual(
-                            contract.id,
-                            attendances,
-                            pacc_id,
-                            pacc_code,
-                            paccrate,
-                            paccmin,
-                            paccmax,
-                            presence_sequence,
-                        ):
-
-                            presence_sequence += 1
-
-                # Get Absence data
-                #
-                absence_data = self.get_absence_policies(
-                    contract.policy_group_id, dToday, absence_data
+                (
+                    awol_code,
+                    absence_data,
+                    attendances,
+                    res,
+                ) = self.setup_worked_days_absence(
+                    contract, dToday, absence_data, attendances, res
                 )
-                absence_sequence = 100
 
-                for abcode, abname, abtype, abrate, useawol in absence_data["codes"]:
-                    if useawol:
-                        awol_code = abcode
-                    if abtype == "unpaid":
-                        abrate = 0
-                    elif abtype == "dock":
-                        abrate = -abrate
-
-                    if attendances.get(abcode, False):
-                        continue
-
-                    # If the leave has already been added by the parent class, only
-                    # modify the rate.
-                    #
-                    res_dict = False
-                    for r in res:
-                        if r["code"] == abcode:
-                            res_dict = r
-                            break
-
-                    if res_dict is not False:
-                        res_dict["rate"] = abrate
-                    else:
-                        attendances[abcode] = {
-                            "name": abname,
-                            "code": abcode,
-                            "sequence": absence_sequence,
-                            "number_of_days": 0.0,
-                            "number_of_hours": 0.0,
-                            "rate": abrate,
-                            "contract_id": contract.id,
-                        }
-                        absence_sequence += 1
-
-                # Get OT data
-                #
-                ot_data = self.get_ot_policies(
-                    contract.policy_group_id, dToday, ot_data
+                ot_policy, daily_ot, ot_data, attendances = self.setup_worked_days_ot(
+                    contract, dToday, ot_data, attendances
                 )
-                ot_policy = ot_data["policy"]
-                daily_ot = ot_data["daily"]
-                ot_sequence = 150
-
-                if ot_policy:
-                    for (
-                        otcode,
-                        otname,
-                        _ottype,
-                        otrate,
-                        otacc_id,
-                        otacc_code,
-                        otaccrate,
-                        otaccmin,
-                        otaccmax,
-                    ) in ot_data["codes"]:
-                        if attendances.get(otcode, False):
-                            continue
-                        attendances[otcode] = {
-                            "name": otname,
-                            "code": otcode,
-                            "sequence": ot_sequence,
-                            "number_of_days": 0.0,
-                            "number_of_hours": 0.0,
-                            "rate": otrate,
-                            "contract_id": contract.id,
-                        }
-                        ot_sequence += 1
-
-                        # Create accrual input
-                        if otacc_id:
-                            if self._insert_accrual(
-                                contract.id,
-                                attendances,
-                                otacc_id,
-                                otacc_code,
-                                otaccrate,
-                                otaccmin,
-                                otaccmax,
-                                ot_sequence,
-                            ):
-
-                                ot_sequence += 1
 
                 # Is today a holiday?
                 public_holiday = self.holidays_list_contains(
@@ -364,158 +528,44 @@ class HrPayslip(models.Model):
                 if working_hours_on_day:
                     done = False
 
-                    if public_holiday:
-                        _hours, push_lsd = self._book_holiday_hours(
-                            contract,
-                            presence_policy,
-                            ot_policy,
-                            attendances,
-                            dToday,
-                            rest_days["default"],
-                            lsd,
-                            working_hours_on_day,
-                        )
-                        if _hours == 0:
-                            done = True
-                        else:
-                            working_hours_on_day = _hours
-                    elif self.require_day_off(lsd, presence_policy):
-                        _hours, push_lsd = self._book_restday_hours(
-                            contract,
-                            presence_policy,
-                            ot_policy,
-                            attendances,
-                            dToday,
-                            rest_days["default"],
-                            lsd,
-                            working_hours_on_day,
-                        )
-                        if _hours == 0:
-                            done = True
-                        else:
-                            working_hours_on_day = _hours
+                    (
+                        working_hours_on_day,
+                        push_lsd,
+                        done,
+                    ) = self.check_and_process_public_holiday(
+                        contract,
+                        dToday,
+                        public_holiday,
+                        lsd,
+                        presence_policy,
+                        ot_policy,
+                        attendances,
+                        rest_days,
+                        working_hours_on_day,
+                    )
 
                     if not done and daily_ot:
-
-                        # Do the OT between specified times (partial OT) first, so that it
-                        # doesn't get double-counted in the regular OT.
-                        #
-                        partial_hr = 0
-                        hours_after_ot = working_hours_on_day
-                        for line in ot_policy.line_ids:
-                            active_after_hrs = float(line.active_after) / 60.0
-                            if (
-                                line.type == "daily"
-                                and working_hours_on_day > active_after_hrs
-                                and line.active_start_time
-                            ):
-                                partial_hr = att_obj.partial_hours_on_day(
-                                    contract,
-                                    dToday,
-                                    active_after_hrs,
-                                    line.active_start_time,
-                                    line.active_end_time,
-                                    line.tz,
-                                    punches_list=self.attendance_dict_list(
-                                        working_hours_dict
-                                    ),
-                                )
-                                if (
-                                    fields.Float.compare(
-                                        partial_hr, 0.0, precision_digits=2
-                                    )
-                                    == 1
-                                ):
-                                    attendances[line.code][
-                                        "number_of_hours"
-                                    ] += partial_hr
-                                    attendances[line.code]["number_of_days"] += 1.0
-                                    hours_after_ot -= partial_hr
-                                    working_hours_on_day -= partial_hr
-
-                                    # Process Accruals
-                                    if line.accrual_policy_line_id:
-                                        accrued_hours = self._get_accrued_accrual(
-                                            partial_hr,
-                                            line.accrual_policy_line_id.accrual_rate_hour,
-                                            line.accrual_min,
-                                            line.accrual_max,
-                                        )
-                                        if (
-                                            fields.Float.compare(
-                                                accrued_hours, 0.0, precision_digits=2
-                                            )
-                                            == 1
-                                        ):
-                                            self._add_accrued_hours(
-                                                line, attendances, accrued_hours
-                                            )
-
-                        for line in ot_policy.line_ids:
-                            active_after_hrs = float(line.active_after) / 60.0
-                            if (
-                                line.type == "daily"
-                                and hours_after_ot > active_after_hrs
-                                and not line.active_start_time
-                            ):
-                                attendances[line.code][
-                                    "number_of_hours"
-                                ] += hours_after_ot - (float(line.active_after) / 60.0)
-                                attendances[line.code]["number_of_days"] += 1.0
-
-                                # Process Accruals
-                                if line.accrual_policy_line_id:
-                                    accrued_hours = self._get_accrued_accrual(
-                                        hours_after_ot
-                                        - (float(line.active_after) / 60.0),
-                                        line.accrual_policy_line_id.accrual_rate_hour,
-                                        line.accrual_min,
-                                        line.accrual_max,
-                                    )
-                                    if (
-                                        fields.Float.compare(
-                                            accrued_hours, 0.0, precision_digits=2
-                                        )
-                                        == 1
-                                    ):
-                                        self._add_accrued_hours(
-                                            line, attendances, accrued_hours
-                                        )
+                        working_hours_on_day, attendances = self.check_and_process_ot(
+                            contract,
+                            dToday,
+                            ot_policy,
+                            working_hours_dict,
+                            attendances,
+                            working_hours_on_day,
+                        )
 
                     if not done:
-                        for line in presence_policy.line_ids:
-                            if line.type == "normal":
-                                normal_hours = self._get_applied_time(
-                                    working_hours_on_day,
-                                    line.active_after,
-                                    line.duration,
-                                )
-                                attendances[line.code][
-                                    "number_of_hours"
-                                ] += normal_hours
-                                attendances[line.code]["number_of_days"] += (
-                                    normal_hours > 0 and 1.0 or 0
-                                )
-
-                                # Process Accruals
-                                if line.accrual_policy_line_id:
-                                    accrued_hours = self._get_accrued_accrual(
-                                        normal_hours,
-                                        line.accrual_policy_line_id.accrual_rate_hour,
-                                        line.accrual_min,
-                                        line.accrual_max,
-                                    )
-                                    if (
-                                        fields.Float.compare(
-                                            accrued_hours, 0.0, precision_digits=2
-                                        )
-                                        == 1
-                                    ):
-                                        self._add_accrued_hours(
-                                            line, attendances, accrued_hours
-                                        )
-
-                                done = True
+                        (
+                            working_hours_on_day,
+                            attendances,
+                            done,
+                        ) = self.check_and_process_standard(
+                            contract,
+                            dToday,
+                            presence_policy,
+                            attendances,
+                            working_hours_on_day,
+                        )
 
                     if push_lsd:
                         lsd.push(True)
@@ -588,6 +638,22 @@ class HrPayslip(models.Model):
         data["codes"] = policy.get_codes()
         return data
 
+    def get_presence_data(self, contract, date_from, date_to, data):
+
+        # Short-circuit:
+        # If the policy for the first day is the same as the one for the
+        # last day assume that it will also be the same for the days in
+        # between, and reuse the same policy instead of checking for every day.
+        #
+        data2 = None
+        data = self.get_presence_policies(contract.policy_group_id, date_from, data)
+        data2 = self.get_presence_policies(contract.policy_group_id, date_to, data2)
+        if (data["policy"] and data2["policy"]) and data["policy"].id == data2[
+            "policy"
+        ].id:
+            data["_reuse"] = True
+        return data
+
     def _get_absence_policy(self, policy_group, dDay):
         """Return an Absence policy with an effective date before dDay but
         greater than all others"""
@@ -612,6 +678,18 @@ class HrPayslip(models.Model):
 
         data["policy"] = absence_policy
         data["codes"] = absence_policy.get_codes()
+        return data
+
+    def get_absence_data(self, contract, date_from, date_to, data):
+
+        # Short-circuite
+        data2 = None
+        data = self.get_absence_policies(contract.policy_group_id, date_from, data)
+        data2 = self.get_absence_policies(contract.policy_group_id, date_to, data2)
+        if (data["policy"] and data2["policy"]) and data["policy"].id == data2[
+            "policy"
+        ].id:
+            data["_reuse"] = True
         return data
 
     @api.model
@@ -658,6 +736,41 @@ class HrPayslip(models.Model):
         data["weekly"] = weekly_ot
         data["holiday"] = holiday_ot
         return data
+
+    def get_ot_data(self, contract, date_from, date_to, data):
+
+        # Short-circuit
+        data2 = None
+        data = self.get_ot_policies(contract.policy_group_id, date_from, data)
+        data2 = self.get_ot_policies(contract.policy_group_id, date_to, data2)
+        if (data["policy"] and data2["policy"]) and data["policy"].id == data2[
+            "policy"
+        ].id:
+            data["_reuse"] = True
+        return data
+
+    def init_last_week_worked(self, contract, date_from):
+
+        # Calculate the number of days worked in the last week before the
+        # start of this contract. Necessary to calculate Weekly Rest Day OT.
+        #
+        att_obj = self.env["hr.attendance"]
+        lsd = LastXDays()
+        if len(lsd.arr) == 0:
+            d = date_from - timedelta(days=6)
+            while d < date_from:
+                att_count = att_obj.search_count(
+                    [
+                        ("employee_id", "=", contract.employee_id.id),
+                        ("day", "=", d.strftime("%Y-%m-%d")),
+                    ],
+                )
+                if att_count > 0:
+                    lsd.push(True)
+                else:
+                    lsd.push(False)
+                d += timedelta(days=1)
+        return lsd
 
     @api.model
     def _insert_accrual(
