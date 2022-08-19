@@ -16,7 +16,7 @@ class TestAbsencePolicy(common.TestHrPayslip):
         cls.AbsencePolicy = cls.env["hr.policy.absence"]
         cls.AbsencePolicyLine = cls.env["hr.policy.line.absence"]
 
-        # Create a salary rule for OT tests and add it to the salary structure
+        # Create salary rules for Absence tests and add it to the salary structure
         cls.absence_test_rule = cls.Rule.create(
             {
                 "name": "Absence test rule",
@@ -27,7 +27,18 @@ class TestAbsencePolicy(common.TestHrPayslip):
                 "amount_python_compute": "result = 0",
             }
         )
+        cls.awol_test_rule = cls.Rule.create(
+            {
+                "name": "AWOL test rule",
+                "code": "AWTEST",
+                "category_id": cls.env.ref("payroll.ALW").id,
+                "sequence": 6,
+                "amount_select": "code",
+                "amount_python_compute": "result = 0",
+            }
+        )
         cls.payroll_structure.write({"rule_ids": [(4, cls.absence_test_rule.id)]})
+        cls.payroll_structure.write({"rule_ids": [(4, cls.awol_test_rule.id)]})
 
         # Create an AWOL leave type
         cls.awol_leave_type = cls.LeaveType.create(
@@ -205,7 +216,7 @@ class TestAbsencePolicy(common.TestHrPayslip):
                 "holiday_status_id": self.sick_leave_type.id,
                 "date_from": datetime(2022, 4, 4),
                 "date_to": datetime(2022, 4, 5, 23, 59, 59),
-                # 'number_of_days': 1,
+                # 'number_of_days': 2,
             }
         )
         lv.action_approve()
@@ -221,6 +232,12 @@ class TestAbsencePolicy(common.TestHrPayslip):
         self.absence_test_rule.amount_python_compute = (
             "result_rate = worked_days.SICK50.rate * 100 \n"
             "result = worked_days.SICK50.number_of_hours"
+        )
+
+        # I set the test rule to detect the number of awol hours
+        self.awol_test_rule.amount_python_compute = (
+            "result_rate = worked_days.AWOL.rate * 100 \n"
+            "result = worked_days.AWOL.number_of_hours"
         )
 
         # I create a contract for "Richard"
@@ -256,4 +273,12 @@ class TestAbsencePolicy(common.TestHrPayslip):
             line[0].rate,
             50.0,
             "The time the employee was on sick leave is paid at 0.5x",
+        )
+
+        line = richard_payslip.line_ids.filtered(lambda l: l.code == "AWTEST")
+        self.assertEqual(len(line), 1, "I found the AWOL Test line")
+        self.assertEqual(
+            line[0].amount,
+            168.0 - (2 * 8.0),
+            "The time of the sick leave is not marked as AWOL",
         )
