@@ -1,7 +1,7 @@
 # Copyright (C) 2013,2022 Trevi Software (https://trevi.et)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from odoo import _, api, fields, models
 
@@ -453,6 +453,13 @@ class HrPayslip(models.Model):
             # Initialize dictionary of hours worked per day
             working_hours_dict = self.attendance_dict_init(contract, date_from, date_to)
 
+            # List of leaves taken [(day, hours, resource.calendar.leaves), ...]
+            dt_from = datetime.combine(date_from, datetime.min.time())
+            dt_to = datetime.combine(date_to, datetime.max.time())
+            day_leave_intervals = contract[0].employee_id.list_leaves(
+                dt_from, dt_to, calendar=contract.resource_calendar_id
+            )
+
             # Multiple Contracts in one period handling
             temp_nb_of_days = nb_of_days
             dTempPeriodFrom = date_from
@@ -558,7 +565,7 @@ class HrPayslip(models.Model):
                         (
                             working_hours_on_day,
                             attendances,
-                            done,
+                            _done,
                         ) = self.check_and_process_standard(
                             contract,
                             dToday,
@@ -576,8 +583,14 @@ class HrPayslip(models.Model):
                 else:
                     lsd.push(False)
 
+                on_leave = False
+                for lday, _lhours, _leaves in day_leave_intervals:
+                    if lday == dToday:
+                        on_leave = True
+                        break
                 if (
                     awol_code
+                    and not on_leave
                     and not public_holiday
                     and dToday.weekday() not in rest_days["default"]
                     and working_hours_on_day < normal_working_hours
