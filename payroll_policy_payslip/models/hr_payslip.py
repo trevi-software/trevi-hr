@@ -583,21 +583,21 @@ class HrPayslip(models.Model):
                 else:
                     lsd.push(False)
 
-                on_leave = False
-                for lday, _lhours, _leaves in day_leave_intervals:
+                leave_hours = 0
+                for lday, lhours, _leaves in day_leave_intervals:
                     if lday == dToday:
-                        on_leave = True
-                        break
+                        leave_hours += lhours
                 if (
                     awol_code
-                    and not on_leave
                     and not public_holiday
                     and dToday.weekday() not in rest_days["default"]
-                    and working_hours_on_day < normal_working_hours
+                    and working_hours_on_day < (normal_working_hours - leave_hours)
                 ):
-                    hours_diff = normal_working_hours - working_hours_on_day
+                    hours_diff = (
+                        normal_working_hours - working_hours_on_day - leave_hours
+                    )
                     attendances[awol_code]["number_of_days"] += (
-                        hours_diff > 0 and 1.0 or 0
+                        hours_diff / normal_working_hours
                     )
                     attendances[awol_code]["number_of_hours"] += hours_diff
 

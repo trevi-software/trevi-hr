@@ -49,13 +49,22 @@ class TestAbsencePolicy(common.TestHrPayslip):
             }
         )
 
-        # Create a Sick Leave type
+        # Create Leave types
         cls.sick_leave_type = cls.LeaveType.create(
             {
                 "name": "Sick Leave",
                 "code": "SICK50",
                 "allocation_type": "no",
                 "leave_validation_type": "hr",
+            }
+        )
+        cls.hourly_leave_type = cls.LeaveType.create(
+            {
+                "name": "Hourly Leave",
+                "code": "HOURLY",
+                "allocation_type": "no",
+                "leave_validation_type": "hr",
+                "request_unit": "hour",
             }
         )
 
@@ -81,6 +90,16 @@ class TestAbsencePolicy(common.TestHrPayslip):
                 "type": "paid",
                 "rate": 0.5,
                 "holiday_status_id": cls.sick_leave_type.id,
+                "policy_id": cls.absence_policy.id,
+            }
+        )
+        cls.AbsencePolicyLine.create(
+            {
+                "name": "Line - Hourly Leave",
+                "code": "HOURLY",
+                "type": "dock",
+                "rate": 1.0,
+                "holiday_status_id": cls.hourly_leave_type.id,
                 "policy_id": cls.absence_policy.id,
             }
         )
@@ -281,4 +300,92 @@ class TestAbsencePolicy(common.TestHrPayslip):
             line[0].amount,
             168.0 - (2 * 8.0),
             "The time of the sick leave is not marked as AWOL",
+        )
+
+    def test_leave_partial_awol(self):
+
+        # Set system parameter
+        self.env["ir.config_parameter"].sudo().set_param(
+            "payroll.leaves_positive", True
+        )
+
+        # Create a leave request
+        lv = self.LeaveRequest.create(
+            {
+                "name": "Richard Partial Leave",
+                "employee_id": self.richard_emp.id,
+                "holiday_status_id": self.hourly_leave_type.id,
+                "request_date_from": date(2022, 4, 5),
+                "request_date_to": date(2022, 4, 5),
+                "request_unit_hours": True,
+                "request_hour_from": "8",
+                "request_hour_to": "12",
+            }
+        )
+        lv._compute_date_from_to()
+        lv.action_approve()
+        self.assertEqual(lv.state, "validate", "the leave is in validate state")
+
+        # I set the test rule to detect the number of regular worked hours
+        self.test_rule.amount_python_compute = (
+            "result_rate = worked_days.PL1.rate * 100 \n"
+            "result = worked_days.PL1.number_of_hours"
+        )
+
+        # I set the test rule to detect the number of leave hours
+        self.absence_test_rule.amount_python_compute = (
+            "result_rate = worked_days.HOURLY.rate * 100 \n"
+            "result = worked_days.HOURLY.number_of_hours"
+        )
+
+        # I set the test rule to detect the number of awol hours
+        self.awol_test_rule.amount_python_compute = (
+            "result_rate = worked_days.AWOL.rate * 100 \n"
+            "result = worked_days.AWOL.number_of_hours"
+        )
+
+        # I create a contract for "Richard"
+        contract_start = date(2022, 1, 1)
+        start = date(2022, 4, 1)
+        end = date(2022, 4, 30)
+        self.create_contract(contract_start, False, self.richard_emp, 5000.0)
+        self.apply_contract_cron()
+
+        # I create an employee Payslip and process it
+        richard_payslip = self.create_payslip(
+            start, end, self.richard_emp, user=self.payroll_user
+        )
+        richard_payslip.onchange_employee()
+        richard_payslip.compute_sheet()
+
+        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        self.assertEqual(len(line), 1, "I found the Test line")
+        self.assertEqual(
+            line[0].amount,
+            0.0,
+            "There is no attenance",
+        )
+
+        line = richard_payslip.line_ids.filtered(lambda l: l.code == "ABTEST")
+        self.assertEqual(len(line), 1, "I found the Absence Test line")
+        self.assertEqual(
+            line[0].amount,
+            4.0,
+            "The time of the partial leave is only 1/2 day",
+        )
+
+        line = richard_payslip.line_ids.filtered(lambda l: l.code == "AWTEST")
+        self.assertEqual(len(line), 1, "I found the AWOL Test line")
+        self.assertEqual(
+            line[0].amount,
+            168.0 - 4.0,
+            "The AWOL time for the other 1/2 day is recorded correctly",
+        )
+
+        wdl = richard_payslip.worked_days_line_ids.filtered(lambda l: l.code == "AWOL")
+        self.assertEqual(len(wdl), 1, "I found the AWOL worked days line")
+        self.assertEqual(
+            wdl[0].number_of_days,
+            20.5,
+            "In worked days line field 'number_of_days' 1/2 day is subtracted",
         )
