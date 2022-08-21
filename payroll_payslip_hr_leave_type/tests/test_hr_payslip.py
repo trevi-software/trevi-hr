@@ -3,6 +3,8 @@
 
 from datetime import datetime, time
 
+from dateutil.relativedelta import relativedelta
+
 from odoo.addons.payroll.tests.common import TestPayslipBase
 
 
@@ -76,6 +78,10 @@ class TestHrPayslip(TestPayslipBase):
         # Create a leave request
         lv_from = datetime.combine(datetime.today(), time.min)
         lv_to = datetime.combine(datetime.today(), time.max)
+        while lv_from.date().weekday() in [5, 6]:
+            lv_from -= relativedelta(days=1)
+        while lv_to.date().weekday() in [5, 6]:
+            lv_to -= relativedelta(days=1)
         leave = self.Requests.create(
             {
                 "name": "Hol11",
