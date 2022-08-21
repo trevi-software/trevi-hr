@@ -19,6 +19,59 @@ class TestPolicyCommon(common.SavepointCase):
         cls.PolicyGroup = cls.env["hr.policy.group"]
         cls.Policy = cls.env["hr.policy.rounding"]
         cls.PolicyLine = cls.env["hr.policy.line.rounding"]
+        cls.ResourceCalendar = cls.env["resource.calendar"]
+        cls.CalendarAttendance = cls.env["resource.calendar.attendance"]
+        cls.CalendarAttendanceTemplate = cls.env[
+            "resource.calendar.attendance.template"
+        ]
+
+        cls.tpl_morning = cls.CalendarAttendanceTemplate.create(
+            {
+                "name": "Morning",
+                "day_period": "morning",
+                "hour_from": 8,
+                "hour_to": 12,
+            }
+        )
+        cls.tpl_afternoon = cls.CalendarAttendanceTemplate.create(
+            {
+                "name": "Afternoon",
+                "day_period": "afternoon",
+                "hour_from": 13,
+                "hour_to": 17,
+            }
+        )
+        cls.default_calendar = cls.ResourceCalendar.create(
+            {
+                "name": "56 Hrs a week",
+                "tz": "UTC",
+            }
+        )
+        # Create a full 7-day week sor our tests don't fail on Sat. and Sun.
+        for day in ["0", "1", "2", "3", "4", "5", "6"]:
+            cls.CalendarAttendance.create(
+                {
+                    "calendar_id": cls.default_calendar.id,
+                    "template_id": cls.tpl_morning.id,
+                    "dayofweek": day,
+                    "name": "Morning",
+                    "day_period": "morning",
+                    "hour_from": 8,
+                    "hour_to": 12,
+                }
+            )._onchange_template_id()
+            cls.CalendarAttendance.create(
+                {
+                    "calendar_id": cls.default_calendar.id,
+                    "template_id": cls.tpl_afternoon.id,
+                    "dayofweek": day,
+                    "name": "Afternoon",
+                    "day_period": "afternoon",
+                    "hour_from": 13,
+                    "hour_to": 17,
+                }
+            )._onchange_template_id()
+
         cls.policy = cls.Policy.create(
             {"name": "ROUNDING POLICY1", "date": date.today(), "tz": "UTC"}
         )
@@ -55,7 +108,9 @@ class TestPolicyCommon(common.SavepointCase):
         )
 
         # Employee with contract
-        cls.test_employee = cls.HrEmployee.create({"name": "Test Employee"})
+        cls.test_employee = cls.HrEmployee.create(
+            {"name": "Test Employee", "resource_calendar_id": cls.default_calendar.id}
+        )
         cls.test_contract = cls.create_contract(cls)
         cls.apply_contract_cron(cls)
 
@@ -75,6 +130,7 @@ class TestPolicyCommon(common.SavepointCase):
                 "wage": 1,
                 "date_start": start,
                 "date_end": end,
+                "resource_calendar_id": self.default_calendar.id,
             }
         )
 
