@@ -31,8 +31,8 @@ class PayrollPeriodSchedule(models.Model):
             if len(ou_ids) > 1:
                 for ou in ou_ids.filtered(lambda x: x.id != res["operating_unit_id"]):
                     other_data = {
-                        "name": _("Pay Period {}/{} {}").format(
-                            str(yearno), str(mo_name), ou.name
+                        "name": _("{}/{} {} {}").format(
+                            str(yearno), str(mo_num), str(mo_name), ou.name
                         ),
                         "schedule_id": res["schedule_id"],
                         "date_start": res["date_start"],

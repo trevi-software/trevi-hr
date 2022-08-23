@@ -202,6 +202,7 @@ class HrPayperiodSchedule(models.Model):
 
         self.ensure_one()
         data = None
+        month_name = month_number = year_number = ""
         latest = self._get_latest_period(self.id)
         local_tz = timezone(self.tz)
         if not latest:
@@ -222,7 +223,7 @@ class HrPayperiodSchedule(models.Model):
                     dtStart = datetime(dStart.year, dStart.month, dStart.day, 0, 0, 0)
                 dtEnd = add_months(dtStart, 1) - timedelta(days=1)
                 dtEnd = datetime(dtEnd.year, dtEnd.month, dtEnd.day, 23, 59, 59)
-                month_name, _month_number, year_number = get_period_year(dtStart, 12)
+                month_name, month_number, year_number = get_period_year(dtStart, 12)
 
                 # Convert from time zone of punches to UTC for storage
                 ltzStart = local_tz.localize(dtStart, is_dst=None)
@@ -253,7 +254,7 @@ class HrPayperiodSchedule(models.Model):
                 ltzEnd = local_tz.localize(
                     datetime(dEnd.year, dEnd.month, dEnd.day, 23, 59, 59)
                 )
-                month_name, _month_number, year_number = get_period_year(ltzStart, 12)
+                month_name, month_number, year_number = get_period_year(ltzStart, 12)
 
                 # Convert from time zone of punches to UTC for storage
                 utcStart = ltzStart.astimezone(utc)
@@ -262,8 +263,8 @@ class HrPayperiodSchedule(models.Model):
                 dtEnd = utcEnd.replace(tzinfo=None)
 
                 data = {
-                    "name": _("Pay Period {}/{}").format(
-                        str(year_number), str(month_name)
+                    "name": _("{}/{} {}").format(
+                        str(year_number), str(month_number), str(month_name)
                     ),
                     "schedule_id": self.id,
                     "date_start": dtStart,
@@ -272,7 +273,7 @@ class HrPayperiodSchedule(models.Model):
 
         # Run hook method to give other modules a chance to edit the data
         data = self.payroll_period_data_hook(
-            data, month_name, _month_number, year_number
+            data, month_name, month_number, year_number
         )
         self.write({"pay_period_ids": [(0, 0, data)]})
 
