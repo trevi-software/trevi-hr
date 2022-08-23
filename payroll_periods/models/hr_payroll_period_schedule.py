@@ -271,15 +271,18 @@ class HrPayperiodSchedule(models.Model):
                 }
 
         # Run hook method to give other modules a chance to edit the data
-        if data is None:
-            data = {}
-        data.update(self.payroll_period_data_hook(data))
+        data = self.payroll_period_data_hook(
+            data, month_name, _month_number, year_number
+        )
         self.write({"pay_period_ids": [(0, 0, data)]})
 
-    @api.model
-    def payroll_period_data_hook(self, _data=None):
-
-        return {}
+    def payroll_period_data_hook(
+        self, _data=None, mo_name=False, mo_num=False, yearno=False
+    ):
+        self.ensure_one()
+        if _data is None:
+            _data = {}
+        return _data
 
     @api.model
     def _get_latest_period(self, sched_id):
