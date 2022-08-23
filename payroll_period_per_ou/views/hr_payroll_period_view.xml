@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_payroll_period_tree" model="ir.ui.view">
+        <field name="name">hr.payroll.period.tree.operating_unit</field>
+        <field name="model">hr.payroll.period</field>
+        <field name="inherit_id" ref="payroll_periods.view_payroll_period_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_end']" position="after">
+                <field name="operating_unit_id" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_payroll_period_form" model="ir.ui.view">
+        <field name="name">hr.payroll.period.form.operating_unit</field>
+        <field name="model">hr.payroll.period</field>
+        <field name="inherit_id" ref="payroll_periods.view_payroll_period_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='schedule_id']" position="after">
+                <field name="operating_unit_id" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
