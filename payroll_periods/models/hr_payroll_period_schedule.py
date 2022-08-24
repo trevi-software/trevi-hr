@@ -29,7 +29,7 @@ def get_period_year(dt, annual_pay_periods):
     year_number = 0
     if dt.day < 15:
         month_name = dt.strftime("%B")
-        month_number = dt.month
+        month_number = dt.strftime("%m")
         year_number = dt.year
     else:
         dtTmp = add_months(dt, 1)
@@ -38,7 +38,7 @@ def get_period_year(dt, annual_pay_periods):
             month_name = dt.strftime("%B")
         else:
             month_name = dtTmp.strftime("%B")
-        month_number = dtTmp.month
+        month_number = dtTmp.strftime("%m")
         year_number = dtTmp.year
     return month_name, month_number, year_number
 
@@ -234,8 +234,8 @@ class HrPayperiodSchedule(models.Model):
                 dtEnd = utcEnd.replace(tzinfo=None)
 
                 data = {
-                    "name": _("Pay Period {}/{}").format(
-                        str(year_number), str(month_name)
+                    "name": _("{}/{} {}").format(
+                        str(year_number), str(month_number), str(month_name)
                     ),
                     "schedule_id": self.id,
                     "date_start": dtStart,
