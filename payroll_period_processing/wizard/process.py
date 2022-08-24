@@ -213,6 +213,11 @@ class ProcessingWizard(models.TransientModel):
         register.run_ids.unlink()
         register.unlink()
 
+    def get_period_schedule_contracts(self, period):
+        """Get contracts attached to payroll schedule of 'period'."""
+
+        return period.schedule_id.contract_ids
+
     def create_payslip_runs(self, register_values, dept_ids):
         """
         Create payslips for employees, in all departments, that have a contract in
@@ -232,7 +237,7 @@ class ProcessingWizard(models.TransientModel):
         date_start = tzdt_start.date()
         date_end = tzdt_end.date()
         previous_register = period.register_id
-        contract_ids = period.schedule_id.contract_ids
+        contract_ids = self.get_period_schedule_contracts(period)
 
         # Remove any pre-existing payroll registers
         if previous_register:

@@ -15,6 +15,7 @@ class TestProcessing(common.SavepointCase):
     def setUpClass(cls):
         super(TestProcessing, cls).setUpClass()
 
+        cls.Employee = cls.env["hr.employee"]
         cls.Wizard = cls.env["hr.payroll.processing"]
         cls.Period = cls.env["hr.payroll.period"]
         cls.Schedule = cls.env["hr.payroll.period.schedule"]
@@ -47,7 +48,7 @@ class TestProcessing(common.SavepointCase):
         cls.user_employee = mail_new_test_user(
             cls.env, login="david", groups="base.group_user"
         )
-        cls.employee_emp = cls.env["hr.employee"].create(
+        cls.employee_emp = cls.Employee.create(
             {
                 "name": "David Employee",
                 "user_id": cls.user_employee.id,
