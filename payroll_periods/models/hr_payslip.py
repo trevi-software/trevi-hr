@@ -97,8 +97,13 @@ class HrPayslip(models.Model):
         #
         categories = {}
         for rule in rules:
-            if rule.category_id.id not in categories.keys():
+            if rule.category_id.code not in categories.keys():
                 categories.update({rule.category_id.code: 0})
+        if not categories:
+            _logger.warning(
+                f"Payslip {self.number}: could not get salary rule categories."
+            )
+            return categories
 
         # Populate the dict with the sum of all the salary lines for that
         # category and its children
