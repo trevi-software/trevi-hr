@@ -12,9 +12,11 @@
     "license": "AGPL-3",
     "depends": [
         "payroll",
+        "payroll_default_salary_rules",
     ],
     "data": [
         "security/ir.model.access.csv",
+        "data/payslip_report_data.xml",
         "report/hr_payslip_report.xml",
         "views/res_config_settings_views.xml",
     ],
