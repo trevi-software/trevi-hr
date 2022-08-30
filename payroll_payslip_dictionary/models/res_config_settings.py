@@ -8,9 +8,6 @@ class ResConfigSettings(models.TransientModel):
 
     _inherit = "res.config.settings"
 
-    payroll_code_net = fields.Char(
-        config_parameter="payroll_payslip_dictionary.payroll_code_net"
-    )
     work_days_code_max = fields.Char(
         config_parameter="payroll_payslip_dictionary.work_days_code_max"
     )

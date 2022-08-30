@@ -65,7 +65,7 @@
                         </div>
                     </div>
                 </div>
-                <h2>Payroll Codes</h2>
+                <h2>Worked Days Codes</h2>
                 <div
                     class="row mt16 o_settings_container"
                     name="max_dictionary_setting_container"
@@ -77,21 +77,6 @@
                             <field name="work_days_code_max" />
                             <div class="text-muted">
                                     In the 'worked_days' dictionary, the code used for maximum possible working days.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="row mt16 o_settings_container"
-                    name="net_dictionary_setting_container"
-                >
-                    <div class="col-12 col-lg-6 o_setting_box" id="payroll_code_net">
-                        <div class="o_setting_left_pane" />
-                        <div class="o_setting_right_pane">
-                            <label for="payroll_code_net" />
-                            <field name="payroll_code_net" />
-                            <div class="text-muted">
-                                    The Payroll Code used for net amount received by employee after earnings and deductions.
                             </div>
                         </div>
                     </div>

@@ -15,6 +15,7 @@
         "hr_contract",
         "hr_employee_seniority_months",
         "payroll",
+        "payroll_salary_codes_default",
     ],
     "data": [
         "data/payroll_payslip_dictionary.xml",
