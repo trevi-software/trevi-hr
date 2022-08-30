@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Rule Codes -->
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.rule_gross', 'GRS')"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.rule_net', 'NET')"
+        />
+
+        <!-- Category Codes -->
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.categ_gross', 'GROSS')"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.categ_net', 'NET')"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.categ_info', 'INFO')"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.categ_basic', 'BASIC')"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.categ_ot', 'OVERTM')"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.categ_allowance', 'ALLWNC')"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.categ_deduction', 'DEDUCT')"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.categ_taxexempt', 'TAXEXT')"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.categ_taxable', 'TAXBLE')"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.categ_payroll_tax', 'PRLTAX')"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.categ_income_tax', 'INCTAX')"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.categ_ee_contribution', 'EECONT')"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.categ_er_contribution', 'ERCONT')"
+        />
+
+    </data>
+
+    <data noupdate="1">
+
+        <!-- Salary Rule Categories -->
+        <record id="INFO" model="hr.salary.rule.category">
+            <field name="name">Informational</field>
+            <field name="code">INFO</field>
+        </record>
+        <record id="BASIC" model="hr.salary.rule.category">
+            <field name="name">Basic</field>
+            <field name="code">BASIC</field>
+        </record>
+        <record id="OVERTM" model="hr.salary.rule.category">
+            <field name="name">Overtime</field>
+            <field name="code">OVERTM</field>
+        </record>
+        <record id="ALLWNC" model="hr.salary.rule.category">
+            <field name="name">Allowance</field>
+            <field name="code">ALLWNC</field>
+        </record>
+        <record id="TAXEXT" model="hr.salary.rule.category">
+            <field name="name">Tax-exempt Earnings</field>
+            <field name="code">TAXEXT</field>
+        </record>
+        <record id="TAXBLE" model="hr.salary.rule.category">
+            <field name="name">Taxable Gross Earnings</field>
+            <field name="code">TAXBLE</field>
+        </record>
+        <record id="GROSS" model="hr.salary.rule.category">
+            <field name="name">Gross Earnings</field>
+            <field name="code">GROSS</field>
+        </record>
+        <record id="PRLTAX" model="hr.salary.rule.category">
+            <field name="name">Payroll Taxes</field>
+            <field name="code">PRLTAX</field>
+        </record>
+        <record id="INCTAX" model="hr.salary.rule.category">
+            <field name="name">Income Taxes</field>
+            <field name="code">INCTAX</field>
+        </record>
+        <record id="EECONT" model="hr.salary.rule.category">
+            <field name="name">Employee Contributions</field>
+            <field name="code">EECONT</field>
+        </record>
+        <record id="ERCONT" model="hr.salary.rule.category">
+            <field name="name">Employer Contributions</field>
+            <field name="code">ERCONT</field>
+        </record>
+        <record id="DEDUCT" model="hr.salary.rule.category">
+            <field name="name">Deduction</field>
+            <field name="code">DED</field>
+        </record>
+        <record id="NET" model="hr.salary.rule.category">
+            <field name="name">Net Earnings</field>
+            <field name="code">NET</field>
+        </record>
+
+        <!-- Salary Rules -->
+        <record id="rule_taxable_gross" model="hr.salary.rule">
+            <field name="name">Taxable Earnings</field>
+            <field name="sequence" eval="93" />
+            <field name="code">TXB</field>
+            <field name="category_id" ref="payroll_default_salary_rules.TAXBLE" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories.BASIC + categories.OVERTM + categories.ALLWNC - categories.TAXEXT
+            </field>
+        </record>
+        <record id="rule_estimated_monthly_gross" model="hr.salary.rule">
+            <field name="name">Estimated Monthly Taxable Earnings</field>
+            <field name="sequence" eval="95" />
+            <field name="code">EMT</field>
+            <field name="category_id" ref="payroll_default_salary_rules.INFO" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = payroll.contracts.count == 1 and categories.TAXBLE or (categories.TAXBLE / current_contract.ppf)
+            </field>
+        </record>
+        <record id="rule_gross" model="hr.salary.rule">
+            <field name="name">Gross Earnings</field>
+            <field name="sequence" eval="100" />
+            <field name="code">GRS</field>
+            <field name="category_id" ref="payroll_default_salary_rules.GROSS" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories.BASIC + categories.OVERTM + categories.ALLWNC + categories.TAXEXT
+            </field>
+        </record>
+        <record id="rule_net" model="hr.salary.rule">
+            <field name="name">Net Earnings</field>
+            <field name="sequence" eval="200" />
+            <field name="code">NET</field>
+            <field name="category_id" ref="payroll_default_salary_rules.NET" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories.GROSS - categories.PRLTAX - categories.INCTAX - categories.EECONT - categories.DEDUCT
+            </field>
+        </record>
+
+    </data>
+</odoo>
