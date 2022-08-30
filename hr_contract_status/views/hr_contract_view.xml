@@ -155,7 +155,6 @@
                 <xpath expr="//field[@name='job_id']" position="replace">
                     <field
                         name="job_id"
-                        domain="[('department_id', '=', employee_dept_id)]"
                         attrs="{'invisible': [('state','=','close')]}"
                     />
                     <field
