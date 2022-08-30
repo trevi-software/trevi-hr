@@ -12,9 +12,9 @@ class HrEmployee(models.Model):
     department_id = fields.Many2one(compute="_compute_contract", store=True)
     job_id = fields.Many2one(compute="_compute_contract", store=True)
 
-    @api.depends("contract_id")
+    @api.depends("contract_id", "contract_id.job_id")
     def _compute_contract(self):
-        for employee in self.filtered("contract_id"):
+        for employee in self.filtered(lambda c: c.contract_id):
             employee.job_id = employee.contract_id.job_id
             employee.department_id = employee.contract_id.department_id
 
