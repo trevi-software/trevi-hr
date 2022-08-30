@@ -1,60 +1,140 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+
     <data noupdate="1">
-        <record id="01cent" model="res.currency.denomination">
-            <field name="currency_id" ref="base.ETB" />
+
+        <!-- Euros -->
+        <record id="01eucent" model="res.currency.denomination">
+            <field name="currency_id" ref="base.EUR" />
             <field name="value">0.01</field>
             <field name="ratio" eval="1.0/100.0" />
         </record>
-        <record id="05cent" model="res.currency.denomination">
-            <field name="currency_id" ref="base.ETB" />
+        <record id="02eucent" model="res.currency.denomination">
+            <field name="currency_id" ref="base.EUR" />
+            <field name="value">0.02</field>
+            <field name="ratio" eval="2.0/100.0" />
+        </record>
+        <record id="05eucent" model="res.currency.denomination">
+            <field name="currency_id" ref="base.EUR" />
             <field name="value">0.05</field>
             <field name="ratio" eval="5.0/100.0" />
         </record>
-        <record id="10cent" model="res.currency.denomination">
-            <field name="currency_id" ref="base.ETB" />
+        <record id="10eucent" model="res.currency.denomination">
+            <field name="currency_id" ref="base.EUR" />
             <field name="value">0.10</field>
             <field name="ratio" eval="10.0/100.0" />
         </record>
-        <record id="25cent" model="res.currency.denomination">
-            <field name="currency_id" ref="base.ETB" />
-            <field name="value">0.25</field>
-            <field name="ratio" eval="25.0/100.0" />
+        <record id="20eucent" model="res.currency.denomination">
+            <field name="currency_id" ref="base.EUR" />
+            <field name="value">0.20</field>
+            <field name="ratio" eval="20.0/100.0" />
         </record>
-        <record id="50cent" model="res.currency.denomination">
-            <field name="currency_id" ref="base.ETB" />
+        <record id="50eucent" model="res.currency.denomination">
+            <field name="currency_id" ref="base.USD" />
             <field name="value">0.50</field>
             <field name="ratio" eval="50.0/100.0" />
         </record>
-        <record id="01br" model="res.currency.denomination">
-            <field name="currency_id" ref="base.ETB" />
+        <record id="01euro" model="res.currency.denomination">
+            <field name="currency_id" ref="base.EUR" />
             <field name="value">1</field>
             <field name="ratio" eval="1" />
         </record>
-        <record id="05br" model="res.currency.denomination">
-            <field name="currency_id" ref="base.ETB" />
+        <record id="02euro" model="res.currency.denomination">
+            <field name="currency_id" ref="base.EUR" />
+            <field name="value">2</field>
+            <field name="ratio" eval="2" />
+        </record>
+        <record id="05euro" model="res.currency.denomination">
+            <field name="currency_id" ref="base.EUR" />
             <field name="value">5</field>
             <field name="ratio" eval="5" />
         </record>
-        <record id="10br" model="res.currency.denomination">
-            <field name="currency_id" ref="base.ETB" />
+        <record id="10euro" model="res.currency.denomination">
+            <field name="currency_id" ref="base.EUR" />
             <field name="value">10</field>
             <field name="ratio" eval="10" />
         </record>
-        <record id="50br" model="res.currency.denomination">
-            <field name="currency_id" ref="base.ETB" />
+        <record id="20euro" model="res.currency.denomination">
+            <field name="currency_id" ref="base.EUR" />
+            <field name="value">20</field>
+            <field name="ratio" eval="20" />
+        </record>
+        <record id="50euro" model="res.currency.denomination">
+            <field name="currency_id" ref="base.EUR" />
             <field name="value">50</field>
             <field name="ratio" eval="50" />
         </record>
-        <record id="100br" model="res.currency.denomination">
-            <field name="currency_id" ref="base.ETB" />
+        <record id="100euro" model="res.currency.denomination">
+            <field name="currency_id" ref="base.EUR" />
             <field name="value">100</field>
             <field name="ratio" eval="100" />
         </record>
-        <record id="200br" model="res.currency.denomination">
-            <field name="currency_id" ref="base.ETB" />
+        <record id="200euro" model="res.currency.denomination">
+            <field name="currency_id" ref="base.EUR" />
             <field name="value">200</field>
             <field name="ratio" eval="200" />
+        </record>
+        <record id="500euro" model="res.currency.denomination">
+            <field name="currency_id" ref="base.EUR" />
+            <field name="value">500</field>
+            <field name="ratio" eval="500" />
+        </record>
+
+        <!-- US Dollars -->
+        <record id="01uscent" model="res.currency.denomination">
+            <field name="currency_id" ref="base.USD" />
+            <field name="value">0.01</field>
+            <field name="ratio" eval="1.0/100.0" />
+        </record>
+        <record id="05uscent" model="res.currency.denomination">
+            <field name="currency_id" ref="base.USD" />
+            <field name="value">0.05</field>
+            <field name="ratio" eval="5.0/100.0" />
+        </record>
+        <record id="10uscent" model="res.currency.denomination">
+            <field name="currency_id" ref="base.USD" />
+            <field name="value">0.10</field>
+            <field name="ratio" eval="10.0/100.0" />
+        </record>
+        <record id="25uscent" model="res.currency.denomination">
+            <field name="currency_id" ref="base.USD" />
+            <field name="value">0.25</field>
+            <field name="ratio" eval="25.0/100.0" />
+        </record>
+        <record id="50uscent" model="res.currency.denomination">
+            <field name="currency_id" ref="base.USD" />
+            <field name="value">0.50</field>
+            <field name="ratio" eval="50.0/100.0" />
+        </record>
+        <record id="01usd" model="res.currency.denomination">
+            <field name="currency_id" ref="base.USD" />
+            <field name="value">1</field>
+            <field name="ratio" eval="1" />
+        </record>
+        <record id="05usd" model="res.currency.denomination">
+            <field name="currency_id" ref="base.USD" />
+            <field name="value">5</field>
+            <field name="ratio" eval="5" />
+        </record>
+        <record id="10usd" model="res.currency.denomination">
+            <field name="currency_id" ref="base.USD" />
+            <field name="value">10</field>
+            <field name="ratio" eval="10" />
+        </record>
+        <record id="20usd" model="res.currency.denomination">
+            <field name="currency_id" ref="base.USD" />
+            <field name="value">20</field>
+            <field name="ratio" eval="20" />
+        </record>
+        <record id="50usd" model="res.currency.denomination">
+            <field name="currency_id" ref="base.USD" />
+            <field name="value">50</field>
+            <field name="ratio" eval="50" />
+        </record>
+        <record id="100usd" model="res.currency.denomination">
+            <field name="currency_id" ref="base.USD" />
+            <field name="value">100</field>
+            <field name="ratio" eval="100" />
         </record>
     </data>
 </odoo>
