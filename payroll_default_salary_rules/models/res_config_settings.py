@@ -27,7 +27,9 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="payroll_default_salary_rules.categ_basic",
     )
 
-    categ_ot = fields.Char(string="OT Categ.", config_parameter=".categ_ot")
+    categ_ot = fields.Char(
+        string="OT Categ.", config_parameter="payroll_default_salary_rules.categ_ot"
+    )
 
     categ_allowance = fields.Char(
         string="Allowance Categ.",
@@ -49,9 +51,14 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="payroll_default_salary_rules.categ_gross",
     )
 
-    categ_payroll_tax = fields.Char(
-        string="Payroll Tax Categ.",
-        config_parameter="payroll_default_salary_rules.categ_payroll_tax",
+    categ_payroll_tax_ee = fields.Char(
+        string="EE Payroll Tax Categ.",
+        config_parameter="payroll_default_salary_rules.categ_payroll_tax_ee",
+    )
+
+    categ_payroll_tax_er = fields.Char(
+        string="ER Payroll Tax Categ.",
+        config_parameter="payroll_default_salary_rules.categ_payroll_tax_er",
     )
 
     categ_income_tax = fields.Char(
