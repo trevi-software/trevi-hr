@@ -63,7 +63,12 @@
         <function
             model="ir.config_parameter"
             name="set_param"
-            eval="('payroll_default_salary_rules.categ_payroll_tax', 'PRLTAX')"
+            eval="('payroll_default_salary_rules.categ_payroll_tax_ee', 'PRLTAX')"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_default_salary_rules.categ_payroll_tax_er', 'ERPTAX')"
         />
         <function
             model="ir.config_parameter"
@@ -115,8 +120,12 @@
             <field name="code">GROSS</field>
         </record>
         <record id="PRLTAX" model="hr.salary.rule.category">
-            <field name="name">Payroll Taxes</field>
+            <field name="name">Payroll Taxes EE</field>
             <field name="code">PRLTAX</field>
+        </record>
+        <record id="ERPTAX" model="hr.salary.rule.category">
+            <field name="name">Payroll Taxes ER</field>
+            <field name="code">ERPTAX</field>
         </record>
         <record id="INCTAX" model="hr.salary.rule.category">
             <field name="name">Income Taxes</field>

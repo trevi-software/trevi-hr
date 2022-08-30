@@ -53,7 +53,7 @@
                             <div class="text-muted">
                                     Payslip lines deducted from the employer for
                                     the purposes of a current or future benefit to
-                                    the employee.
+                                    the employee. Does not include payroll taxes.
                             </div>
                         </div>
                     </div>
@@ -148,14 +148,31 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="categ_payroll_tax">
+                    <div
+                        class="col-12 col-lg-6 o_setting_box"
+                        id="categ_payroll_tax_ee"
+                    >
                         <div class="o_setting_left_pane" />
                         <div class="o_setting_right_pane">
-                            <label for="categ_payroll_tax" />
-                            <field name="categ_payroll_tax" />
+                            <label for="categ_payroll_tax_ee" />
+                            <field name="categ_payroll_tax_ee" />
                             <div class="text-muted">
                                     Payroll tax deductions. Deducted from the
                                     employee and usually used to fund social programs.
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="col-12 col-lg-6 o_setting_box"
+                        id="categ_payroll_tax_er"
+                    >
+                        <div class="o_setting_left_pane" />
+                        <div class="o_setting_right_pane">
+                            <label for="categ_payroll_tax_er" />
+                            <field name="categ_payroll_tax_er" />
+                            <div class="text-muted">
+                                    Payroll tax contributions from the employer. Does
+                                    not necessarily have an employEE counterpart.
                             </div>
                         </div>
                     </div>
