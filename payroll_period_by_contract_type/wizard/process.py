@@ -75,6 +75,7 @@ class ProcessPayroll(models.TransientModel):
             # Create a pay slip for each employee in each department that has
             # a contract in the pay period schedule of this pay period
             payslips = self.env["hr.payslip"]
+            ees = ees.sorted(key=lambda e: e.name)
             for ee in ees:
                 if not self.payroll_period_id.process_employee(ee.id):
                     continue

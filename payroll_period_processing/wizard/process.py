@@ -233,7 +233,7 @@ class ProcessingWizard(models.TransientModel):
                 ("employee_id.department_id", "=", dept.id),
             ]
         )
-        return c_ids.mapped("employee_id").sorted()
+        return c_ids.mapped("employee_id")
 
     def _create_batches(
         self,
@@ -271,6 +271,7 @@ class ProcessingWizard(models.TransientModel):
             # Create a pay slip for each employee in each department that has
             # a contract in the pay period schedule of this pay period
             payslips = self.env["hr.payslip"]
+            ee_ids = ee_ids.sorted(key=lambda e: e.name)
             for ee in ee_ids:
                 if not self.payroll_period_id.process_employee(ee.id):
                     continue
