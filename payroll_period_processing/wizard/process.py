@@ -6,6 +6,8 @@ from pytz import timezone, utc
 
 from odoo import _, api, exceptions, fields, models
 
+DEFAULT_BATCHBY = "department"
+
 
 class ProcessingWizard(models.TransientModel):
 
@@ -218,6 +220,69 @@ class ProcessingWizard(models.TransientModel):
 
         return period.schedule_id.contract_ids
 
+    def _get_employees_from_department(self, dept, contracts, date_start, date_end):
+        c_ids = self.env["hr.contract"].search(
+            [
+                ("id", "in", contracts.ids),
+                ("date_start", "<=", date_end),
+                "|",
+                ("date_end", "=", False),
+                ("date_end", ">=", date_start),
+                "|",
+                ("department_id.id", "=", dept.id),
+                ("employee_id.department_id", "=", dept.id),
+            ]
+        )
+        return c_ids.mapped("employee_id").sorted()
+
+    def _create_batches(
+        self,
+        register,
+        contracts,
+        departments,
+        date_start,
+        date_end,
+        batch_by=DEFAULT_BATCHBY,
+    ):
+
+        batches = self.env["hr.payslip.run"]
+        if batch_by != DEFAULT_BATCHBY:
+            return batches
+
+        # Create payslip batch (run) for each department
+        #
+        for dept in departments:
+            ee_ids = self._get_employees_from_department(
+                dept, contracts, date_start, date_end
+            )
+            if len(ee_ids) == 0:
+                continue
+
+            run_res = {
+                "name": dept.complete_name,
+                "date_start": date_start,
+                "date_end": date_end,
+                "register_id": register.id,
+                "period_id": register.period_id.id,
+                "department_ids": [(6, 0, [dept.id])],
+            }
+            batch = self.env["hr.payslip.run"].create(run_res)
+
+            # Create a pay slip for each employee in each department that has
+            # a contract in the pay period schedule of this pay period
+            payslips = self.env["hr.payslip"]
+            for ee in ee_ids:
+                if not self.payroll_period_id.process_employee(ee.id):
+                    continue
+
+                payslips |= self.payroll_period_id.create_payslip(ee.id, batch.id)
+
+            # Calculate payroll for all the pay slips in this batch (run)
+            payslips.compute_sheet()
+            batches |= batch
+
+        return batches
+
     def create_payslip_runs(self, register_values, dept_ids):
         """
         Create payslips for employees, in all departments, that have a contract in
@@ -238,6 +303,7 @@ class ProcessingWizard(models.TransientModel):
         date_end = tzdt_end.date()
         previous_register = period.register_id
         contract_ids = self.get_period_schedule_contracts(period)
+        batch_by = self.get_batch_criteria()
 
         # Remove any pre-existing payroll registers
         if previous_register:
@@ -246,49 +312,15 @@ class ProcessingWizard(models.TransientModel):
         # Create Payroll Register
         register = self.env["hr.payroll.register"].create(register_values)
 
-        # Create payslip batch (run) for each department
-        #
-        for dept in dept_ids:
-            c_ids = self.env["hr.contract"].search(
-                [
-                    ("id", "in", contract_ids.ids),
-                    ("date_start", "<=", date_end),
-                    "|",
-                    ("date_end", "=", False),
-                    ("date_end", ">=", date_start),
-                    "|",
-                    ("department_id.id", "=", dept.id),
-                    ("employee_id.department_id", "=", dept.id),
-                ]
-            )
-
-            ee_ids = c_ids.mapped("employee_id").sorted()
-            if len(ee_ids) == 0:
-                continue
-
-            run_res = {
-                "name": dept.complete_name,
-                "date_start": date_start,
-                "date_end": date_end,
-                "register_id": register.id,
-                "period_id": register.period_id.id,
-                "department_ids": [(6, 0, [dept.id])],
-            }
-            batch = self.env["hr.payslip.run"].create(run_res)
-
-            # Create a pay slip for each employee in each department that has
-            # a contract in the pay period schedule of this pay period
-            payslips = self.env["hr.payslip"]
-            for ee in ee_ids:
-                if not period.process_employee(ee.id):
-                    continue
-
-                payslips |= period.create_payslip(ee.id, batch.id)
-
-            # Calculate payroll for all the pay slips in this batch (run)
-            payslips.compute_sheet()
+        # Create payslip batches
+        self._create_batches(
+            register, contract_ids, dept_ids, date_start, date_end, batch_by
+        )
 
         # Attach payroll register to this pay period
         period.register_id = register
 
         return register
+
+    def get_batch_criteria(self):
+        return DEFAULT_BATCHBY
