@@ -45,9 +45,8 @@ class HrPayrollRegister(models.Model):
         name = _("Payroll for the Month of %s %s" % (nMonth, year))
         return name
 
-    name = fields.Char(
-        string="Description", size=256, required=True, default=_get_default_name
-    )
+    name = fields.Char(string="Description", required=True, default=_get_default_name)
+    period_name = fields.Char()
     state = fields.Selection(
         string="Status",
         selection=[("draft", "Draft"), ("close", "Close")],
@@ -101,6 +100,15 @@ class HrPayrollRegister(models.Model):
             for den in reg.denomination_ids:
                 res += den.denomination * den.denomination_qty
             reg.exact_change = res
+
+    def name_get(self):
+        res = []
+        for rec in self:
+            if not rec.period_name or rec.period_name in rec.name:
+                res.append((rec.id, f"{rec.name}"))
+            else:
+                res.append((rec.id, f"{rec.period_name} {rec.name}"))
+        return res
 
     def action_delete_runs(self):
 

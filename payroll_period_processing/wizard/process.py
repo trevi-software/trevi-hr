@@ -196,6 +196,7 @@ class ProcessingWizard(models.TransientModel):
         # Create the payroll register
         register_values = {
             "name": _("%s Payroll Sheet" % (self.payroll_period_id.name)),
+            "period_name": self.payroll_period_id.period_name,
             "date_start": self.payroll_period_id.date_start,
             "date_end": self.payroll_period_id.date_end,
             "period_id": self.payroll_period_id.id,

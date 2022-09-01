@@ -12,18 +12,14 @@
                         <t t-set="payroll_tax_heading" t-value="'Pension Fund 7%'" />
                         <center>
                             <h1>
-                                <span t-field="o.name" />
+                                <span t-field="o.company_id.name" />
                             </h1>
                             <h2>
-                                <span
-                                    t-field="o.with_context(tz=o.period_id.schedule_id.tz).date_start"
-                                    t-options="{'widget': 'date'}"
-                                />
-                                - <span
-                                    t-field="o.with_context(tz=o.period_id.schedule_id.tz).date_end"
-                                    t-options="{'widget': 'date'}"
-                                />
+                                <span t-field="o.name" />
                             </h2>
+                            <h3 t-if="o.period_name not in o.name">
+                                <span t-field="o.period_name" />
+                            </h3>
                         </center>
                         <t t-foreach="o.run_ids" t-as="batch">
                             <t

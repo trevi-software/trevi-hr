@@ -1,7 +1,7 @@
 # Copyright (C) 2022 Trevi Software (https://trevi.et)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class PayrollPeriodSchedule(models.Model):
@@ -25,15 +25,14 @@ class PayrollPeriodSchedule(models.Model):
                 res.update(
                     {
                         "operating_unit_id": ou_ids.ids[0],
-                        "name": f"{res['name']} {ou_ids[0].name}",
+                        "name": f"{ou_ids[0].name}",
                     }
                 )
             if len(ou_ids) > 1:
                 for ou in ou_ids.filtered(lambda x: x.id != res["operating_unit_id"]):
                     other_data = {
-                        "name": _("{}/{} {} {}").format(
-                            str(yearno), str(mo_num), str(mo_name), ou.name
-                        ),
+                        "name": f"{ou.name}",
+                        "period_name": res["period_name"],
                         "schedule_id": res["schedule_id"],
                         "date_start": res["date_start"],
                         "date_end": res["date_end"],

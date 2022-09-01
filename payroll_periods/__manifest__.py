@@ -5,7 +5,7 @@
 {
     "name": "Payroll Period",
     "summary": "Configurable payroll schedules.",
-    "version": "14.0.1.1.4",
+    "version": "14.0.1.2.4",
     "category": "Payroll",
     "images": ["static/src/img/main_screenshot.png"],
     "author": "TREVI Software, Michael Telahun Makonnen",

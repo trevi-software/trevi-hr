@@ -237,6 +237,9 @@ class HrPayperiodSchedule(models.Model):
                     "name": _("{}/{} {}").format(
                         str(year_number), str(month_number), str(month_name)
                     ),
+                    "period name": _("{}/{} {}").format(
+                        str(year_number), str(month_number), str(month_name)
+                    ),
                     "schedule_id": self.id,
                     "date_start": dtStart,
                     "date_end": dtEnd,
@@ -264,6 +267,9 @@ class HrPayperiodSchedule(models.Model):
 
                 data = {
                     "name": _("{}/{} {}").format(
+                        str(year_number), str(month_number), str(month_name)
+                    ),
+                    "period_name": _("{}/{} {}").format(
                         str(year_number), str(month_number), str(month_name)
                     ),
                     "schedule_id": self.id,

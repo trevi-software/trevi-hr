@@ -35,6 +35,7 @@
             <field name="arch" type="xml">
                 <tree string="Payroll Periods">
                     <field name="name" />
+                    <field name="period_name" />
                     <field name="date_start" />
                     <field name="date_end" />
                     <field name="state" />
@@ -81,6 +82,9 @@
                                     name="company_id"
                                     groups="base.group_multi_company"
                                 />
+                            </group>
+                            <group>
+                                <field name="period_name" />
                             </group>
                         </group>
                         <notebook>
