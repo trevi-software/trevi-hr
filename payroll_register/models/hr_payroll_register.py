@@ -29,6 +29,13 @@ class HrPayrollRegister(models.Model):
 
     _name = "hr.payroll.register"
     _description = "Payroll Register"
+    _sql_constraints = [
+        (
+            "unique_name",
+            "CHECK(1=1)",
+            _("Payroll Register description must be unique per company."),
+        )
+    ]
 
     @api.model
     def _get_default_name(self):
