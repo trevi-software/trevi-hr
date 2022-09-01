@@ -141,7 +141,7 @@
         </record>
         <record id="DEDUCT" model="hr.salary.rule.category">
             <field name="name">Deduction</field>
-            <field name="code">DED</field>
+            <field name="code">DEDUCT</field>
         </record>
         <record id="NET" model="hr.salary.rule.category">
             <field name="name">Net Earnings</field>
