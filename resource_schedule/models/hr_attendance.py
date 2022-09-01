@@ -33,9 +33,9 @@ class HrAttendance(models.Model):
         """
         res = self.env["hr.attendance"]
         max_shift_length = int(
-            self.env["ir.config_parameter"].get_param(
-                "resource_schedule.max_shift_length"
-            )
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("resource_schedule.max_shift_length")
         )
         if max_shift_length == 0 or max_shift_length is False:
             return res
