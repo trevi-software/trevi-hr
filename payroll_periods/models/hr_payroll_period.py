@@ -19,7 +19,8 @@ class HrPayrollPeriod(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "date_start, name desc"
 
-    name = fields.Char(string="Description", size=256, required=True)
+    name = fields.Char(string="Description", required=True)
+    period_name = fields.Char()
     schedule_id = fields.Many2one(
         string="Payroll Period Schedule",
         comodel_name="hr.payroll.period.schedule",

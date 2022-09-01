@@ -28,7 +28,7 @@
             <field name="model">hr.payroll.register</field>
             <field name="arch" type="xml">
                 <tree string="Payroll Registers">
-                    <field name="name" />
+                    <field name="display_name" />
                 </tree>
             </field>
         </record>
@@ -64,6 +64,7 @@
                                 <field name="company_id" />
                             </group>
                             <group>
+                                <field name="period_name" />
                             </group>
                          </group>
                         <group>
