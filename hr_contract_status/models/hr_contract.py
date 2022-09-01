@@ -95,8 +95,10 @@ class HrContract(models.Model):
     @api.constrains("employee_id", "state", "kanban_state", "date_start", "date_end")
     def _check_current_contract(self):
 
-        allow = self.env["ir.config_parameter"].get_param(
-            "hr_contract_status.concurrent_contracts", False
+        allow = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("hr_contract_status.concurrent_contracts", False)
         )
         if allow:
             return
