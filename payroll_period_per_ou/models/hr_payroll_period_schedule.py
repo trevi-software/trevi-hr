@@ -1,7 +1,7 @@
 # Copyright (C) 2022 Trevi Software (https://trevi.et)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo import fields, models
+from odoo import _, fields, models
 
 
 class PayrollPeriodSchedule(models.Model):
@@ -18,7 +18,9 @@ class PayrollPeriodSchedule(models.Model):
         # Modify the current data to be for the first OU and
         # Create a payroll period for all the rest
         #
-        res = super().payroll_period_data_hook(_data)
+        res = super().payroll_period_data_hook(
+            _data, mo_name=mo_name, mo_num=mo_num, yearno=yearno
+        )
         if self.use_operating_units:
             ou_ids = self.env["operating.unit"].search([])
             if len(ou_ids) > 0:
@@ -32,7 +34,9 @@ class PayrollPeriodSchedule(models.Model):
                 for ou in ou_ids.filtered(lambda x: x.id != res["operating_unit_id"]):
                     other_data = {
                         "name": f"{ou.name}",
-                        "period_name": res["period_name"],
+                        "period_name": _("{}/{} {}").format(
+                            str(yearno), str(mo_num), str(mo_name)
+                        ),
                         "schedule_id": res["schedule_id"],
                         "date_start": res["date_start"],
                         "date_end": res["date_end"],
