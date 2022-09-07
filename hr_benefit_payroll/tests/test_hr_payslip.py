@@ -257,3 +257,33 @@ class TestBenefit(benefit_common.TestBenefitCommon):
             0.9677,
             "Benefit should indicate PPF of 0.9677",
         )
+        self.assertEqual(
+            benefit.code,
+            slip.benefit_line_ids[0].code,
+            "The benefit appears in the payslip's benefit lines",
+        )
+
+    def test_onchange_deletes_old_values(self):
+
+        start = date(2021, 1, 1)
+        end = date(2021, 1, 31)
+        self.benefit_create_vals.update({"link2payroll": True})
+        benefit = self.create_benefit(self.benefit_create_vals)
+        self.create_earning(benefit, start=start, allowance=100.00)
+        self.create_policy(self.eeJohn, benefit, start)
+        self.create_contract(self.eeJohn.id, "draft", "done", start).signal_confirm()
+        slip = self.Payslip.create(
+            {
+                "employee_id": self.eeJohn.id,
+                "date_from": start,
+                "date_to": end,
+            }
+        )
+        slip.onchange_employee()
+        slip.onchange_employee()
+
+        self.assertEqual(
+            len(slip.benefit_line_ids),
+            1,
+            "There should be only 1 benefit line attached to payslip",
+        )
