@@ -4,6 +4,7 @@
 from datetime import date, timedelta
 
 from odoo import fields
+from odoo.tests.common import Form
 
 from odoo.addons.hr_benefit.tests import common as benefit_common
 
@@ -286,4 +287,13 @@ class TestBenefit(benefit_common.TestBenefitCommon):
             len(slip.benefit_line_ids),
             1,
             "There should be only 1 benefit line attached to payslip",
+        )
+
+    def test_no_employee_no_contract(self):
+
+        frm = Form(self.Payslip)
+        frm.date_from = date(2021, 1, 1)
+        frm.date_to = date(2021, 1, 31)
+        self.assertTrue(
+            True, "If we've reached this far without an exception thrown we're good"
         )

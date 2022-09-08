@@ -61,8 +61,10 @@ class HrPayslip(models.Model):
     @api.model
     def get_benefit_lines(self, contracts, date_from, date_to, credit_note=False):
 
-        employee = contracts[0].employee_id
         res = {}
+        if not contracts:
+            return res
+        employee = contracts[0].employee_id
 
         # Search policies for those employees that are linked to payroll
         policy_ids = self.env["hr.benefit.policy"].search(
