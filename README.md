@@ -44,11 +44,11 @@ addon | version | maintainers | summary
 [hr_photobooth](hr_photobooth/) | 14.0.1.0.0 |  | Capture employee picture with webcam
 [ir_module_category_payroll](ir_module_category_payroll/) | 14.0.1.0.0 |  | Creates Payroll module category
 [payroll_default_salary_rules](payroll_default_salary_rules/) | 14.0.1.0.0 |  | Default set of salary rules and categories.
-[payroll_operating_unit](payroll_operating_unit/) | 14.0.1.0.0 |  | WARNING-this module will be removed.
-[payroll_operating_unit_access_all](payroll_operating_unit_access_all/) | 14.0.1.0.0 |  | Access all payslips.
+[payroll_operating_unit](payroll_operating_unit/) | 14.0.1.1.0 |  | WARNING-this module will be removed.
+[payroll_operating_unit_access_all](payroll_operating_unit_access_all/) | 14.0.1.1.0 |  | Access all payslips.
 [payroll_payslip_amendment](payroll_payslip_amendment/) | 14.0.1.0.0 |  | Add amendments to current and future pay slips
 [payroll_payslip_amendment_contract_status](payroll_payslip_amendment_contract_status/) | 14.0.1.0.0 |  | Link payslip amendments with the employee contract state.
-[payroll_payslip_dictionary](payroll_payslip_dictionary/) | 14.0.1.1.0 |  | Dictionary of values that can be used in payslip calculations
+[payroll_payslip_dictionary](payroll_payslip_dictionary/) | 14.0.1.2.0 |  | Dictionary of values that can be used in payslip calculations
 [payroll_payslip_hr_leave_type](payroll_payslip_hr_leave_type/) | 14.0.1.0.0 |  | Use time-off codes (instead of names) in payslip rules
 [payroll_payslip_patch](payroll_payslip_patch/) | 14.0.2.0.0 |  | Miscellaneous source code patches to payslip handling
 [payroll_payslip_report](payroll_payslip_report/) | 14.0.2.0.0 |  | Comprehensive payslip report by department.
@@ -60,7 +60,7 @@ addon | version | maintainers | summary
 [payroll_period_per_ou](payroll_period_per_ou/) | 14.0.1.0.0 |  | Generate separate payroll sheets for each OU.
 [payroll_period_processing](payroll_period_processing/) | 14.0.1.2.1 |  | Payroll period processing wizard
 [payroll_period_processing_per_ou](payroll_period_processing_per_ou/) | 14.0.1.0.0 |  | For each period process only those payslips that belong to the OU.
-[payroll_periods](payroll_periods/) | 14.0.1.2.4 |  | Configurable payroll schedules.
+[payroll_periods](payroll_periods/) | 14.0.1.3.0 |  | Configurable payroll schedules.
 [payroll_policy_absence](payroll_policy_absence/) | 14.0.1.0.0 |  | Define properties of an employee absense policy for payroll.
 [payroll_policy_accrual](payroll_policy_accrual/) | 14.0.1.0.0 |  | Automatically or manually accrue to time banks to be withdrawn later
 [payroll_policy_group](payroll_policy_group/) | 14.0.1.0.1 |  | Group payroll policies and assign them to contracts
@@ -68,9 +68,9 @@ addon | version | maintainers | summary
 [payroll_policy_payslip](payroll_policy_payslip/) | 14.0.1.0.1 |  | Apply payroll policies duing payslip processing
 [payroll_policy_presence](payroll_policy_presence/) | 14.0.1.0.0 |  | Define properties of an employee presence policy
 [payroll_policy_rounding](payroll_policy_rounding/) | 14.0.1.0.0 |  | Define attendance check-in and check-out rounding policies
-[payroll_register](payroll_register/) | 14.0.1.2.0 |  | Payroll Register
+[payroll_register](payroll_register/) | 14.0.1.3.0 |  | Payroll Register
 [payroll_register_report](payroll_register_report/) | 14.0.1.0.0 |  | List payslips with salary categories by batch.
-[res_currency_denomination](res_currency_denomination/) | 14.0.1.0.0 |  | Currency Denominations
+[res_currency_denomination](res_currency_denomination/) | 14.0.1.1.0 |  | Currency Denominations
 [resource_schedule](resource_schedule/) | 14.0.1.0.0 |  | Easily create, manage, and track employee shift planning.
 [trevi_hr_job_categories](trevi_hr_job_categories/) | 14.0.1.0.0 |  | Job Categories
 [trevi_hr_usability](trevi_hr_usability/) | 14.0.1.0.0 |  | Simplify Employee Records.
