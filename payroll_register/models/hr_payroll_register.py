@@ -2,11 +2,9 @@
 # Copyright (C) 2011,2013 Michael Telahun Makonnen <mmakonnen@gmail.com>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-import math
 from datetime import datetime
 
 from odoo import api, fields, models
-from odoo.tools.float_utils import float_compare
 from odoo.tools.translate import _
 
 
@@ -136,35 +134,6 @@ class HrPayrollRegister(models.Model):
 
         return net_lines
 
-    def _get_denominations(self):
-
-        self.ensure_one()
-        denominations = []
-        smallest_note = 1
-
-        # Get denominations for payroll currency
-        # Arrange in order from largest value to smallest.
-        #
-        for denom in self.currency_id.denomination_ids:
-            if float_compare(denom.ratio, 1.00, precision_digits=2) == 0:
-                smallest_note = denom.value
-
-            if len(denominations) == 0:
-                denominations.append(denom.value)
-                continue
-
-            idx = 0
-            last_idx = len(denominations) - 1
-            for preexist_val in denominations:
-                if denom.value > preexist_val:
-                    denominations.insert(idx, denom.value)
-                    break
-                elif idx == last_idx:
-                    denominations.append(denom.value)
-                    break
-                idx += 1
-        return denominations, smallest_note
-
     def set_denominations(self):
 
         Denominations = self.env["hr.payroll.register.denominations"]
@@ -182,31 +151,13 @@ class HrPayrollRegister(models.Model):
             if len(net_lines) == 0:
                 return
 
-            denominations, smallest_note = register._get_denominations()
-
+            currency = self.currency_id
+            denominations, smallest_note = currency.get_denomination_list()
             denom_qty_list = dict.fromkeys(denominations, 0)
-            cents_factor = float(smallest_note) / (
-                len(denominations) and denominations[-1] or 1
-            )
             for net in net_lines:
-                cents, notes = math.modf(net)
-
-                notes = int(notes)
-                # XXX - rounding to 4 decimal places should work for most currencies... I hope
-                cents = int(round(cents, 4) * cents_factor)
-                for denom in denominations:
-                    if notes >= denom:
-                        denom_qty_list[denom] += int(notes / denom)
-                        notes = (notes > 0) and (notes % denom) or 0
-
-                    if notes == 0 and cents >= (denom * cents_factor):
-                        cooked_denom = int(denom * cents_factor)
-                        if cents >= cooked_denom:
-                            denom_qty_list[denom] += cents / cooked_denom
-                        elif denom == denominations[-1]:
-                            denom_qty_list[denom] += cents / cents_factor
-                            cents = 0
-                        cents = cents % cooked_denom
+                denominations_list = currency.get_denominations_from_amount(net)
+                for line in denominations_list:
+                    denom_qty_list[line["name"]] += line["qty"]
 
             exact_change = 0.0
             for k, v in denom_qty_list.items():
@@ -220,8 +171,6 @@ class HrPayrollRegister(models.Model):
                 exact_change += k * v
 
             register.exact_change = exact_change
-
-        return
 
 
 class HrPayrollRegisterDenominations(models.Model):

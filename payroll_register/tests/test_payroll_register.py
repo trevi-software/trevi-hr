@@ -115,7 +115,7 @@ class TestPayrollRegister(common.SavepointCase):
             {
                 "date_start": self.start,
                 "date_end": self.end,
-                "currency_id": self.env.ref("base.ETB").id,
+                "currency_id": self.env.ref("base.USD").id,
             }
         )
         wiz = self.Wizard.with_context({"active_id": reg.id}).create(
@@ -131,10 +131,10 @@ class TestPayrollRegister(common.SavepointCase):
             0.50: 1,
             1: 4,
             5: 1,
-            10: 3,
+            10: 1,
+            20: 1,
             50: 1,
-            100: 1,
-            200: 4,
+            100: 9,
         }
         self.assertGreater(len(reg.denomination_ids), 0)
         self.check_denominations(reg, res)

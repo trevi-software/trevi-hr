@@ -56,7 +56,7 @@ class TestSchedule(common.SavepointCase):
 
         listPP = self.Period.search([])
         self.assertEqual(1, len(listPP))
-        self.assertEqual("Pay Period 2021/January", listPP[0].name)
+        self.assertEqual("2021/01 January", listPP[0].name)
         # utc is -3:00 hours
         self.assertEqual(datetime(2020, 12, 31, 21, 0, 0), listPP[0].date_start)
         self.assertEqual(datetime(2021, 1, 31, 20, 59, 59), listPP[0].date_end)
