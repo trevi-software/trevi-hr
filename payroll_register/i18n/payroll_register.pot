@@ -235,6 +235,11 @@ msgid "Payslips by Department"
 msgstr ""
 
 #. module: payroll_register
+#: model:ir.model.fields,field_description:payroll_register.field_hr_payroll_register__period_name
+msgid "Period Name"
+msgstr ""
+
+#. module: payroll_register
 #: code:addons/payroll_register/wizard/hr_payroll_register_run.py:0
 #, python-format
 msgid "Programming Error !"
