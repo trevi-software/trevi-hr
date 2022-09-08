@@ -4,7 +4,7 @@
 
 import math
 
-from odoo import api, fields, models
+from odoo import fields, models
 from odoo.tools.float_utils import float_compare
 
 
@@ -36,18 +36,45 @@ class ResCurrency(models.Model):
         inverse_name="currency_id",
     )
 
-    @api.model
-    def get_denominations_from_amount(self, currency_name, amount):
+    def get_denomination_list(self):
+
+        self.ensure_one()
+        denominations = []
+        smallest_note = 1
+
+        # Get denominations for payroll currency
+        # Arrange in order from largest value to smallest.
+        #
+        for denom in self.denomination_ids:
+            if float_compare(denom.ratio, 1.00, precision_digits=2) == 0:
+                smallest_note = denom.value
+
+            if len(denominations) == 0:
+                denominations.append(denom.value)
+                continue
+
+            idx = 0
+            last_idx = len(denominations) - 1
+            for preexist_val in denominations:
+                if denom.value > preexist_val:
+                    denominations.insert(idx, denom.value)
+                    break
+                elif idx == last_idx:
+                    denominations.append(denom.value)
+                    break
+                idx += 1
+        return denominations, smallest_note
+
+    def get_denominations_from_amount(self, amount):
+        self.ensure_one()
 
         # Get denominations for currency
         # Arrange in order from largest value to smallest.
         #
         denominations = []
         smallest_note = 1
-        currency_obj = self.env["res.currency"]
-        currency_id = currency_obj.search([("name", "=", currency_name)])[0]
 
-        for currency in currency_id:
+        for currency in self:
             for denom in currency.denomination_ids:
                 if float_compare(denom.ratio, 1.00, precision_digits=2) == 0:
                     smallest_note = denom.value
@@ -68,7 +95,9 @@ class ResCurrency(models.Model):
                     idx += 1
 
         denom_qty_list = dict.fromkeys(denominations, 0)
-        cents_factor = float(smallest_note) / denominations[-1]
+        cents_factor = float(smallest_note) / (
+            len(denominations) and denominations[-1] or 1
+        )
         cents, notes = math.modf(amount)
 
         notes = int(notes)
@@ -77,10 +106,7 @@ class ResCurrency(models.Model):
         for denom in denominations:
             if notes >= denom:
                 denom_qty_list[denom] += int(notes / denom)
-            elif float_compare(denom, smallest_note, precision_digits=4) == 0:
-                denom_qty_list[denom] += int(notes / smallest_note)
-                notes = 0
-            notes = (notes > 0) and (notes % denom) or 0
+                notes = (notes > 0) and (notes % denom) or 0
 
             if notes == 0 and cents >= (denom * cents_factor):
                 cooked_denom = int(denom * cents_factor)
@@ -89,7 +115,7 @@ class ResCurrency(models.Model):
                 elif denom == denominations[-1]:
                     denom_qty_list[denom] += cents / cents_factor
                     cents = 0
-                cents = cents % denom
+                cents = cents % cooked_denom
 
         res = []
         for k, v in denom_qty_list.items():
