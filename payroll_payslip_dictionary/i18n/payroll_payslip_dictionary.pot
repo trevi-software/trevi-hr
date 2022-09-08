@@ -104,25 +104,8 @@ msgid "Pay Slip"
 msgstr ""
 
 #. module: payroll_payslip_dictionary
-#: model:ir.model.fields,field_description:payroll_payslip_dictionary.field_res_config_settings__payroll_code_net
-msgid "Payroll Code Net"
-msgstr ""
-
-#. module: payroll_payslip_dictionary
-#: model_terms:ir.ui.view,arch_db:payroll_payslip_dictionary.res_config_settings_view_form
-msgid "Payroll Codes"
-msgstr ""
-
-#. module: payroll_payslip_dictionary
 #: model:ir.model.fields.selection,name:payroll_payslip_dictionary.selection__res_config_settings__working_days_calculation__resource_calendar
 msgid "Resource calendar"
-msgstr ""
-
-#. module: payroll_payslip_dictionary
-#: model_terms:ir.ui.view,arch_db:payroll_payslip_dictionary.res_config_settings_view_form
-msgid ""
-"The Payroll Code used for net amount received by employee after earnings and"
-" deductions."
 msgstr ""
 
 #. module: payroll_payslip_dictionary
@@ -133,6 +116,11 @@ msgstr ""
 #. module: payroll_payslip_dictionary
 #: model:ir.model.fields,field_description:payroll_payslip_dictionary.field_res_config_settings__work_days_code_max
 msgid "Work Days Code Max"
+msgstr ""
+
+#. module: payroll_payslip_dictionary
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_dictionary.res_config_settings_view_form
+msgid "Worked Days Codes"
 msgstr ""
 
 #. module: payroll_payslip_dictionary
