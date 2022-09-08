@@ -4,7 +4,7 @@
 {
     "name": "DO NOT USE Payroll Operating Unit Access",
     "summary": "Access all payslips.",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.1.0",
     "category": "Payroll",
     "images": ["static/src/img/main_screenshot.png"],
     "author": "TREVI Software, Odoo Community Association (OCA)",
