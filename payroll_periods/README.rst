@@ -50,6 +50,10 @@ Known issues / Roadmap
 Changelog
 =========
 
+14.0.1.1.4 (2022-08-11)
+~~~~~~~~~~~~~~~~~~~~~~~
+* [FIX] A bug when creating pay slips that didn't change the period's start/end times to the local timezone
+
 14.0.1.1.3 (2022-04-10)
 ~~~~~~~~~~~~~~~~~~~~~~~
 * [FIX] Fixed a bug that prevented multiple payslips being computed at once

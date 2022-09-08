@@ -31,6 +31,10 @@ This module manages the employee life-cycle from on-boarding to separation.
 Changelog
 =========
 
+14.0.1.0.2 (2022-01-12)
+~~~~~~~~~~~~~~~~~~~~~~~
+* [ADD] Allow users to view their own (and subordinates) separation records
+
 14.0.1.0.1 (2021-10-07)
 ~~~~~~~~~~~~~~~~~~~~~~~
 

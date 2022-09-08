@@ -46,7 +46,8 @@ Credits
 Authors
 ~~~~~~~
 
-* Michael Telahun Makonnen <mmakonnen@gmail.com>
+* TREVI Software
+* Michael Telahun Makonnen
 
 Other credits
 ~~~~~~~~~~~~~

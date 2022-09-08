@@ -10,11 +10,14 @@ Base Lock
 .. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: Beta
-.. |badge2| image:: https://img.shields.io/badge/github-trevi-software%2Ftrevi--hr-lightgray.png?logo=github
+.. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
+    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
+    :alt: License: AGPL-3
+.. |badge3| image:: https://img.shields.io/badge/github-trevi-software%2Ftrevi--hr-lightgray.png?logo=github
     :target: https://github.com/trevi-software/trevi-hr/tree/14.0/base_lock
     :alt: trevi-software/trevi-hr
 
-|badge1| |badge2| 
+|badge1| |badge2| |badge3| 
 
 This module provides a base object locking mechanism. It offers no user visible functionality on its own. It is expected to be used by module developers.
 

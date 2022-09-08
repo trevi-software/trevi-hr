@@ -50,7 +50,6 @@ Other credits
 
 * Michael Telahun Makonnen <mtm@trevi.et>
 
-
 Maintainers
 ~~~~~~~~~~~
 
