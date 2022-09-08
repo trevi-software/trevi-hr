@@ -329,24 +329,28 @@ class TestHrPayslip(common.TestHrPayslip):
         self.apply_contract_cron()
 
         # I create a Payslip for March, process it and set it to 'done'
-        richard_payslip = self.create_payslip(start1, end1, self.richard_emp)
-        richard_payslip.compute_sheet()
-        richard_payslip.action_payslip_done()
+        richard_payslip01 = self.create_payslip(start1, end1, self.richard_emp)
+        richard_payslip01.compute_sheet()
+        richard_payslip01.action_payslip_done()
 
-        self.assertEqual(richard_payslip.state, "done", "The first payslip is closed")
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        self.assertEqual(richard_payslip01.state, "done", "The first payslip is closed")
+        line = richard_payslip01.line_ids.filtered(lambda l: l.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(line[0].amount, 0.0, "A previous payslip does NOT exist")
+        net_line = richard_payslip01.line_ids.filtered(lambda l: l.code == "NET")
+        self.assertEqual(
+            net_line[0].amount, 5000.0, "Found the first payslip NET amount"
+        )
 
         # I create a Payslip for April and process it
-        richard_payslip = self.create_payslip(start2, end2, self.richard_emp)
-        richard_payslip.compute_sheet()
+        richard_payslip02 = self.create_payslip(start2, end2, self.richard_emp)
+        richard_payslip02.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip02.line_ids.filtered(lambda l: l.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(line[0].amount, 1.0, "A previous payslip exists")
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST2")
+        line = richard_payslip02.line_ids.filtered(lambda l: l.code == "TEST2")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(
             line[0].amount,

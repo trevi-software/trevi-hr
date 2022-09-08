@@ -251,7 +251,7 @@ class HrPayslip(models.Model):
 
         if len(ps_ids) > 0:
             # Get payroll code of Net salary rule
-            code_net = IrConfig.get_param("payroll_salary_codes_default.rule_net")
+            code_net = IrConfig.get_param("payroll_default_salary_rules.rule_net")
 
             ps = ps_ids[0]
             payroll_dict["PREVPS"].exists = 1
