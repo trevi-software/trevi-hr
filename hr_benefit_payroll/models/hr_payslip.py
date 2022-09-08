@@ -23,11 +23,24 @@ class HrPayslip(models.Model):
         inverse_name="payslip_id",
     )
 
+    @api.onchange("date_from", "date_to")
+    def onchange_dates(self):
+        super().onchange_dates()
+        for rec in self:
+            if not rec.date_from or not rec.date_to:
+                continue
+            rec.benefit_line_ids.unlink()
+            benefit_lines_dict = rec.get_benefit_lines(
+                rec._get_employee_contracts(), rec.date_from, rec.date_to
+            )
+            write_vals = [(0, 0, v) for _k, v in benefit_lines_dict.items()]
+            rec.write({"benefit_line_ids": write_vals})
+
     def get_payslip_vals(
-        self, date_from, date_to, employee_id=False, contract_id=False
+        self, date_from, date_to, employee_id=False, contract_id=False, struct_id=False
     ):
-        res = super(HrPayslip, self).get_payslip_vals(
-            date_from, date_to, employee_id, contract_id
+        res = super().get_payslip_vals(
+            date_from, date_to, employee_id, contract_id, struct_id
         )
 
         # Delete old lines
@@ -35,29 +48,8 @@ class HrPayslip(models.Model):
             {"benefit_line_ids": [(2, x) for x in self.benefit_line_ids.ids]}
         )
 
-        # Boilerplate
-        #
-
-        if (not employee_id) or (not date_from) or (not date_to):
-            return res
-        employee = self.env["hr.employee"].browse(employee_id)
-        if not self.env.context.get("contract"):
-            contract_ids = employee.contract_id.ids
-        else:
-            if contract_id:
-                contract_ids = [contract_id]
-            else:
-                # if we don't give the contract, then the input to fill should
-                # be for all current contracts of the employee
-                contract_ids = employee._get_contracts(
-                    date_from=date_from, date_to=date_to
-                ).ids
-
-        if not contract_ids:
-            return res
-        contracts = self.env["hr.contract"].browse(contract_ids)
-
         # Get benefit lines
+        contracts = self._get_employee_contracts()
         benefit_lines = self.get_benefit_lines(contracts, date_from, date_to)
         res["value"].update(
             {
@@ -66,37 +58,13 @@ class HrPayslip(models.Model):
         )
         return res
 
-    @api.onchange("employee_id", "date_from", "date_to")
-    def onchange_employee(self):
-        res = super(HrPayslip, self).onchange_employee()
-
-        # Boilerplate
-        employee = self.employee_id
-        date_from = self.date_from
-        date_to = self.date_to
-        contract_ids = self.contract_id.ids
-        if not self.env.context.get("contract") or not self.contract_id:
-            contract_ids = employee._get_contracts(
-                date_from=date_from, date_to=date_to
-            ).ids
-            if not contract_ids:
-                return
-        if not self.contract_id.struct_id:
-            return
-        contracts = self.env["hr.contract"].browse(contract_ids)
-
-        # Populate Benefit lines
-        benefit_lines = self.get_benefit_lines(contracts, date_from, date_to)
-        write_vals = [(0, 0, v) for _k, v in benefit_lines.items()]
-        self.write({"benefit_line_ids": write_vals})
-
-        return res
-
     @api.model
     def get_benefit_lines(self, contracts, date_from, date_to, credit_note=False):
 
-        employee = contracts[0].employee_id
         res = {}
+        if not contracts:
+            return res
+        employee = contracts[0].employee_id
 
         # Search policies for those employees that are linked to payroll
         policy_ids = self.env["hr.benefit.policy"].search(
