@@ -17,7 +17,6 @@
     "data": [
         "security/ir.model.access.csv",
         "wizard/hr_payroll_register_run_view.xml",
-        # 'report/hr_payroll_register_report.xml',
         "views/hr_payroll_register_view.xml",
     ],
     "installable": True,
