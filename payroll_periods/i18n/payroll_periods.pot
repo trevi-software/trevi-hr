@@ -622,13 +622,6 @@ msgid "Pay Period Schedules"
 msgstr ""
 
 #. module: payroll_periods
-#: code:addons/payroll_periods/models/hr_payroll_period_schedule.py:0
-#: code:addons/payroll_periods/models/hr_payroll_period_schedule.py:0
-#, python-format
-msgid "Pay Period {}/{}"
-msgstr ""
-
-#. module: payroll_periods
 #: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__pay_period_ids
 #: model_terms:ir.ui.view,arch_db:payroll_periods.view_payperiod_schedule_form
 msgid "Pay Periods"
@@ -764,6 +757,11 @@ msgstr ""
 #. module: payroll_periods
 #: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_form
 msgid "Payslips"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__period_name
+msgid "Period Name"
 msgstr ""
 
 #. module: payroll_periods
