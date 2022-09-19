@@ -30,5 +30,5 @@ msgstr ""
 
 #. module: payroll_payslip_hr_leave_type
 #: model:ir.model,name:payroll_payslip_hr_leave_type.model_hr_payslip
-msgid "Pay Slip"
+msgid "Payslip"
 msgstr ""
