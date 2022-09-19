@@ -48,7 +48,7 @@ addon | version | maintainers | summary
 [payroll_operating_unit_access_all](payroll_operating_unit_access_all/) | 14.0.1.1.0 |  | Access all payslips.
 [payroll_payslip_amendment](payroll_payslip_amendment/) | 14.0.1.0.0 |  | Add amendments to current and future pay slips
 [payroll_payslip_amendment_contract_status](payroll_payslip_amendment_contract_status/) | 14.0.1.0.0 |  | Link payslip amendments with the employee contract state.
-[payroll_payslip_dictionary](payroll_payslip_dictionary/) | 14.0.1.2.0 |  | Dictionary of values that can be used in payslip calculations
+[payroll_payslip_dictionary](payroll_payslip_dictionary/) | 14.0.1.3.0 |  | Dictionary of values that can be used in payslip calculations
 [payroll_payslip_hr_leave_type](payroll_payslip_hr_leave_type/) | 14.0.1.0.0 |  | Use time-off codes (instead of names) in payslip rules
 [payroll_payslip_patch](payroll_payslip_patch/) | 14.0.2.0.0 |  | Miscellaneous source code patches to payslip handling
 [payroll_payslip_report](payroll_payslip_report/) | 14.0.2.0.0 |  | Comprehensive payslip report by department.
@@ -60,7 +60,7 @@ addon | version | maintainers | summary
 [payroll_period_per_ou](payroll_period_per_ou/) | 14.0.1.0.0 |  | Generate separate payroll sheets for each OU.
 [payroll_period_processing](payroll_period_processing/) | 14.0.1.2.1 |  | Payroll period processing wizard
 [payroll_period_processing_per_ou](payroll_period_processing_per_ou/) | 14.0.1.0.0 |  | For each period process only those payslips that belong to the OU.
-[payroll_periods](payroll_periods/) | 14.0.1.3.0 |  | Configurable payroll schedules.
+[payroll_periods](payroll_periods/) | 14.0.1.4.0 |  | Configurable payroll schedules.
 [payroll_policy_absence](payroll_policy_absence/) | 14.0.1.0.0 |  | Define properties of an employee absense policy for payroll.
 [payroll_policy_accrual](payroll_policy_accrual/) | 14.0.1.0.0 |  | Automatically or manually accrue to time banks to be withdrawn later
 [payroll_policy_group](payroll_policy_group/) | 14.0.1.0.1 |  | Group payroll policies and assign them to contracts
