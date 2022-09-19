@@ -32,11 +32,6 @@ msgid "Last Modified on"
 msgstr ""
 
 #. module: payroll_period_payslip_amendment
-#: model:ir.model,name:payroll_period_payslip_amendment.model_hr_payslip
-msgid "Pay Slip"
-msgstr ""
-
-#. module: payroll_period_payslip_amendment
 #: model:ir.model,name:payroll_period_payslip_amendment.model_hr_payslip_amendment
 msgid "Pay Slip Amendment"
 msgstr ""
@@ -44,4 +39,9 @@ msgstr ""
 #. module: payroll_period_payslip_amendment
 #: model:ir.model.fields,field_description:payroll_period_payslip_amendment.field_hr_payslip_amendment__period_id
 msgid "Payroll Period"
+msgstr ""
+
+#. module: payroll_period_payslip_amendment
+#: model:ir.model,name:payroll_period_payslip_amendment.model_hr_payslip
+msgid "Payslip"
 msgstr ""
