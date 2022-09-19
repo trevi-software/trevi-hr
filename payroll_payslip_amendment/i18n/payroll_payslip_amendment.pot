@@ -200,11 +200,6 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: payroll_payslip_amendment
-#: model:ir.model,name:payroll_payslip_amendment.model_hr_payslip
-msgid "Pay Slip"
-msgstr ""
-
-#. module: payroll_payslip_amendment
 #: model:ir.model,name:payroll_payslip_amendment.model_hr_payslip_amendment
 #: model_terms:ir.ui.view,arch_db:payroll_payslip_amendment.view_payslip_amendment_form
 msgid "Pay Slip Amendment"
@@ -215,6 +210,11 @@ msgstr ""
 #: model:ir.ui.menu,name:payroll_payslip_amendment.menu_payslip_amendment
 #: model_terms:ir.ui.view,arch_db:payroll_payslip_amendment.view_payslip_amendment_tree
 msgid "Pay Slip Amendments"
+msgstr ""
+
+#. module: payroll_payslip_amendment
+#: model:ir.model,name:payroll_payslip_amendment.model_hr_payslip
+msgid "Payslip"
 msgstr ""
 
 #. module: payroll_payslip_amendment
