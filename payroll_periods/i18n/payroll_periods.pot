@@ -628,7 +628,6 @@ msgid "Pay Periods"
 msgstr ""
 
 #. module: payroll_periods
-#: model:ir.model,name:payroll_periods.model_hr_payslip
 #: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception__slip_id
 msgid "Pay Slip"
 msgstr ""
@@ -745,6 +744,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_filter
 #: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_tree
 msgid "Payroll Periods"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model,name:payroll_periods.model_hr_payslip
+msgid "Payslip"
 msgstr ""
 
 #. module: payroll_periods
