@@ -14,13 +14,8 @@ class TestPayslip(TestPayslipBase):
         frm = Form(self.Payslip)
         frm.employee_id = self.richard_emp
         richard_payslip = frm.save()
-        lines = [
-            (0, 0, line)
-            for line in richard_payslip._get_payslip_lines(
-                self.richard_emp.contract_ids.ids, richard_payslip.id
-            )
-        ]
-        richard_payslip.write({"line_ids": lines, "number": "SLIP/1000"})
+        richard_payslip.compute_sheet()
+        richard_payslip.write({"number": "SLIP/1000"})
 
         categories = richard_payslip.get_categories_dict()
         self.assertEqual(

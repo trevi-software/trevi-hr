@@ -320,13 +320,13 @@ class HrPayslip(models.Model):
 
         return res
 
-    def get_contract_dict(self, contract, contracts):
+    def get_current_contract_dict(self, contract, contracts):
         """Refer in salary rules as:
         * current_contract.ppf
         * current_contract.daily_wage
         * current_contract.hourly_wage
         """
-        res = super().get_contract_dict(contract, contracts)
+        res = super().get_current_contract_dict(contract, contracts)
         res.update(self.get_contract_dictionary(contract, contracts))
         return res
 

@@ -343,6 +343,7 @@ class TestSchedule(common.SavepointCase):
         id_old = slip.id
         self.assertEqual(1, slip.get_salary_line_total("NET"))
 
+        slip.action_payslip_cancel()
         slip = pp.rerun_payslip(slip)
 
         self.assertEqual(1, slip.get_salary_line_total("NET"))
