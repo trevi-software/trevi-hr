@@ -74,7 +74,7 @@ msgstr ""
 
 #. module: payroll_policy_payslip
 #: model:ir.model,name:payroll_policy_payslip.model_hr_payslip
-msgid "Pay Slip"
+msgid "Payslip"
 msgstr ""
 
 #. module: payroll_policy_payslip
