@@ -36,5 +36,5 @@ msgstr ""
 
 #. module: payroll_operating_unit
 #: model:ir.model,name:payroll_operating_unit.model_hr_payslip
-msgid "Pay Slip"
+msgid "Payslip"
 msgstr ""
