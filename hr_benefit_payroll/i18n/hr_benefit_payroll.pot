@@ -187,7 +187,6 @@ msgid "My Payments"
 msgstr ""
 
 #. module: hr_benefit_payroll
-#: model:ir.model,name:hr_benefit_payroll.model_hr_payslip
 #: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_payslip_benefit__payslip_id
 msgid "Pay Slip"
 msgstr ""
@@ -198,6 +197,7 @@ msgid "Payroll Period Factor"
 msgstr ""
 
 #. module: hr_benefit_payroll
+#: model:ir.model,name:hr_benefit_payroll.model_hr_payslip
 #: model:ir.model.fields,field_description:hr_benefit_payroll.field_hr_benefit_premium_payment__payslip_id
 msgid "Payslip"
 msgstr ""
