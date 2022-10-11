@@ -124,6 +124,30 @@ class TestHrEmployeeSeniority(common.TransactionCase):
             float_compare(0.0, ee.length_of_service, precision_digits=2), 0
         )
 
+    def test_contract_end_in_future(self):
+        """Contract with end date in the future returns only until today"""
+
+        ee = self.HrEmployee.create({"name": "EE"})
+        self.HrContract.create(
+            {
+                "name": "C",
+                "employee_id": ee.id,
+                "wage": 1.0,
+                "date_start": fields.Date.today() - relativedelta(months=3, days=14),
+                "date_end": fields.Date.today() + relativedelta(months=3),
+            }
+        )
+        delta = abs(
+            relativedelta(
+                fields.Date.today() - relativedelta(months=3, days=14),
+                fields.Date.today(),
+            )
+        )
+        months = round(float(delta.years * 12 + delta.months + delta.days / 31), 2)
+        self.assertEqual(
+            float_compare(months, ee.length_of_service, precision_digits=2), 0
+        )
+
     def test_no_contract_no_employment_date(self):
         """An employee without a contract has no employment date"""
 
