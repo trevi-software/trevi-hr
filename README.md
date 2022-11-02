@@ -26,6 +26,7 @@ addon | version | maintainers | summary
 [hr_employee_seniority_months](hr_employee_seniority_months/) | 16.0.1.0.0 |  | Calculate an employee's months of employment
 [hr_leave_type_unique](hr_leave_type_unique/) | 16.0.1.0.0 |  | Ensure leave types are unique
 [res_currency_denomination](res_currency_denomination/) | 16.0.1.0.0 |  | Currency Denominations
+[trevi_hr_usability](trevi_hr_usability/) | 16.0.1.0.0 |  | Simplify Employee Records.
 
 [//]: # (end addons)
 
