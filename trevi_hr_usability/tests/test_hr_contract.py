@@ -7,7 +7,7 @@ from odoo.exceptions import AccessError
 from odoo.tests import common, new_test_user
 
 
-class TestHrContract(common.SavepointCase):
+class TestHrContract(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestHrContract, cls).setUpClass()
