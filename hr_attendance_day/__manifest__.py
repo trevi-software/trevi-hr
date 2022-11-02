@@ -4,7 +4,7 @@
 {
     "name": "Attendance Day",
     "summary": "Attach a localized date to an attendace record",
-    "version": "14.0.1.0.0",
+    "version": "16.0.1.0.0",
     "category": "Human Resources",
     "author": "TREVI Software",
     "license": "AGPL-3",
