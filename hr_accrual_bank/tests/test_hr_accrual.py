@@ -5,7 +5,7 @@ from odoo import fields
 from odoo.tests import common
 
 
-class TestAccrual(common.SavepointCase):
+class TestAccrual(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestAccrual, cls).setUpClass()
@@ -21,8 +21,7 @@ class TestAccrual(common.SavepointCase):
         cls.accrual_type = LeaveType.create(
             {
                 "name": "accrual",
-                "allocation_type": "fixed",
-                "validity_start": False,
+                "allocation_validation_type": "officer",
             }
         )
 
