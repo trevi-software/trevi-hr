@@ -5,10 +5,10 @@
 from datetime import timedelta
 
 from odoo.fields import Date
-from odoo.tests.common import Form, SavepointCase
+from odoo.tests.common import Form, TransactionCase
 
 
-class TestHrSimplify(SavepointCase):
+class TestHrSimplify(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestHrSimplify, cls).setUpClass()
@@ -114,8 +114,7 @@ class TestHrSimplify(SavepointCase):
         with Form(contract) as f:
             f.employee_id = self.emp_kal
             f.job_id = self.job_mkt_director
-            if self.env.ref("payroll.structure_base"):
-                f.struct_id = self.env.ref("payroll.structure_base")
+            f.hr_responsible_id = self.env.user
             self.assertEqual(f.employee_dept_id, self.dept_RandD)
 
     def test_compute_employees(self):
