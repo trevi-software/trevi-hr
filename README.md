@@ -23,6 +23,7 @@ addon | version | maintainers | summary
 --- | --- | --- | ---
 [hr_accrual_bank](hr_accrual_bank/) | 16.0.1.0.0 |  | Basic framework for recording accruals to a time bank
 [hr_attendance_day](hr_attendance_day/) | 16.0.1.0.0 |  | Attach a localized date to an attendace record
+[hr_employee_seniority_months](hr_employee_seniority_months/) | 16.0.1.0.0 |  | Calculate an employee's months of employment
 [hr_leave_type_unique](hr_leave_type_unique/) | 16.0.1.0.0 |  | Ensure leave types are unique
 [res_currency_denomination](res_currency_denomination/) | 16.0.1.0.0 |  | Currency Denominations
 
