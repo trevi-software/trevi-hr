@@ -22,6 +22,7 @@ Available addons
 addon | version | maintainers | summary
 --- | --- | --- | ---
 [hr_accrual_bank](hr_accrual_bank/) | 16.0.1.0.0 |  | Basic framework for recording accruals to a time bank
+[res_currency_denomination](res_currency_denomination/) | 16.0.1.0.0 |  | Currency Denominations
 
 [//]: # (end addons)
 
