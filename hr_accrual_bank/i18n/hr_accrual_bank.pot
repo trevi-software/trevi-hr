@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -38,11 +38,6 @@ msgid "Accrual Time Banks"
 msgstr ""
 
 #. module: hr_accrual_bank
-#: model_terms:ir.ui.view,arch_db:hr_accrual_bank.hr_accrual_view_tree
-msgid "Accruals"
-msgstr ""
-
-#. module: hr_accrual_bank
 #: model:ir.model.fields,field_description:hr_accrual_bank.field_hr_accrual_line__amount
 msgid "Amount"
 msgstr ""
@@ -67,7 +62,6 @@ msgstr ""
 #. module: hr_accrual_bank
 #: model:ir.model.fields,field_description:hr_accrual_bank.field_hr_accrual__display_name
 #: model:ir.model.fields,field_description:hr_accrual_bank.field_hr_accrual_line__display_name
-#: model:ir.model.fields,field_description:hr_accrual_bank.field_hr_leave_allocation__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -84,14 +78,12 @@ msgstr ""
 #. module: hr_accrual_bank
 #: model:ir.model.fields,field_description:hr_accrual_bank.field_hr_accrual__id
 #: model:ir.model.fields,field_description:hr_accrual_bank.field_hr_accrual_line__id
-#: model:ir.model.fields,field_description:hr_accrual_bank.field_hr_leave_allocation__id
 msgid "ID"
 msgstr ""
 
 #. module: hr_accrual_bank
 #: model:ir.model.fields,field_description:hr_accrual_bank.field_hr_accrual____last_update
 #: model:ir.model.fields,field_description:hr_accrual_bank.field_hr_accrual_line____last_update
-#: model:ir.model.fields,field_description:hr_accrual_bank.field_hr_leave_allocation____last_update
 msgid "Last Modified on"
 msgstr ""
 
