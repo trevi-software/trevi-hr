@@ -1,7 +1,9 @@
-[![Runbot Status](https://runbot.odoo-community.org/runbot/badge/flat//14.0.svg)](https://runbot.odoo-community.org/runbot/repo/github-com-oca-trevi-hr-)
-[![Build Status](https://travis-ci.com/OCA/trevi-hr.svg?branch=14.0)](https://travis-ci.com/OCA/trevi-hr)
-[![codecov](https://codecov.io/gh/OCA/trevi-hr/branch/14.0/graph/badge.svg)](https://codecov.io/gh/OCA/trevi-hr)
-[![Translation Status](https://translation.odoo-community.org/widgets/trevi-hr-14-0/-/svg-badge.svg)](https://translation.odoo-community.org/engage/trevi-hr-14-0/?utm_source=widget)
+
+<!-- /!\ Non OCA Context : Set here the badge of your runbot / runboat instance. -->
+[![Pre-commit Status](https://github.com/trevi-software/trevi-hr/actions/workflows/pre-commit.yml/badge.svg?branch=16.0)](https://github.com/trevi-software/trevi-hr/actions/workflows/pre-commit.yml?query=branch%3A16.0)
+[![Build Status](https://github.com/trevi-software/trevi-hr/actions/workflows/test.yml/badge.svg?branch=16.0)](https://github.com/trevi-software/trevi-hr/actions/workflows/test.yml?query=branch%3A16.0)
+[![codecov](https://codecov.io/gh/trevi-software/trevi-hr/branch/16.0/graph/badge.svg)](https://codecov.io/gh/trevi-software/trevi-hr)
+<!-- /!\ Non OCA Context : Set here the badge of your translation instance. -->
 
 <!-- /!\ do not modify above this line -->
 
@@ -25,12 +27,9 @@ This part will be replaced when running the oca-gen-addons-table script from OCA
 
 This repository is licensed under [AGPL-3.0](LICENSE).
 
-However, each module can have a totally different license, as long as they adhere to OCA
+However, each module can have a totally different license, as long as they adhere to TREVI Software
 policy. Consult each module's `__manifest__.py` file, which contains a `license` key
 that explains its license.
 
 ----
-
-OCA, or the [Odoo Community Association](http://odoo-community.org/), is a nonprofit
-organization whose mission is to support the collaborative development of Odoo features
-and promote its widespread use.
+<!-- /!\ Non OCA Context : Set here the full description of your organization. -->
