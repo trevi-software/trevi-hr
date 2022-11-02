@@ -19,7 +19,6 @@ class ContractInit(models.Model):
     _order = "date desc"
 
     name = fields.Char(
-        string="Name",
         size=64,
         required=True,
     )
@@ -33,7 +32,6 @@ class ContractInit(models.Model):
         string="Starting Wages",
     )
     trial_period = fields.Integer(
-        string="Trial Period",
         default=0,
         help="Length of Trial Period, in days",
     )
