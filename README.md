@@ -17,7 +17,11 @@ This repository contains Human Resource addons developed by TREVI Software
 
 [//]: # (addons)
 
-This part will be replaced when running the oca-gen-addons-table script from OCA/maintainer-tools.
+Available addons
+----------------
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[hr_accrual_bank](hr_accrual_bank/) | 16.0.1.0.0 |  | Basic framework for recording accruals to a time bank
 
 [//]: # (end addons)
 
