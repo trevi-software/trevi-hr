@@ -174,7 +174,7 @@ class TestContract(common.TransactionCase):
         self.assertTrue(c.state_ending)
 
         # Ended
-        c.date_end = today + relativedelta(days=-1)
+        c.date_end = today - relativedelta(days=1)
         self.apply_cron()
         self.assertEqual("close", c.state)
         self.assertEqual("normal", c.kanban_state)
