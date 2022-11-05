@@ -197,7 +197,8 @@ class HrContract(models.Model):
         # Contract has expired
         self.search(
             [
-                ("state", "=", "open"),
+                ("state", "in", ["open", "close"]),
+                ("state_ending", "=", True),
                 "|",
                 (
                     "date_end",
