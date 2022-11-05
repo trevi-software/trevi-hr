@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -33,8 +33,12 @@ msgid "Company"
 msgstr ""
 
 #. module: hr_contract_values
+#: model:ir.model,name:hr_contract_values.model_hr_contract
+msgid "Contract"
+msgstr ""
+
+#. module: hr_contract_values
 #: model_terms:ir.ui.view,arch_db:hr_contract_values.view_contract_init_form
-#: model_terms:ir.ui.view,arch_db:hr_contract_values.view_contract_init_tree
 msgid "Contract Initial Values"
 msgstr ""
 
@@ -72,7 +76,6 @@ msgid "Currency"
 msgstr ""
 
 #. module: hr_contract_values
-#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract__display_name
 #: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__display_name
 #: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__display_name
 msgid "Display Name"
@@ -81,11 +84,6 @@ msgstr ""
 #. module: hr_contract_values
 #: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__date
 msgid "Effective Date"
-msgstr ""
-
-#. module: hr_contract_values
-#: model:ir.model,name:hr_contract_values.model_hr_contract
-msgid "Employee Contract"
 msgstr ""
 
 #. module: hr_contract_values
@@ -110,7 +108,6 @@ msgid "ErrorYou may not a delete a record that is not in a \"Draft\" state"
 msgstr ""
 
 #. module: hr_contract_values
-#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract__id
 #: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__id
 #: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__id
 msgid "ID"
@@ -123,7 +120,6 @@ msgstr ""
 
 #. module: hr_contract_values
 #: model_terms:ir.ui.view,arch_db:hr_contract_values.view_contract_init_form
-#: model_terms:ir.ui.view,arch_db:hr_contract_values.view_init_wage_tree
 msgid "Initial Wages"
 msgstr ""
 
@@ -138,7 +134,6 @@ msgid "Job"
 msgstr ""
 
 #. module: hr_contract_values
-#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract____last_update
 #: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init____last_update
 #: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage____last_update
 msgid "Last Modified on"
