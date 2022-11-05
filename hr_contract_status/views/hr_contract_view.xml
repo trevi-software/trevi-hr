@@ -133,11 +133,6 @@
                         class="oe_highlight"
                     />
                 </xpath>
-                <!--
-                <xpath expr="//field[@name='date_start']" position="replace">
-                    <field name="date_start" class="oe_inline" /> -
-                </xpath>
-            -->
                 <xpath expr="//field[@name='date_end']" position="after">
                     <field name="trial_date_end" />
                 </xpath>
@@ -158,24 +153,6 @@
                     attrs="{'invisible': [('state','!=','close')]}"
                 />
             </xpath>
-        </field>
-    </record>
-
-    <record id="hr_hr_employee_view_form2" model="ir.ui.view">
-        <field name="name">hr.employee.view.form.contract_state</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2" />
-        <field name="arch" type="xml">
-            <data>
-                <xpath
-                    expr="//button[@name='%(hr_contract.act_hr_employee_2_hr_contract)d']"
-                    position="attributes"
-                >
-                    <attribute
-                        name="groups"
-                    >hr_contract.group_hr_contract_manager,hr.group_hr_user</attribute>
-                </xpath>
-            </data>
         </field>
     </record>
 
