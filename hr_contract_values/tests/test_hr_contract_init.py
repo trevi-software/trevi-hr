@@ -208,3 +208,27 @@ class TestContractInit(common.TransactionCase):
             }
         )
         self.assertEqual(2000, contract.wage)
+
+    def test_create_multi(self):
+
+        self.HrContractInit.create(
+            [
+                {
+                    "name": "Way in the past",
+                    "date": "2000-01-01",
+                    "trial_period": 45,
+                },
+                {
+                    "name": "A bit newer",
+                    "date": "2010-01-01",
+                    "trial_period": 60,
+                },
+            ]
+        )
+        self.assertEqual(
+            self.HrContractInit.sudo().search_count(
+                [("name", "in", ["Way in the past", "A bit newer"])]
+            ),
+            2,
+            "Exactly two additional records were created",
+        )

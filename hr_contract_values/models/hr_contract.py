@@ -152,16 +152,17 @@ class HrContract(models.Model):
     trial_date_end = fields.Date(default=_get_trial_date_end)
     structure_type_id = fields.Many2one(default=_get_structure_type)
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
 
-        # set default wage based on the job
-        if "wage" not in vals.keys() and "job_id" in vals.keys():
-            _wage = self._get_wage(job_id=vals["job_id"])
-            if _wage != 0:
-                vals.update({"wage": _wage})
+        for vals in vals_list:
+            # set default wage based on the job
+            if "wage" not in vals.keys() and "job_id" in vals.keys():
+                _wage = self._get_wage(job_id=vals["job_id"])
+                if _wage != 0:
+                    vals.update({"wage": _wage})
 
-        return super(HrContract, self).create(vals)
+        return super(HrContract, self).create(vals_list)
 
     @api.onchange("job_id")
     def onchange_job(self):
