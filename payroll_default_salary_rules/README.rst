@@ -25,6 +25,7 @@ the codes configured in those settings to develop their modules regardless of th
 used by the administrator.  Salary rule categories modeled after these settings are made available.
 Additionaly a very basic set of salary rules that are essential to correct payslip calculations
 are included.
+In addition this module allows salary rule categories to be archived.
 
 **Table of contents**
 
