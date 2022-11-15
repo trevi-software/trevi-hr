@@ -16,6 +16,7 @@
     "data": [
         "data/default_salary_data.xml",
         "views/res_config_settings_views.xml",
+        "views/hr_salary_rule_category_views.xml",
     ],
     "demo": [],
     "installable": True,
