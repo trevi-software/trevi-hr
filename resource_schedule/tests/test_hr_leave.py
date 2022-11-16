@@ -93,6 +93,8 @@ class TestHrLeave(common.SavepointCase):
 
     def test_leave_partial_start_shift(self):
 
+        # Set timezone
+        self.default_calendar.tz = "UTC"
         dStart, dEnd = self.get_start_end_dates()
         self.eeSally.resource_id.calendar_id = self.default_calendar
         shifts = self.ScheduleShift.search(
@@ -110,7 +112,7 @@ class TestHrLeave(common.SavepointCase):
         self.assertEqual(len(startShift), 1, "There is one shift on Monday")
 
         leave_start = datetime.combine(dStart - timedelta(days=2), datetime.min.time())
-        leave_end = datetime.combine(dStart, datetime.strptime("6:30", "%H:%M").time())
+        leave_end = datetime.combine(dStart, datetime.strptime("8:30", "%H:%M").time())
         lv = self.HrLeave.with_user(self.userSally).create(
             {
                 "name": "PTO",
