@@ -18,6 +18,7 @@ class HrContract(models.Model):
         for c in self:
             c.employee_id.resource_id.calendar_id = c.resource_calendar_id
 
+    @api.model
     def create(self, vals):
 
         res = super(HrContract, self).create(vals)
