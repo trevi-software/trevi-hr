@@ -16,10 +16,10 @@
                         <group>
                             <field
                                 name="resource_calendar_id"
-                                attr="{
-                                'required': [('type', '=', 'calendar)],
-                                'invisible': [('type', '!=', 'calendar')],
-                            }"
+                                attrs="{
+                                    'required': [('type', '=', 'calendar')],
+                                    'invisible': [('type', '!=', 'calendar')],
+                                }"
                             />
                         </group>
                     </group>
@@ -28,7 +28,7 @@
                     </group>
                     <group
                         string="Teams"
-                        attr="{'invisible': [('type', '!=', 'team')]}"
+                        attrs="{'invisible': [('type', '!=', 'team')]}"
                     >
                         <field name="schedule_team_ids" />
                     </group>
