@@ -20,11 +20,13 @@ class HrContract(models.Model):
 
     resource_calendar_id = fields.Many2one(default=_get_resource_calendar)
 
-    def create(self, values):
+    @api.model_create_multi
+    def create(self, lst):
 
-        res = super().create(values)
-        if res and res.resource_calendar_id:
-            resources = res.mapped("employee_id").mapped("resource_id")
-            resources.write({"calendar_id": res.resource_calendar_id.id})
+        res = super().create(lst)
+        for r in res:
+            if r and r.resource_calendar_id:
+                resources = r.mapped("employee_id").mapped("resource_id")
+                resources.write({"calendar_id": r.resource_calendar_id.id})
 
         return res
