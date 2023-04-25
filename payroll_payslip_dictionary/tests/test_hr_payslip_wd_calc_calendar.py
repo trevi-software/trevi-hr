@@ -13,6 +13,12 @@ class TestHrPayslip(common.TestHrPayslip):
         super().setUp()
 
         self.env["ir.config_parameter"].set_param(
+            "payroll_payslip_dictionary.daily_max_regular_hours", "8"
+        )
+        self.env["ir.config_parameter"].set_param(
+            "payroll_payslip_dictionary.weekly_max_regular_hours", "48"
+        )
+        self.env["ir.config_parameter"].set_param(
             "payroll_payslip_dictionary.monthly_max_working_days", "30"
         )
         self.env["ir.config_parameter"].set_param(
@@ -22,6 +28,12 @@ class TestHrPayslip(common.TestHrPayslip):
     def tearDown(self):
         super().tearDown()
 
+        self.env["ir.config_parameter"].set_param(
+            "payroll_payslip_dictionary.daily_max_regular_hours", "8"
+        )
+        self.env["ir.config_parameter"].set_param(
+            "payroll_payslip_dictionary.weekly_max_regular_hours", "48"
+        )
         self.env["ir.config_parameter"].set_param(
             "payroll_payslip_dictionary.working_days_calculation", "30"
         )
@@ -35,16 +47,16 @@ class TestHrPayslip(common.TestHrPayslip):
         start = date(2022, 4, 1)
         end = date(2022, 4, 30)
         self.create_contract(
-            start - relativedelta(years=1), False, self.richard_emp, 5000.0
+            start - relativedelta(years=1), False, self.alice_emp, 5000.0
         )
 
         self.apply_contract_cron()
 
         # I create an employee Payslip and process it
-        richard_payslip = self.create_payslip(start, end, self.richard_emp)
-        richard_payslip.compute_sheet()
+        alice_payslip = self.create_payslip(start, end, self.alice_emp)
+        alice_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        line = alice_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
         self.assertTrue(len(line) == 1, "I found the BASIC salary line")
         self.assertEqual(
             line[0].amount,
@@ -57,15 +69,15 @@ class TestHrPayslip(common.TestHrPayslip):
         # I create a contract for "Richard"
         start = date(2022, 4, 1)
         end = date(2022, 4, 30)
-        self.create_contract(start, end, self.richard_emp, 5000.0)
+        self.create_contract(start, end, self.alice_emp, 5000.0)
 
         self.apply_contract_cron()
 
         # I create an employee Payslip and process it
-        richard_payslip = self.create_payslip(start, end, self.richard_emp)
-        richard_payslip.compute_sheet()
+        alice_payslip = self.create_payslip(start, end, self.alice_emp)
+        alice_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        line = alice_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
         self.assertTrue(len(line) == 1, "I found the BASIC salary line")
         self.assertEqual(
             line[0].amount,
@@ -78,15 +90,15 @@ class TestHrPayslip(common.TestHrPayslip):
         # I create a contract for "Richard"
         start = date(2022, 3, 1)
         end = date(2022, 3, 31)
-        self.create_contract(start, end, self.richard_emp, 5000.0)
+        self.create_contract(start, end, self.alice_emp, 5000.0)
 
         self.apply_contract_cron()
 
         # I create an employee Payslip and process it
-        richard_payslip = self.create_payslip(start, end, self.richard_emp)
-        richard_payslip.compute_sheet()
+        alice_payslip = self.create_payslip(start, end, self.alice_emp)
+        alice_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        line = alice_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
         self.assertTrue(len(line) == 1, "I found the BASIC salary line")
         self.assertEqual(
             line[0].amount,
@@ -100,16 +112,16 @@ class TestHrPayslip(common.TestHrPayslip):
         start = date(2022, 4, 1)
         end = date(2022, 4, 30)
         self.create_contract(
-            start, start + relativedelta(days=14), self.richard_emp, 5000.0
+            start, start + relativedelta(days=14), self.alice_emp, 5000.0
         )
 
         self.apply_contract_cron()
 
         # I create an employee Payslip and process it
-        richard_payslip = self.create_payslip(start, end, self.richard_emp)
-        richard_payslip.compute_sheet()
+        alice_payslip = self.create_payslip(start, end, self.alice_emp)
+        alice_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        line = alice_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
         self.assertTrue(len(line) == 1, "I found the BASIC salary line")
         self.assertEqual(
             line[0].amount,
@@ -123,22 +135,22 @@ class TestHrPayslip(common.TestHrPayslip):
         start = date(2022, 4, 1)
         end = date(2022, 4, 30)
         self.create_contract(
-            start, start + relativedelta(days=14), self.richard_emp, 5000.0
+            start, start + relativedelta(days=14), self.alice_emp, 5000.0
         )
 
         # I create a second contract for "Richard"
         start2 = date(2022, 4, 16)
         self.create_contract(
-            start2, False, self.richard_emp, 10000.0, "2nd Contract for Richard"
+            start2, False, self.alice_emp, 10000.0, "2nd Contract for Richard"
         )
 
         self.apply_contract_cron()
 
         # I create an employee Payslip and process it
-        richard_payslip = self.create_payslip(start, end, self.richard_emp)
-        richard_payslip.compute_sheet()
+        alice_payslip = self.create_payslip(start, end, self.alice_emp)
+        alice_payslip.compute_sheet()
 
-        lines = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        lines = alice_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
         self.assertTrue(len(lines) == 2, "I found the BASIC salary lines")
 
         sum_amounts = sum([line.amount for line in lines])
@@ -155,22 +167,22 @@ class TestHrPayslip(common.TestHrPayslip):
         pay_end = date(2022, 4, 30)
         c1_start = date(2022, 3, 30)
         c1_end = date(2022, 4, 10)
-        self.create_contract(c1_start, c1_end, self.richard_emp, 5000.0)
+        self.create_contract(c1_start, c1_end, self.alice_emp, 5000.0)
 
         # I create a second contract for "Richard" of another 10 days
         c2_start = date(2022, 4, 11)
         c2_end = date(2022, 4, 20)
         self.create_contract(
-            c2_start, c2_end, self.richard_emp, 15000.0, "2nd Contract for Richard"
+            c2_start, c2_end, self.alice_emp, 15000.0, "2nd Contract for Richard"
         )
 
         self.apply_contract_cron()
 
         # I create an employee Payslip and process it
-        richard_payslip = self.create_payslip(pay_start, pay_end, self.richard_emp)
-        richard_payslip.compute_sheet()
+        alice_payslip = self.create_payslip(pay_start, pay_end, self.alice_emp)
+        alice_payslip.compute_sheet()
 
-        lines = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        lines = alice_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
         self.assertTrue(len(lines) == 2, "I found the BASIC salary lines")
 
         sum_amounts = sum([line.amount for line in lines])
@@ -187,22 +199,22 @@ class TestHrPayslip(common.TestHrPayslip):
         pay_end = date(2022, 3, 31)
         c1_start = date(2022, 1, 30)
         c1_end = date(2022, 3, 10)
-        self.create_contract(c1_start, c1_end, self.richard_emp, 5000.0)
+        self.create_contract(c1_start, c1_end, self.alice_emp, 5000.0)
 
         # I create a second contract for "Richard" of another 10 days
         c2_start = date(2022, 3, 11)
         c2_end = date(2022, 3, 20)
         self.create_contract(
-            c2_start, c2_end, self.richard_emp, 15000.0, "2nd Contract for Richard"
+            c2_start, c2_end, self.alice_emp, 15000.0, "2nd Contract for Richard"
         )
 
         self.apply_contract_cron()
 
         # I create an employee Payslip and process it
-        richard_payslip = self.create_payslip(pay_start, pay_end, self.richard_emp)
-        richard_payslip.compute_sheet()
+        alice_payslip = self.create_payslip(pay_start, pay_end, self.alice_emp)
+        alice_payslip.compute_sheet()
 
-        lines = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        lines = alice_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
         self.assertTrue(len(lines) == 2, "I found the BASIC salary lines")
 
         sum_amounts = sum([line.amount for line in lines])
@@ -218,21 +230,21 @@ class TestHrPayslip(common.TestHrPayslip):
         start = date(2022, 2, 1)
         end = date(2022, 2, 15)
         month_end = date(2022, 2, 28)
-        self.create_contract(start, end, self.richard_emp, 5000.0)
+        self.create_contract(start, end, self.alice_emp, 5000.0)
 
         # I create a second contract for "Richard"
         start2 = date(2022, 2, 16)
         self.create_contract(
-            start2, month_end, self.richard_emp, 10000.0, "2nd Contract for Richard"
+            start2, month_end, self.alice_emp, 10000.0, "2nd Contract for Richard"
         )
 
         self.apply_contract_cron()
 
         # I create an employee Payslip and process it
-        richard_payslip = self.create_payslip(start, month_end, self.richard_emp)
-        richard_payslip.compute_sheet()
+        alice_payslip = self.create_payslip(start, month_end, self.alice_emp)
+        alice_payslip.compute_sheet()
 
-        lines = richard_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        lines = alice_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
         self.assertTrue(len(lines) == 2, "I found the BASIC salary lines")
 
         sum_amounts = sum([line.amount for line in lines])
