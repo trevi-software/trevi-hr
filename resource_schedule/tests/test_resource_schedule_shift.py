@@ -6,12 +6,14 @@ from datetime import date, datetime, timedelta
 from pytz import timezone, utc
 
 from odoo.exceptions import ValidationError
-from odoo.tests import Form, common
+from odoo.tests import Form
 
 from odoo.addons.resource.models.resource import float_to_time
 
+from .common import TestResourceScheduleCommon
 
-class TestResourceScheduleShift(common.SavepointCase):
+
+class TestResourceScheduleShift(TestResourceScheduleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -26,15 +28,9 @@ class TestResourceScheduleShift(common.SavepointCase):
         cls.eeSally = cls.HrEmployee.create({"name": "Sally"})
         cls.sunday = cls.env.ref("resource_schedule.wd_sun")
         cls.tuesday = cls.env.ref("resource_schedule.wd_tue")
-        cls.att_template = cls.env.ref("resource_schedule.attendance_template_demo0")
-        cls.flex_workday_template = cls.env.ref(
-            "resource_schedule.attendance_template_demo11"
-        )
-        cls.area_1 = cls.env.ref("resource_schedule.schedule_area0")
-        cls.area_2 = cls.env.ref("resource_schedule.schedule_area1")
-        cls.default_calendar = cls.env.ref("resource_schedule.resource_calendar_44h")
+        cls.default_calendar = cls.office_calendar
         cls.std35_calendar = cls.env.ref("resource.resource_calendar_std_35h")
-        cls.production_calendar = cls.env.ref("resource_schedule.resource_calendar_56h")
+        cls.production_calendar = cls.seven_day_calendar
         cls.empty_calendar = cls.env["resource.calendar"].create(
             {
                 "name": "Standard 0 hours/week",

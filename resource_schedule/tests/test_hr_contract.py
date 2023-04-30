@@ -6,10 +6,10 @@ from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
-from odoo.tests import common
+from .common import TestResourceScheduleCommon
 
 
-class TestContract(common.SavepointCase):
+class TestContract(TestResourceScheduleCommon):
     @classmethod
     def setUpClass(cls):
         super(TestContract, cls).setUpClass()
@@ -17,13 +17,13 @@ class TestContract(common.SavepointCase):
         cls.HrEmployee = cls.env["hr.employee"]
         cls.HrContract = cls.env["hr.contract"]
         cls.employee = cls.HrEmployee.create({"name": "John"})
-        cls.default_calendar = cls.env.ref("resource_schedule.resource_calendar_44h")
         cls.empty_calendar = cls.env["resource.calendar"].create(
             {
                 "name": "Standard 0 hours/week",
             }
         )
         cls.empty_calendar.attendance_ids.unlink()
+        cls.default_calendar = cls.office_calendar
 
     def create_contract(
         self,

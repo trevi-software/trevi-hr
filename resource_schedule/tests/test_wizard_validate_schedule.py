@@ -14,9 +14,9 @@ class TestWizardValidateSchedule(common.SavepointCase):
         cls.ScheduleShift = cls.env["resource.schedule.shift"]
         cls.Wizard = cls.env["resource.schedule.validate.departments"]
 
-        cls.dep_management = cls.env.ref("hr.dep_management")
+        cls.dep_administration = cls.env.ref("hr.dep_administration")
         cls.eeJohn = cls.env["hr.employee"].create(
-            {"name": "John", "department_id": cls.dep_management.id}
+            {"name": "John", "department_id": cls.dep_administration.id}
         )
         cls.std35_calendar = cls.env.ref("resource.resource_calendar_std_35h")
         cls.eeJohn.resource_id.calendar_id = cls.std35_calendar
@@ -38,7 +38,7 @@ class TestWizardValidateSchedule(common.SavepointCase):
             self.assertFalse(shift.published, "Initially all shifts are unpublished")
 
         frmWizard = Form(self.Wizard)
-        frmWizard.department_ids.add(self.dep_management)
+        frmWizard.department_ids.add(self.dep_administration)
         wizard = frmWizard.save()
         wizard.do_validate()
         for shift in shifts:

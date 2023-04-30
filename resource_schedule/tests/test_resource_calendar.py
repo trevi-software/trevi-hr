@@ -1,10 +1,12 @@
 # Copyright (C) 2022 Trevi Software (https://trevi.et)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo.tests import Form, common
+from odoo.tests import Form
+
+from .common import TestResourceScheduleCommon
 
 
-class TestResourceCalenar(common.SavepointCase):
+class TestResourceCalenar(TestResourceScheduleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -12,12 +14,10 @@ class TestResourceCalenar(common.SavepointCase):
         cls.ResourceCalendar = cls.env["resource.calendar"]
         cls.wtpl_morning = cls.env.ref("resource_schedule.attendance_template_0")
         cls.wtpl_afternoon = cls.env.ref("resource_schedule.attendance_template_1")
-        cls.wtpl_weekday = cls.env.ref("resource_schedule.attendance_template_demo0")
-        cls.wtpl_flex_weekday = cls.env.ref(
-            "resource_schedule.attendance_template_demo11"
-        )
-        cls.default_calendar = cls.env.ref("resource_schedule.resource_calendar_44h")
-        cls.production_calendar = cls.env.ref("resource_schedule.resource_calendar_56h")
+        cls.wtpl_weekday = cls.att_template
+        cls.wtpl_flex_weekday = cls.flex_workday_template
+        cls.default_calendar = cls.office_calendar
+        cls.production_calendar = cls.seven_day_calendar
 
     def test_default_get(self):
 

@@ -3,10 +3,10 @@
 
 from datetime import date, timedelta
 
-from odoo.tests import common
+from .common import TestResourceScheduleCommon
 
 
-class TestHrEmployee(common.SavepointCase):
+class TestHrEmployee(TestResourceScheduleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -16,7 +16,7 @@ class TestHrEmployee(common.SavepointCase):
 
         cls.employee = cls.HrEmployee.create({"name": "John"})
         cls.eeSally = cls.HrEmployee.create({"name": "Sally"})
-        cls.default_calendar = cls.env.ref("resource_schedule.resource_calendar_44h")
+        cls.default_calendar = cls.office_calendar
 
     def test_create_schedule(self):
 

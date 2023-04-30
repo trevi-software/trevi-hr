@@ -5,12 +5,12 @@ from datetime import date, datetime, timedelta
 
 from dateutil.relativedelta import relativedelta
 
-from odoo.tests import common
-
 from odoo.addons.mail.tests.common import mail_new_test_user
 
+from .common import TestResourceScheduleCommon
 
-class TestHrLeave(common.SavepointCase):
+
+class TestHrLeave(TestResourceScheduleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -32,7 +32,7 @@ class TestHrLeave(common.SavepointCase):
         cls.eeSally = cls.HrEmployee.create(
             {"name": "Sally", "user_id": cls.userSally.id}
         )
-        cls.default_calendar = cls.env.ref("resource_schedule.resource_calendar_56h")
+        cls.default_calendar = cls.seven_day_calendar
         cls.holidays_type_1 = cls.LeaveType.create(
             {
                 "name": "NotLimitedHR",
@@ -308,7 +308,7 @@ class TestHrLeave(common.SavepointCase):
             dStart - relativedelta(days=4), datetime.min.time()
         )
         leave_end = datetime.combine(
-            dStart, datetime.strptime("7:29:59", "%H:%M:%S").time()
+            dStart, datetime.strptime("8:29:59", "%H:%M:%S").time()
         )
         lv = self.HrLeave.with_user(self.userSally).create(
             {
@@ -337,7 +337,7 @@ class TestHrLeave(common.SavepointCase):
         self.assertTrue(monAtt, "I found an attendance for Monday")
         self.assertEqual(
             monAtt.check_in,
-            datetime.combine(dStart, datetime.strptime("7:30", "%H:%M").time()),
+            datetime.combine(dStart, datetime.strptime("8:30", "%H:%M").time()),
             "The attendance has been modified according to the leave",
         )
 
