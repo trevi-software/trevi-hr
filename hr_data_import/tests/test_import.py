@@ -1,8 +1,9 @@
 # Copyright (C) 2022 Trevi Software (https://trevi.et)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from datetime import date
+from datetime import date, timedelta
 
+from odoo.exceptions import UserError
 from odoo.tests import common
 
 
@@ -104,6 +105,22 @@ class TestImport(common.SavepointCase):
             ]
         )
 
+        cls.sample01 = {
+            "name": "Alice",
+            "gender": "female",
+            "street": "123 A Avenue",
+            "private_phone": "(555) 555-5555",
+            "emergency_contact": "John Doe",
+            "emergency_phone": "(555) 555-666",
+            "hire_date": date(2000, 1, 1),
+            "date_start": date.today(),
+            "wage": 5000.00,
+            "job_id": cls.job_sales_rep.id,
+            "struct_id": cls.pay_structure.id,
+            "pps_id": cls.pps.id,
+            "policy_group_id": cls.policy_group.id,
+        }
+
     def test_workflow(self):
         self.data.action_import_employees()
 
@@ -125,6 +142,30 @@ class TestImport(common.SavepointCase):
                 rec.related_employee_id.contract_ids.ids,
                 f"Contract created for record: {rec.name}",
             )
+            if rec.identification_id:
+                self.assertEqual(
+                    rec.related_employee_id.identification_id,
+                    rec.identification_id,
+                    "Employee government ID matches imported record",
+                )
+            if rec.private_email:
+                self.assertEqual(
+                    rec.related_employee_id.private_email,
+                    rec.private_email,
+                    "Employee private email matches imported record",
+                )
+            if rec.emergency_contact:
+                self.assertEqual(
+                    rec.related_employee_id.emergency_contact,
+                    rec.emergency_contact,
+                    "Employee emergency contact matches imported record",
+                )
+            if rec.emergency_phone:
+                self.assertEqual(
+                    rec.related_employee_id.emergency_phone,
+                    rec.emergency_phone,
+                    "Employee emergency contact phone matches imported record",
+                )
             if rec.hire_date:
                 self.assertEqual(
                     rec.related_employee_id.contract_ids[0].state,
@@ -143,6 +184,10 @@ class TestImport(common.SavepointCase):
                 f"The record state is 'imported' after employee creation: {rec.name}",
             )
 
+        # Attempt to import again raises exception
+        with self.assertRaises(UserError):
+            self.data.action_import_employees()
+
     def test_set_value_contract_type(self):
         self.data[0].contract_type_id = self.contract_type
         self.data.import_records()
@@ -152,6 +197,18 @@ class TestImport(common.SavepointCase):
             ee.contract_ids[0].contract_type_id,
             self.contract_type,
             f"Contract type correctly set on employee contract: {ee.name}",
+        )
+
+    def test_set_value_contract_trial_end_date(self):
+        self.sample01.update({"trial_date_end": date.today() + timedelta(days=15)})
+        data = self.DataImport.create(self.sample01)
+        data.import_records()
+        ee = self.Employee.search([("name", "=", data[0].name)])
+        self.assertTrue(ee, f"Found employee: {data[0].name}")
+        self.assertEqual(
+            ee.contract_ids[0].trial_date_end,
+            date.today() + timedelta(days=15),
+            f"Trial end date correctly set on employee contract: {ee.name}",
         )
 
     def test_set_value_calendar(self):

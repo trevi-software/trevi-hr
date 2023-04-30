@@ -108,7 +108,7 @@ class ImportEmployee(models.Model):
                 val.update({"private_email": rec.private_email})
             if rec.emergency_contact:
                 val.update({"emergency_contact": rec.emergency_contact})
-            if rec.private_email:
+            if rec.emergency_phone:
                 val.update({"emergency_phone": rec.emergency_phone})
             if rec.hire_date:
                 val.update({"hire_date": rec.hire_date})
