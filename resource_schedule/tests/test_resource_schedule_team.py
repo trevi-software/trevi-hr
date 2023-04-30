@@ -3,31 +3,16 @@
 
 from datetime import date, timedelta
 
-from odoo.tests import common
+from .common import TestResourceScheduleCommon
 
 
-class TestResourceScheduleShift(common.SavepointCase):
+class TestResourceScheduleShift(TestResourceScheduleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.HrAttendance = cls.env["hr.attendance"]
-        cls.HrEmployee = cls.env["hr.employee"]
-        cls.HrContract = cls.env["hr.contract"]
-        cls.ScheduleShift = cls.env["resource.schedule.shift"]
-        cls.AttendanceTemplate = cls.env["resource.calendar.attendance.template"]
-
         cls.employee = cls.HrEmployee.create({"name": "John"})
         cls.eeSally = cls.HrEmployee.create({"name": "Sally"})
-        cls.sunday = cls.env.ref("resource_schedule.wd_sun")
-        cls.tuesday = cls.env.ref("resource_schedule.wd_tue")
-        cls.att_template = cls.env.ref("resource_schedule.attendance_template_demo0")
-        cls.area_1 = cls.env.ref("resource_schedule.schedule_area0")
-        cls.area_2 = cls.env.ref("resource_schedule.schedule_area1")
-        cls.default_calendar = cls.env.ref("resource_schedule.resource_calendar_44h")
-        cls.std35_calendar = cls.env.ref("resource.resource_calendar_std_35h")
-        cls.production_calendar = cls.env.ref("resource_schedule.resource_calendar_56h")
-        cls.dupont_calendar = cls.env.ref("resource_schedule.resource_calendar_dupont")
 
     def get_start_end_dates(self, weeks=1):
 
@@ -42,8 +27,8 @@ class TestResourceScheduleShift(common.SavepointCase):
 
         dStart, dEnd = self.get_start_end_dates(weeks=1)
         employees = self.employee | self.eeSally
-        teamA = self.env.ref("resource_schedule.schedule_team0")
-        teamB = self.env.ref("resource_schedule.schedule_team1")
+        teamA = self.team_alpha
+        teamB = self.team_bravo
         teamA.resource_calendar_id = self.dupont_calendar
         teamA.start_week = 0
         teamB.resource_calendar_id = self.dupont_calendar
@@ -119,7 +104,7 @@ class TestResourceScheduleShift(common.SavepointCase):
     def test_schedule_dupont(self):
 
         dStart, dEnd = self.get_start_end_dates(weeks=4)
-        teamA = self.env.ref("resource_schedule.schedule_team0")
+        teamA = self.team_alpha
         teamA.resource_calendar_id = self.dupont_calendar
         teamA.start_week = 1
         self.employee.resource_id.schedule_team_id = teamA
