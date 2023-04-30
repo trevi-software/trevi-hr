@@ -5,10 +5,10 @@ from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
-from . import common
+from . import test_common
 
 
-class TestHrPayslip(common.TestHrPayslip):
+class TestHrPayslip(test_common.TestHrPayslip):
     def setUp(self):
         super().setUp()
 
