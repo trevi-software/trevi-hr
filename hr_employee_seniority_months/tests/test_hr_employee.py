@@ -1,6 +1,7 @@
 # Copyright (C) 2021 Trevi Software (https://trevi.et)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
+from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 
@@ -15,6 +16,16 @@ class TestHrEmployeeSeniority(common.TransactionCase):
 
         self.HrEmployee = self.env["hr.employee"]
         self.HrContract = self.env["hr.contract"]
+
+    def _get_days_in_month(self, d):
+
+        last_date = (
+            d
+            - timedelta(days=(d.day - 1))
+            + relativedelta(months=+1)
+            + relativedelta(days=-1)
+        )
+        return last_date.day
 
     def test_no_contract(self):
         """Seniority of employee with no contracts is zero"""
@@ -143,7 +154,11 @@ class TestHrEmployeeSeniority(common.TransactionCase):
                 fields.Date.today(),
             )
         )
-        months = round(float(delta.years * 12 + delta.months + delta.days / 31), 2)
+        days_in_month = self._get_days_in_month(fields.Date.today())
+        months = round(
+            float(delta.years * 12 + delta.months) + float(delta.days / days_in_month),
+            2,
+        )
         self.assertEqual(
             float_compare(months, ee.length_of_service, precision_digits=2), 0
         )

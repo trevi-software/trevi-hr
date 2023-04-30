@@ -53,11 +53,6 @@ class TestHrPayslip(TestPayslipBase):
         contracts[0].kanban_state = "done"
         contracts[0].date_start = datetime(2022, 1, 1)
 
-    def apply_contract_cron(self):
-        self.env.ref(
-            "hr_contract.ir_cron_data_contract_update_state"
-        ).method_direct_trigger()
-
     def test_holiday_type_code(self):
 
         self.mock_rule.condition_python = "result = worked_days.LVCODE"
@@ -67,7 +62,7 @@ class TestHrPayslip(TestPayslipBase):
 
         self.apply_contract_cron()
         self.assertEqual(
-            self.richard_emp.contract_id.state, "open", "Contract is in 'open' state"
+            self.richard_emp.contract_id.state, "trial", "Contract is in 'trial' state"
         )
 
         # Set system parameter
