@@ -142,6 +142,30 @@ class HrPayslip(models.Model):
 
         return res
 
+    def action_payslip_done(self):
+        res = super().action_payslip_done()
+
+        for payslip in self:
+            policy_ids = self.env["hr.benefit.policy"].search(
+                [
+                    ("employee_id", "=", payslip.employee_id.id),
+                    ("benefit_id.link2payroll", "=", True),
+                    ("start_date", "<=", payslip.date_to),
+                    "|",
+                    ("end_date", "=", False),
+                    ("end_date", ">=", payslip.date_from),
+                ]
+            )
+            benefits = {}
+            for p in policy_ids:
+                benefits.update(
+                    {p.name: {"id": p.benefit_id.id, "amount": p.premium_amount}}
+                )
+            payslip.record_benefit_premium_payments(benefits)
+            payslip.finalize_benefit_premium_payments()
+
+        return res
+
     def record_benefit_premium_payments(self, benefits):
 
         policy_obj = self.env["hr.benefit.policy"]
@@ -168,7 +192,7 @@ class HrPayslip(models.Model):
                         "payslip_id": payslip.id,
                         "date": payslip.date_to,
                         "employee_id": payslip.employee_id.id,
-                        "policy_id": pol_ids[0],
+                        "policy_id": pol_ids[0].id,
                         "amount": payslip.credit_note and -v["amount"] or v["amount"],
                     }
                 )
@@ -191,7 +215,8 @@ class HrPayslip(models.Model):
 
         res = super(HrPayslip, self).refund_sheet()
         payments = self.mapped("premium_payment_ids")
-        payments.set_cancel()
+        if payments:
+            payments.state_cancel()
 
         return res
 
