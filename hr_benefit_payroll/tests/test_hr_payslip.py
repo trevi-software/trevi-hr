@@ -15,6 +15,39 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         super(TestBenefit, cls).setUpClass()
 
         cls.Payslip = cls.env["hr.payslip"]
+        cls.PayrollStructure = cls.env["hr.payroll.structure"]
+        cls.SalaryRule = cls.env["hr.salary.rule"]
+        cls.SalaryRuleCateg = cls.env["hr.salary.rule.category"]
+
+        cls.categ_basic = cls.SalaryRuleCateg.create(
+            {
+                "name": "Basic",
+                "code": "BASIC",
+            }
+        )
+
+        cls.rule_basic = cls.SalaryRule.create(
+            {
+                "name": "Basic Salary",
+                "code": "BASIC",
+                "sequence": 1,
+                "category_id": cls.categ_basic.id,
+                "condition_select": "none",
+                "amount_select": "code",
+                "amount_python_compute": "result = contract.wage",
+            }
+        )
+
+        cls.payroll_structure = cls.PayrollStructure.create(
+            {
+                "name": "Salary Structure for Sales Person",
+                "code": "SP",
+                "company_id": cls.env.ref("base.main_company").id,
+                "rule_ids": [
+                    (4, cls.rule_basic.id),
+                ],
+            }
+        )
 
     def create_contract(
         self, eid, state, kanban_state, start, end=None, trial_end=None, pps_id=None
@@ -29,7 +62,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "date_start": start,
                 "trial_date_end": trial_end,
                 "date_end": end,
-                "struct_id": self.env.ref("payroll.structure_base").id,
+                "struct_id": self.payroll_structure.id,
             }
         )
 
@@ -296,4 +329,52 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         frm.date_to = date(2021, 1, 31)
         self.assertTrue(
             True, "If we've reached this far without an exception thrown we're good"
+        )
+
+    def test_benefit_policy_premium_refund(self):
+
+        start = date(2021, 1, 1)
+        end = date(2021, 1, 31)
+        self.benefit_create_vals.update({"link2payroll": True})
+        bn = self.create_benefit(self.benefit_create_vals)
+        self.create_premium(
+            bn,
+            start,
+            ptype="monthly",
+            amount=100,
+            total=300,
+        )
+        pol = self.create_policy(self.eeJohn, bn, start)
+        pol.state_open()
+        self.create_contract(self.eeJohn.id, "draft", "done", start).signal_confirm()
+        slip = self.Payslip.create(
+            {
+                "employee_id": self.eeJohn.id,
+                "date_from": start,
+                "date_to": end,
+            }
+        )
+        slip.onchange_employee()
+        self.assertEqual(
+            bn.code,
+            slip.benefit_line_ids[0].code,
+            "The benefit appears in the payslip's benefit lines",
+        )
+        slip.compute_sheet()
+        slip.action_payslip_done()
+        self.assertEqual(
+            len(slip.premium_payment_ids), 1, "There is one premium payment"
+        )
+        self.assertEqual(
+            slip.premium_payment_ids[0].state,
+            "done",
+            "The premium payment is done",
+        )
+
+        slip.refund_sheet()
+
+        self.assertEqual(
+            slip.premium_payment_ids[0].state,
+            "cancel",
+            "The premium payment has been cancelled",
         )
