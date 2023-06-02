@@ -4,7 +4,7 @@
 
 {
     "name": "Employee Seniority",
-    "version": "14.0.1.0.1",
+    "version": "14.0.1.0.2",
     "license": "AGPL-3",
     "author": "TREVI Software",
     "category": "Human Resources",
