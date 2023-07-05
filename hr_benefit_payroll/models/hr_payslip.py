@@ -248,9 +248,9 @@ class HrPayslip(models.Model):
 
         return res
 
-    def get_baselocaldict(self, contracts):
+    def _get_baselocaldict(self, contracts):
 
-        res = super().get_baselocaldict(contracts)
+        res = super()._get_baselocaldict(contracts)
         res.update(
             {
                 "hr_benefit": BaseBrowsableObject(
