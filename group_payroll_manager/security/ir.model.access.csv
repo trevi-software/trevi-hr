@@ -1,4 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hr_employee_payrollm,access_hr_employee,hr.model_hr_employee,group_payroll_manager.group_payroll_manager,1,0,0,0
-access_hr_job_payrollm,access_hr_job,hr.model_hr_job,group_payroll_manager.group_payroll_manager,1,0,0,0
-access_hr_contract_payrollm,access_hr_contract,hr_contract.model_hr_contract,group_payroll_manager.group_payroll_manager,1,0,0,0
