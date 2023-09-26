@@ -5,7 +5,7 @@
 {
     "name": "Photo Booth",
     "summary": "Capture employee picture with webcam",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Human Resources",
     "author": "TREVI Software",
     "license": "AGPL-3",
