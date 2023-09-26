@@ -5,7 +5,7 @@
 {
     "name": "Benefits Payroll",
     "summary": "Access benefits in payroll through salary rules.",
-    "version": "14.0.1.2.2",
+    "version": "15.0.1.0.0",
     "category": "Payroll",
     "author": "TREVI Software, Michael Telahun Makonnen",
     "license": "AGPL-3",
