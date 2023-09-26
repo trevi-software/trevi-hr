@@ -5,7 +5,7 @@
 {
     "name": "Benefit Management",
     "summary": "Assign benefits and deductables to employees",
-    "version": "14.0.1.0.1",
+    "version": "15.0.1.0.0",
     "category": "Human Resources",
     "author": "TREVI Software, Michael Telahun Makonnen",
     "license": "AGPL-3",
