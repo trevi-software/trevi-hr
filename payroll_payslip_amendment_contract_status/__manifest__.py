@@ -4,7 +4,7 @@
 {
     "name": "Payslip Amendment with Contract State",
     "summary": "Link payslip amendments with the employee contract state.",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Payroll",
     "images": ["static/src/img/main_screenshot.png"],
     "license": "AGPL-3",
