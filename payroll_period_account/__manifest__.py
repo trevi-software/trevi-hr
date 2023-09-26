@@ -5,7 +5,7 @@
 {
     "name": "Payroll Period Account",
     "summary": "Links payroll periods to accounting",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Payroll",
     "images": ["static/src/img/main_screenshot.png"],
     "author": "TREVI Software, Michael Telahun Makonnen",
