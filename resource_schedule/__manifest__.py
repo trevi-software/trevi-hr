@@ -5,7 +5,7 @@
 {
     "name": "Employee Shift Scheduling",
     "summary": "Easily create, manage, and track employee shift planning.",
-    "version": "14.0.1.0.1",
+    "version": "15.0.1.0.0",
     "category": "Human Resources",
     "license": "AGPL-3",
     "author": "TREVI Software, Michael Telahun Makonnen",
