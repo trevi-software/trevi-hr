@@ -5,7 +5,7 @@
     "name": "Payslip Report",
     "summary": "Comprehensive payslip report by department.",
     "category": "Payroll",
-    "version": "14.0.2.0.0",
+    "version": "15.0.1.0.0",
     "author": "TREVI Software",
     "website": "https://github.com/trevi-software/trevi-hr",
     "images": ["static/src/img/main_screenshot.png"],
