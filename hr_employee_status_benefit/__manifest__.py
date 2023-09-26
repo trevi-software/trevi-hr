@@ -5,7 +5,7 @@
 {
     "name": "Employee status benefit",
     "summary": "Link between hr_employee_status and hr_benefit",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Human Resources",
     "images": ["static/src/img/main_screenshot.png"],
     "license": "AGPL-3",
