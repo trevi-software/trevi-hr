@@ -4,7 +4,7 @@
 {
     "name": "Payroll Register Report",
     "summary": "List payslips with salary categories by batch.",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Payroll",
     "license": "AGPL-3",
     "author": "TREVI Software",
