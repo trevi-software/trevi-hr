@@ -5,7 +5,7 @@
 {
     "name": "New Employee Wizard",
     "summary": "Streamline the creation of a new employee record",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Human Resources",
     "images": ["static/src/img/main_screenshot.png"],
     "license": "AGPL-3",
