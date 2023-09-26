@@ -4,7 +4,7 @@
 {
     "name": "Payroll Policy Payslip",
     "summary": "Apply payroll policies duing payslip processing",
-    "version": "14.0.1.0.1",
+    "version": "15.0.1.0.0",
     "category": "Payroll",
     "author": "TREVI Software, Michael Telahun Makonnen",
     "license": "AGPL-3",
