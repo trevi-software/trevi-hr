@@ -5,7 +5,7 @@
 {
     "name": "Payroll Period Schedule in Contracts",
     "summary": "Links payroll period schedules with employee contracts.",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Payroll",
     "images": ["static/src/img/main_screenshot.png"],
     "license": "AGPL-3",
