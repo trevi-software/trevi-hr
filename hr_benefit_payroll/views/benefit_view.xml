@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_benefits_tree" model="ir.ui.view">
+            <field name="name">hr.benefit.tree.payroll</field>
+            <field name="model">hr.benefit</field>
+            <field name="inherit_id" ref="hr_benefit.view_benefits_tree" />
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='min_employed_days']" position="after">
+                    <field name="link2payroll" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_benefits_form" model="ir.ui.view">
+            <field name="name">hr.benefit.form.payroll</field>
+            <field name="model">hr.benefit</field>
+            <field name="inherit_id" ref="hr_benefit.view_benefits_form" />
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='min_employed_days']" position="after">
+                    <field name="link2payroll" />
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

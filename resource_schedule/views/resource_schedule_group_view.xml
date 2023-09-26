@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_resource_schedule_group_search" model="ir.ui.view">
+        <field name="name">resource.schedule.group.search</field>
+        <field name="model">resource.schedule.group</field>
+        <field name="arch" type="xml">
+            <search string="Resource Scheduling Group Search">
+                <field name="name" />
+                <separator />
+                <filter
+                    string="Archived"
+                    name="inactive"
+                    domain="[('active', '=', False)]"
+                />
+        </search>
+        </field>
+    </record>
+
+    <record id="view_resource_schedule_group_tree" model="ir.ui.view">
+        <field name="name">resource.schedule.group.tree</field>
+        <field name="model">resource.schedule.group</field>
+        <field name="arch" type="xml">
+            <tree string="Scheduling Groups">
+                <field name="name" />
+                <field name="manager_ids" widget="many2many_tags" />
+                <field name="template_count" />
+                <field name="attendance_template_ids" widget="many2many_tags" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="active" widget="boolean_toggle" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_resource_schedule_group_form" model="ir.ui.view">
+        <field name="name">resource.schedule.group.form</field>
+        <field name="model">resource.schedule.group</field>
+        <field name="arch" type="xml">
+            <form string="Scheduling Group">
+                <sheet>
+                    <field name="active" invisible="1" />
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="template_count" />
+                        </group>
+                        <group>
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                    </group>
+                    <group>
+                        <group
+                            name="attendance_template"
+                            string="Work Detail Templates"
+                        >
+                            <field name="attendance_template_ids" nolabel="1">
+                                <tree string="Scheduling Group Work Detail Templates">
+                                    <field name="name" />
+                                    <field name="day_period" />
+                                    <field name="hour_from" />
+                                    <field name="hour_to" />
+                                    <field name="default_area_id" />
+                                </tree>
+                            </field>
+                        </group>
+                        <group name="managers" string="Managers">
+                            <field name="manager_ids" nolabel="1">
+                                <tree string="Scheduling Group Managers">
+                                    <field name="name" />
+                                    <field name="login" />
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="open_schedule_group_view" model="ir.actions.act_window">
+        <field name="name">Scheduling Group</field>
+        <field name="res_model">resource.schedule.group</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_resource_schedule_group_search" />
+    </record>
+
+    <menuitem
+        action="open_schedule_group_view"
+        id="menu_schedule_group_view"
+        parent="menu_schedule_config"
+        groups="group_scheduling_manager"
+        sequence="20"
+    />
+
+</odoo>

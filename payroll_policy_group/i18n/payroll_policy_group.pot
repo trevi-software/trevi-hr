@@ -1,0 +1,100 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payroll_policy_group
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payroll_policy_group
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_policy_group__contract_ids
+msgid "Contracts"
+msgstr ""
+
+#. module: payroll_policy_group
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_policy_group__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: payroll_policy_group
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_policy_group__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: payroll_policy_group
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_contract_init__display_name
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_policy_group__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payroll_policy_group
+#: model:ir.model,name:payroll_policy_group.model_hr_contract
+msgid "Employee Contract"
+msgstr ""
+
+#. module: payroll_policy_group
+#: model:ir.model,name:payroll_policy_group.model_hr_policy_group
+msgid "HR Policy Group"
+msgstr ""
+
+#. module: payroll_policy_group
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_contract__id
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_contract_init__id
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_policy_group__id
+msgid "ID"
+msgstr ""
+
+#. module: payroll_policy_group
+#: model:ir.model,name:payroll_policy_group.model_hr_contract_init
+msgid "Initial Contract Settings"
+msgstr ""
+
+#. module: payroll_policy_group
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_contract____last_update
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_contract_init____last_update
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_policy_group____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: payroll_policy_group
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_policy_group__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: payroll_policy_group
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_policy_group__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: payroll_policy_group
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_policy_group__name
+#: model_terms:ir.ui.view,arch_db:payroll_policy_group.policy_group_view_form
+msgid "Name"
+msgstr ""
+
+#. module: payroll_policy_group
+#: model:ir.ui.menu,name:payroll_policy_group.menu_hr_policy_configuration
+msgid "Policies"
+msgstr ""
+
+#. module: payroll_policy_group
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_contract__policy_group_id
+#: model:ir.model.fields,field_description:payroll_policy_group.field_hr_contract_init__policy_group_id
+#: model_terms:ir.ui.view,arch_db:payroll_policy_group.policy_group_view_form
+msgid "Policy Group"
+msgstr ""
+
+#. module: payroll_policy_group
+#: model:ir.actions.act_window,name:payroll_policy_group.open_policy_group
+#: model:ir.ui.menu,name:payroll_policy_group.menu_hr_policy_group
+#: model_terms:ir.ui.view,arch_db:payroll_policy_group.policy_group_view_tree
+msgid "Policy Groups"
+msgstr ""

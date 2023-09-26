@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_resource_calendar_attendance_tree" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.schedule.tree</field>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="priority">99</field>
+        <field
+            name="inherit_id"
+            ref="resource.view_resource_calendar_attendance_tree"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="template_id" />
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="shift_type" />
+            </xpath>
+            <xpath expr="//field[@name='week_type']" position="after">
+                <field name="flex_core_from" widget="float_time" />
+                <field name="flex_core_to" widget="float_time" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_resource_calendar_attendance_form" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.schedule.form</field>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="priority">99</field>
+        <field
+            name="inherit_id"
+            ref="resource.view_resource_calendar_attendance_form"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <!-- calendar_id is needed for unit tests using Form() to work -->
+                <field name="calendar_id" invisible="1" />
+                <field name="template_id" />
+            </xpath>
+            <xpath expr="//field[@name='day_period']" position="after">
+                <field name="shift_type" />
+            </xpath>
+            <xpath expr="//sheet/group" position="after">
+                <group
+                    name="flex"
+                    string="Flex Shift"
+                    attrs="{'invisible': [('shift_type', '!=', 'flex')]}"
+                >
+                    <group>
+                        <label for="flex_core_from" string="Hours" />
+                        <div class="o_row">
+                            <field name="flex_core_from" /> -
+                            <field name="flex_core_to" />
+                        </div>
+                        <field name="flex_scheduled_hrs" />
+                        <field name="flex_scheduled_avg" widget="boolean_toggle" />
+                    </group>
+                    <group>
+                        <field name="flex_weekly_hrs" />
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Scheduling Templates (Working Hours) -->
+    <menuitem
+        id="menu_resource_calendar"
+        parent="menu_schedule_config"
+        action="resource.action_resource_calendar_form"
+        sequence="40"
+    />
+
+</odoo>

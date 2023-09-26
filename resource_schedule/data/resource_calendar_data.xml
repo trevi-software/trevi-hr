@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Template for default workdetails used in upstream Odoo -->
+        <record
+            id="attendance_template_0"
+            model="resource.calendar.attendance.template"
+        >
+            <field name="name">Morning</field>
+            <field name="hour_from">8</field>
+            <field name="hour_to">12</field>
+            <field name="day_period">morning</field>
+        </record>
+        <record
+            id="attendance_template_1"
+            model="resource.calendar.attendance.template"
+        >
+            <field name="name">Afternoon</field>
+            <field name="hour_from">13</field>
+            <field name="hour_to">17</field>
+            <field name="day_period">afternoon</field>
+        </record>
+
+        <!-- resource.calendar.weekday: Week days -->
+        <record id="wd_mon" model="resource.calendar.weekday">
+            <field name="name">Monday</field>
+            <field name="dayofweek">0</field>
+        </record>
+
+        <record id="wd_tue" model="resource.calendar.weekday">
+            <field name="name">Tuesday</field>
+            <field name="dayofweek">1</field>
+        </record>
+
+        <record id="wd_wed" model="resource.calendar.weekday">
+            <field name="name">Wednesday</field>
+            <field name="dayofweek">2</field>
+        </record>
+
+        <record id="wd_thu" model="resource.calendar.weekday">
+            <field name="name">Thursday</field>
+            <field name="dayofweek">3</field>
+        </record>
+
+        <record id="wd_fri" model="resource.calendar.weekday">
+            <field name="name">Friday</field>
+            <field name="dayofweek">4</field>
+        </record>
+
+        <record id="wd_sat" model="resource.calendar.weekday">
+            <field name="name">Saturday</field>
+            <field name="dayofweek">5</field>
+        </record>
+
+        <record id="wd_sun" model="resource.calendar.weekday">
+            <field name="name">Sunday</field>
+            <field name="dayofweek">6</field>
+        </record>
+
+        <!-- Default Settings -->
+
+        <function model="res.company" name="_update_data_resource_calendar" eval="[]" />
+
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="(
+            'resource_schedule.max_shift_length', 15
+        )"
+        />
+    </data>
+</odoo>

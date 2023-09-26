@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Allow users to access own (and subordinates) Pay Slips -->
+        <record id="property_rule_payslip_own" model="ir.rule">
+            <field name="name">Own and Subordinates: Pay Slips</field>
+            <field name="model_id" ref="payroll.model_hr_payslip" />
+            <field name="domain_force">
+                ['|',('employee_id.user_id', '=', user.id),
+                ('employee_id.department_id.manager_id.user_id', '=', user.id)]
+            </field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]" />
+        </record>
+
+        <!-- Allow HR Officer to access Pay Slips -->
+        <record id="property_rule_payslip_hro" model="ir.rule">
+            <field name="name">HR Officer: Pay Slips</field>
+            <field name="model_id" ref="payroll.model_hr_payslip" />
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4,ref('hr.group_hr_user'))]" />
+            <field name="perm_create" eval="False" />
+            <field name="perm_read" eval="True" />
+            <field name="perm_write" eval="False" />
+            <field name="perm_unlink" eval="False" />
+        </record>
+
+    </data>
+</odoo>

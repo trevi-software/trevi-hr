@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <!-- Payroll Exception Rule -->
+        <record id="view_exception_rule_tree" model="ir.ui.view">
+            <field name="name">hr.payslip.exception.rule.tree</field>
+            <field name="model">hr.payslip.exception.rule</field>
+            <field name="arch" type="xml">
+                <tree string="Payroll Exception Rules">
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="severity" />
+                    <field name="sequence" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_exception_rule_form" model="ir.ui.view">
+            <field name="name">hr.payslip.exception.rule.form</field>
+            <field name="model">hr.payslip.exception.rule</field>
+            <field name="arch" type="xml">
+                <form string="Payroll Exception Rule" version="7.0">
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                        <label for="code" class="oe_edit_only" string="Code" />
+                        <h2>
+                            <field name="code" />
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="severity" />
+                            <field name="condition_select" />
+                        </group>
+                        <group>
+                            <field name="active" />
+                            <field name="sequence" />
+                            <field
+                                name="company_id"
+                                widget="selection"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                    </group>
+                    <group string="Conditions" colspan="4">
+                        <field
+                            name="condition_python"
+                            nolabel="1"
+                            colspan="4"
+                            attrs="{'invisible':[('condition_select','&lt;&gt;','python')], 'required': [('condition_select','=','python')]}"
+                        />
+                    </group>
+                    <group string="Note" colspan="4">
+                        <field name="note" nolabel="1" />
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="open_payroll_exception_rule_view" model="ir.actions.act_window">
+            <field name="name">Payroll Exception Rules</field>
+            <field name="res_model">hr.payslip.exception.rule</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem
+            action="open_payroll_exception_rule_view"
+            id="menu_payroll_exception_rule_view"
+            parent="payroll.payroll_menu_configuration"
+            groups="payroll.group_payroll_manager"
+            sequence="30"
+        />
+
+    </data>
+</odoo>

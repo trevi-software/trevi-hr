@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <!-- Create tentative schedule for all employee en-masse -->
+
+        <record model="ir.cron" id="mass_schedule_cron">
+            <field name="name">Schedule: Mass Scheduling</field>
+            <field name="model_id" ref="model_resource_schedule_shift" />
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model.create_mass_schedule()</field>
+            <field
+                name="nextcall"
+                eval="(DateTime.now() + timedelta(days= +(7-DateTime.now().weekday())))"
+            />
+            <field name="interval_number">2</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="False" />
+        </record>
+
+        <!-- Auto-punch attendance -->
+
+        <record model="ir.cron" id="autopunch_schedule_cron">
+            <field name="name">Schedule: Auto-punch</field>
+            <field name="model_id" ref="model_resource_schedule_shift" />
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model.autopunch_shifts()</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=30))" />
+            <field name="interval_number">30</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True" />
+        </record>
+
+        <!-- Automatically punch out attendances -->
+
+        <record model="ir.cron" id="auto_clockout_schedule_cron">
+            <field
+                name="name"
+            >Schedule: Automatically clock-out after max. shift length</field>
+            <field name="model_id" ref="hr_attendance.model_hr_attendance" />
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model.auto_punchout()</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=15))" />
+            <field name="interval_number">30</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True" />
+        </record>
+
+    </data>
+</odoo>

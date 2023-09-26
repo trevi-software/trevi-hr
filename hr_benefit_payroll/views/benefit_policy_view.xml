@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <!-- Policies -->
+
+        <record id="view_benefits_policy_form" model="ir.ui.view">
+            <field name="name">hr.benefit.policy.form.inherit.payroll</field>
+            <field name="model">hr.benefit.policy</field>
+            <field name="inherit_id" ref="hr_benefit.view_benefits_policy_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook" position="inside">
+                    <page string="Premiums">
+                        <group string="Premium Payments">
+                            <field name="premium_payment_ids" nolabel="1" />
+                        </group>
+                    </page>
+            </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

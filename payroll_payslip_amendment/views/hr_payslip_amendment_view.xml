@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <!-- Pay Slip Amendment -->
+
+        <record id="view_payslip_amendment_tree" model="ir.ui.view">
+            <field name="name">hr.payslip.amendment.tree</field>
+            <field name="model">hr.payslip.amendment</field>
+            <field name="arch" type="xml">
+                <tree string="Pay Slip Amendments">
+                    <field name="employee_id" />
+                    <field name="input_id" />
+                    <field name="date" />
+                    <field name="amount" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_payslip_amendment_form" model="ir.ui.view">
+            <field name="name">hr.payslip.amendment.form</field>
+            <field name="model">hr.payslip.amendment</field>
+            <field name="arch" type="xml">
+                <form string="Pay Slip Amendment">
+                    <header>
+                        <button
+                            name="do_validate"
+                            type="object"
+                            states="draft"
+                            class="oe_highlight"
+                            string="Confirm"
+                        />
+                        <button
+                            name="do_cancel"
+                            type="object"
+                            states="draft,validate"
+                            class="oe_highlight"
+                            string="Cancel"
+                        />
+                        <button
+                            name="do_reset"
+                            type="object"
+                            states="cancel"
+                            class="oe_highlight"
+                            string="Set to Draft"
+                        />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="employee_id" />
+                                <field name="input_id" widget="selection" />
+                                <field name="amount" />
+                            </group>
+                            <group>
+                                <field name="date" />
+                            </group>
+                            <newline />
+                            <group string="Note">
+                                <field
+                                    name="note"
+                                    nolabel="1"
+                                    placeholder="Explain the reason for the amendment..."
+                                />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="action_payslip_amendment" model="ir.actions.act_window">
+            <field name="name">Pay Slip Amendments</field>
+            <field name="res_model">hr.payslip.amendment</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem
+            action="action_payslip_amendment"
+            id="menu_payslip_amendment"
+            parent="payroll.payroll_menu_root"
+            groups="payroll.group_payroll_user"
+            sequence="50"
+        />
+
+    </data>
+</odoo>

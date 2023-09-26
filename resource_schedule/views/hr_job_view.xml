@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Job Form -->
+    <record id="job_form_view" model="ir.ui.view">
+        <field name="name">hr.job.form.schedule</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form" />
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='company_id']" position="before">
+                    <field name="default_area_id" />
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+</odoo>

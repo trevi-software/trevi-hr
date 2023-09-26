@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <data>
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_payslip_dictionary.daily_max_regular_hours', 8)"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_payslip_dictionary.weekly_max_regular_hours', 48)"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_payslip_dictionary.monthly_max_working_days', 30)"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_payslip_dictionary.work_days_code_max', 'WORK100')"
+        />
+        <function
+            model="ir.config_parameter"
+            name="set_param"
+            eval="('payroll_payslip_dictionary.payroll_code_net', 'NET')"
+        />
+    </data>
+
+</odoo>
