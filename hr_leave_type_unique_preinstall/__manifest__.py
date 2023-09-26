@@ -5,7 +5,7 @@
 {
     "name": "Leave Type Unique - Preinstall",
     "summary": "Technical module depended on by Leave Type Unique",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Human Resources",
     "license": "AGPL-3",
     "author": "TREVI Software, Michael Telahun Makonnen",
