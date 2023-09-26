@@ -1,0 +1,947 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payroll_periods
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__10
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__10
+msgid "10"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__11
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__11
+msgid "11"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__12
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__12
+msgid "12"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__13
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__13
+msgid "13"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__14
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__14
+msgid "14"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__15
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__15
+msgid "15"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__16
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__16
+msgid "16"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__17
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__17
+msgid "17"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__18
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__18
+msgid "18"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__19
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__19
+msgid "19"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__20
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__20
+msgid "20"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__21
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__21
+msgid "21"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__22
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__22
+msgid "22"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__23
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__23
+msgid "23"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__24
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__24
+msgid "24"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__25
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__25
+msgid "25"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__26
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__26
+msgid "26"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__27
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__27
+msgid "27"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__28
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__28
+msgid "28"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__29
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__29
+msgid "29"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__30
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__30
+msgid "30"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_firstday__31
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__mo_paydate__31
+msgid "31"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__active
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule__active
+msgid "Active"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payperiod_schedule_form
+msgid "Add"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payslip_exception_rule__condition_select__none
+msgid "Always True"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__annual_pay_periods
+msgid "Annual Pay Periods"
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_form
+msgid ""
+"Are you sure? Once you start payment you cannot make any more modifications "
+"to the pay slip."
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: payroll_periods
+#: model:mail.message.subtype,description:payroll_periods.mt_state_end
+msgid "Begin end-of-period processing"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period__state__closed
+#: model:mail.message.subtype,name:payroll_periods.mt_state_close
+msgid "Closed"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule__code
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_exception_rule_form
+msgid "Code"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__company_id
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__company_id
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule__company_id
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_filter
+msgid "Company"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule__condition_select
+msgid "Condition Based on"
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_exception_rule_form
+msgid "Conditions"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__contract_ids
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payperiod_schedule_form
+msgid "Contracts"
+msgstr ""
+
+#. module: payroll_periods
+#: model:mail.message.subtype,name:payroll_periods.mt_state_open
+msgid "Create"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__create_uid
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__create_uid
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception__create_uid
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__create_date
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__create_date
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception__create_date
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payslip_exception_rule__severity__critical
+msgid "Critical"
+msgstr ""
+
+#. module: payroll_periods
+#: code:addons/payroll_periods/models/hr_payroll_period.py:0
+#, python-format
+msgid ""
+"Critical exceptions remain in %s. If you wish to"
+"                             proceed you must resolve or ignore them."
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__name
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__name
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule__note
+msgid "Description"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__display_name
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__display_name
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip__display_name
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception__display_name
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule__display_name
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_run__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model,name:payroll_periods.model_hr_contract
+msgid "Employee Contract"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__date_end
+msgid "End Date"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period__state__ended
+msgid "End of Period Processing"
+msgstr ""
+
+#. module: payroll_periods
+#: model:mail.message.subtype,name:payroll_periods.mt_state_end
+msgid "Ended"
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_filter
+msgid "Ended Periods"
+msgstr ""
+
+#. module: payroll_periods
+#: code:addons/payroll_periods/models/hr_payslip_exception_rule.py:0
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.actions.act_window,name:payroll_periods.open_payroll_exception_view
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip__exception_ids
+#: model:ir.ui.menu,name:payroll_periods.menu_payroll_exception_view
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payslip_form
+msgid "Exceptions"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,help:payroll_periods.field_hr_payroll_period__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: payroll_periods
+#: code:addons/payroll_periods/models/hr_payroll_period_schedule.py:0
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__ot_week_startday__5
+#, python-format
+msgid "Friday"
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_form
+msgid "General"
+msgstr ""
+
+#. module: payroll_periods
+#: model:mail.message.subtype,name:payroll_periods.mt_state_generate
+msgid "Generate Payslips"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period__state__generate
+msgid "Generating Payslips"
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_filter
+msgid "Group By..."
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_contract__id
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__id
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__id
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip__id
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception__id
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule__id
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_run__id
+msgid "ID"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__activity_exception_icon
+msgid "Icon"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,help:payroll_periods.field_hr_payroll_period__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,help:payroll_periods.field_hr_payroll_period__message_needaction
+#: model:ir.model.fields,help:payroll_periods.field_hr_payroll_period__message_unread
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,help:payroll_periods.field_hr_payroll_period__message_has_error
+#: model:ir.model.fields,help:payroll_periods.field_hr_payroll_period__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,help:payroll_periods.field_hr_payslip_exception_rule__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the rule "
+"without removing it."
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception__ignore
+msgid "Ignore"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__initial_period_date
+msgid "Initial Period Start Date"
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_form
+msgid "Interval"
+msgstr ""
+
+#. module: payroll_periods
+#: code:addons/payroll_periods/models/hr_payslip_run.py:0
+#, python-format
+msgid "Invalid Action"
+msgstr ""
+
+#. module: payroll_periods
+#: code:addons/payroll_periods/models/hr_payroll_period.py:0
+#, python-format
+msgid ""
+"Invalid ActionYou cannot modify a pay slip once the period it is in has been"
+" marked for payment."
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_contract____last_update
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period____last_update
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule____last_update
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip____last_update
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception____last_update
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule____last_update
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_run____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__write_uid
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__write_uid
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception__write_uid
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__write_date
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__write_date
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception__write_date
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: payroll_periods
+#: model:mail.message.subtype,name:payroll_periods.mt_state_lock
+msgid "Locked"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payslip_exception_rule__severity__low
+msgid "Low"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__type__manual
+msgid "Manual"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payslip_exception_rule__severity__medium
+msgid "Medium"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: payroll_periods
+#: code:addons/payroll_periods/models/hr_payroll_period_schedule.py:0
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__ot_week_startday__1
+#, python-format
+msgid "Monday"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__type__monthly
+msgid "Monthly"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception__name
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule__name
+msgid "Name"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_exception_rule_form
+msgid "Note"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,help:payroll_periods.field_hr_payroll_period__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,help:payroll_periods.field_hr_payroll_period__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,help:payroll_periods.field_hr_payroll_period__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__ot_max_rollover_hours
+msgid "OT Max. Continous Hours"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__ot_max_rollover_gap
+msgid "OT Max. Continuous Hours Gap (in Min.)"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period__state__open
+msgid "Open"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__mo_paydate
+msgid "Pay Date"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__paydate_biz_day
+msgid "Pay Date on a Business Day"
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payperiod_schedule_form
+msgid "Pay Period Schedule"
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payperiod_schedule_tree
+msgid "Pay Period Schedules"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__pay_period_ids
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payperiod_schedule_form
+msgid "Pay Periods"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception__slip_id
+msgid "Pay Slip"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__exception_ids
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_form
+msgid "Pay Slip Exceptions"
+msgstr ""
+
+#. module: payroll_periods
+#: code:addons/payroll_periods/models/hr_payroll_period.py:0
+#, python-format
+msgid "Pay Slip for %s for %s/%s"
+msgstr ""
+
+#. module: payroll_periods
+#: model:mail.message.subtype,description:payroll_periods.mt_state_generate
+msgid "Pay Slip generation has begun"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period__state__payment
+#: model:mail.message.subtype,name:payroll_periods.mt_state_payment
+msgid "Payment"
+msgstr ""
+
+#. module: payroll_periods
+#: model:mail.message.subtype,description:payroll_periods.mt_state_payment
+msgid "Payment has started"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model,name:payroll_periods.model_hr_payslip_exception
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_exception_form
+msgid "Payroll Exception"
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_exception_rule_form
+msgid "Payroll Exception Rule"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.actions.act_window,name:payroll_periods.open_payroll_exception_rule_view
+#: model:ir.ui.menu,name:payroll_periods.menu_payroll_exception_rule_view
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_exception_rule_tree
+msgid "Payroll Exception Rules"
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_exception_tree
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payslip_form
+msgid "Payroll Exceptions"
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_form
+msgid "Payroll Exceptions in Period"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_run__period_id
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_form
+msgid "Payroll Period"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model,name:payroll_periods.model_hr_payroll_period_schedule
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_contract__pps_id
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__schedule_id
+msgid "Payroll Period Schedule"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.actions.server,name:payroll_periods.hr_payroll_period_create_cron_ir_actions_server
+#: model:ir.cron,cron_name:payroll_periods.hr_payroll_period_create_cron
+#: model:ir.cron,name:payroll_periods.hr_payroll_period_create_cron
+msgid "Payroll Period Schedule: Create New Periods"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.actions.act_window,name:payroll_periods.open_payroll_period_schedule_view
+#: model:ir.ui.menu,name:payroll_periods.menu_payroll_period_schedule_view
+msgid "Payroll Period Schedules"
+msgstr ""
+
+#. module: payroll_periods
+#: model:mail.message.subtype,description:payroll_periods.mt_state_close
+msgid "Payroll Period closed"
+msgstr ""
+
+#. module: payroll_periods
+#: model:mail.message.subtype,description:payroll_periods.mt_state_lock
+msgid "Payroll Period has been locked"
+msgstr ""
+
+#. module: payroll_periods
+#: model:mail.message.subtype,description:payroll_periods.mt_state_open
+msgid "Payroll Period opened"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.actions.server,name:payroll_periods.hr_payroll_period_ended_cron_ir_actions_server
+#: model:ir.cron,cron_name:payroll_periods.hr_payroll_period_ended_cron
+#: model:ir.cron,name:payroll_periods.hr_payroll_period_ended_cron
+msgid "Payroll Period: Past End Date"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.actions.act_window,name:payroll_periods.open_payroll_period_view
+#: model:ir.model,name:payroll_periods.model_hr_payroll_period
+#: model:ir.ui.menu,name:payroll_periods.menu_payroll_period_view
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_filter
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_tree
+msgid "Payroll Periods"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model,name:payroll_periods.model_hr_payslip
+msgid "Payslip"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model,name:payroll_periods.model_hr_payslip_run
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__run_ids
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_form
+msgid "Payslip Batches"
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_form
+msgid "Payslips"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__period_name
+msgid "Period Name"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule__condition_python
+msgid "Python Condition"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payslip_exception_rule__condition_select__python
+msgid "Python Expression"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception__rule_id
+msgid "Rule"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model,name:payroll_periods.model_hr_payslip_exception_rule
+msgid "Rules describing pay slips in an abnormal state"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: payroll_periods
+#: code:addons/payroll_periods/models/hr_payroll_period_schedule.py:0
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__ot_week_startday__6
+#, python-format
+msgid "Saturday"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception__severity
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payslip_exception_rule__severity
+msgid "Severity"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__date_start
+msgid "Start Date"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__mo_firstday
+msgid "Start Day"
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.ui.view,arch_db:payroll_periods.view_payroll_period_form
+msgid "Start Payment"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__ot_week_startday
+msgid "Start of Week"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__state
+msgid "State"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,help:payroll_periods.field_hr_payroll_period__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: payroll_periods
+#: code:addons/payroll_periods/models/hr_payroll_period_schedule.py:0
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__ot_week_startday__0
+#, python-format
+msgid "Sunday"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,help:payroll_periods.field_hr_payslip_exception_rule__condition_python
+msgid "The condition that triggers the exception."
+msgstr ""
+
+#. module: payroll_periods
+#: model_terms:ir.actions.act_window,help:payroll_periods.open_payroll_period_view
+msgid "There are no current pay periods that are past their end date."
+msgstr ""
+
+#. module: payroll_periods
+#: code:addons/payroll_periods/models/hr_payroll_period_schedule.py:0
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__ot_week_startday__4
+#, python-format
+msgid "Thursday"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__tz
+msgid "Time Zone"
+msgstr ""
+
+#. module: payroll_periods
+#: code:addons/payroll_periods/models/hr_payroll_period_schedule.py:0
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__ot_week_startday__2
+#, python-format
+msgid "Tuesday"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period_schedule__type
+msgid "Type"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,help:payroll_periods.field_hr_payroll_period__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,help:payroll_periods.field_hr_payslip_exception_rule__sequence
+msgid "Use to arrange calculation sequence"
+msgstr ""
+
+#. module: payroll_periods
+#: code:addons/payroll_periods/models/hr_payroll_period.py:0
+#, python-format
+msgid "Validation Error"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,field_description:payroll_periods.field_hr_payroll_period__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: payroll_periods
+#: model:ir.model.fields,help:payroll_periods.field_hr_payroll_period__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: payroll_periods
+#: code:addons/payroll_periods/models/hr_payroll_period_schedule.py:0
+#: model:ir.model.fields.selection,name:payroll_periods.selection__hr_payroll_period_schedule__ot_week_startday__3
+#, python-format
+msgid "Wednesday"
+msgstr ""
+
+#. module: payroll_periods
+#: code:addons/payroll_periods/models/hr_payslip_exception_rule.py:0
+#, python-format
+msgid "Wrong python condition defined for payroll exception rule %s (%s)."
+msgstr ""
+
+#. module: payroll_periods
+#: code:addons/payroll_periods/models/hr_payslip_run.py:0
+#, python-format
+msgid "You must lock the payroll period first."
+msgstr ""

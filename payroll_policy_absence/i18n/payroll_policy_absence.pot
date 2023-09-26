@@ -1,0 +1,179 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payroll_policy_absence
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payroll_policy_absence
+#: model_terms:ir.ui.view,arch_db:payroll_policy_absence.absence_policy_line_tree_view
+#: model_terms:ir.ui.view,arch_db:payroll_policy_absence.absence_policy_view_form
+msgid "Absence Lines"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.actions.act_window,name:payroll_policy_absence.open_absence_policy
+#: model:ir.ui.menu,name:payroll_policy_absence.menu_hr_absence_policy
+#: model_terms:ir.ui.view,arch_db:payroll_policy_absence.absence_policy_view_tree
+msgid "Absence Policies"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_group__absence_policy_ids
+#: model_terms:ir.ui.view,arch_db:payroll_policy_absence.absence_policy_line_form_view
+#: model_terms:ir.ui.view,arch_db:payroll_policy_absence.absence_policy_view_form
+msgid "Absence Policy"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model,name:payroll_policy_absence.model_hr_policy_absence
+msgid "Absence payroll policy"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model,name:payroll_policy_absence.model_hr_policy_line_absence
+msgid "Absence payroll policy line"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_line_absence__use_awol
+msgid "Absent Without Leave"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_line_absence__code
+msgid "Code"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_absence__create_uid
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_line_absence__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_absence__create_date
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_line_absence__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,help:payroll_policy_absence.field_hr_policy_line_absence__type
+msgid ""
+"Determines how the absence will be treated in payroll. The 'Dock Salary' "
+"type will deduct money (usefull for salaried employees)."
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_absence__display_name
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_group__display_name
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_line_absence__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields.selection,name:payroll_policy_absence.selection__hr_policy_line_absence__type__dock
+msgid "Dock"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_absence__date
+msgid "Effective Date"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model,name:payroll_policy_absence.model_hr_policy_group
+msgid "HR Policy Group"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_absence__id
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_group__id
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_line_absence__id
+msgid "ID"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_absence____last_update
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_group____last_update
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_line_absence____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_absence__write_uid
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_line_absence__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_absence__write_date
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_line_absence__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_line_absence__holiday_status_id
+msgid "Leave"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,help:payroll_policy_absence.field_hr_policy_line_absence__rate
+msgid "Multiplier of employee wage."
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_absence__name
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_line_absence__name
+#: model_terms:ir.ui.view,arch_db:payroll_policy_absence.absence_policy_view_form
+msgid "Name"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields.selection,name:payroll_policy_absence.selection__hr_policy_line_absence__type__paid
+msgid "Paid"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_line_absence__policy_id
+msgid "Policy"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_absence__line_ids
+msgid "Policy Lines"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_line_absence__rate
+msgid "Rate"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,field_description:payroll_policy_absence.field_hr_policy_line_absence__type
+msgid "Type"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields.selection,name:payroll_policy_absence.selection__hr_policy_line_absence__type__unpaid
+msgid "Unpaid"
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,help:payroll_policy_absence.field_hr_policy_line_absence__code
+msgid "Use this code in the salary rules."
+msgstr ""
+
+#. module: payroll_policy_absence
+#: model:ir.model.fields,help:payroll_policy_absence.field_hr_policy_line_absence__use_awol
+msgid ""
+"Use this policy to record employee time absence not covered by other leaves."
+msgstr ""

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="enroll_employee_form" model="ir.ui.view">
+            <field name="name">hr.benefit.enroll.employee.form</field>
+            <field name="model">hr.benefit.enroll.employee</field>
+            <field name="arch" type="xml">
+                <form string="Enroll Employee">
+                    <header>
+                        <button
+                            name="do_enroll"
+                            type="object"
+                            string="Enroll"
+                            class="oe_highlight"
+                        />
+                    </header>
+                    <group>
+                        <group>
+                            <field name="benefit_id" />
+                            <field name="employee_id" />
+                            <field name="start_date" />
+                            <field name="end_date" />
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="action_enroll_employee" model="ir.actions.act_window">
+            <field name="name">Enroll Employee</field>
+            <field name="res_model">hr.benefit.enroll.employee</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="enroll_employee_form" />
+            <field name="target">new</field>
+        </record>
+        <record id="server_action_enroll_employee" model="ir.actions.server">
+            <field name="name">Enroll Employee</field>
+            <field name="model_id" ref="model_hr_benefit_enroll_employee" />
+            <field name="binding_model_id" ref="model_hr_benefit" />
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+action_values = env.ref("hr_benefit.action_enroll_employee").sudo().read()[0]
+action_values.update({"context": env.context})
+action = action_values
+            </field>
+        </record>
+
+    </data>
+</odoo>

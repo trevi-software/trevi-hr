@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="policygroup_demo" model="hr.policy.group">
+            <field name="name">Demo group for all employees</field>
+        </record>
+
+        <!-- Amend demo contracts -->
+
+        <record id="hr_contract.hr_contract_admin" model="hr.contract">
+            <field name="policy_group_id" ref="policygroup_demo" />
+        </record>
+        <record id="hr_contract.hr_contract_al" model="hr.contract">
+            <field name="policy_group_id" ref="policygroup_demo" />
+        </record>
+        <record id="hr_contract.hr_contract_mit" model="hr.contract">
+            <field name="policy_group_id" ref="policygroup_demo" />
+        </record>
+        <record id="hr_contract.hr_contract_stw" model="hr.contract">
+            <field name="policy_group_id" ref="policygroup_demo" />
+        </record>
+        <record id="hr_contract.hr_contract_qdp" model="hr.contract">
+            <field name="policy_group_id" ref="policygroup_demo" />
+        </record>
+        <record id="hr_contract.hr_contract_han" model="hr.contract">
+            <field name="policy_group_id" ref="policygroup_demo" />
+        </record>
+        <record id="hr_contract.hr_contract_niv" model="hr.contract">
+            <field name="policy_group_id" ref="policygroup_demo" />
+        </record>
+        <record id="hr_contract.hr_contract_jth" model="hr.contract">
+            <field name="policy_group_id" ref="policygroup_demo" />
+        </record>
+        <record id="hr_contract.hr_contract_chs" model="hr.contract">
+            <field name="policy_group_id" ref="policygroup_demo" />
+        </record>
+        <record id="hr_contract.hr_contract_jve" model="hr.contract">
+            <field name="policy_group_id" ref="policygroup_demo" />
+        </record>
+        <record id="hr_contract.hr_contract_fme" model="hr.contract">
+            <field name="policy_group_id" ref="policygroup_demo" />
+        </record>
+        <record id="hr_contract.hr_contract_fpi" model="hr.contract">
+            <field name="policy_group_id" ref="policygroup_demo" />
+        </record>
+        <record id="hr_contract.hr_contract_vad" model="hr.contract">
+            <field name="policy_group_id" ref="policygroup_demo" />
+        </record>
+
+    </data>
+</odoo>

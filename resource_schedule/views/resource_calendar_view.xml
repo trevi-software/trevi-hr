@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="resource_calendar_form" model="ir.ui.view">
+        <field name="name">resource.calendar.form.schedule</field>
+        <field name="model">resource.calendar</field>
+        <field name="priority">99</field>
+        <field name="inherit_id" ref="resource.resource_calendar_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='resource_details']" position="inside">
+                <group>
+                    <field name="dayoff_type" />
+                    <field
+                        name="default_dayoff_ids"
+                        attrs="{'invisible': [('dayoff_type', '=', 'fix_all')]}"
+                    />
+                </group>
+            </xpath>
+            <xpath expr="//button[@name='switch_calendar_type']" position="attributes">
+                <attribute name="string">Switch to multi-week calendar</attribute>
+                <!--
+                <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', True)]}" string="Switch to multi-week calendar" type="object" confirm="Are you sure you want to switch this calendar to 2 weeks calendar ? All entries will be lost"/>
+                -->
+            </xpath>
+            <xpath expr="//field[@name='attendance_ids']" position="replace">
+                <field name="attendance_ids" widget="section_one2many">
+                    <tree string="Work Details" editable="bottom">
+                        <control>
+                            <create name="add_day_control" string="Add a workday" />
+                            <create
+                                name="add_section_control"
+                                string="Add a new week"
+                                context="{'default_display_type': 'line_section'}"
+                            />
+                        </control>
+                        <field name="sequence" widget="handle" />
+                        <!-- We do not display the type because we don't want the user to be bothered with that information if he has no section or note. -->
+                        <field name="display_type" invisible="1" />
+                        <field name="week_nbr" readonly="1" optional="show" />
+                        <field name="template_id" />
+                        <field
+                            name="name"
+                            widget="section_and_note_text"
+                            optional="show"
+                        />
+                        <field
+                            name="dayofweek"
+                            attrs="{
+                                'required': [('display_type', '=', False)],
+                            }"
+                        />
+                        <field
+                            name="day_period"
+                            attrs="{
+                                'required': [('display_type', '=', False)],
+                            }"
+                            optional="hide"
+                        />
+                        <field
+                            name="hour_from"
+                            widget="float_time"
+                            attrs="{
+                                'required': [('display_type', '=', False)],
+                            }"
+                        />
+                        <field
+                            name="hour_to"
+                            widget="float_time"
+                            attrs="{
+                                'required': [('display_type', '=', False)],
+                            }"
+                        />
+                        <field name="shift_type" optional="hide" />
+                        <field
+                            name="flex_core_from"
+                            widget="float_time"
+                            optional="hide"
+                        />
+                        <field
+                            name="flex_core_to"
+                            widget="float_time"
+                            optional="hide"
+                        />
+                        <field name="flex_scheduled_hrs" optional="hide" />
+                        <field
+                            name="flex_scheduled_avg"
+                            widget="boolean_toggle"
+                            optional="hide"
+                        />
+                        <field name="flex_weekly_hrs" optional="hide" />
+                        <field name="date_from" optional="hide" />
+                        <field name="date_to" optional="hide" />
+                        <field
+                            name="week_type"
+                            readonly="1"
+                            force_save="1"
+                            groups="base.group_no_one"
+                            optional="show"
+                        />
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Scheduling Templates (Working Hours) -->
+    <menuitem
+        id="menu_resource_calendar"
+        parent="menu_schedule_config"
+        action="resource.action_resource_calendar_form"
+        sequence="80"
+    />
+
+</odoo>

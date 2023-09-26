@@ -1,0 +1,200 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payroll_payslip_report
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_hr_payslip_report_view__rule_amount
+msgid "Amount"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.ui.menu,name:payroll_payslip_report.menu_hr_payslip_category_view_report
+msgid "Analysis by Category"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.ui.menu,name:payroll_payslip_report.menu_hr_payslip_view_report
+msgid "Analysis by Department"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.res_config_settings_view_form
+msgid ""
+"Comma-separated list of codes of salary rule\n"
+"                                categories to include in the payslip analysis reports."
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_hr_payslip_report_view__company_id
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_view_search
+msgid "Company"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model,name:payroll_payslip_report.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_view_search
+msgid "Date From"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_hr_payslip_report_view__department_id
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_view_search
+msgid "Department"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_hr_payslip_report_view__display_name
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields.selection,name:payroll_payslip_report.selection__hr_payslip_report_view__state__done
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_view_search
+msgid "Done"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields.selection,name:payroll_payslip_report.selection__hr_payslip_report_view__state__draft
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_view_search
+msgid "Draft"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_hr_payslip_report_view__name
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_view_search
+msgid "Employee"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_hr_payslip_report_view__date_from
+msgid "From"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_view_search
+msgid "Group By"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_hr_payslip_report_view__id
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_res_config_settings__id
+msgid "ID"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_res_config_settings__include_category_codes
+msgid "Include Category Codes"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_view_search
+msgid "Job"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_hr_payslip_report_view__job_id
+msgid "Job Title"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_hr_payslip_report_view____last_update
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_res_config_settings____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_view_search
+msgid "My Department"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.actions.act_window,name:payroll_payslip_report.action_hr_payslip_category_view_report
+msgid "Payroll Analysis"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.actions.act_window,name:payroll_payslip_report.action_hr_payslip_view_report
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_view_search
+msgid "Payslip Analysis"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model,name:payroll_payslip_report.model_hr_payslip_report_view
+msgid "Payslip Analysis View"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_category_view_graph
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_category_view_pivot
+msgid "Payslip Analysis by Category"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_view_graph
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_view_pivot
+msgid "Payslip Analysis by Department"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.res_config_settings_view_form
+msgid "Payslip Report Analysis"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields.selection,name:payroll_payslip_report.selection__hr_payslip_report_view__state__cancel
+msgid "Rejected"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.ui.menu,name:payroll_payslip_report.menu_hr_payslip_reports
+msgid "Reports"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_hr_payslip_report_view__rule_name
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_view_search
+msgid "Rule Category"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_hr_payslip_report_view__rule_id
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_view_search
+msgid "Salary Rule"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_hr_payslip_report_view__struct_id
+msgid "Salary Structure"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_hr_payslip_report_view__state
+#: model_terms:ir.ui.view,arch_db:payroll_payslip_report.hr_payroll_report_view_search
+msgid "Status"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields,field_description:payroll_payslip_report.field_hr_payslip_report_view__date_to
+msgid "To"
+msgstr ""
+
+#. module: payroll_payslip_report
+#: model:ir.model.fields.selection,name:payroll_payslip_report.selection__hr_payslip_report_view__state__verify
+msgid "Waiting"
+msgstr ""

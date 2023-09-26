@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_lock_user,access_base_lock,base_lock.model_base_lock,base.group_user,1,0,0,0
+access_lock_user_payroll_manager,access_base_lock,base_lock.model_base_lock,payroll.group_payroll_manager,1,1,1,1

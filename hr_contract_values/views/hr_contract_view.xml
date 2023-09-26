@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="view_contract_init_tree" model="ir.ui.view">
+            <field name="name">hr.contract.init.tree</field>
+            <field name="model">hr.contract.init</field>
+            <field name="arch" type="xml">
+                <tree string="Contract Initial Values">
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="trial_period" />
+                    <field name="contract_type" />
+                    <field name="locked" />
+                    <field name="company_id" groups="base.group_multi_company" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_contract_init_form" model="ir.ui.view">
+            <field name="name">hr.contract.init.form</field>
+            <field name="model">hr.contract.init</field>
+            <field name="arch" type="xml">
+                <form string="Contract Initial Values">
+                    <header>
+                        <button
+                            name="lock"
+                            class="fa fa-lock"
+                            type="object"
+                            string="Lock"
+                        />
+                        <button
+                            name="unlock"
+                            class="fa fa-unlock"
+                            type="object"
+                            string="Unlock"
+                        />
+                    </header>
+                    <label for="name" class="oe_edit_only" />
+                    <h1>
+                        <field name="name" />
+                    </h1>
+                    <group>
+                        <group name="grp1">
+                            <field name="date" />
+                            <field name="trial_period" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                        <group name="grp2">
+                            <field name="contract_type" />
+                        </group>
+                    </group>
+                    <group string="Initial Wages">
+                        <field name="wage_ids" nolabel="1">
+                            <tree string="Initial Wages" editable="bottom">
+                                <field name="category_ids" widget="many2many_tags" />
+                                <field name="job_id" />
+                                <field name="starting_wage" />
+                                <field name="is_default" />
+                            </tree>
+                        </field>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="open_contract_init" model="ir.actions.act_window">
+            <field name="name">Contract Starting Values</field>
+            <field name="res_model">hr.contract.init</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem
+            action="open_contract_init"
+            id="menu_hr_contract_init"
+            parent="hr.menu_human_resources_configuration"
+            sequence="4"
+        />
+
+        <!-- Initial Wages -->
+
+        <record id="view_init_wage_tree" model="ir.ui.view">
+            <field name="name">hr.contract.init.wage.tree</field>
+            <field name="model">hr.contract.init.wage</field>
+            <field name="arch" type="xml">
+                <tree string="Initial Wages">
+                    <field name="category_ids" widget="many2many_tags" />
+                    <field name="job_id" />
+                    <field name="starting_wage" />
+                    <field name="is_default" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_init_wage_form" model="ir.ui.view">
+            <field name="name">hr.contract.init.wage.form</field>
+            <field name="model">hr.contract.init.wage</field>
+            <field name="arch" type="xml">
+                <form string="Intial Wages">
+                    <group>
+                        <group>
+                            <field name="job_id" />
+                            <field name="starting_wage" />
+                            <field name="is_default" />
+                        </group>
+                        <group>
+                            <field name="category_ids" widget="many2many_tags" />
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Contract -->
+
+        <record id="hr_contract_view_form" model="ir.ui.view">
+            <field name="name">hr.contract.view.form.contract_init</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="trevi_hr_usability.view_contract_form" />
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='job_id']" position="replace">
+                    <field
+                        name="job_id"
+                        required="1"
+                        domain="[('department_id', '=', employee_dept_id)]"
+                    />
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

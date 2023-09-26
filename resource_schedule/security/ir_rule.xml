@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+<odoo>
+  <data noupdate="1">
+
+    <!-- Record Rules: Schedules -->
+
+    <record id="property_rule_schedule_employee" model="ir.rule">
+        <field name="name">Schedule: Own and Employees</field>
+        <field name="model_id" ref="model_hr_schedule" />
+        <field name="domain_force">
+            [
+                '|',
+                ('employee_id.user_id','=',user.id),
+                ('employee_id.department_id.manager_id.user_id', '=', user.id),
+            ]
+        </field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]" />
+    </record>
+
+    <record id="property_rule_schedule_officer" model="ir.rule">
+        <field name="name">Schedule: Scheduling group manager</field>
+        <field name="model_id" ref="model_hr_schedule" />
+        <field name="domain_force">
+            [
+                ('employee_id.schedule_group_id.manager_ids.user_id', '=', user.id),
+            ]
+        </field>
+        <field
+                name="groups"
+                eval="[(4,ref('resource_schedule.group_scheduling_user'))]"
+            />
+    </record>
+
+    <record id="property_rule_schedule_admin" model="ir.rule">
+        <field name="name">Schedule: Administrator</field>
+        <field name="model_id" ref="model_hr_schedule" />
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field
+                name="groups"
+                eval="[(4,ref('resource_schedule.group_scheduling_manager'))]"
+            />
+    </record>
+
+  </data>
+</odoo>
