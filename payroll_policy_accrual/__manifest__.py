@@ -5,7 +5,7 @@
 {
     "name": "Time Accrual Policy",
     "summary": "Automatically or manually accrue to time banks to be withdrawn later",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Payroll",
     "author": "TREVI Software, Michael Telahun Makonnen",
     "license": "AGPL-3",
