@@ -11,7 +11,7 @@ github_enable_stale_action: true
 github_enforce_dev_status_compatibility: true
 include_wkhtmltopdf: false
 odoo_test_flavor: Both
-odoo_version: 14.0
+odoo_version: 15.0
 org_name: TREVI Software
 org_slug: trevi-software
 rebel_module_groups: []
