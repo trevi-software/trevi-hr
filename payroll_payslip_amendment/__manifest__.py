@@ -5,7 +5,7 @@
 {
     "name": "Pay Slip Amendment",
     "summary": "Add amendments to current and future pay slips",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Payroll",
     "images": ["static/src/img/main_screenshot.png"],
     "license": "AGPL-3",
