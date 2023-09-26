@@ -9,7 +9,7 @@
     "license": "AGPL-3",
     "website": "https://github.com/trevi-software/trevi-hr",
     "images": ["static/src/img/main_screenshot.png"],
-    "version": "14.0.1.1.0",
+    "version": "15.0.1.0.0",
     "depends": [
         "base",
     ],
