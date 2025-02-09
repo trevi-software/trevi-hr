@@ -31,6 +31,26 @@ class ImportEmployee(models.Model):
         string="Identification No", groups="hr.group_hr_user"
     )
     taxid = fields.Char(string="Tax ID")
+    place_of_birth = fields.Char()
+    education_level = fields.Selection(
+        [
+            ("1", "1"),
+            ("2", "2"),
+            ("3", "3"),
+            ("4", "4"),
+            ("5", "5"),
+            ("6", "6"),
+            ("7", "7"),
+            ("8", "8"),
+            ("9", "9"),
+            ("10", "10"),
+            ("11", "11"),
+            ("12", "12"),
+            ("Diploma", "Diploma"),
+            ("BA Degree", "BA Degree"),
+            ("Masters Degree", "MA Degree"),
+        ]
+    )
     street = fields.Char(string="Address", groups="hr.group_hr_user")
     private_phone = fields.Char(string="Private Phone", groups="hr.group_hr_user")
     private_email = fields.Char(string="Private Email", groups="hr.group_hr_user")
@@ -98,6 +118,37 @@ class ImportEmployee(models.Model):
             }
             if rec.birthday:
                 val.update({"birthday": rec.birthday})
+            if rec.place_of_birth:
+                val.update({"place_of_birth": rec.place_of_birth})
+            if rec.education_level:
+                if rec.education_level == "1":
+                    val.update({"study_field": "1"})
+                elif rec.education_level == "2":
+                    val.update({"study_field": "2"})
+                elif rec.education_level == "3":
+                    val.update({"study_field": "3"})
+                elif rec.education_level == "4":
+                    val.update({"study_field": "4"})
+                elif rec.education_level == "5":
+                    val.update({"study_field": "5"})
+                elif rec.education_level == "6":
+                    val.update({"study_field": "6"})
+                elif rec.education_level == "7":
+                    val.update({"study_field": "7"})
+                elif rec.education_level == "8":
+                    val.update({"study_field": "8"})
+                elif rec.education_level == "9":
+                    val.update({"study_field": "9"})
+                elif rec.education_level == "10":
+                    val.update({"study_field": "10"})
+                elif rec.education_level == "11":
+                    val.update({"study_field": "11"})
+                elif rec.education_level == "12":
+                    val.update({"study_field": "12"})
+                elif rec.education_level == "diploma":
+                    val.update({"certificate": "diploma"})
+                elif rec.education_level == "ba":
+                    val.update({"certificate": "bachelor"})
             if rec.gender:
                 val.update({"gender": rec.gender})
             if rec.marital:

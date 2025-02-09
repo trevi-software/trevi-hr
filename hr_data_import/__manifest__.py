@@ -5,7 +5,7 @@
 {
     "name": "HR Data Import",
     "summary": "Import HR data from another system using Excel",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.0.1",
     "category": "Human Resources",
     "images": ["static/src/img/main_screenshot.png"],
     "license": "AGPL-3",
