@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 from datetime import date, timedelta
+
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 
@@ -88,7 +89,7 @@ class ImportEmployee(models.Model):
     currency_id = fields.Many2one(
         string="Currency", related="company_id.currency_id", readonly=True
     )
-    DA_LEAVE="Product Price"
+    DA_LEAVE = "Product Price"
     anlv_earned = fields.Float("Earned", digits=DA_LEAVE, default=0.00)
     anlv_used = fields.Float("Used", digits=DA_LEAVE, default=0.00)
     anlv_remain = fields.Float("Remaining", digits=DA_LEAVE, default=0.00)
@@ -131,9 +132,21 @@ class ImportEmployee(models.Model):
                 "emergency_contact": rec.emergency_contact,
                 "emergency_phone": rec.emergency_phone,
                 "hire_date": rec.hire_date,
-
             }
-            if rec.education_level in ["1","2","3","4","5","6","7","8","9","10","11","12"]:
+            if rec.education_level in [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+            ]:
                 val.update({"study_field": rec.education_level})
             elif rec.education_level == "diploma":
                 val.update({"certificate": "diploma"})
@@ -182,9 +195,11 @@ class ImportEmployee(models.Model):
                 records.update({"contract_type_id": data_id.contract_type_id.id})
             contracts_list.append(records)
         return self.env["hr.contract"].create(contracts_list)
-    
+
     def create_annual_leave_allocation(self, employees):
-        al_status_id = self.env["hr.leave.type"].search([("name", "=", "Annual Leave")])[0].id
+        al_status_id = (
+            self.env["hr.leave.type"].search([("name", "=", "Annual Leave")])[0].id
+        )
         records = {}
         for ee in employees:
             data = self.filtered(lambda s, ee=ee: s.related_employee_id.id == ee.id)
@@ -196,15 +211,17 @@ class ImportEmployee(models.Model):
             #                     )
             leave_allocation = {
                 "employee_id": ee.id,
-                "name": "Leave allocation for {} as of {}".format(data.name, date.today()),
+                "name": "Leave allocation for {} as of {}".format(
+                    data.name, date.today()
+                ),
                 "state": "draft",
                 "holiday_status_id": al_status_id,
                 "number_of_days": lv_days,
             }
             records.append(leave_allocation)
-        
+
         return self.env["hr.leave.allocation"].create(records)
-    
+
     def calculate_leave_days_accrued(self, employee, hire_date):
 
         today = date.today()
@@ -224,5 +241,5 @@ class ImportEmployee(models.Model):
         delta = today - tmp_date
         if delta.days > 0:
             accrued_todate += (delta.days / 30) * monthly_accrual
-        
+
         return accrued_todate
