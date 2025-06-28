@@ -10,7 +10,7 @@ from odoo.tests import common, new_test_user
 class TestPolicyAccess(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestPolicyAccess, cls).setUpClass()
+        super().setUpClass()
 
         cls.Policy = cls.env["hr.policy.presence"]
         cls.PolicyLine = cls.env["hr.policy.line.presence"]

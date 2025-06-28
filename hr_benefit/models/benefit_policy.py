@@ -229,7 +229,7 @@ class BenefitPolicy(models.Model):
                 )
             )
 
-        ben_id = super(BenefitPolicy, self).create(vals)
+        ben_id = super().create(vals)
         if ben_id:
             ref = self.env["ir.sequence"].next_by_code("benefit.policy.ref")
             if not ref:
@@ -252,7 +252,7 @@ class BenefitPolicy(models.Model):
                     )
                 )
 
-        return super(BenefitPolicy, self).unlink()
+        return super().unlink()
 
     def _check_state(self, to_state):
         for rec in self:
@@ -272,7 +272,7 @@ class BenefitPolicy(models.Model):
     def write(self, vals):
         if "state" in vals:
             self._check_state(vals["state"])
-        return super(BenefitPolicy, self).write(vals)
+        return super().write(vals)
 
     def state_open(self):
 

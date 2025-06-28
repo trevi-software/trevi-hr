@@ -8,7 +8,7 @@ from .common import TestHrCommon
 class TestHrContract(TestHrCommon):
     @classmethod
     def setUpClass(cls):
-        super(TestHrContract, cls).setUpClass()
+        super().setUpClass()
 
     def test_manager_for_contract_employee_is_set(self):
         # -- employees

@@ -13,7 +13,7 @@ from odoo.tests import common
 class TestPayslipAmendment(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestPayslipAmendment, cls).setUpClass()
+        super().setUpClass()
 
         cls.Payslip = cls.env["hr.payslip"]
         cls.Amendment = cls.env["hr.payslip.amendment"]

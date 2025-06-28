@@ -11,7 +11,7 @@ from odoo.addons.hr_benefit.tests import common as benefit_common
 class TestBenefit(benefit_common.TestBenefitCommon):
     @classmethod
     def setUpClass(cls):
-        super(TestBenefit, cls).setUpClass()
+        super().setUpClass()
 
         cls.PremiumPayment = cls.env["hr.benefit.premium.payment"]
 

@@ -11,7 +11,7 @@ from odoo.tests import Form, common
 class TestPayslipAmendment(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestPayslipAmendment, cls).setUpClass()
+        super().setUpClass()
 
         cls.Period = cls.env["hr.payroll.period"]
         cls.Schedule = cls.env["hr.payroll.period.schedule"]

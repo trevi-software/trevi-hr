@@ -11,7 +11,7 @@ from odoo.tests.common import SavepointCase
 class TestHrCommon(SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestHrCommon, cls).setUpClass()
+        super().setUpClass()
 
         # -- models
         cls.Contract = cls.env["hr.contract"]

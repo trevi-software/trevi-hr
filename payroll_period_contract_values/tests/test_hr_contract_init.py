@@ -9,7 +9,7 @@ from odoo.addons.hr_contract_values.tests.test_hr_contract_init import TestContr
 class TestPayrollHrContractInit(TestContractInit):
     @classmethod
     def setUpClass(cls):
-        super(TestPayrollHrContractInit, cls).setUpClass()
+        super().setUpClass()
 
         cls.PPSchedule = cls.env["hr.payroll.period.schedule"]
 

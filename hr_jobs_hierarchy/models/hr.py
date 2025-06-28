@@ -42,7 +42,7 @@ class HrJob(models.Model):
 
     def write(self, vals):
 
-        res = super(HrJob, self).write(vals)
+        res = super().write(vals)
 
         dept_obj = self.env["hr.department"]
         if vals.get("department_manager", False):
@@ -85,7 +85,7 @@ class HrContract(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(HrContract, self).create(vals_list)
+        res = super().create(vals_list)
 
         if not any([vals.get("job_id", False) for vals in vals_list]):
             return res
@@ -122,7 +122,7 @@ class HrContract(models.Model):
 
     def write(self, vals):
 
-        res = super(HrContract, self).write(vals)
+        res = super().write(vals)
 
         if not vals.get("job_id", False):
             return res
@@ -171,7 +171,7 @@ class HrDepartment(models.Model):
                 if rec.manager_id and rec.manager_id.id not in manager_ids:
                     manager_ids.append(rec.manager_id.id)
 
-        res = super(HrDepartment, self).write(vals)
+        res = super().write(vals)
 
         Employee = self.env["hr.employee"]
 

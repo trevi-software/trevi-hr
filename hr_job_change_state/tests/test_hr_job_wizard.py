@@ -5,7 +5,7 @@ from odoo.tests.common import Form, SavepointCase
 class TestHrJobWizard(SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestHrJobWizard, cls).setUpClass()
+        super().setUpClass()
         cls.Job = cls.env["hr.job"]
         cls.Wizard = cls.env["hr.job.wizard.state.change"]
         cls.User = cls.env["res.users"]

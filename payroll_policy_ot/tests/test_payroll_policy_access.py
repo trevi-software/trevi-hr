@@ -10,7 +10,7 @@ from odoo.tests import common, new_test_user
 class TestPolicyAccess(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestPolicyAccess, cls).setUpClass()
+        super().setUpClass()
 
         cls.OtPolicy = cls.env["hr.policy.ot"]
         cls.OtPolicyLine = cls.env["hr.policy.line.ot"]

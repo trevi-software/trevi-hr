@@ -8,7 +8,7 @@ from .common import TestHrCommon
 class TestHrJob(TestHrCommon):
     @classmethod
     def setUpClass(cls):
-        super(TestHrJob, cls).setUpClass()
+        super().setUpClass()
 
     def test_employee_with_manager_job_position_is_set_as_department_manager(self):
         emp_SM = self.create_employee("#EMP (sale manager)")

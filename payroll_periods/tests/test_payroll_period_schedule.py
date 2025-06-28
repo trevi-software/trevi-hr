@@ -14,7 +14,7 @@ from ..models.hr_payroll_period_schedule import add_months
 class TestSchedule(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestSchedule, cls).setUpClass()
+        super().setUpClass()
 
         cls.Period = cls.env["hr.payroll.period"]
         cls.Schedule = cls.env["hr.payroll.period.schedule"]

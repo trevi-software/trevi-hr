@@ -87,7 +87,7 @@ class PremiumPayment(models.Model):
                     % (payment.policy_id.name, payment.date)
                 )
 
-        return super(PremiumPayment, self).unlink()
+        return super().unlink()
 
     def state_pending(self):
 

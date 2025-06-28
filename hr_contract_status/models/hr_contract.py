@@ -102,7 +102,7 @@ class HrContract(models.Model):
         )
         if allow:
             return
-        return super(HrContract, self)._check_current_contract()
+        return super()._check_current_contract()
 
     def _track_subtype(self, init_values):
         self.ensure_one()
@@ -111,7 +111,7 @@ class HrContract(models.Model):
                 return self.env.ref("hr_contract_status.mt_alert_trial_ending")
             elif self.state == "contract_ending":
                 return self.env.ref("hr_contract_status.mt_alert_contract_ending")
-        return super(HrContract, self)._track_subtype(init_values)
+        return super()._track_subtype(init_values)
 
     @api.model
     def update_state(self):
@@ -212,7 +212,7 @@ class HrContract(models.Model):
             ]
         ).write({"state_ending": False})
 
-        return super(HrContract, self).update_state()
+        return super().update_state()
 
     def condition_trial_period(self):
         self.ensure_one()
@@ -242,4 +242,4 @@ class HrContract(models.Model):
     def write(self, vals):
         if vals.get("state") == "trial":
             self._assign_open_contract()
-        return super(HrContract, self).write(vals)
+        return super().write(vals)

@@ -37,7 +37,7 @@ class HrHolidays(models.Model):
 
     def action_validate(self):
 
-        res = super(HrHolidays, self).action_validate()
+        res = super().action_validate()
 
         today = fields.Date.today()
         for record in self:
@@ -78,4 +78,4 @@ class HrHolidays(models.Model):
                     record.number_of_days_temp,
                 )
 
-        return super(HrHolidays, self).holidays_refuse()
+        return super().holidays_refuse()

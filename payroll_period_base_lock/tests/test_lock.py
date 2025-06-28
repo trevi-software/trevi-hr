@@ -11,7 +11,7 @@ from odoo.tests import common, new_test_user
 class TestLock(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestLock, cls).setUpClass()
+        super().setUpClass()
 
         cls.Lock = cls.env["base.lock"]
 

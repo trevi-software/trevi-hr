@@ -25,7 +25,7 @@ class HrApplicant(models.Model):
 
     def create_employee_from_applicant(self):
 
-        res = super(HrApplicant, self).create_employee_from_applicant()
+        res = super().create_employee_from_applicant()
 
         for applicant in self:
             vals = {

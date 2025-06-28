@@ -10,7 +10,7 @@ from odoo.tests import common
 class TestContractInit(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestContractInit, cls).setUpClass()
+        super().setUpClass()
 
         cls.HrEmployee = cls.env["hr.employee"]
         cls.HrContract = cls.env["hr.contract"]

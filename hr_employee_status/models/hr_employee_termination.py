@@ -77,11 +77,11 @@ class Separation(models.Model):
             elif self.state == "cancel":
                 return self.env.ref("hr_employee_status.mt_alert_state_cancel")
 
-        return super(Separation, self)._track_subtype(init_values)
+        return super()._track_subtype(init_values)
 
     @api.model
     def create(self, vals):
-        res = super(Separation, self).create(vals)
+        res = super().create(vals)
         res.employee_state = res.employee_id.status
         res.employee_id.set_state_separation()
         if res.employee_id.contract_id:
@@ -104,7 +104,7 @@ class Separation(models.Model):
             # Trigger employee status change back to Active
             term.employee_id.set_state_active(term.employee_state)
 
-        return super(Separation, self).unlink()
+        return super().unlink()
 
     def signal_cancel(self):
 

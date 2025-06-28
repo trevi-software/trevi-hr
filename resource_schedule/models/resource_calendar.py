@@ -157,7 +157,8 @@ class ResourceCalendar(models.Model):
         """If the rest day(s) have been explicitly specified that's what is returned, otherwise
         a guess is returned based on the week days that are not scheduled. If an explicit
         rest day(s) has not been specified an empty list is returned. If it is able to figure
-        out the rest days it will return a list of week day integers with Monday being 0."""
+        out the rest days it will return a list of week day integers with Monday being 0.
+        """
 
         res = []
         for tpl in self:

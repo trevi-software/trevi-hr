@@ -213,7 +213,7 @@ class HrPayslip(models.Model):
 
     def refund_sheet(self):
 
-        res = super(HrPayslip, self).refund_sheet()
+        res = super().refund_sheet()
         payments = self.mapped("premium_payment_ids")
         if payments:
             payments.state_cancel()

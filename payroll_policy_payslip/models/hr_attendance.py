@@ -325,7 +325,8 @@ class HrAttendance(models.Model):
         self, contract, dDay, active_after, begin, stop, tz, punches_list=None
     ):
         """Calculate the number of hours worked between begin and stop hours, but
-        after active_after hours past the beginning of the first sign-in on specified date."""
+        after active_after hours past the beginning of the first sign-in on specified date.
+        """
 
         # Since OpenERP stores datetime in db as UTC, but in naive format we have to do
         # the following to compare our partial time to the time in db:

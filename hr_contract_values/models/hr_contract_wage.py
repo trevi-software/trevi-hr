@@ -56,4 +56,4 @@ class InitWage(models.Model):
                         'You may not a delete a record that is not in a "Draft" state'
                     )
                 )
-        return super(InitWage, self).unlink()
+        return super().unlink()

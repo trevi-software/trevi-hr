@@ -10,7 +10,7 @@ from odoo.tests.common import Form, TransactionCase
 
 class RecruitmentTestCase(TransactionCase):
     def setUp(self):
-        super(RecruitmentTestCase, self).setUp()
+        super().setUp()
 
         self.Contract = self.env["hr.contract"]
         self.Partner = self.env["res.partner"]

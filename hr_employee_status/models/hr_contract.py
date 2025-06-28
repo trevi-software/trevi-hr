@@ -125,10 +125,10 @@ class HrContract(models.Model):
             }
             c.setup_pending_done(vals)
 
-        return super(HrContract, self).update_state()
+        return super().update_state()
 
     def signal_confirm(self):
-        res = super(HrContract, self).signal_confirm()
+        res = super().signal_confirm()
         for c in self:
             if c.condition_trial_period():
                 c.employee_id.status = "trial"

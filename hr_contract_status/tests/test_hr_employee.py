@@ -13,7 +13,7 @@ from odoo.tests import common
 class TestContract(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestContract, cls).setUpClass()
+        super().setUpClass()
 
         cls.HrEmployee = cls.env["hr.employee"]
         cls.HrContract = cls.env["hr.contract"]

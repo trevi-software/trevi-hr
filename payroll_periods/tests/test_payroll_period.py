@@ -13,7 +13,7 @@ from odoo.tests import common, new_test_user
 class TestSchedule(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestSchedule, cls).setUpClass()
+        super().setUpClass()
 
         cls.Period = cls.env["hr.payroll.period"]
         cls.Schedule = cls.env["hr.payroll.period.schedule"]

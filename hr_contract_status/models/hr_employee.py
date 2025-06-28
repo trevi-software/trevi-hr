@@ -38,6 +38,6 @@ class HrEmployee(models.Model):
         if states == default_states:
             states = ["trial", "open", "close"]
 
-        return super(HrEmployee, self)._get_contracts(
+        return super()._get_contracts(
             date_from, date_to, states=states, kanban_state=False
         )

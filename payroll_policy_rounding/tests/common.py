@@ -11,7 +11,7 @@ from odoo.tests import common, new_test_user
 class TestPolicyCommon(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestPolicyCommon, cls).setUpClass()
+        super().setUpClass()
 
         cls.HrAttendance = cls.env["hr.attendance"]
         cls.HrContract = cls.env["hr.contract"]

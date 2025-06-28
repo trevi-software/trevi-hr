@@ -10,7 +10,7 @@ from odoo.tests import common, new_test_user
 class TestBenefitCommon(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestBenefitCommon, cls).setUpClass()
+        super().setUpClass()
 
         cls.Benefit = cls.env["hr.benefit"]
         cls.Premium = cls.env["hr.benefit.premium"]

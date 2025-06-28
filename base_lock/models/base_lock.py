@@ -48,7 +48,7 @@ class Lock(models.Model):
         vals["start_time"] = dtStart
         vals["end_time"] = dtEnd
 
-        return super(Lock, self).create(vals)
+        return super().create(vals)
 
     @api.model
     def is_locked_datetime_utc(self, dt_str):

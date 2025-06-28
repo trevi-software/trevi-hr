@@ -12,7 +12,7 @@ from .common import TestResourceScheduleCommon
 class TestContract(TestResourceScheduleCommon):
     @classmethod
     def setUpClass(cls):
-        super(TestContract, cls).setUpClass()
+        super().setUpClass()
 
         cls.HrEmployee = cls.env["hr.employee"]
         cls.HrContract = cls.env["hr.contract"]

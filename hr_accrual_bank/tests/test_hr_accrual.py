@@ -8,7 +8,7 @@ from odoo.tests import common
 class TestAccrual(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestAccrual, cls).setUpClass()
+        super().setUpClass()
 
         cls.Accrual = cls.env["hr.accrual"]
         cls.Allocation = cls.env["hr.leave.allocation"]

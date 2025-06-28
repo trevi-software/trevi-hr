@@ -12,7 +12,7 @@ from odoo.tools.float_utils import float_compare, float_is_zero
 
 class TestHrEmployeeSeniority(common.TransactionCase):
     def setUp(self):
-        super(TestHrEmployeeSeniority, self).setUp()
+        super().setUp()
 
         self.HrEmployee = self.env["hr.employee"]
         self.HrContract = self.env["hr.contract"]

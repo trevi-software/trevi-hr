@@ -10,7 +10,7 @@ from odoo.tests import common, new_test_user
 class TestGroupPayrollManager(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestGroupPayrollManager, cls).setUpClass()
+        super().setUpClass()
 
         cls.ResPartner = cls.env["res.partner"]
         cls.ResUsers = cls.env["res.users"]

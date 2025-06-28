@@ -13,7 +13,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 class TestProcessing(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestProcessing, cls).setUpClass()
+        super().setUpClass()
 
         cls.Employee = cls.env["hr.employee"]
         cls.Wizard = cls.env["hr.payroll.processing"]

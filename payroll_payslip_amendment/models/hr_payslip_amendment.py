@@ -71,7 +71,7 @@ class HrPayslipAmendment(models.Model):
                     _("A Pay Slip Amendment that has been confirmed cannot be deleted!")
                 )
 
-        return super(HrPayslipAmendment, self).unlink()
+        return super().unlink()
 
     def do_validate(self):
         rset = self.filtered(lambda rec: rec.state == "draft")

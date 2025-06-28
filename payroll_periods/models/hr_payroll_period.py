@@ -97,7 +97,7 @@ class HrPayrollPeriod(models.Model):
                 return self.env.ref("payroll_periods.mt_state_payment")
             elif self.state == "close":
                 return self.env.ref("payroll_periods.mt_state_close")
-        return super(HrPayrollPeriod, self)._track_subtype(init_values)
+        return super()._track_subtype(init_values)
 
     @api.model
     def is_ended(self):

@@ -103,7 +103,7 @@ class BenefitClaim(models.Model):
     @api.model
     def create(self, vals):
 
-        res = super(BenefitClaim, self).create(vals)
+        res = super().create(vals)
         for rec in res:
             approved = res._get_approved_amount(vals["date"])
             rec.amount_approved = approved
@@ -129,7 +129,7 @@ class BenefitClaim(models.Model):
             for clm in self:
                 clm._check_state(vals["state"])
 
-        res = super(BenefitClaim, self).write(vals)
+        res = super().write(vals)
         if do_calc:
             for clm in self:
                 approved = self._get_approved_amount(vals.get("date"))
@@ -150,7 +150,7 @@ class BenefitClaim(models.Model):
                         'You may not a delete a claim that is not in a "Draft" state'
                     )
                 )
-        return super(BenefitClaim, self).unlink()
+        return super().unlink()
 
     def set_to_draft(self):
         self.state = "draft"

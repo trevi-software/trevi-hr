@@ -127,7 +127,7 @@ class HrAttendance(models.Model):
 
         vals = self._process_policy(vals["employee_id"], vals)
 
-        return super(HrAttendance, self).create(vals)
+        return super().create(vals)
 
     def write(self, vals):
 

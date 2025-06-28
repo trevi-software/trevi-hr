@@ -21,7 +21,7 @@ class HrContract(models.Model):
     @api.model
     def create(self, vals):
 
-        res = super(HrContract, self).create(vals)
+        res = super().create(vals)
 
         # Update resource.calendar on employee resource record
         if "resource_calendar_id" in vals:

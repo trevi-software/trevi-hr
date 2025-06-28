@@ -120,7 +120,7 @@ class HrPayslip(models.Model):
 
     def compute_sheet(self):
 
-        res = super(HrPayslip, self).compute_sheet()
+        res = super().compute_sheet()
 
         sorted_rules = (
             self.env["hr.payslip.exception.rule"].search([]).sorted("sequence")

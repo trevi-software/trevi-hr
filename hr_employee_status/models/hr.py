@@ -53,7 +53,7 @@ class HrEmployee(models.Model):
                         active before the trial period is over."
                         )
                     )
-        return super(HrEmployee, self).write(vals)
+        return super().write(vals)
 
     def set_state_active(self, status="active"):
 

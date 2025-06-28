@@ -13,7 +13,7 @@ class HrLeave(models.Model):
 
     def action_validate(self):
 
-        res = super(HrLeave, self).action_validate()
+        res = super().action_validate()
 
         lv_requests = self.filtered(lambda lv: lv.holiday_type == "employee")
 

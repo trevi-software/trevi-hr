@@ -118,7 +118,7 @@ class HrTransfer(models.Model):
             elif self.state == "done":
                 return self.env.ref("hr_job_transfer.mt_alert_xfer_done")
 
-        return super(HrTransfer, self)._track_subtype(init_values)
+        return super()._track_subtype(init_values)
 
     def effective_date_in_future(self):
 
@@ -139,7 +139,7 @@ class HrTransfer(models.Model):
                             "create another transfer to undo it."
                         )
                     )
-        return super(HrTransfer, self).unlink()
+        return super().unlink()
 
     def action_transfer(self):
 

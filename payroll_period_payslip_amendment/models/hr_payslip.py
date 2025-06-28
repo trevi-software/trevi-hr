@@ -23,4 +23,4 @@ class HrPayslip(models.Model):
             date_from = periods[0].date_start
             date_to = periods[0].date_end
 
-        return super(HrPayslip, self).get_inputs(contracts, date_from, date_to)
+        return super().get_inputs(contracts, date_from, date_to)

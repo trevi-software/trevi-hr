@@ -11,7 +11,7 @@ from odoo.tests import common, new_test_user
 class TestPayrollRegister(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestPayrollRegister, cls).setUpClass()
+        super().setUpClass()
 
         cls.Wizard = cls.env["hr.payroll.register.run"]
         cls.Register = cls.env["hr.payroll.register"]

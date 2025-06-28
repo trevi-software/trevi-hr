@@ -11,7 +11,7 @@ class HrPayslip(models.Model):
     @api.model
     def get_inputs(self, contracts, date_from, date_to):
 
-        res = super(HrPayslip, self).get_inputs(contracts, date_from, date_to)
+        res = super().get_inputs(contracts, date_from, date_to)
 
         psa_ids = self.env["hr.payslip.amendment"].search(
             [

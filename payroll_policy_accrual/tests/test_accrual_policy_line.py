@@ -12,7 +12,7 @@ from odoo.tests import common
 class TestAccrualPolicy(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestAccrualPolicy, cls).setUpClass()
+        super().setUpClass()
 
         cls.PolicyGroup = cls.env["hr.policy.group"]
         cls.Policy = cls.env["hr.policy.accrual"]
