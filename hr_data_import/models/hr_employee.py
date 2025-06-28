@@ -13,6 +13,11 @@ class HrEmployee(models.Model):
         help="Initial date of employment if different than date on first contract."
     )
     import_data_id = fields.Many2one("hr.data.import.employee", "Imported Record")
+    DA_LEAVE="Product Price"
+    anlv_earned = fields.Float("Earned", digits=DA_LEAVE, default=0.00)
+    anlv_used = fields.Float("Used", digits=DA_LEAVE, default=0.00)
+    anlv_remain = fields.Float("Remaining", digits=DA_LEAVE, default=0.00)
+    anlv_date = fields.Date("As of")
 
     def get_months_service_to_date(self, today=None):
         months = super().get_months_service_to_date(today)

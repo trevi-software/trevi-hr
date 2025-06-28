@@ -15,6 +15,12 @@
                         <group>
                             <field name="import_data_id" />
                         </group>
+                        <group string="Annual Leave">
+                            <field name="anlv_earned" />
+                            <field name="anlv_used" />
+                            <field name="anlv_remain" />
+                            <field name="anlv_date" />
+                        </group>
                     </group>
                 </xpath>
             </data>
