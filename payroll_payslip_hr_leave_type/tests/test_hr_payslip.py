@@ -99,7 +99,7 @@ class TestHrPayslip(TestPayslipBase):
         richard_payslip.compute_sheet()
 
         worked_days_line = richard_payslip.worked_days_line_ids.filtered(
-            lambda l: l.code == "TESTLV"
+            lambda line: line.code == "TESTLV"
         )
         self.assertEqual(
             len(worked_days_line), 1, "There is a worked_days_line for the leave"
@@ -112,7 +112,7 @@ class TestHrPayslip(TestPayslipBase):
         self.assertEqual(
             len(
                 richard_payslip.worked_days_line_ids.filtered(
-                    lambda l: l.code == "WORK100"
+                    lambda line: line.code == "WORK100"
                 )
             ),
             1,

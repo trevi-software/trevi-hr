@@ -5,7 +5,7 @@
         <field name="name">hr.department.transfer.tree</field>
         <field name="model">hr.department.transfer</field>
         <field name="arch" type="xml">
-            <tree string="Departmental Transfers">
+            <tree>
                 <field name="employee_id" />
                 <field name="src_id" />
                 <field name="dst_id" />

@@ -135,7 +135,7 @@ class TestAbsencePolicy(common.TestHrPayslip):
         richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(
             line[0].amount,
@@ -143,7 +143,7 @@ class TestAbsencePolicy(common.TestHrPayslip):
             "There is no attenance",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "ABTEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "ABTEST")
         self.assertEqual(len(line), 1, "I found the Absence Test line")
         self.assertEqual(
             line[0].amount,
@@ -199,7 +199,7 @@ class TestAbsencePolicy(common.TestHrPayslip):
         richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(
             line[0].amount,
@@ -207,7 +207,7 @@ class TestAbsencePolicy(common.TestHrPayslip):
             "There is no attenance",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "ABTEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "ABTEST")
         self.assertEqual(len(line), 1, "I found the Absence Test line")
         self.assertEqual(
             line[0].amount,
@@ -273,7 +273,7 @@ class TestAbsencePolicy(common.TestHrPayslip):
         richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(
             line[0].amount,
@@ -281,7 +281,7 @@ class TestAbsencePolicy(common.TestHrPayslip):
             "There is no attenance",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "ABTEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "ABTEST")
         self.assertEqual(len(line), 1, "I found the Absence Test line")
         self.assertEqual(
             line[0].amount,
@@ -294,7 +294,7 @@ class TestAbsencePolicy(common.TestHrPayslip):
             "The time the employee was on sick leave is paid at 0.5x",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "AWTEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "AWTEST")
         self.assertEqual(len(line), 1, "I found the AWOL Test line")
         self.assertEqual(
             line[0].amount,
@@ -358,7 +358,7 @@ class TestAbsencePolicy(common.TestHrPayslip):
         richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(
             line[0].amount,
@@ -366,7 +366,7 @@ class TestAbsencePolicy(common.TestHrPayslip):
             "There is no attenance",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "ABTEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "ABTEST")
         self.assertEqual(len(line), 1, "I found the Absence Test line")
         self.assertEqual(
             line[0].amount,
@@ -374,7 +374,7 @@ class TestAbsencePolicy(common.TestHrPayslip):
             "The time of the partial leave is only 1/2 day",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "AWTEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "AWTEST")
         self.assertEqual(len(line), 1, "I found the AWOL Test line")
         self.assertEqual(
             line[0].amount,
@@ -382,7 +382,7 @@ class TestAbsencePolicy(common.TestHrPayslip):
             "The AWOL time for the other 1/2 day is recorded correctly",
         )
 
-        wdl = richard_payslip.worked_days_line_ids.filtered(lambda l: l.code == "AWOL")
+        wdl = richard_payslip.worked_days_line_ids.filtered(lambda line: line.code == "AWOL")
         self.assertEqual(len(wdl), 1, "I found the AWOL worked days line")
         self.assertEqual(
             wdl[0].number_of_days,

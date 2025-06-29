@@ -1,6 +1,5 @@
 <?xml version="1.0" ?>
-<odoo>
-  <data noupdate="1">
+<odoo noupdate="1">
 
     <record id="property_rule_contract_employee" model="ir.rule">
         <field name="name">Employee Own Contract</field>
@@ -15,5 +14,4 @@
         <field name="groups" eval="[(4,ref('hr.group_hr_user'))]" />
     </record>
 
-  </data>
 </odoo>

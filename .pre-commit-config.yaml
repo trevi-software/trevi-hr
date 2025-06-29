@@ -35,7 +35,7 @@ repos:
         language: fail
         files: '[a-zA-Z0-9_]*/i18n/en\.po$'
   - repo: https://github.com/oca/maintainer-tools
-    rev: cc63f71d3da20629c71cd095cdec394291f22713
+    rev: f9b919b9868143135a9c9cb03021089cabba8223
     hooks:
       # update the NOT INSTALLABLE ADDONS section above
       - id: oca-update-pre-commit-excluded-addons
@@ -49,7 +49,7 @@ repos:
           - --repo-name=trevi-hr
           - --if-source-changed
   - repo: https://github.com/OCA/odoo-pre-commit-hooks
-    rev: v0.0.34
+    rev: v0.1.4
     hooks:
       - id: oca-checks-odoo-module
       - id: oca-checks-po
@@ -65,7 +65,7 @@ repos:
           - --remove-duplicate-keys
           - --remove-unused-variables
   - repo: https://github.com/psf/black
-    rev: 24.10.0
+    rev: 25.1.0
     hooks:
       - id: black
   - repo: https://github.com/pre-commit/mirrors-prettier
@@ -80,7 +80,7 @@ repos:
           - --plugin=@prettier/plugin-xml
         files: \.(css|htm|html|js|json|jsx|less|md|scss|toml|ts|xml|yaml|yml)$
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.15.0
+    rev: v9.30.0
     hooks:
       - id: eslint
         verbose: true
@@ -110,12 +110,12 @@ repos:
       - id: mixed-line-ending
         args: ["--fix=lf"]
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.19.0
+    rev: v3.20.0
     hooks:
       - id: pyupgrade
         args: ["--keep-percent-format"]
   - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2
+    rev: 6.0.1
     hooks:
       - id: isort
         name: isort except __init__.py
@@ -133,13 +133,13 @@ repos:
           - --header
           - "# generated from manifests external_dependencies"
   - repo: https://github.com/PyCQA/flake8
-    rev: 7.1.1
+    rev: 7.3.0
     hooks:
       - id: flake8
         name: flake8
         additional_dependencies: ["flake8-bugbear==20.1.4"]
   - repo: https://github.com/OCA/pylint-odoo
-    rev: v9.1.3
+    rev: v9.3.11
     hooks:
       - id: pylint_odoo
         name: pylint with optional checks

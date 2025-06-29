@@ -56,7 +56,7 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip = self.create_payslip(start, end, self.alice_emp)
         alice_payslip.compute_sheet()
 
-        line = alice_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        line = alice_payslip.line_ids.filtered(lambda line: line.code == "BASIC")
         self.assertTrue(len(line) == 1, "I found the BASIC salary line")
         self.assertEqual(
             line[0].amount,
@@ -77,7 +77,7 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip = self.create_payslip(start, end, self.alice_emp)
         alice_payslip.compute_sheet()
 
-        line = alice_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        line = alice_payslip.line_ids.filtered(lambda line: line.code == "BASIC")
         self.assertTrue(len(line) == 1, "I found the BASIC salary line")
         self.assertEqual(
             line[0].amount,
@@ -100,7 +100,7 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip = self.create_payslip(start, end, self.alice_emp)
         alice_payslip.compute_sheet()
 
-        line = alice_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        line = alice_payslip.line_ids.filtered(lambda line: line.code == "BASIC")
         self.assertTrue(len(line) == 1, "I found the BASIC salary line")
         self.assertEqual(
             line[0].amount,
@@ -133,7 +133,7 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip = self.create_payslip(start, end, self.alice_emp)
         alice_payslip.compute_sheet()
 
-        lines = alice_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        lines = alice_payslip.line_ids.filtered(lambda line: line.code == "BASIC")
         self.assertTrue(len(lines) == 2, "I found the BASIC salary lines")
 
         sum_amounts = sum([line.amount for line in lines])
@@ -165,7 +165,7 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip = self.create_payslip(pay_start, pay_end, self.alice_emp)
         alice_payslip.compute_sheet()
 
-        lines = alice_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        lines = alice_payslip.line_ids.filtered(lambda line: line.code == "BASIC")
         self.assertTrue(len(lines) == 2, "I found the BASIC salary lines")
 
         sum_amounts = sum([line.amount for line in lines])
@@ -195,7 +195,7 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip = self.create_payslip(start, month_end, self.alice_emp)
         alice_payslip.compute_sheet()
 
-        lines = alice_payslip.line_ids.filtered(lambda l: l.code == "BASIC")
+        lines = alice_payslip.line_ids.filtered(lambda line: line.code == "BASIC")
         self.assertTrue(len(lines) == 2, "I found the BASIC salary lines")
 
         sum_amounts = sum([line.amount for line in lines])

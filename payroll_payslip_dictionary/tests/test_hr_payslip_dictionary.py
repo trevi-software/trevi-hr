@@ -69,7 +69,7 @@ class TestHrPayslip(test_common.TestHrPayslip):
             2,
         )
 
-        line = alice_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = alice_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(
             line[0].amount,
@@ -101,7 +101,7 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip = self.create_payslip(start, end, self.alice_emp)
         alice_payslip.compute_sheet()
 
-        line = alice_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = alice_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 2, "I found the Test lines")
         self.assertEqual(
             line[0].amount,
@@ -133,7 +133,7 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip = self.create_payslip(start, end, self.alice_emp)
         alice_payslip.compute_sheet()
 
-        line = alice_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = alice_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 2, "I found the Test lines")
         self.assertEqual(
             line[0].amount,
@@ -165,7 +165,7 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip = self.create_payslip(start, end, self.alice_emp)
         alice_payslip.compute_sheet()
 
-        line = alice_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = alice_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 2, "I found the Test lines")
         self.assertEqual(
             line[0].amount,
@@ -197,7 +197,7 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip = self.create_payslip(start, end, self.alice_emp)
         alice_payslip.compute_sheet()
 
-        line = alice_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = alice_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 2, "I found the Test lines")
         self.assertEqual(
             line[0].amount,
@@ -231,7 +231,7 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip = self.create_payslip(start, end, self.alice_emp)
         alice_payslip.compute_sheet()
 
-        line = alice_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = alice_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 2, "I found the Test lines")
         self.assertEqual(
             line[0].amount,
@@ -259,7 +259,7 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip = self.create_payslip(start, end, self.alice_emp)
         alice_payslip.compute_sheet()
 
-        line = alice_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = alice_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(
             line[0].amount,
@@ -285,7 +285,7 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip = self.create_payslip(start, end, self.alice_emp)
         alice_payslip.compute_sheet()
 
-        line = alice_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = alice_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         res = fields.Float.compare(20.83, line[0].amount, precision_digits=2)
         self.assertEqual(
@@ -312,7 +312,7 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip = self.create_payslip(start, end, self.alice_emp)
         alice_payslip.compute_sheet()
 
-        line = alice_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = alice_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         res = fields.Float.compare(166.67, line[0].amount, precision_digits=2)
         self.assertEqual(
@@ -354,10 +354,10 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip01.action_payslip_done()
 
         self.assertEqual(alice_payslip01.state, "done", "The first payslip is closed")
-        line = alice_payslip01.line_ids.filtered(lambda l: l.code == "TEST")
+        line = alice_payslip01.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(line[0].amount, 0.0, "A previous payslip does NOT exist")
-        net_line = alice_payslip01.line_ids.filtered(lambda l: l.code == "NET")
+        net_line = alice_payslip01.line_ids.filtered(lambda line: line.code == "NET")
         self.assertEqual(
             net_line[0].amount, 5000.0, "Found the first payslip NET amount"
         )
@@ -366,11 +366,11 @@ class TestHrPayslip(test_common.TestHrPayslip):
         alice_payslip02 = self.create_payslip(start2, end2, self.alice_emp)
         alice_payslip02.compute_sheet()
 
-        line = alice_payslip02.line_ids.filtered(lambda l: l.code == "TEST")
+        line = alice_payslip02.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(line[0].amount, 1.0, "A previous payslip exists")
 
-        line = alice_payslip02.line_ids.filtered(lambda l: l.code == "TEST2")
+        line = alice_payslip02.line_ids.filtered(lambda line: line.code == "TEST2")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(
             line[0].amount,
