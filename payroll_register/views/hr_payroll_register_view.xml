@@ -79,14 +79,8 @@
                         </group>
                         <group name="denominations" string="Denominations">
                             <group>
-                                <field
-                                    name="denomination_ids"
-                                    nolabel="1"
-                                    colspan="2"
-                                >
-                                    <tree
-                                        default_order="denomination"
-                                    >
+                                <field name="denomination_ids" nolabel="1" colspan="2">
+                                    <tree default_order="denomination">
                                         <field name="denomination" />
                                         <field name="denomination_qty" />
                                     </tree>

@@ -18,13 +18,10 @@
             </xpath>
             <xpath expr="//button[@name='switch_calendar_type']" position="attributes">
                 <attribute name="string">Switch to multi-week calendar</attribute>
-                <!--
-                <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', True)]}" string="Switch to multi-week calendar" type="object" confirm="Are you sure you want to switch this calendar to 2 weeks calendar ? All entries will be lost"/>
-                -->
             </xpath>
             <xpath expr="//field[@name='attendance_ids']" position="replace">
                 <field name="attendance_ids" widget="section_one2many">
-                    <tree string="Work Details" editable="bottom">
+                    <tree editable="bottom">
                         <control>
                             <create name="add_day_control" string="Add a workday" />
                             <create

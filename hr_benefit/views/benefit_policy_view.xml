@@ -113,10 +113,10 @@
                             <field name="employee_id" />
                             <label for="start_date" string="Duration" />
                             <div>
-                                <field
-                                    name="start_date"
+                                <field name="start_date" class="oe_inline" /> - <field
+                                    name="end_date"
                                     class="oe_inline"
-                                /> - <field name="end_date" class="oe_inline" />
+                                />
                             </div>
                             <field name="advantage_override" />
                             <field name="premium_override" />
@@ -135,18 +135,9 @@
                     <notebook>
                         <page string="General">
                             <group name="left">
-                                <field
-                                    name="advantage_override_amount"
-                                    invisible="1"
-                                />
-                                <field
-                                    name="premium_override_amount"
-                                    invisible="1"
-                                />
-                                <field
-                                    name="premium_override_total"
-                                    invisible="1"
-                                />
+                                <field name="advantage_override_amount" invisible="1" />
+                                <field name="premium_override_amount" invisible="1" />
+                                <field name="premium_override_total" invisible="1" />
                                 <field
                                     name="advantage_amount"
                                     attrs="{'readonly': [('advantage_override', '=', False)], 'required': [('advantage_override', '=', True)]}"

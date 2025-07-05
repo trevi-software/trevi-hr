@@ -133,7 +133,7 @@
                         class="oe_highlight"
                     />
                 </xpath>
-                
+
                 <xpath expr="//field[@name='date_end']" position="after">
                     <field name="trial_date_end" />
                 </xpath>
@@ -148,10 +148,7 @@
         <field name="priority">99</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_id']" position="replace">
-                <field
-                    name="job_id"
-                    attrs="{'invisible': [('state','=','close')]}"
-                />
+                <field name="job_id" attrs="{'invisible': [('state','=','close')]}" />
                 <field
                     name="end_job_id"
                     attrs="{'invisible': [('state','!=','close')]}"

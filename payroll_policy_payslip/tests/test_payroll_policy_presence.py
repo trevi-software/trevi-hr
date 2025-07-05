@@ -98,7 +98,7 @@ class TestPresencePolicy(common.TestHrPayslip):
         richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(
             line[0].amount,
@@ -153,7 +153,7 @@ class TestPresencePolicy(common.TestHrPayslip):
         richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(
             line[0].amount,
@@ -218,7 +218,7 @@ class TestPresencePolicy(common.TestHrPayslip):
         richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(
             line[0].amount,
@@ -231,7 +231,7 @@ class TestPresencePolicy(common.TestHrPayslip):
             "Rest day hours are accrued at the regular rate",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "ACRTEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "ACRTEST")
         self.assertEqual(len(line), 1, "I found the Accrual Test line")
         self.assertEqual(
             line[0].amount,
@@ -302,7 +302,7 @@ class TestPresencePolicy(common.TestHrPayslip):
         richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Test line")
         self.assertEqual(
             line[0].amount,
@@ -315,7 +315,7 @@ class TestPresencePolicy(common.TestHrPayslip):
             "Rest day hours are accrued at the regular rate",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "ACRTEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "ACRTEST")
         self.assertEqual(len(line), 1, "I found the Accrual Test line")
         self.assertEqual(
             line[0].amount,

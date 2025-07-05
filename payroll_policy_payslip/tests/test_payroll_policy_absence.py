@@ -382,7 +382,9 @@ class TestAbsencePolicy(common.TestHrPayslip):
             "The AWOL time for the other 1/2 day is recorded correctly",
         )
 
-        wdl = richard_payslip.worked_days_line_ids.filtered(lambda line: line.code == "AWOL")
+        wdl = richard_payslip.worked_days_line_ids.filtered(
+            lambda line: line.code == "AWOL"
+        )
         self.assertEqual(len(wdl), 1, "I found the AWOL worked days line")
         self.assertEqual(
             wdl[0].number_of_days,

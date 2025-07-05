@@ -47,18 +47,11 @@
                             attrs="{'invisible': [('type','!=','monthly')], 'required': [('type','=','monthly')]}"
                         />
                         <field name="active" />
-                        <field
-                            name="company_id"
-                            groups="base.group_multi_company"
-                        />
+                        <field name="company_id" groups="base.group_multi_company" />
                     </group>
                 </group>
                 <group string="Pay Periods" colspan="4" col="1">
-                    <button
-                        name="button_add_pay_periods"
-                        type="object"
-                        string="Add"
-                    />
+                    <button name="button_add_pay_periods" type="object" string="Add" />
                     <field name="pay_period_ids" nolabel="1" />
                 </group>
                 <group string="Contracts" colspan="4" col="1">

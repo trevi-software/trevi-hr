@@ -23,11 +23,7 @@
                     expr="//form/sheet/notebook/page/group/field/tree/button[@name='button_ignore']"
                     position="before"
                 >
-                    <button
-                        name="button_recalculate"
-                        type="object"
-                        icon="fa-gears"
-                    />
+                    <button name="button_recalculate" type="object" icon="fa-gears" />
                 </xpath>
             </data>
         </field>

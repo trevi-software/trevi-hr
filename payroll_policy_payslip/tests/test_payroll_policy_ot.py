@@ -147,7 +147,7 @@ class TestPresencePolicy(common.TestHrPayslip):
         richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Normal Test line")
         self.assertEqual(
             line[0].amount,
@@ -160,7 +160,7 @@ class TestPresencePolicy(common.TestHrPayslip):
             "Regular hours are paid at the normal rate",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "OTTEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "OTTEST")
         self.assertEqual(len(line), 1, "I found the OT Test line")
         self.assertEqual(
             line[0].amount,
@@ -216,7 +216,7 @@ class TestPresencePolicy(common.TestHrPayslip):
         richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Normal Test line")
         self.assertEqual(
             line[0].amount,
@@ -229,7 +229,7 @@ class TestPresencePolicy(common.TestHrPayslip):
             "Regular hours are paid at the normal rate",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "OTTEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "OTTEST")
         self.assertEqual(len(line), 1, "I found the OT Test line")
         self.assertEqual(
             line[0].amount,
@@ -288,7 +288,7 @@ class TestPresencePolicy(common.TestHrPayslip):
         richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Normal Test line")
         self.assertEqual(
             line[0].amount,
@@ -301,7 +301,7 @@ class TestPresencePolicy(common.TestHrPayslip):
             "Regular hours are paid at the normal rate",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "OTTEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "OTTEST")
         self.assertEqual(len(line), 1, "I found the OT Test line")
         self.assertEqual(
             line[0].amount,
@@ -360,7 +360,7 @@ class TestPresencePolicy(common.TestHrPayslip):
         richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Normal Test line")
         self.assertEqual(
             line[0].amount,
@@ -373,7 +373,7 @@ class TestPresencePolicy(common.TestHrPayslip):
             "Regular hours are paid at the normal rate",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "OTTEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "OTTEST")
         self.assertEqual(len(line), 1, "I found the OT Test line")
         self.assertEqual(
             line[0].amount,
@@ -436,7 +436,7 @@ class TestPresencePolicy(common.TestHrPayslip):
         richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Normal Test line")
         self.assertEqual(
             line[0].amount,
@@ -449,7 +449,7 @@ class TestPresencePolicy(common.TestHrPayslip):
             "Regular hours are paid at the normal rate",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "OTTEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "OTTEST")
         self.assertEqual(len(line), 1, "I found the DAY OT Test line")
         self.assertEqual(
             line[0].amount,
@@ -462,7 +462,7 @@ class TestPresencePolicy(common.TestHrPayslip):
             "DAY OT hours are paid at 1.5x normal rate",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "OTTEST2")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "OTTEST2")
         self.assertEqual(len(line), 1, "I found the NIGHT OT Test line")
         self.assertEqual(
             line[0].amount,
@@ -530,7 +530,7 @@ class TestPresencePolicy(common.TestHrPayslip):
         richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Normal Test line")
         self.assertEqual(
             line[0].amount,
@@ -543,7 +543,7 @@ class TestPresencePolicy(common.TestHrPayslip):
             "Regular hours are paid at the normal rate",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "OTTEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "OTTEST")
         self.assertEqual(len(line), 1, "I found the OT Test line")
         self.assertEqual(
             line[0].amount,
@@ -556,7 +556,7 @@ class TestPresencePolicy(common.TestHrPayslip):
             "Daily OT hours are paid at 1.5x normal rate",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "OTTEST2")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "OTTEST2")
         self.assertEqual(len(line), 1, "I found the Rest Day OT Test line")
         self.assertEqual(
             line[0].amount,
@@ -630,7 +630,7 @@ class TestPresencePolicy(common.TestHrPayslip):
         richard_payslip.onchange_employee()
         richard_payslip.compute_sheet()
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "TEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "TEST")
         self.assertEqual(len(line), 1, "I found the Normal Test line")
         self.assertEqual(
             line[0].amount,
@@ -643,7 +643,7 @@ class TestPresencePolicy(common.TestHrPayslip):
             "Regular hours are paid at the normal rate",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "OTTEST")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "OTTEST")
         self.assertEqual(len(line), 1, "I found the OT Test line")
         self.assertEqual(
             line[0].amount,
@@ -656,7 +656,7 @@ class TestPresencePolicy(common.TestHrPayslip):
             "Holiday hours are paid at 2x normal rate",
         )
 
-        line = richard_payslip.line_ids.filtered(lambda l: l.code == "OTTEST2")
+        line = richard_payslip.line_ids.filtered(lambda line: line.code == "OTTEST2")
         self.assertEqual(len(line), 1, "I found the Holiday OT Test line")
         self.assertEqual(
             line[0].amount,

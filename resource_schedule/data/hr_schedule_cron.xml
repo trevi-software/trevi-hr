@@ -10,9 +10,9 @@
             <field name="state">code</field>
             <field name="code">model.create_mass_schedule()</field>
             <field
-                name="nextcall"
-                eval="(DateTime.now() + timedelta(days= +(7-DateTime.now().weekday())))"
-            />
+            name="nextcall"
+            eval="(DateTime.now() + timedelta(days= +(7-DateTime.now().weekday())))"
+        />
             <field name="interval_number">2</field>
             <field name="interval_type">weeks</field>
             <field name="numbercall">-1</field>
@@ -38,8 +38,8 @@
 
         <record model="ir.cron" id="auto_clockout_schedule_cron">
             <field
-                name="name"
-            >Schedule: Automatically clock-out after max. shift length</field>
+            name="name"
+        >Schedule: Automatically clock-out after max. shift length</field>
             <field name="model_id" ref="hr_attendance.model_hr_attendance" />
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>

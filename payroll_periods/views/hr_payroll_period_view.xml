@@ -69,11 +69,7 @@
                                     nolabel="1"
                                     class="oe_inline"
                                 /> -
-                                <field
-                                    name="date_end"
-                                    nolabel="1"
-                                    class="oe_inline"
-                                />
+                                <field name="date_end" nolabel="1" class="oe_inline" />
                             </div>
                             <field name="name" />
                             <newline />
@@ -96,7 +92,8 @@
                                 >
                                     <tree
                                         default_order="severity"
-                                        colors="red:severity == 'critical';orange:severity == 'high';blue:severity == 'medium'"
+                                        decoration-danger="severity == 'critical'"
+                                        decoration-warning="severity == 'high'"
                                     >
                                         <field name="name" />
                                         <field name="slip_id" />
@@ -125,10 +122,7 @@
                         </page>
                     </notebook>
                     <div class="oe_chatter">
-                        <field
-                            name="message_follower_ids"
-                            widget="mail_followers"
-                        />
+                        <field name="message_follower_ids" widget="mail_followers" />
                         <field name="activity_ids" widget="mail_activity" />
                         <field name="message_ids" widget="mail_thread" />
                     </div>

@@ -41,10 +41,7 @@
         <field name="day_period">8day</field>
         <field name="autodeduct_break" eval="True" />
         <field name="break_minutes">60</field>
-        <field
-            name="schedule_group_ids"
-            eval="[(6, 0, [ref('schedule_group3')])]"
-        />
+        <field name="schedule_group_ids" eval="[(6, 0, [ref('schedule_group3')])]" />
     </record>
 
     <record
@@ -55,10 +52,7 @@
         <field name="hour_from">8</field>
         <field name="hour_to">12.5</field>
         <field name="day_period">morning</field>
-        <field
-            name="schedule_group_ids"
-            eval="[(6, 0, [ref('schedule_group3')])]"
-        />
+        <field name="schedule_group_ids" eval="[(6, 0, [ref('schedule_group3')])]" />
     </record>
 
     <record
@@ -69,10 +63,7 @@
         <field name="hour_from">6</field>
         <field name="hour_to">14</field>
         <field name="day_period">morning</field>
-        <field
-            name="schedule_group_ids"
-            eval="[(6, 0, [ref('schedule_group2')])]"
-        />
+        <field name="schedule_group_ids" eval="[(6, 0, [ref('schedule_group2')])]" />
         <field name="default_area_id" ref="schedule_area2" />
     </record>
 
@@ -84,10 +75,7 @@
         <field name="hour_from">10</field>
         <field name="hour_to">18</field>
         <field name="day_period">afternoon</field>
-        <field
-            name="schedule_group_ids"
-            eval="[(6, 0, [ref('schedule_group2')])]"
-        />
+        <field name="schedule_group_ids" eval="[(6, 0, [ref('schedule_group2')])]" />
         <field name="default_area_id" ref="schedule_area2" />
     </record>
 
@@ -99,10 +87,7 @@
         <field name="hour_from">18</field>
         <field name="hour_to">23</field>
         <field name="day_period">evening</field>
-        <field
-            name="schedule_group_ids"
-            eval="[(6, 0, [ref('schedule_group2')])]"
-        />
+        <field name="schedule_group_ids" eval="[(6, 0, [ref('schedule_group2')])]" />
         <field name="default_area_id" ref="schedule_area2" />
     </record>
 
@@ -114,10 +99,7 @@
         <field name="hour_from">6</field>
         <field name="hour_to">14</field>
         <field name="day_period">morning</field>
-        <field
-            name="schedule_group_ids"
-            eval="[(6, 0, [ref('schedule_group1')])]"
-        />
+        <field name="schedule_group_ids" eval="[(6, 0, [ref('schedule_group1')])]" />
     </record>
 
     <record
@@ -128,10 +110,7 @@
         <field name="hour_from">6</field>
         <field name="hour_to">9</field>
         <field name="day_period">morning</field>
-        <field
-            name="schedule_group_ids"
-            eval="[(6, 0, [ref('schedule_group1')])]"
-        />
+        <field name="schedule_group_ids" eval="[(6, 0, [ref('schedule_group1')])]" />
     </record>
 
     <record
@@ -142,10 +121,7 @@
         <field name="hour_from">6</field>
         <field name="hour_to">15</field>
         <field name="day_period">morning</field>
-        <field
-            name="schedule_group_ids"
-            eval="[(6, 0, [ref('schedule_group0')])]"
-        />
+        <field name="schedule_group_ids" eval="[(6, 0, [ref('schedule_group0')])]" />
     </record>
 
     <record
@@ -156,10 +132,7 @@
         <field name="hour_from">15</field>
         <field name="hour_to">22</field>
         <field name="day_period">afternoon</field>
-        <field
-            name="schedule_group_ids"
-            eval="[(6, 0, [ref('schedule_group0')])]"
-        />
+        <field name="schedule_group_ids" eval="[(6, 0, [ref('schedule_group0')])]" />
     </record>
 
     <record
@@ -195,10 +168,7 @@
         <field name="flex_core_to">15</field>
         <field name="flex_scheduled_hrs">8</field>
         <field name="day_period">8day</field>
-        <field
-            name="schedule_group_ids"
-            eval="[(6, 0, [ref('schedule_group3')])]"
-        />
+        <field name="schedule_group_ids" eval="[(6, 0, [ref('schedule_group3')])]" />
     </record>
 
     <!-- Working Times -->

@@ -21,7 +21,7 @@
         <field name="name">resource.schedule.group.tree</field>
         <field name="model">resource.schedule.group</field>
         <field name="arch" type="xml">
-            <tree string="Scheduling Groups">
+            <tree>
                 <field name="name" />
                 <field name="manager_ids" widget="many2many_tags" />
                 <field name="template_count" />
@@ -63,7 +63,7 @@
                             string="Work Detail Templates"
                         >
                             <field name="attendance_template_ids" nolabel="1">
-                                <tree string="Scheduling Group Work Detail Templates">
+                                <tree>
                                     <field name="name" />
                                     <field name="day_period" />
                                     <field name="hour_from" />
@@ -74,7 +74,7 @@
                         </group>
                         <group name="managers" string="Managers">
                             <field name="manager_ids" nolabel="1">
-                                <tree string="Scheduling Group Managers">
+                                <tree>
                                     <field name="name" />
                                     <field name="login" />
                                 </tree>

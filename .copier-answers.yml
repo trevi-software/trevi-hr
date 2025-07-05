@@ -1,23 +1,26 @@
 # Do NOT update manually; changes here will be overwritten by Copier
-_commit: v1.17.1
+_commit: v1.32
 _src_path: https://github.com/OCA/oca-addons-repo-template.git
 ci: GitHub
+convert_readme_fragments_to_markdown: false
+enable_checklog_odoo: false
 generate_requirements_txt: true
 github_check_license: true
 github_ci_extra_env: {}
 github_enable_codecov: true
 github_enable_makepot: true
-github_enable_stale_action: true
-github_enforce_dev_status_compatibility: true
+github_enable_stale_action: false
+github_enforce_dev_status_compatibility: false
 include_wkhtmltopdf: false
 odoo_test_flavor: Both
 odoo_version: 14.0
 org_name: TREVI Software
 org_slug: trevi-software
 rebel_module_groups: []
-repo_description: This repository contains Human Resource addons developed by TREVI
-    Software
-repo_name: TREVI Human Resource addons for Odoo
+repo_description: HR Addons
+repo_name: trevi-hr project
 repo_slug: trevi-hr
 repo_website: https://github.com/trevi-software/trevi-hr
+use_pyproject_toml: false
+use_ruff: false
 

@@ -7,18 +7,18 @@
         <field name="inherit_id" ref="hr.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath
-            expr="//div[@name='employee_rights_setting_container']"
-            position="after"
-        >
+                expr="//div[@name='employee_rights_setting_container']"
+                position="after"
+            >
                 <h2>Employee Contracts</h2>
                 <div
-                class="row mt16 o_settings_container"
-                name="employee_contracts_setting_container"
-            >
-                    <div
-                    class="col-12 col-lg-6 o_setting_box"
-                    title="Allow multiple concurrent employee contracts."
+                    class="row mt16 o_settings_container"
+                    name="employee_contracts_setting_container"
                 >
+                    <div
+                        class="col-12 col-lg-6 o_setting_box"
+                        title="Allow multiple concurrent employee contracts."
+                    >
                         <div class="o_setting_left_pane">
                             <field name="concurrent_contracts" />
                         </div>

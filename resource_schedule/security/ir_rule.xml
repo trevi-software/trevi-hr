@@ -24,10 +24,7 @@
             ('employee_id.schedule_group_id.manager_ids.user_id', '=', user.id),
         ]
     </field>
-    <field
-            name="groups"
-            eval="[(4,ref('resource_schedule.group_scheduling_user'))]"
-        />
+    <field name="groups" eval="[(4,ref('resource_schedule.group_scheduling_user'))]" />
 </record>
 
 <record id="property_rule_schedule_admin" model="ir.rule">

@@ -6,10 +6,7 @@
         <field name="tz">GMT</field>
         <field name="type">monthly</field>
         <field name="mo_paydate">3</field>
-        <field
-            name="initial_period_date"
-            eval="datetime.now().strftime('%Y-%m-1')"
-        />
+        <field name="initial_period_date" eval="datetime.now().strftime('%Y-%m-1')" />
     </record>
 
     <!-- Amend demo contracts -->

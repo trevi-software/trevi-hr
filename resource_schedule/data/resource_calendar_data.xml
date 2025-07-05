@@ -2,19 +2,13 @@
 <odoo noupdate="1">
 
     <!-- Template for default workdetails used in upstream Odoo -->
-    <record
-        id="attendance_template_0"
-        model="resource.calendar.attendance.template"
-    >
+    <record id="attendance_template_0" model="resource.calendar.attendance.template">
         <field name="name">Morning</field>
         <field name="hour_from">8</field>
         <field name="hour_to">12</field>
         <field name="day_period">morning</field>
     </record>
-    <record
-        id="attendance_template_1"
-        model="resource.calendar.attendance.template"
-    >
+    <record id="attendance_template_1" model="resource.calendar.attendance.template">
         <field name="name">Afternoon</field>
         <field name="hour_from">13</field>
         <field name="hour_to">17</field>

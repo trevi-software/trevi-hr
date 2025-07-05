@@ -59,10 +59,7 @@
         <field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
         <field name="arch" type="xml">
             <data>
-                <xpath
-                    expr="//group[@name='salary_and_advantages']"
-                    position="inside"
-                >
+                <xpath expr="//group[@name='salary_and_advantages']" position="inside">
                     <field name="policy_group_id" required="1" />
                 </xpath>
             </data>

@@ -120,7 +120,7 @@
         <field name="name">resource.schedule.shift.tree</field>
         <field name="model">resource.schedule.shift</field>
         <field name="arch" type="xml">
-            <tree string="Scheduling">
+            <tree>
                 <field name="template_id" invisible="1" />
                 <field name="display_name" />
                 <field name="resource_id" />
