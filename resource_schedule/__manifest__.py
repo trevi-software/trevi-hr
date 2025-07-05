@@ -25,7 +25,6 @@
         "data/hr_schedule_cron.xml",
         "security/groups.xml",
         "security/ir.model.access.csv",
-        "security/ir_rule.xml",
         "views/menus.xml",
         "wizard/generate_schedules_view.xml",
         "wizard/validate_schedule_view.xml",
