@@ -23,36 +23,34 @@ class HrPolicy(models.Model):
 
     # Return records with latest date first
     @api.model
-    def get_latest_policy(self, policy_group, dToday=None):
+    def get_latest_policy(self, policy_group, today=None):
         """
-        Return an accrual policy with an effective date before dToday but
+        Return an accrual policy with an effective date before today but
         greater than all the others
         """
 
-        if not policy_group or not policy_group.accr_policy_ids or not dToday:
+        if not policy_group or not policy_group.accr_policy_ids or not today:
             return None
 
-        res = None
+        accrual_policy = None
         for policy in policy_group.accr_policy_ids:
-            dPolicy = fields.Date.from_string(policy.date)
-            if dPolicy <= dToday:
-                if res is None:
-                    res = policy
-                elif dPolicy > fields.Date.from_string(res.date):
-                    res = policy
+            policy_date = fields.Date.from_string(policy.date)
+            if policy_date <= today:
+                if accrual_policy is None or policy_date > fields.Date.from_string(accrual_policy.date):
+                    accrual_policy = policy
 
-        return res
+        return accrual_policy
 
     @api.model
     def try_calculate_accruals(self):
 
-        PolicyGroup = self.env["hr.policy.group"]
-        AccrualJob = self.env["hr.policy.line.accrual.job"]
+        policy_group = self.env["hr.policy.group"]
+        accrual_job = self.env["hr.policy.line.accrual.job"]
 
-        dToday = fields.Date.from_string(fields.Date.today())
+        today = fields.Date.from_string(fields.Date.today())
 
-        for pg in PolicyGroup.search([]):
-            accrual_policy = self.get_latest_policy(pg, dToday)
+        for pg in policy_group.search([]):
+            accrual_policy = self.get_latest_policy(pg, today)
             if accrual_policy is None:
                 continue
 
@@ -65,10 +63,10 @@ class HrPolicy(models.Model):
             for line in accrual_policy.line_ids:
                 d = line.get_last_job_date()
                 if d is None:
-                    line_jobs[line.id] = [dToday]
+                    line_jobs[line.id] = [today]
                 else:
                     line_jobs[line.id] = []
-                    while d < dToday:
+                    while d < today:
                         d += timedelta(days=1)
                         line_jobs[line.id].append(d)
 
@@ -80,15 +78,15 @@ class HrPolicy(models.Model):
                 if line.type not in ["calendar"]:
                     continue
 
-                for dJob in line_jobs[line.id]:
+                for job_date in line_jobs[line.id]:
 
                     # Create a Job for the accrual line
                     job_vals = {
-                        "name": dJob,
+                        "name": job_date,
                         "execution_time": fields.Datetime.now(),
                         "policy_line_id": line.id,
                     }
-                    job = AccrualJob.create(job_vals)
+                    job = accrual_job.create(job_vals)
 
                     employee_list = []
                     for contract in pg.contract_ids:
@@ -99,10 +97,10 @@ class HrPolicy(models.Model):
                         ):
                             continue
                         # contract has already ended
-                        if contract.date_end and contract.date_end < dJob:
+                        if contract.date_end and contract.date_end < job_date:
                             continue
                         line.calculate_and_deposit(
-                            contract.employee_id, job, dToday=dJob
+                            contract.employee_id, job, dToday=job_date
                         )
 
                         # An employee may have multiple valid contracts. Don't double-count.
@@ -110,17 +108,17 @@ class HrPolicy(models.Model):
                     job.end_time = datetime.now()
 
     @api.model
-    def do_accrual_by_period(self, policy_line, employee, dStart, dEnd, descr=None):
+    def do_accrual_by_period(self, policy_line, employee, start_date, end_date, descr=None):
 
         res = True
-        if not dStart or not dEnd or policy_line.type not in ["calendar"]:
+        if not start_date or not end_date or policy_line.type not in ["calendar"]:
             return False
 
-        dToday = dStart
-        while dToday <= dEnd:
+        today = start_date
+        while today <= end_date:
             policy_line.calculate_and_deposit(
-                employee, job_id=False, dToday=dToday, descr=descr
+                employee, job_id=False, dToday=today, descr=descr
             )
-            dToday += timedelta(days=+1)
+            today += timedelta(days=+1)
 
         return res
