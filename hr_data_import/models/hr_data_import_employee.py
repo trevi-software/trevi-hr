@@ -165,7 +165,7 @@ class ImportEmployee(models.Model):
         # Additional changes to system
         contracts = self.create_contracts(employees)
         contracts.signal_confirm()
-        # self.create_annual_leave_allocation(employees)
+        self.create_annual_leave_allocation(employees)
 
         return employees
 
@@ -203,24 +203,29 @@ class ImportEmployee(models.Model):
         records = {}
         for ee in employees:
             data = self.filtered(lambda s, ee=ee: s.related_employee_id.id == ee.id)
-            lv_days = self.calculate_leave_days_accrued(ee, data.hire_date)
-            # if data.anlv_earned != lv_days:
+            _lv_days = self.calculate_leave_days_accrued(ee, data.hire_date)
+            # if data.anlv_earned != _lv_days:
             #     raise UserError("Calculated annual leave (data, calculated) {} - {} != {}"
             #                     .format(
             #                         ee.name, data.anlv_earned, lv_days)
             #                     )
-            leave_allocation = {
-                "employee_id": ee.id,
-                "name": "Leave allocation for {} as of {}".format(
-                    data.name, date.today()
-                ),
-                "state": "draft",
-                "holiday_status_id": al_status_id,
-                "number_of_days": lv_days,
-            }
-            records.append(leave_allocation)
+            anlv_allocation = data.anlv_earned - data.anlv_used
+            if anlv_allocation > 0:
+                leave_allocation = {
+                    "employee_id": ee.id,
+                    "name": "Leave allocation for {} as of {}".format(
+                        data.name, date.today()
+                    ),
+                    "state": "draft",
+                    "holiday_status_id": al_status_id,
+                    "number_of_days": data.anlv_earned - data.anlv_used,
+                }
+                records.append(leave_allocation)
 
-        return self.env["hr.leave.allocation"].create(records)
+        if len(records) > 0:
+            allocations = self.env["hr.leave.allocation"].create(records)
+            allocations.action_confirm()
+            allocations.action_approve()
 
     def calculate_leave_days_accrued(self, employee, hire_date):
 
