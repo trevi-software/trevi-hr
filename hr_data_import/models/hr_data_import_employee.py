@@ -203,12 +203,6 @@ class ImportEmployee(models.Model):
         records = {}
         for ee in employees:
             data = self.filtered(lambda s, ee=ee: s.related_employee_id.id == ee.id)
-            _lv_days = self.calculate_leave_days_accrued(ee, data.hire_date)
-            # if data.anlv_earned != _lv_days:
-            #     raise UserError("Calculated annual leave (data, calculated) {} - {} != {}"
-            #                     .format(
-            #                         ee.name, data.anlv_earned, lv_days)
-            #                     )
             anlv_allocation = data.anlv_earned - data.anlv_used
             if anlv_allocation > 0:
                 leave_allocation = {
