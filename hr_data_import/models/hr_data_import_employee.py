@@ -163,8 +163,7 @@ class ImportEmployee(models.Model):
             )
 
         # Additional changes to system
-        contracts = self.create_contracts(employees)
-        contracts.signal_confirm()
+        self.create_contracts(employees)
         self.create_annual_leave_allocation(employees)
 
         return employees
@@ -194,7 +193,8 @@ class ImportEmployee(models.Model):
             if data_id.contract_type_id:
                 records.update({"contract_type_id": data_id.contract_type_id.id})
             contracts_list.append(records)
-        return self.env["hr.contract"].create(contracts_list)
+
+        self.env["hr.contract"].create(contracts_list).signal_confirm()
 
     def create_annual_leave_allocation(self, employees):
         al_status_id = (
@@ -217,11 +217,11 @@ class ImportEmployee(models.Model):
                 records.append(leave_allocation)
 
         if len(records) > 0:
-            allocations = self.env["hr.leave.allocation"].create(records)
-            allocations.action_confirm()
-            allocations.action_approve()
+            self.env["hr.leave.allocation"].create(
+                records
+            ).action_confirm().action_approve()
 
-    def calculate_leave_days_accrued(self, employee, hire_date):
+    def get_leave_days_accrued(self, employee, hire_date):
 
         today = date.today()
         accrued_todate = 0
