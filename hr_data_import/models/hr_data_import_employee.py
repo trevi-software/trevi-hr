@@ -194,8 +194,8 @@ class ImportEmployee(models.Model):
                 records.update({"contract_type_id": data_id.contract_type_id.id})
             contracts_list.append(records)
 
-        contracts = self.env["hr.contract"].create(contracts_list)
-        contracts.signal_confirm()
+        self.env["hr.contract"].create(contracts_list) \
+                               .signal_confirm()
 
     def create_annual_leave_allocation(self, employees):
         al_status_id = (
@@ -218,9 +218,9 @@ class ImportEmployee(models.Model):
                 records.append(leave_allocation)
 
         if len(records) > 0:
-            allocations = self.env["hr.leave.allocation"].create(records)
-            allocations.action_confirm()
-            allocations.action_approve()
+            self.env["hr.leave.allocation"].create(records)  \
+                                           .action_confirm() \
+                                           .action_approve()
 
     def get_leave_days_accrued(self, employee, hire_date):
 
