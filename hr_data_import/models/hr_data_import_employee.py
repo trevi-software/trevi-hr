@@ -201,7 +201,7 @@ class ImportEmployee(models.Model):
         if len(leave_types) == 0:
             raise MissingError(_("'hr.leave.type' with name 'Annual Leave' not found"))
         al_status_id = leave_types[0].id
-        
+
         records = []
         for ee in employees:
             data = self.filtered(lambda s, ee=ee: s.related_employee_id.id == ee.id)
