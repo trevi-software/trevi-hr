@@ -4,7 +4,7 @@
 from datetime import date, timedelta
 
 from odoo import _, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import MissingError, UserError
 
 
 class ImportEmployee(models.Model):
@@ -197,10 +197,12 @@ class ImportEmployee(models.Model):
         self.env["hr.contract"].create(contracts_list).signal_confirm()
 
     def create_annual_leave_allocation(self, employees):
-        al_status_id = (
-            self.env["hr.leave.type"].search([("name", "=", "Annual Leave")])[0].id
-        )
-        records = {}
+        leave_types = self.env["hr.leave.type"].search([("name", "=", "Annual Leave")])
+        if len(leave_types) == 0:
+            raise MissingError(_("'hr.leave.type' with name 'Annual Leave' not found"))
+        al_status_id = leave_types[0].id
+        
+        records = []
         for ee in employees:
             data = self.filtered(lambda s, ee=ee: s.related_employee_id.id == ee.id)
             anlv_allocation = data.anlv_earned - data.anlv_used
