@@ -219,9 +219,9 @@ class ImportEmployee(models.Model):
                 records.append(leave_allocation)
 
         if len(records) > 0:
-            self.env["hr.leave.allocation"].create(
-                records
-            ).action_confirm().action_approve()
+            leaves = self.env["hr.leave.allocation"].create(records)
+            leaves.action_confirm()
+            leaves.action_approve()
 
     def get_leave_days_accrued(self, employee, hire_date):
 
