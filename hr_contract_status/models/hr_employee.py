@@ -31,8 +31,8 @@ class HrEmployee(models.Model):
         self,
         date_from,
         date_to,
-        states=["open"],
-        kanban_state=False,  # noqa: B006
+        states=["open"],  # noqa: B006
+        kanban_state=False,
     ):  # pylint: disable=W0102
         # Over-ride base class method to includes Closed/Ended contracts. Useful
         # when multiple consecutive contracts occur in a payroll period.
