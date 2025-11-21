@@ -43,7 +43,7 @@ class TestContractInit(common.TransactionCase):
     def test_load_latest_values(self):
         """Initial values are loaded from the latest values"""
 
-        countInits = self.HrContractInit.search_count([])
+        count_inits = self.HrContractInit.search_count([])
 
         # Create two init values
         self.HrContractInit.create(
@@ -53,7 +53,7 @@ class TestContractInit(common.TransactionCase):
                 "trial_period": 45,
             }
         )
-        rightInit = self.HrContractInit.create(
+        right_init = self.HrContractInit.create(
             {
                 "name": "Today",
                 "date": fields.Date.today(),
@@ -69,54 +69,54 @@ class TestContractInit(common.TransactionCase):
             }
         )
         delta = (contract.trial_date_end - contract.trial_date_start).days
-        cInits = self.HrContractInit.search([])
-        self.assertEqual(countInits + 2, len(cInits))
-        self.assertEqual(delta, rightInit.trial_period)
+        c_inits = self.HrContractInit.search([])
+        self.assertEqual(count_inits + 2, len(c_inits))
+        self.assertEqual(delta, right_init.trial_period)
 
     def test_delete_locked(self):
         """Unlinking locked record raises an error"""
 
-        cInit = self.HrContractInit.create(
+        c_init = self.HrContractInit.create(
             {
                 "name": "Way in the past",
                 "date": "2000-01-01",
                 "trial_period": 45,
             }
         )
-        cInit.lock()
+        c_init.lock()
         with self.assertRaises(UserError):
-            cInit.unlink()
+            c_init.unlink()
 
     def test_write_locked(self):
         """Updating a locked record raises a UserError"""
 
-        cInit = self.HrContractInit.create(
+        c_init = self.HrContractInit.create(
             {
                 "name": "Way in the past",
                 "date": "2000-01-01",
                 "trial_period": 45,
             }
         )
-        cInit.lock()
+        c_init.lock()
         with self.assertRaises(UserError):
-            cInit.trial_period = 100
+            c_init.trial_period = 100
 
     def test_lock_then_unlock(self):
         """Lock a record then unlock it and write to it"""
 
-        cInit = self.HrContractInit.create(
+        c_init = self.HrContractInit.create(
             {
                 "name": "Way in the past",
                 "date": "2000-01-01",
                 "trial_period": 45,
             }
         )
-        cInit.lock()
+        c_init.lock()
         with self.assertRaises(UserError):
-            cInit.trial_period = 100
-        cInit.unlock()
+            c_init.trial_period = 100
+        c_init.unlock()
         try:
-            cInit.trial_period = 80
+            c_init.trial_period = 80
         except UserError:
             self.fail("An unexpected UserError exception was raised!")
 
@@ -140,7 +140,7 @@ class TestContractInit(common.TransactionCase):
         self.assertEqual(1000, contract.wage)
 
     def test_get_wage_by_job_id(self):
-        """Creating a contract with a job that has an applicable initial value succeeds"""
+        """Creating contract with a job that has an applicable initial value succeeds"""
 
         self.HrContractInit.create(
             {

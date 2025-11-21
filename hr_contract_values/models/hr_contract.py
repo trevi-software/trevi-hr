@@ -57,7 +57,8 @@ class ContractInit(models.Model):
             if record.locked:
                 raise UserError(
                     _(
-                        "You may not delete a record that is locked. You must unlock it first."
+                        "You may not delete a record that is locked. "
+                        "You must unlock it first."
                     )
                 )
         return super().unlink()
@@ -65,12 +66,12 @@ class ContractInit(models.Model):
     def write(self, vals):
         for record in self:
             if record.locked:
-                if "locked" in vals.keys():
-                    if vals["locked"] is False:
-                        continue
+                if "locked" in vals.keys() and vals["locked"] is False:
+                    continue
                 raise UserError(
                     _(
-                        "You may not update a record that is locked. You must unlock it first."
+                        "You may not update a record that is locked. "
+                        "You must unlock it first."
                     )
                 )
         return super().write(vals)

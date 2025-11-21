@@ -68,15 +68,15 @@ class HrJob(models.Model):
     expected_employees = fields.Integer(
         compute="_compute_employees",
         string="Total Forecasted Employees",
-        help="Expected number of employees for this job position after new recruitment.",
+        help="Expected number of employees for this position after new recruitment.",
     )
 
     @api.depends("no_of_recruitment", "employee_ids.job_id", "employee_ids.active")
     def _compute_employees(self):
         contract_data = self.env["hr.contract"]._read_group(
             [("job_id", "in", self.ids), ("date_end", "<=", fields.Date.today())],
-            ['job_id'],
-            ['__count'],
+            ["job_id"],
+            ["__count"],
         )
         result = {data["job_id"][0]: data["job_id_count"] for data in contract_data}
         for record in self:
