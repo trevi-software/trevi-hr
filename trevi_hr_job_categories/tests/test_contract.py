@@ -12,7 +12,7 @@ from odoo.addons.hr_contract.tests.test_contract import TestHrContracts
 class TestContract(TestHrContracts):
     @classmethod
     def setUpClass(cls):
-        super(TestContract, cls).setUpClass()
+        super().setUpClass()
 
         # -- models
         cls.Category = cls.env["hr.employee.category"]
