@@ -8,10 +8,10 @@
             <xpath expr="//sheet/group[1]" position="before">
                 <group string="Denominations">
                     <field name="denomination_ids" nolabel="1">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="value" />
                             <field name="ratio" />
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </xpath>
