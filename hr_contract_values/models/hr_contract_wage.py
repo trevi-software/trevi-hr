@@ -9,7 +9,6 @@ from odoo.tools.translate import _
 
 
 class InitWage(models.Model):
-
     _name = "hr.contract.init.wage"
     _description = "Starting Wages"
     _sql_constraints = [
@@ -39,7 +38,6 @@ class InitWage(models.Model):
     )
 
     def unlink(self):
-
         data = self.read(["contract_init_id"])
         for d in data:
             if not d.get("contract_init_id", False):
@@ -56,4 +54,4 @@ class InitWage(models.Model):
                         'You may not a delete a record that is not in a "Draft" state'
                     )
                 )
-        return super(InitWage, self).unlink()
+        return super().unlink()

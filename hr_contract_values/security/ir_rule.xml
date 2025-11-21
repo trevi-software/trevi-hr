@@ -1,6 +1,5 @@
 <?xml version="1.0" ?>
 <odoo>
-
     <record model="ir.rule" id="contract_init_shared_company_rule">
         <field name="name">Shared Contract Initial Values Record: multi-company</field>
         <field name="model_id" ref="model_hr_contract_init" />
@@ -9,5 +8,4 @@
             ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
         </field>
     </record>
-
 </odoo>
