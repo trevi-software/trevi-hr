@@ -12,7 +12,7 @@ CODE = "XXX"
 class TestHrLeaveType(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
-        super(TestHrLeaveType, cls).setUpClass()
+        super().setUpClass()
 
         cls.HrLeaveType = cls.env["hr.leave.type"]
         cls.company1 = cls.env["res.company"].create({"name": "A company"})
