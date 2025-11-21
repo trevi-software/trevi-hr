@@ -11,7 +11,6 @@ from odoo import _, api, fields, models
 
 
 class HrContract(models.Model):
-
     _name = "hr.contract"
     _inherit = "hr.contract"
 
@@ -94,7 +93,6 @@ class HrContract(models.Model):
 
     @api.constrains("employee_id", "state", "kanban_state", "date_start", "date_end")
     def _check_current_contract(self):
-
         allow = (
             self.env["ir.config_parameter"]
             .sudo()
@@ -102,7 +100,7 @@ class HrContract(models.Model):
         )
         if allow:
             return
-        return super(HrContract, self)._check_current_contract()
+        return super()._check_current_contract()
 
     def _track_subtype(self, init_values):
         self.ensure_one()
@@ -111,11 +109,10 @@ class HrContract(models.Model):
                 return self.env.ref("hr_contract_status.mt_alert_trial_ending")
             elif self.state == "contract_ending":
                 return self.env.ref("hr_contract_status.mt_alert_contract_ending")
-        return super(HrContract, self)._track_subtype(init_values)
+        return super()._track_subtype(init_values)
 
     @api.model
     def update_state(self):
-
         # New contract with trial period
         self.search(
             [
@@ -213,7 +210,7 @@ class HrContract(models.Model):
             ]
         ).write({"state_ending": False})
 
-        return super(HrContract, self).update_state()
+        return super().update_state()
 
     def condition_trial_period(self):
         self.ensure_one()
@@ -243,4 +240,4 @@ class HrContract(models.Model):
     def write(self, vals):
         if vals.get("state") == "trial":
             self._assign_open_contract()
-        return super(HrContract, self).write(vals)
+        return super().write(vals)
