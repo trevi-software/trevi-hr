@@ -62,7 +62,7 @@ class ContractInit(models.Model):
                         "You may not delete a record that is locked. You must unlock it first."
                     )
                 )
-        return super(ContractInit, self).unlink()
+        return super().unlink()
 
     def write(self, vals):
         for record in self:
@@ -75,7 +75,7 @@ class ContractInit(models.Model):
                         "You may not update a record that is locked. You must unlock it first."
                     )
                 )
-        return super(ContractInit, self).write(vals)
+        return super().write(vals)
 
 
 class HrContract(models.Model):
@@ -162,7 +162,7 @@ class HrContract(models.Model):
                 if _wage != 0:
                     vals.update({"wage": _wage})
 
-        return super(HrContract, self).create(vals_list)
+        return super().create(vals_list)
 
     @api.onchange("job_id")
     def onchange_job(self):

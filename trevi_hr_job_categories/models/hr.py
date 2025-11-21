@@ -56,7 +56,7 @@ class HrContract(models.Model):
     @api.model
     def create(self, vals):
 
-        res = super(HrContract, self).create(vals)
+        res = super().create(vals)
 
         self._tag_employees(vals.get("employee_id", False), vals.get("job_id", False))
         return res
@@ -64,7 +64,7 @@ class HrContract(models.Model):
     def write(self, vals):
 
         prev_data = self.read(["job_id"])
-        res = super(HrContract, self).write(vals)
+        res = super().write(vals)
 
         # Go through each record and delete tags associated with the previous job, then
         # add the tags of the new job.

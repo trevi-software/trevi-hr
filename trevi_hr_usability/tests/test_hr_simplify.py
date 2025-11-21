@@ -11,7 +11,7 @@ from odoo.tests.common import Form, TransactionCase
 class TestHrSimplify(TransactionCase):
     @classmethod
     def setUpClass(cls):
-        super(TestHrSimplify, cls).setUpClass()
+        super().setUpClass()
 
         # -- models
         cls.Contract = cls.env["hr.contract"]
