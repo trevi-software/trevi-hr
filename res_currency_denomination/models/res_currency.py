@@ -9,7 +9,6 @@ from odoo.tools.float_utils import float_compare
 
 
 class ResCurrencyDenomination(models.Model):
-
     _name = "res.currency.denomination"
     _description = "Currency Denomination"
     _rec_name = "value"
@@ -27,7 +26,6 @@ class ResCurrencyDenomination(models.Model):
 
 
 class ResCurrency(models.Model):
-
     _inherit = "res.currency"
 
     denomination_ids = fields.One2many(
@@ -37,7 +35,6 @@ class ResCurrency(models.Model):
     )
 
     def get_denomination_list(self):
-
         self.ensure_one()
         denominations = []
         smallest_note = 1

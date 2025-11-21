@@ -6,7 +6,6 @@ from odoo import api, fields, models
 
 
 class HrJob(models.Model):
-
     _inherit = "hr.job"
 
     category_ids = fields.Many2many(
@@ -19,13 +18,11 @@ class HrJob(models.Model):
 
 
 class HrContract(models.Model):
-
     _name = "hr.contract"
     _inherit = "hr.contract"
 
     @api.model
     def _remove_tags(self, employee_id, job_id):
-
         if not employee_id or not job_id:
             return
 
@@ -40,7 +37,6 @@ class HrContract(models.Model):
 
     @api.model
     def _tag_employees(self, employee_id, job_id):
-
         if not employee_id or not job_id:
             return
 
@@ -55,16 +51,14 @@ class HrContract(models.Model):
 
     @api.model
     def create(self, vals):
-
-        res = super(HrContract, self).create(vals)
+        res = super().create(vals)
 
         self._tag_employees(vals.get("employee_id", False), vals.get("job_id", False))
         return res
 
     def write(self, vals):
-
         prev_data = self.read(["job_id"])
-        res = super(HrContract, self).write(vals)
+        res = super().write(vals)
 
         # Go through each record and delete tags associated with the previous job, then
         # add the tags of the new job.

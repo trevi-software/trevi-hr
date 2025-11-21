@@ -13,7 +13,6 @@ class HrAttendance(models.Model):
 
     @api.depends("check_in")
     def _compute_day(self):
-
         for att in self:
             local_tz = timezone(att.employee_id.tz)
             utc_check_in = utc.localize(att.check_in)

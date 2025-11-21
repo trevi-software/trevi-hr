@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo noupdate="1">
-
     <!-- Euros -->
     <record id="01eucent" model="res.currency.denomination">
         <field name="currency_id" ref="base.EUR" />

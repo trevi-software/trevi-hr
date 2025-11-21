@@ -12,7 +12,7 @@ from odoo.tests import common
 class TestContract(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
-        super(TestContract, cls).setUpClass()
+        super().setUpClass()
 
         cls.IrConfig = cls.env["ir.config_parameter"]
         cls.HrEmployee = cls.env["hr.employee"]

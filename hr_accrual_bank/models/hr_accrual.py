@@ -6,7 +6,6 @@ from odoo import fields, models
 
 
 class HrAccrual(models.Model):
-
     _name = "hr.accrual"
     _description = "Accrual"
 
@@ -20,7 +19,6 @@ class HrAccrual(models.Model):
     )
 
     def get_balance(self, employee_id, date=None):
-
         if date is None:
             date = fields.Date.today()
 
@@ -36,12 +34,10 @@ class HrAccrual(models.Model):
         return res
 
     def deposit(self, employee_id, amount, date, name=None):
-
         line_obj = self.env["hr.accrual.line"]
 
         res = []
         for accrual in self:
-
             lv = False
             if accrual.holiday_status_id:
                 leave_allocation = {
@@ -72,7 +68,6 @@ class HrAccrual(models.Model):
 
 
 class HrAccrualLine(models.Model):
-
     _name = "hr.accrual.line"
     _description = "Accrual Line"
     _rec_name = "date"

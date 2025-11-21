@@ -22,7 +22,6 @@ class TestHrAttendance(common.TransactionCase):
         )
 
     def test_utc_and_tz_match(self):
-
         check_in = datetime(2022, 4, 1, 23, 59, 59)
         check_out = datetime(2022, 4, 2, 8, 0)
         att = self.Attendance.create(
@@ -56,7 +55,6 @@ class TestHrAttendance(common.TransactionCase):
         )
 
     def test_utc_and_tz_mismatch(self):
-
         att = self.Attendance.create(
             {
                 "employee_id": self.sally.id,
@@ -72,7 +70,6 @@ class TestHrAttendance(common.TransactionCase):
         )
 
     def test_update(self):
-
         att = self.Attendance.create(
             {
                 "employee_id": self.sally.id,

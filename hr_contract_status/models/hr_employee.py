@@ -28,9 +28,12 @@ class HrEmployee(models.Model):
             )
 
     def _get_contracts(
-        self, date_from, date_to, states=["open"], kanban_state=False  # noqa: B006
+        self,
+        date_from,
+        date_to,
+        states=["open"],
+        kanban_state=False,  # noqa: B006
     ):  # pylint: disable=W0102
-
         # Over-ride base class method to includes Closed/Ended contracts. Useful
         # when multiple consecutive contracts occur in a payroll period.
         #
@@ -38,6 +41,6 @@ class HrEmployee(models.Model):
         if states == default_states:
             states = ["trial", "open", "close"]
 
-        return super(HrEmployee, self)._get_contracts(
+        return super()._get_contracts(
             date_from, date_to, states=states, kanban_state=False
         )

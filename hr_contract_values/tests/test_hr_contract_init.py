@@ -10,7 +10,7 @@ from odoo.tests import common
 class TestContractInit(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
-        super(TestContractInit, cls).setUpClass()
+        super().setUpClass()
 
         cls.HrEmployee = cls.env["hr.employee"]
         cls.HrContract = cls.env["hr.contract"]
@@ -210,7 +210,6 @@ class TestContractInit(common.TransactionCase):
         self.assertEqual(2000, contract.wage)
 
     def test_create_multi(self):
-
         self.HrContractInit.create(
             [
                 {

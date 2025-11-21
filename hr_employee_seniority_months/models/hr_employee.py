@@ -11,7 +11,6 @@ from odoo import fields, models
 
 
 class HrEmployee(models.Model):
-
     _inherit = "hr.employee"
 
     def _get_contracts_list(self):
@@ -25,7 +24,6 @@ class HrEmployee(models.Model):
         return contracts
 
     def _get_days_in_month(self, d):
-
         last_date = (
             d
             - timedelta(days=(d.day - 1))
@@ -74,7 +72,6 @@ class HrEmployee(models.Model):
         return round(float((delta.years * 12) + delta.months) + date_part, 2)
 
     def _compute_employed_months(self):
-
         for ee in self:
             ee.length_of_service = ee.get_months_service_to_date()
 
@@ -83,7 +80,6 @@ class HrEmployee(models.Model):
     )
 
     def get_employment_date(self):
-
         self.ensure_one()
 
         contracts = self._get_contracts_list()
