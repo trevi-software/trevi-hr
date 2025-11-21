@@ -21,7 +21,7 @@
     />
 
     <record id="hr_contract_view_tree" model="ir.ui.view">
-        <field name="name">hr.contract.tree.state</field>
+        <field name="name">hr.contract.list.state</field>
         <field name="model">hr.contract</field>
         <field name="inherit_id" ref="hr_contract.hr_contract_view_tree" />
         <field name="arch" type="xml">
@@ -37,23 +37,23 @@
     </record>
 
     <record id="view_expiring_contracts_tree" model="ir.ui.view">
-        <field name="name">hr.contract.contract.expire.tree</field>
+        <field name="name">hr.contract.contract.expire.list</field>
         <field name="model">hr.contract</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="employee_id" />
                 <field name="department_id" />
                 <field name="job_id" />
                 <field name="trial_date_end" />
                 <field name="date_end" />
                 <field name="state" />
-            </tree>
+            </list>
         </field>
     </record>
     <record id="open_expiring_contracts" model="ir.actions.act_window">
         <field name="name">Ending Trials &amp; Contracts</field>
         <field name="res_model">hr.contract</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="view_expiring_contracts_tree" />
         <field
             name="domain"
@@ -73,10 +73,10 @@
     />
 
     <record id="view_draft_contracts_tree" model="ir.ui.view">
-        <field name="name">hr.contract.contract.draft.tree</field>
+        <field name="name">hr.contract.contract.draft.list</field>
         <field name="model">hr.contract</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="employee_id" />
                 <field name="department_id" />
                 <field name="job_id" />
@@ -84,13 +84,13 @@
                 <field name="trial_date_end" />
                 <field name="date_end" />
                 <field name="state" />
-            </tree>
+            </list>
         </field>
     </record>
     <record id="open_draft_contracts" model="ir.actions.act_window">
         <field name="name">Contracts to be Approved</field>
         <field name="res_model">hr.contract</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="view_draft_contracts_tree" />
         <field name="domain">[('state','in',['draft'])]</field>
         <field name="help" type="html">
