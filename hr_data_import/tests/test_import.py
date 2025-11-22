@@ -71,6 +71,7 @@ class TestImport(common.SavepointCase):
                 "name": "Default Policy Group",
             }
         )
+        cls.default_rest_day = "Friday"
         cls.data = cls.DataImport.create(
             [
                 {
@@ -87,6 +88,7 @@ class TestImport(common.SavepointCase):
                     "struct_id": cls.pay_structure.id,
                     "pps_id": cls.pps.id,
                     "policy_group_id": cls.policy_group.id,
+                    "rest_day": cls.default_rest_day,
                 },
                 {
                     "name": "John Doe",
@@ -119,6 +121,7 @@ class TestImport(common.SavepointCase):
             "struct_id": cls.pay_structure.id,
             "pps_id": cls.pps.id,
             "policy_group_id": cls.policy_group.id,
+            "rest_day": cls.default_rest_day,
         }
 
     def test_workflow(self):
@@ -178,6 +181,18 @@ class TestImport(common.SavepointCase):
                     "trial",
                     f"Employee's contract is in 'trial' state: {rec.name}",
                 )
+            if rec.rest_day:
+                self.assertEqual(
+                    rec.related_employee_id.resource_id.dayoff_ids[0].name,
+                    self.default_rest_day,
+                    f"Employee's rest day matches imported record: {rec.name}",
+                )
+            else:
+                self.assertFalse(
+                    rec.related_employee_id.resource_id.dayoff_ids,
+                    f"Employee's rest day is empty as no value was imported: {rec.name}",
+                )
+
             self.assertEqual(
                 rec.state,
                 "imported",
@@ -219,5 +234,16 @@ class TestImport(common.SavepointCase):
         self.assertEqual(
             ee.contract_ids[0].resource_calendar_id,
             self.std_calendar,
+            f"Calendar correctly set on employee contract: {ee.name}",
+        )
+
+    def test_rest_day(self):
+        self.data[1].rest_day = self.default_rest_day
+        self.data.import_records()
+        ee = self.Employee.search([("name", "=", self.data[1].name)])
+        self.assertTrue(ee, f"Found employee: {self.data[1].name}")
+        self.assertEqual(
+            ee.resource_id.dayoff_ids[0].name,
+            self.default_rest_day,
             f"Calendar correctly set on employee contract: {ee.name}",
         )
