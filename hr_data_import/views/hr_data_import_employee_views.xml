@@ -24,6 +24,11 @@
                     name="state_imported"
                     domain="[('state', '=', 'imported')]"
                 />
+                <filter
+                    string="State: Updated"
+                    name="state_updated"
+                    domain="[('state', '=', 'updated')]"
+                />
                 <separator />
                 <group expand="0" string="Group By">
                     <filter
@@ -75,6 +80,7 @@
                 <field name="hire_date" />
                 <field name="department_id" />
                 <field name="job_id" />
+                <field name="rest_day" />
                 <field name="date_start" />
                 <field name="wage" />
                 <field name="contract_type_id" />
@@ -116,6 +122,7 @@
                             <field name="private_phone" />
                             <field name="hire_date" />
                             <field name="resource_calendar_id" />
+                            <field name="rest_day" />
                         </group>
                         <group>
                             <field name="wage" />
@@ -172,6 +179,18 @@
         <field name="binding_view_types">list,form</field>
         <field name="state">code</field>
         <field name="code">action = records.action_import_employees()</field>
+    </record>
+
+    <record id="action_update_records" model="ir.actions.server">
+        <field name="name">Update HR Records</field>
+        <field name="model_id" ref="hr_data_import.model_hr_data_import_employee" />
+        <field
+            name="binding_model_id"
+            ref="hr_data_import.model_hr_data_import_employee"
+        />
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_update_employees()</field>
     </record>
 
 </odoo>

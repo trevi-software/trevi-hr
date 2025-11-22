@@ -84,7 +84,10 @@ class ImportEmployee(models.Model):
         comodel_name="hr.policy.group",
     )
     related_employee_id = fields.Many2one("hr.employee")
-    state = fields.Selection([("new", "New"), ("imported", "Imported")], default="new")
+    state = fields.Selection(
+        [("new", "New"), ("imported", "Imported"), ("updated", "Updated")],
+        default="new",
+    )
     company_id = fields.Many2one("res.company", default=lambda s: s.env.company)
     currency_id = fields.Many2one(
         string="Currency", related="company_id.currency_id", readonly=True
@@ -94,6 +97,18 @@ class ImportEmployee(models.Model):
     anlv_used = fields.Float("Used", digits=DA_LEAVE, default=0.00)
     anlv_remain = fields.Float("Remaining", digits=DA_LEAVE, default=0.00)
     anlv_date = fields.Date("As of")
+    rest_day = fields.Selection(
+        selection=[
+            ("Monday", "Monday"),
+            ("Tuesday", "Tuesday"),
+            ("Wednesday", "Wednesday"),
+            ("Thursday", "Thursday"),
+            ("Friday", "Friday"),
+            ("Saturday", "Saturday"),
+            ("Sunday", "Sunday"),
+            ("out", False)
+        ]
+    )
 
     def action_import_employees(self):
         if self.filtered(lambda so: so.state != "new"):
@@ -101,11 +116,14 @@ class ImportEmployee(models.Model):
         self.import_records()
         self.write({"state": "imported"})
 
+    def action_update_employees(self):
+        self.update_records()
+        self.write({"state": "updated"})
+
     def import_records(self):
 
         partner_obj = self.env["res.partner"]
 
-        # Create the basic hr.employee record
         values_list = []
         for rec in self:
             # Create contact
@@ -119,6 +137,8 @@ class ImportEmployee(models.Model):
                     "vat": (rec.taxid) and rec.taxid or False,
                 }
             )
+
+            # Create the basic hr.employee record
             val = {
                 "name": rec.name,
                 "import_data_id": rec.id,
@@ -165,6 +185,18 @@ class ImportEmployee(models.Model):
         # Additional changes to system
         self.create_contracts(employees)
         self.create_annual_leave_allocation(employees)
+        self.set_rest_day(employees)
+
+        return employees
+
+    def update_records(self):
+
+        employees = self.env["hr.employee"].search(
+            ["id", "in", self.mapped("related_employee_id.id")]
+        )
+
+        # Additional changes to system
+        self.set_rest_day(employees)
 
         return employees
 
@@ -244,3 +276,31 @@ class ImportEmployee(models.Model):
             accrued_todate += (delta.days / 30) * monthly_accrual
 
         return accrued_todate
+
+    def set_rest_day(self, employees):
+
+        mon = self.env.ref("resource_schedule.wd_mon")
+        tue = self.env.ref("resource_schedule.wd_tue")
+        wed = self.env.ref("resource_schedule.wd_wed")
+        thu = self.env.ref("resource_schedule.wd_thu")
+        fri = self.env.ref("resource_schedule.wd_fri")
+        sat = self.env.ref("resource_schedule.wd_sat")
+        sun = self.env.ref("resource_schedule.wd_sun")
+
+        for ee in employees:
+            resource = ee.resource_id
+            data_id = self.filtered(lambda s, ee=ee: s.related_employee_id.id == ee.id)
+            if data_id.rest_day == "Monday" and mon not in resource.dayoff_ids:
+                resource.dayoff_ids = [(4, mon.id)]
+            elif data_id.rest_day == "Tuesday" and tue not in resource.dayoff_ids:
+                resource.dayoff_ids = [(4, tue.id)]
+            elif data_id.rest_day == "Wednesday" and wed not in resource.dayoff_ids:
+                resource.dayoff_ids = [(4, wed.id)]
+            elif data_id.rest_day == "Thursday" and thu not in resource.dayoff_ids:
+                resource.dayoff_ids = [(4, thu.id)]
+            elif data_id.rest_day == "Friday" and fri not in resource.dayoff_ids:
+                resource.dayoff_ids = [(4, fri.id)]
+            elif data_id.rest_day == "Saturday" and sat not in resource.dayoff_ids:
+                resource.dayoff_ids = [(4, sat.id)]
+            elif data_id.rest_day == "Sunday" and sun not in resource.dayoff_ids:
+                resource.dayoff_ids = [(4, sun.id)]
