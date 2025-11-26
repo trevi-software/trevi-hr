@@ -192,7 +192,7 @@ class ImportEmployee(models.Model):
     def update_records(self):
 
         employees = self.env["hr.employee"].search(
-            ["id", "in", self.mapped("related_employee_id.id")]
+            [("id", "in", self.mapped("related_employee_id.id"))]
         )
 
         # Additional changes to system
