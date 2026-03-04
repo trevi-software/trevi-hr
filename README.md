@@ -1,4 +1,6 @@
 
+
+# trevi-hr
 <!-- /!\ Non OCA Context : Set here the badge of your runbot / runboat instance. -->
 [![Pre-commit Status](https://github.com/trevi-software/trevi-hr/actions/workflows/pre-commit.yml/badge.svg?branch=14.0)](https://github.com/trevi-software/trevi-hr/actions/workflows/pre-commit.yml?query=branch%3A14.0)
 [![Build Status](https://github.com/trevi-software/trevi-hr/actions/workflows/test.yml/badge.svg?branch=14.0)](https://github.com/trevi-software/trevi-hr/actions/workflows/test.yml?query=branch%3A14.0)
@@ -7,9 +9,13 @@
 
 <!-- /!\ do not modify above this line -->
 
+<<<<<<< before updating
 # TREVI Human Resource addons for Odoo
 
 This repository contains Human Resource addons developed by TREVI Software
+=======
+Odoo HR Addons
+>>>>>>> after updating
 
 <!-- /!\ do not modify below this line -->
 
