@@ -21,5 +21,4 @@
         "security/ir.model.access.csv",
         "views/hr_policy_presence_view.xml",
     ],
-    "installable": True,
 }

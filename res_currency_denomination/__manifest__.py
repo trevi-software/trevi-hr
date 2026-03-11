@@ -18,5 +18,4 @@
         "data/res_currency_denomination.xml",
         "views/res_currency_view.xml",
     ],
-    "installable": True,
 }

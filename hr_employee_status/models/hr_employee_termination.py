@@ -32,7 +32,6 @@ class Separation(models.Model):
         states={"draft": [("readonly", False)]},
     )
     reason_id = fields.Many2one(
-        string="Reason",
         comodel_name="hr.employee.termination.reason",
         required=True,
         readonly=True,
@@ -40,10 +39,9 @@ class Separation(models.Model):
     )
     notes = fields.Text(readonly=True, states={"draft": [("readonly", False)]})
     employee_id = fields.Many2one(
-        string="Employee", comodel_name="hr.employee", required=True, readonly=True
+        comodel_name="hr.employee", required=True, readonly=True
     )
     department_id = fields.Many2one(
-        string="Department",
         comodel_name="hr.department",
         related="employee_id.department_id",
         store=True,
@@ -61,7 +59,6 @@ class Separation(models.Model):
         readonly=True,
     )
     company_id = fields.Many2one(
-        string="Company",
         comodel_name="res.company",
         default=lambda self: self.env.company,
         groups="base.group_multi_company",

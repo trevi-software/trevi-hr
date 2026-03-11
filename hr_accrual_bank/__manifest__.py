@@ -20,5 +20,4 @@
         "data/accrual_data.xml",
         "views/hr_accrual_view.xml",
     ],
-    "installable": True,
 }

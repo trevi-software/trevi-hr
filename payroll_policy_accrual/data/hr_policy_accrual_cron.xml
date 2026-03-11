@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
-    <record model="ir.cron" id="hr_accrual_policy_cron">
+    <record id="hr_accrual_policy_cron" model="ir.cron">
         <field name="name">Accrual Policies: Update</field>
         <field name="model_id" ref="model_hr_policy_accrual" />
         <field name="type">ir.actions.server</field>
@@ -12,9 +12,9 @@
             name="nextcall"
             eval="(DateTime.now() + timedelta(hours= +(24-DateTime.now().hour))).strftime('%Y-%m-%d %H:%M:%S')"
         />
-        <field name="interval_number">1</field>
+        <field name="interval_number" eval="1" />
         <field name="interval_type">days</field>
-        <field name="numbercall">-1</field>
+        <field name="numbercall" eval="-1" />
     </record>
 
 </odoo>

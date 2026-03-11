@@ -58,7 +58,7 @@ class BenefitAdvantage(models.Model):
         )
     ]
 
-    benefit_id = fields.Many2one(string="Benefit", comodel_name="hr.benefit")
+    benefit_id = fields.Many2one(comodel_name="hr.benefit")
     effective_date = fields.Date(required=True)
     min_employed_days = fields.Integer(
         string="Minimum Employed Days",

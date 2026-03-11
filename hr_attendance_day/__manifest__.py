@@ -17,5 +17,4 @@
     "data": [
         "views/hr_attendance_view.xml",
     ],
-    "installable": True,
 }

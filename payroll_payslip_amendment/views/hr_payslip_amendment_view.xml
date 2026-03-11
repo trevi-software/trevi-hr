@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
     <!-- Pay Slip Amendment -->
@@ -75,8 +75,8 @@
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem
-        action="action_payslip_amendment"
         id="menu_payslip_amendment"
+        action="action_payslip_amendment"
         parent="payroll.payroll_menu_root"
         groups="payroll.group_payroll_user"
         sequence="50"

@@ -51,9 +51,8 @@ class ProcessingWizard(models.TransientModel):
         readonly=True,
     )
     payroll_period_id = fields.Many2one(
-        string="Payroll Period",
         comodel_name="hr.payroll.period",
-        default=_get_pp,
+        default=lambda self: self._get_pp,
         readonly=True,
     )
 
@@ -64,7 +63,7 @@ class ProcessingWizard(models.TransientModel):
         relation="hr_payroll_processing_contracts_rel",
         column1="wizard_id",
         column2="contract_id",
-        default=_get_contracts,
+        default=lambda self: self._get_contracts,
         readonly=True,
     )
 
@@ -195,7 +194,9 @@ class ProcessingWizard(models.TransientModel):
 
         # Create the payroll register
         register_values = {
-            "name": _("%s Payroll Sheet" % (self.payroll_period_id.name)),
+            "name": _(
+                "%(month)s Payroll Sheet" % {"month": self.payroll_period_id.name}
+            ),
             "period_name": self.payroll_period_id.period_name,
             "date_start": self.payroll_period_id.date_start,
             "date_end": self.payroll_period_id.date_end,

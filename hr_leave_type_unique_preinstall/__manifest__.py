@@ -17,5 +17,4 @@
     "data": [
         "data/hr_holidays_data.xml",
     ],
-    "installable": True,
 }

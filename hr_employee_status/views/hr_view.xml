@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
     <record id="view_employee_form" model="ir.ui.view">
@@ -176,7 +176,7 @@
     <record id="view_contract_form" model="ir.ui.view">
         <field name="name">hr.contract.form.inherit.1</field>
         <field name="model">hr.contract</field>
-        <field name="priority">99</field>
+        <field name="priority" eval="99" />
         <field name="inherit_id" ref="hr_contract_status.view_contract_form" />
         <field name="arch" type="xml">
             <data>

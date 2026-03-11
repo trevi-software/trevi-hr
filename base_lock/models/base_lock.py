@@ -30,7 +30,6 @@ class Lock(models.Model):
     tz = fields.Selection(selection=_tz_list, string="Time Zone", required=True)
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         index=True,
         default=lambda self: self.env.company,
         required=True,

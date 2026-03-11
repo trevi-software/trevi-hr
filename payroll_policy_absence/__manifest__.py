@@ -19,5 +19,4 @@
         "security/ir.model.access.csv",
         "views/hr_policy_absence_view.xml",
     ],
-    "installable": True,
 }

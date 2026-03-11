@@ -22,5 +22,4 @@
         "data/hr_transfer_data.xml",
         "views/hr_transfer_view.xml",
     ],
-    "installable": True,
 }

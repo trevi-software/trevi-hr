@@ -245,20 +245,20 @@
     />
 
     <menuitem
-        action="open_my_schedule_view"
         id="menu_my_schedule_view"
+        action="open_my_schedule_view"
         parent="menu_schedule_schedule"
         sequence="10"
     />
     <menuitem
-        action="open_team_schedule_view"
         id="menu_team_schedule_view"
+        action="open_team_schedule_view"
         parent="menu_schedule_schedule"
         sequence="20"
     />
     <menuitem
-        action="open_dept_schedule_view"
         id="menu_dept_schedule_view"
+        action="open_dept_schedule_view"
         parent="menu_schedule_schedule"
         sequence="30"
     />

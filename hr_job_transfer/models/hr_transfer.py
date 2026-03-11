@@ -16,7 +16,6 @@ class HrTransfer(models.Model):
     _check_company_auto = True
 
     employee_id = fields.Many2one(
-        string="Employee",
         comodel_name="hr.employee",
         required=True,
         readonly=True,
@@ -88,7 +87,6 @@ class HrTransfer(models.Model):
         readonly=True,
     )
     company_id = fields.Many2one(
-        string="Company",
         comodel_name="res.company",
         default=lambda self: self.env.company,
         store=True,
@@ -227,7 +225,8 @@ class HrTransfer(models.Model):
             [("employee_id", "=", contract.employee_id.id)]
         )
         _contract_name = _(
-            "%s's Contract [%d]", contract.employee_id.name, (emp_contract_count + 1)
+            "%(name)s's Contract [%(number)d]"
+            % {"name": contract.employee_id.name, "number": (emp_contract_count + 1)}
         )
 
         # Copy the contract and adjust start/end dates, job id, etc. accordingly.

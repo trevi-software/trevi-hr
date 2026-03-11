@@ -20,6 +20,4 @@
         "report/hr_payslip_report.xml",
         "views/res_config_settings_views.xml",
     ],
-    "installable": True,
-    "application": False,
 }

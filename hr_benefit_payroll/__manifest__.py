@@ -25,5 +25,4 @@
         "views/hr_payslip_view.xml",
         "views/hr_salary_rule_view.xml",
     ],
-    "installable": True,
 }

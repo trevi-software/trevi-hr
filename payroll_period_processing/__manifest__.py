@@ -25,5 +25,4 @@
         "wizard/process_view.xml",
         "views/hr_payroll_view.xml",
     ],
-    "installable": True,
 }

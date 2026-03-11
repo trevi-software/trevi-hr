@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
     <!-- Employee recruitment wizard -->
     <menuitem
-        action="action_new_labour"
         id="menu_new_labour"
+        action="action_new_labour"
         parent="hr_recruitment.menu_hr_recruitment_root"
         groups="hr_recruitment.group_hr_recruitment_user"
         sequence="4"

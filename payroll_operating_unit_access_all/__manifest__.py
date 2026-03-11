@@ -19,5 +19,4 @@
     "data": [
         "security/hr_payslip_security.xml",
     ],
-    "installable": True,
 }

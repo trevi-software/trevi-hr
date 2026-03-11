@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
     <!-- Payroll Period -->
@@ -141,8 +141,8 @@
         </field>
     </record>
     <menuitem
-        action="open_payroll_period_view"
         id="menu_payroll_period_view"
+        action="open_payroll_period_view"
         parent="payroll.payroll_menu_root"
         groups="payroll.group_payroll_user,hr.group_hr_manager"
         sequence="40"

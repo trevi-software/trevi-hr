@@ -19,7 +19,7 @@ class ProcessPayroll(models.TransientModel):
         return False
 
     batch_by_contract_type = fields.Boolean(
-        default=_get_batch_type,
+        default=lambda self: self._get_batch_type,
         help="If checked create payslip batches by contract type.",
     )
 

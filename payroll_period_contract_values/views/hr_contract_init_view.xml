@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
     <!-- Initial Contract Settings -->
@@ -9,7 +9,7 @@
             name="inherit_id"
             ref="hr_contract_values_payroll.view_contract_init_tree"
         />
-        <field name="priority">99</field>
+        <field name="priority" eval="99" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='struct_id']" position="after">
                 <field name="pay_sched_id" />
@@ -23,7 +23,7 @@
             name="inherit_id"
             ref="hr_contract_values_payroll.view_contract_init_form"
         />
-        <field name="priority">99</field>
+        <field name="priority" eval="99" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='struct_id']" position="after">
                 <field name="pay_sched_id" required="1" />

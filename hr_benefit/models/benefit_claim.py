@@ -27,7 +27,6 @@ class BenefitClaim(models.Model):
         states={"draft": [("readonly", False)]},
     )
     employee_id = fields.Many2one(
-        string="Employee",
         comodel_name="hr.employee",
         required=True,
         readonly=True,

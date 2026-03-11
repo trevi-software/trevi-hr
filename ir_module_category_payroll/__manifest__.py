@@ -16,5 +16,4 @@
     "data": [
         "data/ir_module_category.xml",
     ],
-    "installable": True,
 }

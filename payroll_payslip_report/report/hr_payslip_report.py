@@ -24,8 +24,8 @@ class PayrollReportView(models.Model):
         string="Status",
     )
     job_id = fields.Many2one("hr.job", string="Job Title")
-    company_id = fields.Many2one("res.company", string="Company")
-    department_id = fields.Many2one("hr.department", string="Department")
+    company_id = fields.Many2one("res.company")
+    department_id = fields.Many2one("hr.department")
     rule_name = fields.Many2one("hr.salary.rule.category", string="Rule Category")
     rule_amount = fields.Float(string="Amount")
     struct_id = fields.Many2one("hr.payroll.structure", string="Salary Structure")

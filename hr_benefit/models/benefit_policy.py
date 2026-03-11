@@ -19,7 +19,6 @@ class BenefitPolicy(models.Model):
 
     name = fields.Char(string="Reference", readonly=True)
     benefit_id = fields.Many2one(
-        string="Benefit",
         comodel_name="hr.benefit",
         required=True,
         readonly=True,
@@ -28,7 +27,6 @@ class BenefitPolicy(models.Model):
     )
     benefit_code = fields.Char(readonly=True, related="benefit_id.code", store=True)
     employee_id = fields.Many2one(
-        string="Employee",
         comodel_name="hr.employee",
         required=True,
         readonly=True,
@@ -115,19 +113,18 @@ class BenefitPolicy(models.Model):
                 rec.write(res)
                 continue
 
-            dToday = date.today()
+            d_today = date.today()
             if rec.advantage_override:
                 res["advantage_amount"] = rec.advantage_override_amount
             else:
-                adv = rec.benefit_id.get_latest_advantage(dToday)
-                if adv is not None:
-                    if adv.type == "allowance":
-                        res["advantage_amount"] = adv.allowance_amount
+                adv = rec.benefit_id.get_latest_advantage(d_today)
+                if adv is not None and adv.type == "allowance":
+                    res["advantage_amount"] = adv.allowance_amount
             if rec.premium_override:
                 res["premium_amount"] = rec.premium_override_amount
                 res["premium_total"] = rec.premium_override_total
             else:
-                prm = rec.benefit_id.get_latest_premium(dToday)
+                prm = rec.benefit_id.get_latest_premium(d_today)
                 if prm is not None:
                     res["premium_amount"] = prm.amount
                     res["premium_total"] = prm.total_amount
@@ -155,8 +152,8 @@ class BenefitPolicy(models.Model):
                 math.ceil(float(rec.premium_total) / float(rec.premium_amount))
             )
             if installments > 0:
-                dEnd = rec.start_date + relativedelta(months=+installments)
-                res["end_date"] = dEnd
+                d_end = rec.start_date + relativedelta(months=+installments)
+                res["end_date"] = d_end
             res["premium_installments"] = installments
             rec.write(res)
 
@@ -170,16 +167,16 @@ class BenefitPolicy(models.Model):
         #
         if benefit.min_employed_days > 0:
             ee = self.env["hr.employee"].browse(employee_id)
-            dToday = datetime.today().date()
-            dHire = ee.first_contract_date
-            srvc_months = ee.get_months_service_to_date(dToday=dToday)
+            d_today = datetime.today().date()
+            d_hire = ee.first_contract_date
+            srvc_months = ee.get_months_service_to_date(dToday=d_today)
             srvc_months = int(srvc_months)
 
             employed_days = 0
-            dCount = dHire
-            while dCount < dToday:
+            d_count = d_hire
+            while d_count < d_today:
                 employed_days += 1
-                dCount += timedelta(days=+1)
+                d_count += timedelta(days=+1)
             if benefit.min_employed_days > employed_days:
                 res = True
 
@@ -215,9 +212,12 @@ class BenefitPolicy(models.Model):
                 raise UserError(
                     _(
                         "The employee is already enrolled in this benefit program."
-                        "\n%s\nPolicy: %s"
+                        "\n%(name)s\nPolicy: %(policy)s"
                     )
-                    % (policy_ids[0].employee_id.name, policy_ids[0].name)
+                    % {
+                        "name": policy_ids[0].employee_id.name,
+                        "policy": policy_ids[0].name,
+                    }
                 )
 
         # Check if eligibility requirements have been met
@@ -234,7 +234,7 @@ class BenefitPolicy(models.Model):
             ref = self.env["ir.sequence"].next_by_code("benefit.policy.ref")
             if not ref:
                 raise UserError(
-                    _("Critical Error. " "Unable to obtain a benefit policy number!")
+                    _("Critical Error. ", "Unable to obtain a benefit policy number!")
                 )
             ben_id.name = ref
         return ben_id
@@ -248,7 +248,7 @@ class BenefitPolicy(models.Model):
                 raise UserError(
                     _(
                         'You may not delete a policy that is not in a "draft" state.'
-                        "\nPolicy No: %s" % (pol.name)
+                        "\nPolicy No: %(name)s" % {"name": pol.name}
                     )
                 )
 

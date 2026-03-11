@@ -15,7 +15,6 @@ class ResCurrencyDenomination(models.Model):
     _rec_name = "value"
 
     currency_id = fields.Many2one(
-        string="Currency",
         comodel_name="res.currency",
         required=True,
         default=lambda self: self.env.company.currency_id,

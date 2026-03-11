@@ -13,7 +13,6 @@ class HrPayslipException(models.Model):
     name = fields.Char(required=True, readonly=True)
     rule_id = fields.Many2one(
         comodel_name="hr.payslip.exception.rule",
-        string="Rule",
         ondelete="cascade",
         readonly=True,
     )
@@ -21,7 +20,7 @@ class HrPayslipException(models.Model):
         comodel_name="hr.payslip", string="Pay Slip", ondelete="cascade", readonly=True
     )
     severity = fields.Selection(related="rule_id.severity", store=True, readonly=True)
-    ignore = fields.Boolean(string="Ignore", default=False)
+    ignore = fields.Boolean(default=False)
 
     def button_ignore(self):
 

@@ -18,6 +18,4 @@
         "views/hr_payroll_period_schedule_view.xml",
         "views/hr_payroll_period_view.xml",
     ],
-    "demo": [],
-    "installable": True,
 }

@@ -60,7 +60,7 @@ class TestHrJobWizard(SavepointCase):
         with self.assertRaises(AccessError):
             with Form(
                 self.Wizard.with_user(self.hr_user).with_context(
-                    {"active_ids": jobs.ids}
+                    **{"active_ids": jobs.ids}
                 )
             ) as wizard1:
                 for job in wizard1.job_ids:
@@ -68,7 +68,7 @@ class TestHrJobWizard(SavepointCase):
 
         with Form(
             self.Wizard.with_user(self.hr_officer).with_context(
-                {"active_ids": jobs.ids}
+                **{"active_ids": jobs.ids}
             )
         ) as wizard2:
             for job in wizard2.job_ids:
@@ -80,19 +80,19 @@ class TestHrJobWizard(SavepointCase):
         for job in jobs:
             self.assertEqual(job.state, "recruit")
 
-        ManWiz = (
+        wizard = (
             self.Wizard.with_user(self.hr_officer)
-            .with_context({"active_ids": jobs.ids})
+            .with_context(**{"active_ids": jobs.ids})
             .create({})
         )
-        for job in ManWiz.job_ids:
+        for job in wizard.job_ids:
             self.assertIn(job, jobs)
 
-        with Form(ManWiz) as wizard:
+        with Form(wizard) as wizard:
             wizard.do_open = True
 
-        ManWiz.change_state()
+        wizard.change_state()
 
         for job in jobs:
             self.assertEqual(job.state, "open")
-            self.assertIn(job, ManWiz.job_ids)
+            self.assertIn(job, wizard.job_ids)

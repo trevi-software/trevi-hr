@@ -158,8 +158,10 @@ class HrAttendance(models.Model):
             if len(my_list2) == 0:
                 raise exceptions.ValidationError(
                     _("Attendance Error!"),
-                    _("There is not a final sign-out record for %s on %s")
-                    % (employee.name, dDay),
+                    _(
+                        "There is not a final sign-out record for %(employee)s on %(day)s"
+                    )
+                    % {"employee": employee.name, "day": dDay},
                 )
 
             check_in, check_out = my_list2[0]
@@ -179,8 +181,11 @@ class HrAttendance(models.Model):
             else:
                 raise exceptions.ValidationError(
                     _("Attendance Error!"),
-                    _("There is a sign-in with no corresponding sign-out for %s on %s")
-                    % (employee.name, dDay),
+                    _(
+                        "There is a sign-in with no corresponding sign-out"
+                        "for %(employee)s on %(day)s"
+                    )
+                    % {"employee": employee.name, "day": dDay},
                 )
         return (sin, sout)
 
@@ -302,8 +307,8 @@ class HrAttendance(models.Model):
         if len(sin) != len(sout):
             raise exceptions.ValidationError(
                 _("Number of Sign-in and Sign-out records do not match!"),
-                _("Employee: %s\nSign-in(s): %s\nSign-out(s): %s")
-                % (contract.employee_id.name, sin, sout),
+                _("Employee: %(name)s\nSign-in(s): %(in)s\nSign-out(s): %(out)s")
+                % {"name": contract.employee_id.name, "in": sin, "out": sout},
             )
 
         return sin, sout

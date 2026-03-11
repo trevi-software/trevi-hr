@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <!-- Policy Lines -->
     <record id="ot_policy_line_tree_view" model="ir.ui.view">
@@ -110,8 +110,8 @@
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem
-        action="open_ot_policy"
         id="menu_hr_ot_policy"
+        action="open_ot_policy"
         parent="payroll_policy_group.menu_hr_policy_configuration"
         sequence="10"
     />

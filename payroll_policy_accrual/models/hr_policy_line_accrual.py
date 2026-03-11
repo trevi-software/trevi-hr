@@ -177,13 +177,13 @@ class HrPolicyLine(models.Model):
 
         return job_ids[0].name
 
-    def calculate_and_deposit(self, employee, job=False, dToday=None, descr=None):
+    def calculate_and_deposit(self, employee, job=False, d_today=None, descr=None):
 
         for rec in self:
-            amount = rec.do_calculation(employee, dToday)
+            amount = rec.do_calculation(employee, d_today)
             if amount is False:
                 break
-            name = _("Calendar based accrual (%s)" % (self.name))
+            name = _("Calendar based accrual (%(name)s)" % {"name": self.name})
             lines = self.accrual_id.deposit(employee.id, amount, date.today(), name)
             if job:
                 for line in lines:

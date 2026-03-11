@@ -77,8 +77,8 @@
     </record>
 
     <menuitem
-        action="open_schedule_team_view"
         id="menu_schedule_team_view"
+        action="open_schedule_team_view"
         parent="menu_schedule_config"
         groups="group_scheduling_manager"
         sequence="30"

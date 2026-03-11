@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
     <record id="view_contract_init_tree" model="ir.ui.view">
@@ -69,8 +69,8 @@
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem
-        action="open_contract_init"
         id="menu_hr_contract_init"
+        action="open_contract_init"
         parent="hr.menu_human_resources_configuration"
         sequence="4"
     />
@@ -115,7 +115,7 @@
         <field name="name">hr.contract.view.form.contract_init</field>
         <field name="model">hr.contract</field>
         <field name="inherit_id" ref="trevi_hr_usability.view_contract_form" />
-        <field name="priority">100</field>
+        <field name="priority" eval="100" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_id']" position="replace">
                 <field

@@ -45,5 +45,4 @@
     "demo": [
         "data/resource_calendar_demo.xml",
     ],
-    "installable": True,
 }

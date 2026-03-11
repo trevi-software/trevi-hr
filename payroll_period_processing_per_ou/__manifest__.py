@@ -19,5 +19,4 @@
     "data": [
         "security/ir_rule.xml",
     ],
-    "installable": True,
 }

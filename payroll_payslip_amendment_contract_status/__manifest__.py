@@ -14,6 +14,4 @@
         "hr_contract_status",
         "payroll_payslip_amendment",
     ],
-    "data": [],
-    "installable": True,
 }

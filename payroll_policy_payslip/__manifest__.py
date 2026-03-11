@@ -25,5 +25,4 @@
     "data": [
         "security/payroll_policy_payslip_security.xml",
     ],
-    "installable": True,
 }

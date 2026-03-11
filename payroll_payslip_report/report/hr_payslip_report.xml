@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
     <menuitem
-        name="Reports"
         id="menu_hr_payslip_reports"
+        name="Reports"
         parent="payroll.payroll_menu_root"
         groups="payroll.group_payroll_user"
         sequence="90"

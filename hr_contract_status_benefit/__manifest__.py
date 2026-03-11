@@ -16,6 +16,4 @@
         "hr_benefit",
         "hr_contract_status",
     ],
-    "data": [],
-    "installable": True,
 }

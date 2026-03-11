@@ -13,6 +13,4 @@
     "depends": [
         "payroll",
     ],
-    "data": [],
-    "installable": True,
 }

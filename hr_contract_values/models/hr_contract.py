@@ -19,7 +19,6 @@ class ContractInit(models.Model):
     _order = "date desc"
 
     name = fields.Char(
-        string="Name",
         size=64,
         required=True,
     )
@@ -33,14 +32,12 @@ class ContractInit(models.Model):
         string="Starting Wages",
     )
     trial_period = fields.Integer(
-        string="Trial Period",
         default=0,
         help="Length of Trial Period, in days",
     )
     active = fields.Boolean(default=True)
     locked = fields.Boolean()
     company_id = fields.Many2one(
-        string="Company",
         comodel_name="res.company",
         default=lambda self: self.env.company,
         groups="base.group_multi_company",
@@ -149,10 +146,10 @@ class HrContract(models.Model):
             res = init.contract_type
         return res
 
-    wage = fields.Monetary(default=_get_wage)
-    trial_date_start = fields.Date(default=_get_trial_date_start)
-    trial_date_end = fields.Date(default=_get_trial_date_end)
-    structure_type_id = fields.Many2one(default=_get_structure_type)
+    wage = fields.Monetary(default=lambda self: self._get_wage)
+    trial_date_start = fields.Date(default=lambda self: self._get_trial_date_start)
+    trial_date_end = fields.Date(default=lambda self: self._get_trial_date_end)
+    structure_type_id = fields.Many2one(default=lambda self: self._get_structure_type)
 
     @api.model
     def create(self, vals):

@@ -21,7 +21,6 @@ class ContractInit(models.Model):
     _inherit = "hr.contract.init"
 
     policy_group_id = fields.Many2one(
-        string="Policy Group",
         comodel_name="hr.policy.group",
     )
 
@@ -40,7 +39,6 @@ class HrContract(models.Model):
         return res
 
     policy_group_id = fields.Many2one(
-        string="Policy Group",
         comodel_name="hr.policy.group",
-        default=_get_policy_group,
+        default=lambda self: self._get_policy_group,
     )

@@ -19,6 +19,4 @@
         "views/hr_payroll_period_schedule_view.xml",
         "wizard/process_view.xml",
     ],
-    "demo": [],
-    "installable": True,
 }

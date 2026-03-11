@@ -21,7 +21,7 @@ class ProcessingWizard(models.TransientModel):
                     )
         return res
 
-    contract_ids = fields.Many2many(default=_get_contracts)
+    contract_ids = fields.Many2many(default=lambda self: self._get_contracts)
 
     def get_period_schedule_contracts(self, period):
         """Get contracts attached to payroll schedule of 'period'."""
