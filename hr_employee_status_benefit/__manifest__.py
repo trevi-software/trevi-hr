@@ -12,6 +12,4 @@
     "author": "TREVI Software, Michael Telahun Makonnen",
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": ["hr", "hr_benefit", "hr_employee_status"],
-    "data": [],
-    "installable": True,
 }

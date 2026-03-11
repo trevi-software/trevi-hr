@@ -11,4 +11,6 @@ class HrEmployeeWebcam(models.TransientModel):
             eid = self.env.context.get("active_id")
         return eid
 
-    employee_id = fields.Many2one("hr.employee", "Employee", default=_compute_employee)
+    employee_id = fields.Many2one(
+        "hr.employee", default=lambda self: self._compute_employee
+    )

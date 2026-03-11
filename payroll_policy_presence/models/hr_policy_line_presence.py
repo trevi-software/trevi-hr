@@ -11,7 +11,7 @@ class PolicyLinePresence(models.Model):
     _description = "Presence payroll policy line"
 
     name = fields.Char(size=64, required=True)
-    policy_id = fields.Many2one(comodel_name="hr.policy.presence", string="Policy")
+    policy_id = fields.Many2one(comodel_name="hr.policy.presence")
     code = fields.Char(required=True, help="Use this code in the salary rules.")
     rate = fields.Float(required=True, help="Multiplier of employee wage.", default=1.0)
     type = fields.Selection(
@@ -27,8 +27,6 @@ class PolicyLinePresence(models.Model):
         help="Minutes after first punch of the day in which policy will take effect.",
     )
     duration = fields.Integer(required=True, help="In minutes.")
-    accrual_policy_line_id = fields.Many2one(
-        string="Accrual Policy Line", comodel_name="hr.policy.line.accrual"
-    )
+    accrual_policy_line_id = fields.Many2one(comodel_name="hr.policy.line.accrual")
     accrual_min = fields.Float(string="Minimum Accrual", digits="Accruals")
     accrual_max = fields.Float(string="Maximum Accrual", digits="Accruals")

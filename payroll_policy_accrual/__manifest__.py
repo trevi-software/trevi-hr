@@ -22,5 +22,4 @@
         "data/hr_policy_accrual_cron.xml",
         "views/hr_policy_accrual_view.xml",
     ],
-    "installable": True,
 }

@@ -16,13 +16,11 @@ class EnrollEmployee(models.TransientModel):
     _description = "Employee Benefit Enrollment Form"
 
     benefit_id = fields.Many2one(
-        string="Benefit",
         comodel_name="hr.benefit",
         required=True,
         default=lambda self: self._get_benefit(),
     )
     employee_ids = fields.Many2many(
-        string="Employee",
         comodel_name="hr.employee",
         relation="hr_employee_benefit_rel",
         column1="employee_id",
@@ -59,20 +57,19 @@ class EnrollEmployee(models.TransientModel):
             }
 
             if not rec.benefit_id or not rec.start_date:
-                rec.write(res)
+                rec.update(res)
 
-            dToday = rec.start_date
-            adv = rec.benefit_id.get_latest_advantage(dToday)
-            prm = rec.benefit_id.get_latest_premium(dToday)
-            if adv is not None:
-                if adv.type == "allowance":
-                    res["advantage_amount"] = adv.allowance_amount
+            d_today = rec.start_date
+            adv = rec.benefit_id.get_latest_advantage(d_today)
+            prm = rec.benefit_id.get_latest_premium(d_today)
+            if adv is not None and adv.type == "allowance":
+                res["advantage_amount"] = adv.allowance_amount
 
             if prm is not None:
                 res["premium_amount"] = prm.amount
                 res["premium_total"] = prm.total_amount
 
-            rec.write(res)
+            rec.update(res)
 
     @api.depends("start_date", "premium_amount", "premium_total")
     def _compute_premium_installments(self):
@@ -80,17 +77,17 @@ class EnrollEmployee(models.TransientModel):
         for rec in self:
             res = {"end_date": False, "premium_installments": 0}
             if rec.premium_amount == 0:
-                rec.write(res)
+                rec.update(res)
                 return
 
             installments = int(
                 math.ceil(float(rec.premium_total) / float(rec.premium_amount))
             )
             if installments > 0:
-                dEnd = rec.start_date + relativedelta(months=+installments)
-                res["end_date"] = dEnd
+                d_end = rec.start_date + relativedelta(months=+installments)
+                res["end_date"] = d_end
             res["premium_installments"] = installments
-            rec.write(res)
+            rec.update(res)
 
     def do_multi_enroll(self):
 

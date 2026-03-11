@@ -23,5 +23,4 @@
     "demo": [
         "data/hr_payroll_policy_demo.xml",
     ],
-    "installable": True,
 }

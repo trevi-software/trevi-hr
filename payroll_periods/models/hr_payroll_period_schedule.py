@@ -96,7 +96,7 @@ class HrPayperiodSchedule(models.Model):
         required=True,
         default="monthly",
     )
-    annual_pay_periods = fields.Integer(compute=_compute_annual_periods)
+    annual_pay_periods = fields.Integer(compute="_compute_annual_periods")
     mo_firstday = fields.Selection(
         string="Start Day",
         selection=[
@@ -183,7 +183,6 @@ class HrPayperiodSchedule(models.Model):
     initial_period_date = fields.Date(string="Initial Period Start Date", required=True)
     active = fields.Boolean(default=True)
     company_id = fields.Many2one(
-        string="Company",
         comodel_name="res.company",
         required=True,
         default=lambda self: self.env.company,
@@ -234,12 +233,8 @@ class HrPayperiodSchedule(models.Model):
                 dtEnd = utcEnd.replace(tzinfo=None)
 
                 data = {
-                    "name": _("{}/{} {}").format(
-                        str(year_number), str(month_number), str(month_name)
-                    ),
-                    "period_name": _("{}/{} {}").format(
-                        str(year_number), str(month_number), str(month_name)
-                    ),
+                    "name": _("{year_number}/{month_number} {month_name}"),
+                    "period_name": _("{year_number}/{month_number} {month_name}"),
                     "schedule_id": self.id,
                     "date_start": dtStart,
                     "date_end": dtEnd,
@@ -269,9 +264,7 @@ class HrPayperiodSchedule(models.Model):
                     "name": _("{}/{} {}").format(
                         str(year_number), str(month_number), str(month_name)
                     ),
-                    "period_name": _("{}/{} {}").format(
-                        str(year_number), str(month_number), str(month_name)
-                    ),
+                    "period_name": _("{year_number}/{month_number} {month_name}"),
                     "schedule_id": self.id,
                     "date_start": dtStart,
                     "date_end": dtEnd,

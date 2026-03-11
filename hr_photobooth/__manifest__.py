@@ -20,6 +20,4 @@
         "views/hr_photobooth_view.xml",
         "views/assets.xml",
     ],
-    "demo": [],
-    "installable": True,
 }

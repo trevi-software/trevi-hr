@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
     <!-- Policy Lines -->
@@ -131,8 +131,8 @@
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem
-        action="open_accr_policy_line"
         id="menu_hr_accr_policy_line"
+        action="open_accr_policy_line"
         parent="payroll_policy_group.menu_hr_policy_configuration"
         sequence="12"
     />
@@ -180,8 +180,8 @@
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem
-        action="open_accr_policy"
         id="menu_hr_accr_policy"
+        action="open_accr_policy"
         parent="payroll_policy_group.menu_hr_policy_configuration"
         sequence="10"
     />

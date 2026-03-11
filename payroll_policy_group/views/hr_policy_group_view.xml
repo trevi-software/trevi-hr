@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
     <!-- Policy Groups Configuration Submenu -->
@@ -45,8 +45,8 @@
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem
-        action="open_policy_group"
         id="menu_hr_policy_group"
+        action="open_policy_group"
         parent="menu_hr_policy_configuration"
         sequence="5"
     />

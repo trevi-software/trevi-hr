@@ -21,5 +21,4 @@
         "security/ir.model.access.csv",
         "security/ir_rule.xml",
     ],
-    "installable": True,
 }

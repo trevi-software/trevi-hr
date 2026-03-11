@@ -10,7 +10,6 @@ class PolicyGroup(models.Model):
     _inherit = "hr.policy.group"
 
     presence_policy_ids = fields.Many2many(
-        string="Presence Policy",
         comodel_name="hr.policy.presence",
         relation="hr_policy_group_presence_rel",
         column1="group_id",

@@ -15,6 +15,4 @@
         "hr_holidays",
         "hr_leave_type_unique_preinstall",
     ],
-    "data": [],
-    "installable": True,
 }

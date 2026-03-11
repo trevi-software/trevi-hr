@@ -19,5 +19,4 @@
         "security/ir.model.access.csv",
         "views/hr_payslip_amendment_view.xml",
     ],
-    "installable": True,
 }

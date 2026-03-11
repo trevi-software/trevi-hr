@@ -66,8 +66,8 @@
     </record>
 
     <menuitem
-        action="open_schedule_area_view"
         id="menu_schedule_area_view"
+        action="open_schedule_area_view"
         parent="menu_schedule_config"
         groups="group_scheduling_manager"
         sequence="10"

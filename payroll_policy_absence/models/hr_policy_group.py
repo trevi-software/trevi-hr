@@ -14,5 +14,4 @@ class PolicyGroup(models.Model):
         relation="hr_policy_group_absence_rel",
         column1="group_id",
         column2="absence_id",
-        string="Absence Policy",
     )

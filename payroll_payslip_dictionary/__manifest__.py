@@ -22,5 +22,4 @@
         "views/res_config_settings_views.xml",
     ],
     "demo": ["demo/payroll_demo.xml"],
-    "installable": True,
 }

@@ -22,5 +22,4 @@
         "security/hr_payslip_security.xml",
         "views/hr_payslip_view.xml",
     ],
-    "installable": True,
 }

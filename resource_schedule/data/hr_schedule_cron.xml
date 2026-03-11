@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
         <!-- Create tentative schedule for all employee en-masse -->
 
-        <record model="ir.cron" id="mass_schedule_cron">
+        <record id="mass_schedule_cron" model="ir.cron">
             <field name="name">Schedule: Mass Scheduling</field>
             <field name="model_id" ref="model_resource_schedule_shift" />
             <field name="type">ir.actions.server</field>
@@ -13,30 +13,30 @@
             name="nextcall"
             eval="(DateTime.now() + timedelta(days= +(7-DateTime.now().weekday())))"
         />
-            <field name="interval_number">2</field>
+            <field name="interval_number" eval="2" />
             <field name="interval_type">weeks</field>
-            <field name="numbercall">-1</field>
+            <field name="numbercall" eval="-1" />
             <field name="active" eval="False" />
         </record>
 
         <!-- Auto-punch attendance -->
 
-        <record model="ir.cron" id="autopunch_schedule_cron">
+        <record id="autopunch_schedule_cron" model="ir.cron">
             <field name="name">Schedule: Auto-punch</field>
             <field name="model_id" ref="model_resource_schedule_shift" />
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
             <field name="code">model.autopunch_shifts()</field>
             <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=30))" />
-            <field name="interval_number">30</field>
+            <field name="interval_number" eval="30" />
             <field name="interval_type">minutes</field>
-            <field name="numbercall">-1</field>
+            <field name="numbercall" eval="-1" />
             <field name="active" eval="True" />
         </record>
 
         <!-- Automatically punch out attendances -->
 
-        <record model="ir.cron" id="auto_clockout_schedule_cron">
+        <record id="auto_clockout_schedule_cron" model="ir.cron">
             <field
             name="name"
         >Schedule: Automatically clock-out after max. shift length</field>
@@ -45,9 +45,9 @@
             <field name="state">code</field>
             <field name="code">model.auto_punchout()</field>
             <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=15))" />
-            <field name="interval_number">30</field>
+            <field name="interval_number" eval="30" />
             <field name="interval_type">minutes</field>
-            <field name="numbercall">-1</field>
+            <field name="numbercall" eval="-1" />
             <field name="active" eval="True" />
         </record>
 

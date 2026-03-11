@@ -24,7 +24,7 @@ class HrJobStateWizard(models.TransientModel):
         relation="hr_job_state_change_wizard_rel",
         column1="wizard_id",
         column2="job_id",
-        default=_get_jobs,
+        default=lambda self: self._get_jobs(),
         string="Jobs",
     )
     do_open = fields.Boolean(string="Close Recruitment")

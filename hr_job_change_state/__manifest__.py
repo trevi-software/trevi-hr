@@ -14,5 +14,4 @@
         "security/ir.model.access.csv",
         "wizard/change_state.xml",
     ],
-    "installable": True,
 }

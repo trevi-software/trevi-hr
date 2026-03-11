@@ -19,5 +19,4 @@
         "wizard/hr_payroll_register_run_view.xml",
         "views/hr_payroll_register_view.xml",
     ],
-    "installable": True,
 }

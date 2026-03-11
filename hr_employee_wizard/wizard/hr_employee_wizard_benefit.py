@@ -18,9 +18,11 @@ class Benefits(models.TransientModel):
             return datetime.now().date()
         return fields.Date.from_string(self.env.context.get("csdate"))
 
-    wizard_id = fields.Many2one("hr.employee.wizard.new", "Wizard")
-    benefit_id = fields.Many2one("hr.benefit", "Benefit", required=True)
-    effective_date = fields.Date(required=True, default=_find_contract_start_date)
+    wizard_id = fields.Many2one("hr.employee.wizard.new")
+    benefit_id = fields.Many2one("hr.benefit", required=True)
+    effective_date = fields.Date(
+        required=True, default=lambda self: self._find_contract_start_date
+    )
     end_date = fields.Date()
     adv_override = fields.Boolean("Override Advantage")
     prm_override = fields.Boolean("Override Premium")

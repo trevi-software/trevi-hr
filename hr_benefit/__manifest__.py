@@ -30,5 +30,4 @@
         "views/hr_employee_view.xml",
         "data/benefit_sequence.xml",
     ],
-    "installable": True,
 }

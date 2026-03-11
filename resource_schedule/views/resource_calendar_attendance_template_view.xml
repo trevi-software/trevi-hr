@@ -98,8 +98,8 @@
     </record>
 
     <menuitem
-        action="open_attendance_template_view"
         id="menu_attendance_template_view"
+        action="open_attendance_template_view"
         parent="menu_schedule_config"
         sequence="70"
     />

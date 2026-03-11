@@ -15,7 +15,7 @@ class PolicyLineAbsence(models.Model):
     holiday_status_id = fields.Many2one(
         comodel_name="hr.leave.type", string="Leave", required=True
     )
-    policy_id = fields.Many2one(comodel_name="hr.policy.absence", string="Policy")
+    policy_id = fields.Many2one(comodel_name="hr.policy.absence")
     type = fields.Selection(
         selection=[("paid", "Paid"), ("unpaid", "Unpaid"), ("dock", "Dock")],
         required=True,

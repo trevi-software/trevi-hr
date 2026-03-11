@@ -13,13 +13,12 @@ class HrPayrollRun(models.Model):
     _name = "hr.payslip.run"
     _inherit = "hr.payslip.run"
 
-    register_id = fields.Many2one(comodel_name="hr.payroll.register", string="Register")
+    register_id = fields.Many2one(comodel_name="hr.payroll.register")
     department_ids = fields.Many2many(
         comodel_name="hr.department",
         relation="hr_payroll_register_department_rel",
         column1="register_id",
         column2="department_id",
-        string="Department",
     )
 
 
@@ -38,12 +37,17 @@ class HrPayrollRegister(models.Model):
     @api.model
     def _get_default_name(self):
 
-        nMonth = datetime.now().strftime("%B")
+        month_name = datetime.now().strftime("%B")
         year = datetime.now().year
-        name = _("Payroll for the Month of %s %s" % (nMonth, year))
+        name = _("Payroll for the Month of %(month)s %(year)s") % {
+            "month": month_name,
+            "year": year,
+        }
         return name
 
-    name = fields.Char(string="Description", required=True, default=_get_default_name)
+    name = fields.Char(
+        string="Description", required=True, default=lambda self: self._get_default_name
+    )
     period_name = fields.Char()
     state = fields.Selection(
         string="Status",
@@ -71,7 +75,6 @@ class HrPayrollRegister(models.Model):
         states={"draft": [("readonly", False)]},
     )
     company_id = fields.Many2one(
-        string="Company",
         comodel_name="res.company",
         default=lambda self: self.env.company,
     )
@@ -86,7 +89,6 @@ class HrPayrollRegister(models.Model):
     )
     currency_id = fields.Many2one(
         "res.currency",
-        "Currency",
         required=True,
         default=lambda self: self.env.company.currency_id,
     )

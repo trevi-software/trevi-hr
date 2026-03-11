@@ -94,12 +94,12 @@ class HrPayslip(models.Model):
 
         # One dict per benefit
         #
-        dSlipStart = date_from
-        dSlipEnd = date_to
-        d = dSlipStart
-        deltaSlip = 0
-        while d <= dSlipEnd:
-            deltaSlip += 1
+        d_slip_start = date_from
+        d_slip_end = date_to
+        d = d_slip_start
+        delta_slip = 0
+        while d <= d_slip_end:
+            delta_slip += 1
             d += timedelta(days=+1)
 
         # Test for installation of payroll_period
@@ -111,32 +111,32 @@ class HrPayslip(models.Model):
         for policy in policy_ids:
 
             # Calculate partial period factor relative to the policy
-            dPolStart = policy.start_date
-            dPolEnd = dSlipEnd
+            d_pol_start = policy.start_date
+            d_pol_end = d_slip_end
             if policy.end_date:
-                dPolEnd = policy.end_date
-            dS = (dPolStart > dSlipStart) and dPolStart or dSlipStart
-            dE = (dPolEnd < dSlipEnd) and dPolEnd or dSlipEnd
+                d_pol_end = policy.end_date
+            d_start = (d_pol_start > d_slip_start) and d_pol_start or d_slip_start
+            d_end = (d_pol_end < d_slip_end) and d_pol_end or d_slip_end
 
-            if (dPolEnd <= dSlipStart) or (dPolStart >= dSlipEnd):
+            if (d_pol_end <= d_slip_start) or (d_pol_start >= d_slip_end):
                 continue
 
-            d = dS
-            deltaPol = 0
-            while d <= dE:
-                deltaPol += 1
+            d = d_start
+            delta_pol = 0
+            while d <= d_end:
+                delta_pol += 1
                 d += timedelta(days=+1)
 
             # Calculate advantage
             #
-            adv_amount = policy.calculate_advantage(dE)
+            adv_amount = policy.calculate_advantage(d_end)
 
             # Calculate premium
             #
-            prm_amount = policy.calculate_premium(dE, app, refund=credit_note)
+            prm_amount = policy.calculate_premium(d_end, app, refund=credit_note)
 
             res[policy.benefit_id.code]["qty"] += 1
-            res[policy.benefit_id.code]["ppf"] += float(deltaPol) / float(deltaSlip)
+            res[policy.benefit_id.code]["ppf"] += float(delta_pol) / float(delta_slip)
             res[policy.benefit_id.code]["earnings"] += adv_amount
             res[policy.benefit_id.code]["deductions"] += prm_amount
 
@@ -182,9 +182,10 @@ class HrPayslip(models.Model):
                     UserError(
                         _(
                             "Error creating benefit premium payment records!"
-                            "Unable to find a valid benefit policy:\nEmployee: %s\nBenefit: %s"
+                            "Cannot find a valid benefit policy:\n"
+                            "Employee: %(name)s\nBenefit: %(k)s"
                         )
-                        % (payslip.employee_id.name, k)
+                        % {"name": payslip.employee_id.name, "k": k}
                     )
 
                 premium_obj.create(

@@ -25,7 +25,7 @@ class HrEmployee(models.Model):
         if cid:
             return cid[0]
 
-    country_id = fields.Many2one(default=_default_country)
+    country_id = fields.Many2one(default=lambda self: self._default_country)
     job_id = fields.Many2one(
         related="contract_id.job_id", comodel_name="hr.job", string="Job", readonly=True
     )
@@ -43,7 +43,7 @@ class HrContract(models.Model):
             if e_ids:
                 return e_ids[0]
 
-    employee_id = fields.Many2one(default=_default_employee)
+    employee_id = fields.Many2one(default=lambda self: self._default_employee)
     employee_dept_id = fields.Many2one(
         string="Default Dept Id",
         related="employee_id.department_id",

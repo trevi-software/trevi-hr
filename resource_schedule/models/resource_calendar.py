@@ -72,7 +72,7 @@ class ResourceCalendar(models.Model):
                 wtype = (line.week_nbr % 2) == 0 and "0" or "1"
                 line.week_type = wtype
         else:
-            super()._onchange_attendance_ids()
+            return super()._onchange_attendance_ids()
 
     @api.constrains("attendance_ids")
     def _check_attendance(self):

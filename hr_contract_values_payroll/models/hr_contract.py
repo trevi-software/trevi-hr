@@ -18,4 +18,4 @@ class HrContract(models.Model):
             res = init.struct_id.id
         return res
 
-    struct_id = fields.Many2one(default=_get_struct)
+    struct_id = fields.Many2one(default=lambda self: self._get_struct)

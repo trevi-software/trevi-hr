@@ -21,5 +21,4 @@
         "security/ir.model.access.csv",
         "views/payroll_policy_view.xml",
     ],
-    "installable": True,
 }

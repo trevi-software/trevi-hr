@@ -14,7 +14,7 @@ class ResCompany(models.Model):
 
     def _create_resource_calendar(self):
 
-        super()._create_resource_calendar()
+        ret = super()._create_resource_calendar()
 
         for company in self:
             for att in company.resource_calendar_id.attendance_ids:
@@ -24,3 +24,4 @@ class ResCompany(models.Model):
                     att.template_id = morning
                 elif not att.template_id and att.hour_from == 13 and att.hour_to == 17:
                     att.template_id = afternoon
+        return ret

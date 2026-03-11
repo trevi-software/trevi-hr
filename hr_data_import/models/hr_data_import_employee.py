@@ -54,10 +54,10 @@ class ImportEmployee(models.Model):
         ]
     )
     street = fields.Char(string="Address", groups="hr.group_hr_user")
-    private_phone = fields.Char(string="Private Phone", groups="hr.group_hr_user")
-    private_email = fields.Char(string="Private Email", groups="hr.group_hr_user")
-    emergency_contact = fields.Char("Emergency Contact", groups="hr.group_hr_user")
-    emergency_phone = fields.Char("Emergency Phone", groups="hr.group_hr_user")
+    private_phone = fields.Char(groups="hr.group_hr_user")
+    private_email = fields.Char(groups="hr.group_hr_user")
+    emergency_contact = fields.Char(groups="hr.group_hr_user")
+    emergency_phone = fields.Char(groups="hr.group_hr_user")
     hire_date = fields.Date(string="Date Hired", help="Initial date of employment.")
     department_id = fields.Many2one("hr.department")
     job_id = fields.Many2one("hr.job", string="Job Position")
@@ -71,16 +71,13 @@ class ImportEmployee(models.Model):
         "End of Trial Period", help="End date of the trial period (if there is one)."
     )
     resource_calendar_id = fields.Many2one("resource.calendar", "Working Schedule")
-    wage = fields.Monetary("Wage", required=True, help="Employee's monthly gross wage.")
+    wage = fields.Monetary(required=True, help="Employee's monthly gross wage.")
     contract_type_id = fields.Many2one("hr.contract.type", "Contract Type")
-    struct_id = fields.Many2one(
-        "hr.payroll.structure", string="Salary Structure", required=True
-    )
+    struct_id = fields.Many2one("hr.payroll.structure", required=True)
     pps_id = fields.Many2one(
         "hr.payroll.period.schedule", "Payroll Period Schedule", required=True
     )
     policy_group_id = fields.Many2one(
-        string="Policy Group",
         comodel_name="hr.policy.group",
     )
     related_employee_id = fields.Many2one("hr.employee")

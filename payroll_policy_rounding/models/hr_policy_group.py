@@ -10,6 +10,5 @@ class PolicyGroup(models.Model):
     _inherit = "hr.policy.group"
 
     rounding_policy_ids = fields.Many2many(
-        string="Rounding Policy",
         comodel_name="hr.policy.rounding",
     )

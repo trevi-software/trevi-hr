@@ -20,5 +20,4 @@
         "report/report.xml",
         "report/report_payroll_register.xml",
     ],
-    "installable": True,
 }

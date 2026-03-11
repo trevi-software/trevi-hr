@@ -17,5 +17,4 @@
     "data": [
         "views/hr_payslip_amendment_view.xml",
     ],
-    "installable": True,
 }

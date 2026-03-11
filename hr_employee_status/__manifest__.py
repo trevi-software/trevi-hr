@@ -22,5 +22,4 @@
         "data/hr_employee_data.xml",
         "views/hr_view.xml",
     ],
-    "installable": True,
 }

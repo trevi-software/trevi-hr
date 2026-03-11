@@ -17,4 +17,4 @@ class HrContract(models.Model):
             return iv.pay_sched_id.id
         return False
 
-    pps_id = fields.Many2one(default=_get_pay_sched)
+    pps_id = fields.Many2one(default=lambda self: self._get_pay_sched)

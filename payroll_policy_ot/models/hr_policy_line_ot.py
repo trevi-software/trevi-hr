@@ -21,7 +21,7 @@ class PolicyLineOt(models.Model):
         return res
 
     name = fields.Char(size=64, required=True)
-    policy_id = fields.Many2one(comodel_name="hr.policy.ot", string="Policy")
+    policy_id = fields.Many2one(comodel_name="hr.policy.ot")
     type = fields.Selection(
         selection=[
             ("daily", "Daily"),
@@ -37,9 +37,7 @@ class PolicyLineOt(models.Model):
     active_end_time = fields.Char(size=5, help="Time in 24 hour time format")
     tz = fields.Selection(selection=_tz_list, string="Time Zone")
     rate = fields.Float(required=True, default=1, help="Multiplier of employee wage.")
-    accrual_policy_line_id = fields.Many2one(
-        string="Accrual Policy Line", comodel_name="hr.policy.line.accrual"
-    )
+    accrual_policy_line_id = fields.Many2one(comodel_name="hr.policy.line.accrual")
     accrual_rate = fields.Float(digits="Accruals")
     accrual_min = fields.Float(string="Minimum Accrual", digits="Accruals")
     accrual_max = fields.Float(string="Maximum Accrual", digits="Accruals")

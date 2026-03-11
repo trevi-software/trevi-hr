@@ -86,7 +86,7 @@ class PolicyLine(models.Model):
         )
     ]
 
-    policy_id = fields.Many2one(comodel_name="hr.policy.rounding", string="Policy")
+    policy_id = fields.Many2one(comodel_name="hr.policy.rounding")
     attendance_type = fields.Selection(
         selection=[("in", "Sign-in"), ("out", "Sign-out")], required=True
     )

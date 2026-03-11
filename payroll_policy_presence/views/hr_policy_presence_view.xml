@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <!-- Holiday Policy Lines -->
 
@@ -102,8 +102,8 @@
         <field name="view_mode">tree,form</field>
     </record>
     <menuitem
-        action="open_presence_policy"
         id="menu_hr_presence_policy"
+        action="open_presence_policy"
         parent="payroll_policy_group.menu_hr_policy_configuration"
         sequence="10"
     />

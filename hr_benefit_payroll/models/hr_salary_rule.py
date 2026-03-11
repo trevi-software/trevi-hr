@@ -9,5 +9,5 @@ class HrSalaryRule(models.Model):
 
     _inherit = "hr.salary.rule"
 
-    benefit_id = fields.Many2one(string="Benefit", comodel_name="hr.benefit")
+    benefit_id = fields.Many2one(comodel_name="hr.benefit")
     has_premium_payment = fields.Boolean(string="Premium payment?")

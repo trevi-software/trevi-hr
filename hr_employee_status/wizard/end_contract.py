@@ -27,21 +27,19 @@ class EmployeeSetInactive(models.TransientModel):
         return data["employee_id"][0]
 
     contract_id = fields.Many2one(
-        string="Contract",
         comodel_name="hr.contract",
-        default=_get_contract,
+        default=lambda self: self._get_contract,
         readonly=True,
     )
     employee_id = fields.Many2one(
-        string="Employee",
         comodel_name="hr.employee",
-        default=_get_employee,
+        default=lambda self: self._get_employee,
         required=True,
         readonly=True,
     )
     date = fields.Date(required=True, default=fields.Date.today())
     reason_id = fields.Many2one(
-        string="Reason", comodel_name="hr.employee.termination.reason", required=True
+        comodel_name="hr.employee.termination.reason", required=True
     )
     notes = fields.Text()
 

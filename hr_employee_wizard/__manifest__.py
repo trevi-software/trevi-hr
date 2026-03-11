@@ -32,5 +32,4 @@
         "wizard/hr_employee_wizard_views.xml",
         "views/hr_recruitment_view.xml",
     ],
-    "installable": True,
 }

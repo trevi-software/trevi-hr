@@ -14,6 +14,4 @@
         "hr_leave_type_unique",
         "payroll",
     ],
-    "data": [],
-    "installable": True,
 }

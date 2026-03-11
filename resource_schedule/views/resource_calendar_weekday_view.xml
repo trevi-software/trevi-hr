@@ -37,8 +37,8 @@
     </record>
 
     <menuitem
-        action="open_calendar_weekday_view"
         id="menu_calendar_weekday_view"
+        action="open_calendar_weekday_view"
         parent="menu_schedule_config"
         sequence="100"
     />

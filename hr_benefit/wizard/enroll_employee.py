@@ -11,14 +11,11 @@ class EnrollEmployee(models.TransientModel):
     _description = "Employee Benefit Enrollment Form"
 
     benefit_id = fields.Many2one(
-        string="Benefit",
         comodel_name="hr.benefit",
         required=True,
         default=lambda self: self._get_benefit(),
     )
-    employee_id = fields.Many2one(
-        comodel_name="hr.employee", string="Employee", required=True
-    )
+    employee_id = fields.Many2one(comodel_name="hr.employee", required=True)
     start_date = fields.Date(
         string="Enrollment Date", required=True, default=fields.Date.today()
     )

@@ -75,7 +75,6 @@ class NewLabour(models.TransientModel):
         string="Status",
     )
     company_id = fields.Many2one(
-        string="Company",
         comodel_name="res.company",
         default=lambda s: s.env.company,
         required=True,
@@ -89,10 +88,9 @@ class NewLabour(models.TransientModel):
     id_no = fields.Char(string="Official ID")
     street = fields.Char()
     city = fields.Char()
-    state_id = fields.Many2one(comodel_name="res.country.state", string="State")
+    state_id = fields.Many2one(comodel_name="res.country.state")
     country_id = fields.Many2one(
         comodel_name="res.country",
-        string="Country",
         default=lambda s: s.env.company.country_id,
     )
     telephone = fields.Char()
@@ -112,32 +110,38 @@ class NewLabour(models.TransientModel):
     # Contract Details
     #
     job_id = fields.Many2one(comodel_name="hr.job", string="Applied Job")
-    department_id = fields.Many2one(comodel_name="hr.department", string="Department")
+    department_id = fields.Many2one(comodel_name="hr.department")
     struct_id = fields.Many2one(
         string="Salary Structure",
         comodel_name="hr.payroll.structure",
-        default=_get_struct,
+        default=lambda self: self._get_struct,
     )
     pps_id = fields.Many2one(
         string="Payroll Period Schedule",
         comodel_name="hr.payroll.period.schedule",
-        default=_get_pps,
+        default=lambda self: self._get_pps,
     )
     policy_group_id = fields.Many2one(
-        string="Policy Group", comodel_name="hr.policy.group", default=_get_policy_group
+        comodel_name="hr.policy.group", default=lambda self: self._get_policy_group
     )
     wage = fields.Float(
-        digits="Payroll", default=_get_wage, help="Basic Salary of the employee"
+        digits="Payroll",
+        default=lambda self: self._get_wage,
+        help="Basic Salary of the employee",
     )
     calendar_id = fields.Many2one(
         string="Working Schedule Template",
         comodel_name="resource.calendar",
-        default=_get_resource_calendar,
+        default=lambda self: self._get_resource_calendar,
     )
     date_start = fields.Date(string="Start Date", default=fields.Date.today())
     date_end = fields.Date(string="End Date")
-    trial_date_start = fields.Date(string="Trial Start Date", default=_get_trial_start)
-    trial_date_end = fields.Date(string="Trial End Date", default=_get_trial_end)
+    trial_date_start = fields.Date(
+        string="Trial Start Date", default=lambda self: self._get_trial_start
+    )
+    trial_date_end = fields.Date(
+        string="Trial End Date", default=lambda self: self._get_trial_end
+    )
 
     @api.onchange("company_id")
     def onchange_company(self):
@@ -146,14 +150,14 @@ class NewLabour(models.TransientModel):
             if not self.company_id:
                 continue
 
-            Contract = self.env["hr.contract"].with_company(self.company_id)
-            rec.wage = Contract._get_wage()
-            rec.struct_id = Contract._get_struct()
-            rec.trial_date_start = Contract._get_trial_date_start()
-            rec.trial_date_end = Contract._get_trial_date_end()
-            rec.calendar_id = Contract._get_resource_calendar()
-            rec.pps_id = Contract._get_pay_sched()
-            rec.policy_group_id = Contract._get_policy_group()
+            contract = self.env["hr.contract"].with_company(self.company_id)
+            rec.wage = contract._get_wage()
+            rec.struct_id = contract._get_struct()
+            rec.trial_date_start = contract._get_trial_date_start()
+            rec.trial_date_end = contract._get_trial_date_end()
+            rec.calendar_id = contract._get_resource_calendar()
+            rec.pps_id = contract._get_pay_sched()
+            rec.policy_group_id = contract._get_policy_group()
 
     @api.onchange("job_id")
     def onchange_job(self):
@@ -164,9 +168,9 @@ class NewLabour(models.TransientModel):
                 rec.department_id = False
                 rec.wage = False
                 continue
-            Contract = self.env["hr.contract"].with_company(rec.company_id)
+            contract = self.env["hr.contract"].with_company(rec.company_id)
             rec.department_id = rec.job_id.department_id
-            rec.wage = Contract._get_wage(job_id=self.job_id.id)
+            rec.wage = contract._get_wage(job_id=self.job_id.id)
 
     @api.onchange("date_start")
     def onchange_date(self):
@@ -182,10 +186,10 @@ class NewLabour(models.TransientModel):
     def onchange_trial(self):
 
         for rec in self:
-            Contract = self.env["hr.contract"].with_company(rec.company_id)
+            contract = self.env["hr.contract"].with_company(rec.company_id)
             if rec.trial_date_start:
-                dStart = self.trial_date_start
-                rec.trial_date_end = Contract._get_trial_date_end_from_start(dStart)
+                d_start = self.trial_date_start
+                rec.trial_date_end = contract._get_trial_date_end_from_start(d_start)
 
     @api.onchange("country_id")
     def onchange_country(self):

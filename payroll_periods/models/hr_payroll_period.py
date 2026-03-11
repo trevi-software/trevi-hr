@@ -42,7 +42,6 @@ class HrPayrollPeriod(models.Model):
         readonly=True,
     )
     company_id = fields.Many2one(
-        string="Company",
         comodel_name="res.company",
         default=lambda self: self.env.company,
         required=True,
@@ -162,11 +161,9 @@ class HrPayrollPeriod(models.Model):
                     raise exceptions.ValidationError(
                         _("Validation Error")
                         + "\n"
-                        + _(
-                            "Critical exceptions remain in %s. If you wish to \
-                            proceed you must resolve or ignore them."
-                        )
-                        % (period.name)
+                        + _("Critical exceptions remain in %(period)s. If you wish to \
+                            proceed you must resolve or ignore them.")
+                        % {"period": period.name}
                     )
         self.write({"state": "payment"})
 
@@ -296,10 +293,12 @@ class HrPayrollPeriod(models.Model):
                 if term.name >= temp_date_start and term.name < temp_date_end:
                     temp_date_end = term.name
 
-        month_name, month_no, year_no = get_period_year(
-            dPeriodStart, annual_pay_periods
-        )
-        slip_name = _("Pay Slip for %s for %s/%s") % (ee.name, year_no, month_name)
+        month_name, _, year_no = get_period_year(dPeriodStart, annual_pay_periods)
+        slip_name = _("Pay Slip for %(employee)s for %(year)s/%(month)s") % {
+            "employee": ee.name,
+            "year": year_no,
+            "month": month_name,
+        }
         res = {
             "employee_id": ee.id,
             "name": slip_name,

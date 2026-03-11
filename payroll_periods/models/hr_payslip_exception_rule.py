@@ -41,7 +41,6 @@ result = categories.GROSS.amount > categories.NET.amount"""
         default=True,
     )
     company_id = fields.Many2one(
-        string="Company",
         comodel_name="res.company",
         default=lambda self: self.env.company,
     )
@@ -55,7 +54,7 @@ result = categories.GROSS.amount > categories.NET.amount"""
         string="Python Condition",
         readonly=False,
         help="The condition that triggers the exception.",
-        default=_generate_condition_str,
+        default=lambda self: self._generate_condition_str,
     )
     severity = fields.Selection(
         selection=[("low", "Low"), ("medium", "Medium"), ("critical", "Critical")],
@@ -82,7 +81,8 @@ result = categories.GROSS.amount > categories.NET.amount"""
                     _("Error!")
                     + "\n"
                     + _(
-                        "Wrong python condition defined for payroll exception rule %s (%s)."
+                        "Wrong python condition defined for payroll exception"
+                        " rule %(name)s (%(code)s)."
                     )
-                    % (self.name, self.code)
+                    % {"name": self.name, "code": self.code}
                 )

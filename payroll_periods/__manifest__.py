@@ -32,5 +32,4 @@
     "demo": [
         "data/hr_payroll_period_demo.xml",
     ],
-    "installable": True,
 }

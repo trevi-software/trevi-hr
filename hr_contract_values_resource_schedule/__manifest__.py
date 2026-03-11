@@ -21,5 +21,4 @@
     "demo": [
         "data/hr_contract_values_demo.xml",
     ],
-    "installable": True,
 }

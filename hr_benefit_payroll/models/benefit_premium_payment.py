@@ -23,7 +23,6 @@ class PremiumPayment(models.Model):
 
     date = fields.Date(required=True, default=fields.Date.today())
     policy_id = fields.Many2one(
-        string="Policy",
         comodel_name="hr.benefit.policy",
         domain=_compute_policy_id_domain,
         required=True,
@@ -31,7 +30,6 @@ class PremiumPayment(models.Model):
         states={"draft": [("readonly", False)]},
     )
     employee_id = fields.Many2one(
-        string="Employee",
         comodel_name="hr.employee",
         required=True,
         readonly=True,
@@ -43,9 +41,7 @@ class PremiumPayment(models.Model):
         readonly=True,
         states={"draft": [("readonly", False)]},
     )
-    payslip_id = fields.Many2one(
-        string="Payslip", comodel_name="hr.payslip", ondelete="cascade"
-    )
+    payslip_id = fields.Many2one(comodel_name="hr.payslip", ondelete="cascade")
     state = fields.Selection(
         selection=[
             ("draft", "Draft"),
@@ -82,9 +78,9 @@ class PremiumPayment(models.Model):
                     _(
                         "Permission Denied"
                         'You may not delete a premium payment that is past the "draft" stage.'
-                        "\nPolicy: %s\nPayment Date: %s"
+                        "\nPolicy: %(name)s\nPayment Date: %(date)s"
                     )
-                    % (payment.policy_id.name, payment.date)
+                    % {"name": payment.policy_id.name, "date": payment.date}
                 )
 
         return super().unlink()
