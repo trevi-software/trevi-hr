@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="group_hr_infraction_entry" model="res.groups">
+            <field name="name">Infraction Entry</field>
+            <field name="category_id" ref="base.module_category_human_resources" />
+            <field name="users" eval="[(4, ref('base.user_root'))]" />
+            <field
+                name="comment"
+            >the user will be able to read and create Infraction records</field>
+        </record>
+
+        <record id="group_hr_infraction_approve" model="res.groups">
+            <field name="name">Infraction Approval</field>
+            <field name="category_id" ref="base.module_category_human_resources" />
+            <field name="users" eval="[(4, ref('base.user_root'))]" />
+            <field name="comment">the user will be able to approve Infractions</field>
+        </record>
+
+    </data>
+</odoo>
