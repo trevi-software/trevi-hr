@@ -40,5 +40,5 @@ class HrContract(models.Model):
 
     policy_group_id = fields.Many2one(
         comodel_name="hr.policy.group",
-        default=lambda self: self._get_policy_group,
+        default=lambda self: self._get_policy_group(),
     )

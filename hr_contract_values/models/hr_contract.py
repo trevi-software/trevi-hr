@@ -147,8 +147,8 @@ class HrContract(models.Model):
         return res
 
     wage = fields.Monetary(default=lambda self: self._get_wage)
-    trial_date_start = fields.Date(default=lambda self: self._get_trial_date_start)
-    trial_date_end = fields.Date(default=lambda self: self._get_trial_date_end)
+    trial_date_start = fields.Date(default=lambda self: self._get_trial_date_start())
+    trial_date_end = fields.Date(default=lambda self: self._get_trial_date_end())
     structure_type_id = fields.Many2one(default=lambda self: self._get_structure_type)
 
     @api.model
