@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hr_employee_termination_pm,access_hr_employee_termination,hr_employee_status.model_hr_employee_termination,payroll.group_payroll_manager,1,0,0,0
-access_hr_employee_termination_reason_pm,access_hr_employee_termination_reason,hr_employee_status.model_hr_employee_termination_reason,payroll.group_payroll_manager,1,0,0,0
