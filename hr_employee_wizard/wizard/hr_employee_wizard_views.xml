@@ -50,7 +50,10 @@
                                     domain="[('company_id','=',company_id)]"
                                     attrs="{'required': [('state', '!=', 'personal')]}"
                                 />
-                                <field name="wage" attrs="{'required': [('state', '!=', 'personal')]}" />
+                                <field
+                                    name="wage"
+                                    attrs="{'required': [('state', '!=', 'personal')]}"
+                                />
                                 <field
                                     name="struct_id"
                                     attrs="{'required': [('state', '!=', 'personal')]}"
@@ -61,7 +64,10 @@
                                     name="department_id"
                                     domain="[('company_id','=',company_id)]"
                                 />
-                                <field name="pps_id" attrs="{'required': [('state', '!=', 'personal')]}" />
+                                <field
+                                    name="pps_id"
+                                    attrs="{'required': [('state', '!=', 'personal')]}"
+                                />
                                 <field
                                     name="policy_group_id"
                                     attrs="{'required': [('state', '!=', 'personal')]}"
@@ -189,9 +195,18 @@
                                 class="oe_inline"
                             />
                         </div>
-                        <field name="adv_amount" attrs="{'readonly': [('adv_override', '=', False)]}" />
-                        <field name="prm_amount" attrs="{'readonly': [('prm_override', '=', False)]}" />
-                        <field name="prm_total" attrs="{'readonly': [('prm_override', '=', False)]}" />
+                        <field
+                            name="adv_amount"
+                            attrs="{'readonly': [('adv_override', '=', False)]}"
+                        />
+                        <field
+                            name="prm_amount"
+                            attrs="{'readonly': [('prm_override', '=', False)]}"
+                        />
+                        <field
+                            name="prm_total"
+                            attrs="{'readonly': [('prm_override', '=', False)]}"
+                        />
                     </group>
                 </group>
             </form>
