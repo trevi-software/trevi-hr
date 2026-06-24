@@ -1,0 +1,32 @@
+<templates>
+    <div t-name="photo.action" class="oe_hr_webcam oe_hr_webcam_stopped">
+        <div>
+            <div class="oe_inline">
+                <span class="oe_window_webcam">
+                    <video
+                        class="webcam_video"
+                        height="240"
+                        autoplay="true"
+                        muted="true"
+                    />
+                </span>
+
+                <span>
+                    <canvas class="webcam_canvas" width="320" height="240" />
+                </span>
+                <div text-align="center">
+                    <button
+                        class="btn btn-primary webcam_snap"
+                        icon="fa fa-camera"
+                    >Take Picture</button>
+                    | <button
+                        class="btn btn-primary webcam_close"
+                        icon="fa fa-disk"
+                        disabled="1"
+                    >Update &amp; Close</button>
+                    | <button class="btn btn-primary webcam_cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</templates>
