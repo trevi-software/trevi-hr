@@ -72,7 +72,7 @@ class ImportEmployee(models.Model):
     )
     resource_calendar_id = fields.Many2one("resource.calendar", "Working Schedule")
     wage = fields.Monetary(required=True, help="Employee's monthly gross wage.")
-    contract_type_id = fields.Many2one("hr.contract.type", "Contract Type")
+    contract_type_id = fields.Many2one("hr.contract.type")
     struct_id = fields.Many2one("hr.payroll.structure", required=True)
     pps_id = fields.Many2one(
         "hr.payroll.period.schedule", "Payroll Period Schedule", required=True

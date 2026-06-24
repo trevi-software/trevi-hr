@@ -1,7 +1,3 @@
-.. image:: https://odoo-community.org/readme-banner-image
-   :target: https://odoo-community.org/get-involved?utm_source=readme
-   :alt: Odoo Community Association
-
 ============================
 Contracts - Initial Settings
 ============================
@@ -20,9 +16,9 @@ Contracts - Initial Settings
 .. |badge2| image:: https://img.shields.io/badge/license-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
-.. |badge3| image:: https://img.shields.io/badge/github-TREVI Software%2Ftrevi--hr-lightgray.png?logo=github
-    :target: https://github.com/TREVI Software/trevi-hr/tree/15.0/hr_contract_values
-    :alt: TREVI Software/trevi-hr
+.. |badge3| image:: https://img.shields.io/badge/github-trevi--software%2Ftrevi--hr-lightgray.png?logo=github
+    :target: https://github.com/trevi-software/trevi-hr/tree/16.0/hr_contract_values
+    :alt: trevi-software/trevi-hr
 
 |badge1| |badge2| |badge3|
 
@@ -39,10 +35,10 @@ This module defines starting values for new contracts. These include:
 Bug Tracker
 ===========
 
-Bugs are tracked on `GitHub Issues <https://github.com/TREVI Software/trevi-hr/issues>`_.
+Bugs are tracked on `GitHub Issues <https://github.com/trevi-software/trevi-hr/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/TREVI Software/trevi-hr/issues/new?body=module:%20hr_contract_values%0Aversion:%2015.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/trevi-software/trevi-hr/issues/new?body=module:%20hr_contract_values%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -63,6 +59,6 @@ Other credits
 Maintainers
 ~~~~~~~~~~~
 
-This module is part of the `TREVI Software/trevi-hr <https://github.com/TREVI Software/trevi-hr/tree/15.0/hr_contract_values>`_ project on GitHub.
+This module is part of the `trevi-software/trevi-hr <https://github.com/trevi-software/trevi-hr/tree/16.0/hr_contract_values>`_ project on GitHub.
 
 You are welcome to contribute.

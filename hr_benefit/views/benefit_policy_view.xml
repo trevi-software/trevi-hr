@@ -144,7 +144,7 @@
                                         'readonly': [('advantage_override', '=', False)],
                                         'required': [('advantage_override', '=', True)]
                                     }"
-                                 />
+                                />
                                 <field
                                     name="premium_amount"
                                     attrs="{
@@ -158,7 +158,7 @@
                                          'readonly': [('premium_override', '=', False)],
                                          'required': [('premium_override', '=', True)]
                                     }"
-                                 />
+                                />
                                 <field name="premium_installments" readonly="1" />
                             </group>
                         </page>

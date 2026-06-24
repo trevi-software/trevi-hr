@@ -25,7 +25,10 @@
                 <group string="Employees">
                     <field name="employee_ids" nolabel="1" />
                 </group>
-                <group string="Teams" attrs="{'invisible': [('sched_type', '!=', 'team')]}">
+                <group
+                    string="Teams"
+                    attrs="{'invisible': [('sched_type', '!=', 'team')]}"
+                >
                     <field name="schedule_team_ids" />
                 </group>
                 <newline />

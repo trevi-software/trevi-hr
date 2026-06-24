@@ -23,8 +23,8 @@
                         name="resource_schedule_setting_container"
                     >
                         <div
-                            class="col-12 col-lg-6 o_setting_box"
                             id="defaults_setting"
+                            class="col-12 col-lg-6 o_setting_box"
                             title="Defaults"
                         >
                             <div class="o_setting_right_pane">
