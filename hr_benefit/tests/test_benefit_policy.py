@@ -199,7 +199,7 @@ class TestBenefit(common.TestBenefitCommon):
         self.assertFalse(pol.end_date)
         self.assertEqual("open", pol.state)
 
-        wiz = self.EndWizard.with_context({"end_benefit_policy_id": pol.id}).create({})
+        wiz = self.EndWizard.with_context(end_benefit_policy_id=pol.id).create({})
         wiz.date = date.today()
         wiz.end_policy()
 
@@ -212,7 +212,7 @@ class TestBenefit(common.TestBenefitCommon):
         bn = self.create_benefit({"name": "B", "code": "B"})
         self.create_earning(bn, date.today(), allowance=1000)
 
-        wiz = self.EnrollWizard.with_context({"active_id": bn.id}).create(
+        wiz = self.EnrollWizard.with_context(active_id=bn.id).create(
             {"employee_id": self.eeJohn.id, "start_date": date.today()}
         )
         wiz.do_enroll()
@@ -232,7 +232,7 @@ class TestBenefit(common.TestBenefitCommon):
         bn = self.create_benefit({"name": "B", "code": "B"})
         self.create_earning(bn, date.today(), allowance=1000)
 
-        wiz = self.EnrollMultiWizard.with_context({"active_id": bn.id}).create(
+        wiz = self.EnrollMultiWizard.with_context(active_id=bn.id).create(
             {"employee_ids": [(6, 0, [self.eeJohn.id])], "start_date": date.today()}
         )
         wiz.do_multi_enroll()
