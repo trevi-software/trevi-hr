@@ -25,7 +25,6 @@ class HrPayslip(models.Model):
 
     @api.onchange("date_from", "date_to")
     def onchange_dates(self):
-        super().onchange_dates()
         for rec in self:
             if not rec.date_from or not rec.date_to:
                 continue
@@ -35,6 +34,9 @@ class HrPayslip(models.Model):
             )
             write_vals = [(0, 0, v) for _k, v in benefit_lines_dict.items()]
             rec.benefit_line_ids = write_vals
+        
+        return super().onchange_dates()
+
 
     def get_payslip_vals(
         self, date_from, date_to, employee_id=False, contract_id=False, struct_id=False
