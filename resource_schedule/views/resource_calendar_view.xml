@@ -40,7 +40,10 @@
                             widget="section_and_note_text"
                             optional="show"
                         />
-                        <field name="dayofweek" attrs="{'required': [('display_type', '=', False)]}" />
+                        <field
+                            name="dayofweek"
+                            attrs="{'required': [('display_type', '=', False)]}"
+                        />
                         <field
                             name="day_period"
                             attrs="{'required': [('display_type', '=', False)]}"
