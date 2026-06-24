@@ -59,7 +59,9 @@ class HrContract(models.Model):
         records = super().create(vals_list)
 
         for vals in vals_list:
-            self._tag_employees(vals.get("employee_id", False), vals.get("job_id", False))
+            self._tag_employees(
+                vals.get("employee_id", False), vals.get("job_id", False)
+            )
         return records
 
     def write(self, vals):
