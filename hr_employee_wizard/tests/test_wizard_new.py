@@ -71,7 +71,7 @@ class RecruitmentTestCase(TransactionCase):
     def create_wizard(self):
         ctx = self.env.context.copy()
         ctx["csdate"] = self.labour_data["date_start"]
-        return self.labour_model.with_context(ctx).create(self.labour_data)
+        return self.labour_model.with_context(**ctx).create(self.labour_data)
 
     def create_payroll_schedule(self, stype=False, initial_date=False):
         return self.PPSchedule.create(
