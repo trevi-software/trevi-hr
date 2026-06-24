@@ -1,4 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hr_transfer_default,access_hr_transfer_default,model_hr_department_transfer,base.group_user,1,0,0,0
-access_hr_transfer_officer,access_hr_transfer_officer,model_hr_department_transfer,hr.group_hr_user,1,1,1,1
-access_hr_transfer_approve,access_hr_transfer_approve,model_hr_department_transfer,group_hr_transfer,1,1,1,1
