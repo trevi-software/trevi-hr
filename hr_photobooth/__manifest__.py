@@ -19,9 +19,9 @@
         "security/ir.model.access.csv",
         "views/hr_photobooth_view.xml",
     ],
-    'assets': {
-        'web.assets_backend': [
-            'hr_photobooth/static/src/js/webcam_widget.js',
+    "assets": {
+        "web.assets_backend": [
+            "hr_photobooth/static/src/js/webcam_widget.js",
         ],
     },
 }
