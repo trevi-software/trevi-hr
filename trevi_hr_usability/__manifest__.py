@@ -18,5 +18,4 @@
         "security/ir_rule.xml",
         "views/hr_simplify_view.xml",
     ],
-    "installable": True,
 }

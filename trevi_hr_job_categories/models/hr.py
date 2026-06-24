@@ -53,13 +53,16 @@ class HrContract(models.Model):
 
         return
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
 
-        res = super().create(vals)
+        records = super().create(vals_list)
 
-        self._tag_employees(vals.get("employee_id", False), vals.get("job_id", False))
-        return res
+        for vals in vals_list:
+            self._tag_employees(
+                vals.get("employee_id", False), vals.get("job_id", False)
+            )
+        return records
 
     def write(self, vals):
 

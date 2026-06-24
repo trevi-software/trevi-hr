@@ -1,6 +1,7 @@
 # Copyright (C) 2021 Trevi Software (https://trevi.et)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
+from datetime import datetime, timedelta
 
 from dateutil.relativedelta import relativedelta
 
@@ -15,6 +16,16 @@ class TestHrEmployeeSeniority(common.TransactionCase):
 
         self.HrEmployee = self.env["hr.employee"]
         self.HrContract = self.env["hr.contract"]
+
+    def _get_days_in_month(self, d):
+
+        last_date = (
+            d
+            - timedelta(days=(d.day - 1))
+            + relativedelta(months=+1)
+            + relativedelta(days=-1)
+        )
+        return last_date.day
 
     def test_no_contract(self):
         """Seniority of employee with no contracts is zero"""
@@ -122,6 +133,44 @@ class TestHrEmployeeSeniority(common.TransactionCase):
         )
         self.assertEqual(
             float_compare(0.0, ee.length_of_service, precision_digits=2), 0
+        )
+
+    def test_contract_end_in_future(self):
+        """Contract with end date in the future returns only until today"""
+
+        ee = self.HrEmployee.create({"name": "EE"})
+        contract_start = fields.Date.today() - relativedelta(months=3, days=14)
+        self.HrContract.create(
+            {
+                "name": "C",
+                "employee_id": ee.id,
+                "wage": 1.0,
+                "date_start": contract_start,
+                "date_end": fields.Date.today() + relativedelta(months=3),
+            }
+        )
+        delta = abs(
+            relativedelta(
+                contract_start,
+                fields.Date.today(),
+            )
+        )
+        next_even_month = contract_start + relativedelta(months=4)
+        prev_even_month = contract_start + relativedelta(months=3)
+        timedelta_month_days = datetime.combine(
+            next_even_month, datetime.min.time()
+        ) - datetime.combine(prev_even_month, datetime.min.time())
+        total_month_days = timedelta_month_days / timedelta(days=1)
+        relative_today_days = relativedelta(prev_even_month, fields.Date.today())
+        months = round(
+            (
+                float(delta.years * 12 + delta.months)
+                + abs(relative_today_days.days / total_month_days)
+            ),
+            2,
+        )
+        self.assertEqual(
+            float_compare(months, ee.length_of_service, precision_digits=1), 0
         )
 
     def test_no_contract_no_employment_date(self):

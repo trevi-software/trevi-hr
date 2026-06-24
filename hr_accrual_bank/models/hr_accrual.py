@@ -78,11 +78,7 @@ class HrAccrualLine(models.Model):
     _rec_name = "date"
 
     date = fields.Date(required=True, default=fields.Date.today())
-    accrual_id = fields.Many2one(
-        string="Accrual", comodel_name="hr.accrual", required=True
-    )
-    employee_id = fields.Many2one(
-        string="Employee", comodel_name="hr.employee", required=True
-    )
+    accrual_id = fields.Many2one(comodel_name="hr.accrual", required=True)
+    employee_id = fields.Many2one(comodel_name="hr.employee", required=True)
     leave_allocation_id = fields.Many2one("hr.leave.allocation")
     amount = fields.Float(digits="Accruals", required=True)

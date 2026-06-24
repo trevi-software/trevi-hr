@@ -23,9 +23,9 @@ class InitWage(models.Model):
         )
     ]
 
-    job_id = fields.Many2one(string="Job", comodel_name="hr.job")
+    job_id = fields.Many2one(comodel_name="hr.job")
     starting_wage = fields.Monetary(required=True)
-    currency_id = fields.Many2one("res.currency", "Currency")
+    currency_id = fields.Many2one("res.currency")
     is_default = fields.Boolean(string="Use as Default", help="Use as default wage")
     contract_init_id = fields.Many2one(
         comodel_name="hr.contract.init", string="Contract Settings"

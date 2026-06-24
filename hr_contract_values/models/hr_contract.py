@@ -2,11 +2,10 @@
 # Copyright (C) 2013 Michael Telahun Makonnen <mmakonnen@gmail.com>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as OE_DFORMAT
 from odoo.tools.translate import _
 
 
@@ -19,7 +18,6 @@ class ContractInit(models.Model):
     _order = "date desc"
 
     name = fields.Char(
-        size=64,
         required=True,
     )
     date = fields.Date(
@@ -38,7 +36,6 @@ class ContractInit(models.Model):
     active = fields.Boolean(default=True)
     locked = fields.Boolean()
     company_id = fields.Many2one(
-        string="Company",
         comodel_name="res.company",
         default=lambda self: self.env.company,
         groups="base.group_multi_company",
@@ -120,13 +117,13 @@ class HrContract(models.Model):
         res = False
         init = self.get_latest_initial_values()
         if init is not None and init.trial_period and init.trial_period > 0:
-            res = datetime.now().strftime(OE_DFORMAT)
+            res = fields.Date.today()
         return res
 
     @api.model
     def _get_trial_date_end(self):
 
-        return self._get_trial_date_end_from_start(datetime.now().date())
+        return self._get_trial_date_end_from_start(fields.Date.today())
 
     @api.model
     def _get_trial_date_end_from_start(self, dToday):
@@ -135,7 +132,7 @@ class HrContract(models.Model):
         init = self.get_latest_initial_values()
         if dToday and init is not None and init.trial_period and init.trial_period > 0:
             dEnd = dToday + timedelta(days=(init.trial_period))
-            res = dEnd.strftime(OE_DFORMAT)
+            res = dEnd
         return res
 
     @api.model
@@ -147,10 +144,10 @@ class HrContract(models.Model):
             res = init.contract_type
         return res
 
-    wage = fields.Monetary(default=_get_wage)
-    trial_date_start = fields.Date(default=_get_trial_date_start)
-    trial_date_end = fields.Date(default=_get_trial_date_end)
-    structure_type_id = fields.Many2one(default=_get_structure_type)
+    wage = fields.Monetary(default=lambda self: self._get_wage)
+    trial_date_start = fields.Date(default=lambda self: self._get_trial_date_start())
+    trial_date_end = fields.Date(default=lambda self: self._get_trial_date_end())
+    structure_type_id = fields.Many2one(default=lambda self: self._get_structure_type)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -174,15 +171,13 @@ class HrContract(models.Model):
     @api.onchange("trial_date_start")
     def onchange_trial(self):
 
-        res = {"value": {"trial_date_end": False}}
+        self.trial_date_end = False
 
         init = self.get_latest_initial_values()
         if init is not None and init.trial_period and init.trial_period > 0:
-            dStart = datetime.strptime(self.trial_date_start, OE_DFORMAT)
+            dStart = self.trial_date_start
             dEnd = dStart + timedelta(days=(init.trial_period - 1))
-            res["value"]["trial_date_end"] = dEnd.strftime(OE_DFORMAT)
-
-        return res
+            self.trial_date_end = dEnd
 
     @api.model
     def get_latest_initial_values(self, today_str=None):
@@ -191,8 +186,8 @@ class HrContract(models.Model):
 
         init_obj = self.env["hr.contract.init"]
         if today_str is None:
-            today_str = datetime.now().strftime(OE_DFORMAT)
-        dToday = datetime.strptime(today_str, OE_DFORMAT).date()
+            today_str = fields.Date.today()
+        dToday = fields.Date.to_date(today_str)
         domain = [("date", "<=", today_str)]
         res = None
 

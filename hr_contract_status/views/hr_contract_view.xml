@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
     <!-- Menus -->
 
     <menuitem
-        name="Contracts"
         id="submenu_hr_contracts"
+        name="Contracts"
         parent="hr.menu_hr_root"
         sequence="4"
         groups="hr.group_hr_user"
@@ -13,8 +13,8 @@
 
     <!-- Remove stock Contracts menuitem and put it in the submenu -->
     <menuitem
-        action="hr_contract.action_hr_contract"
         id="hr_contract.hr_menu_contract"
+        action="hr_contract.action_hr_contract"
         parent="submenu_hr_contracts"
         name="Contracts"
         sequence="10"
@@ -66,8 +66,8 @@
         </field>
     </record>
     <menuitem
-        action="open_expiring_contracts"
         id="menu_expiring_contracts"
+        action="open_expiring_contracts"
         parent="submenu_hr_contracts"
         groups="hr.group_hr_user"
         sequence="20"
@@ -101,8 +101,8 @@
         </field>
     </record>
     <menuitem
-        action="open_draft_contracts"
         id="menu_draft_contracts"
+        action="open_draft_contracts"
         parent="submenu_hr_contracts"
         groups="hr.group_hr_user"
         sequence="30"
@@ -133,6 +133,7 @@
                         class="oe_highlight"
                     />
                 </xpath>
+
                 <xpath expr="//field[@name='date_end']" position="after">
                     <field name="trial_date_end" />
                 </xpath>
@@ -144,16 +145,34 @@
         <field name="name">hr.contract.view.form.contract_init</field>
         <field name="model">hr.contract</field>
         <field name="inherit_id" ref="hr_contract_values.hr_contract_view_form" />
-        <field name="priority">99</field>
+        <field name="priority" eval="99" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_id']" position="replace">
-                <field name="job_id" attrs="{'invisible': [('state','=','close')]}" />
+                <field name="job_id" attrs="{'invisible': [('state', '=', 'close')]}" />
                 <field
                     name="end_job_id"
-                    attrs="{'invisible': [('state','!=','close')]}"
+                    attrs="{'invisible': [('state', '!=', 'close')]}"
                 />
             </xpath>
         </field>
     </record>
-
+<!--
+    <record id="hr_hr_employee_view_form2" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.contract_state</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2" />
+        <field name="arch" type="xml">
+            <data>
+                <xpath
+                    expr="//button[@name='%(hr_contract.act_hr_employee_2_hr_contract)d']"
+                    position="attributes"
+                >
+                    <attribute
+                        name="groups"
+                    >hr_contract.group_hr_contract_manager,hr.group_hr_user</attribute>
+                </xpath>
+            </data>
+        </field>
+    </record>
+-->
 </odoo>

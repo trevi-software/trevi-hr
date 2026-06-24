@@ -47,36 +47,17 @@ class HrContract(models.Model):
     )
 
     # The following are redefined again to make them editable only in certain states
-    employee_id = fields.Many2one(
-        readonly=True, states={"draft": [("readonly", False)]}
-    )
-    structure_type_id = fields.Many2one(
-        readonly=True, states={"draft": [("readonly", False)]}
-    )
+    employee_id = fields.Many2one(readonly=True)
+    structure_type_id = fields.Many2one(readonly=True)
     job_id = fields.Many2one(
         comodel_name="hr.job",
         compute=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         required=False,
-        states={
-            "draft": [("required", True)],
-            "trial": [("required", True)],
-            "open": [("required", True)],
-        },
         tracking=True,
     )
-    date_start = fields.Date(
-        readonly=True,
-        states={"draft": [("readonly", False)]},
-    )
-    wage = fields.Monetary(
-        readonly=True,
-        states={
-            "draft": [("readonly", False)],
-            "trial": [("readonly", False)],
-            "trial_ending": [("readonly", False)],
-        },
-    )
+    date_start = fields.Date(readonly=True)
+    wage = fields.Monetary(readonly=True)
 
     @api.depends("job_id")
     def _compute_department(self):
@@ -121,8 +102,8 @@ class HrContract(models.Model):
             [
                 ("state", "=", "draft"),
                 ("kanban_state", "=", "done"),
-                ("date_start", "<=", fields.Date.to_string(date.today())),
-                ("trial_date_end", ">=", fields.Date.to_string(date.today())),
+                ("date_start", "<=", date.today()),
+                ("trial_date_end", ">=", date.today()),
             ]
         ).write({"state": "trial"})
 
@@ -132,8 +113,7 @@ class HrContract(models.Model):
                 ("state", "=", "trial"),
                 (
                     "trial_date_end",
-                    "<=",
-                    fields.Date.to_string(date.today() + relativedelta(days=7)),
+                    "<=" <= "date.today() + relativedelta(days=7)",
                 ),
             ]
         )
@@ -154,7 +134,7 @@ class HrContract(models.Model):
                 (
                     "trial_date_end",
                     "<=",
-                    fields.Date.to_string(date.today() - relativedelta(days=1)),
+                    date.today() - relativedelta(days=1),
                 ),
             ]
         )
@@ -173,23 +153,23 @@ class HrContract(models.Model):
                 (
                     "date_end",
                     "<=",
-                    fields.Date.to_string(date.today() + relativedelta(days=7)),
+                    date.today() + relativedelta(days=7),
                 ),
                 (
                     "date_end",
                     ">=",
-                    fields.Date.to_string(date.today() + relativedelta(days=1)),
+                    date.today() + relativedelta(days=1),
                 ),
                 "&",
                 (
                     "visa_expire",
                     "<=",
-                    fields.Date.to_string(date.today() + relativedelta(days=60)),
+                    date.today() + relativedelta(days=60),
                 ),
                 (
                     "visa_expire",
                     ">=",
-                    fields.Date.to_string(date.today() + relativedelta(days=1)),
+                    date.today() + relativedelta(days=1),
                 ),
             ]
         ).write({"state_ending": True})
@@ -197,18 +177,17 @@ class HrContract(models.Model):
         # Contract has expired
         self.search(
             [
-                ("state", "in", ["open", "close"]),
-                ("state_ending", "=", True),
+                ("state", "=", "open"),
                 "|",
                 (
                     "date_end",
                     "<=",
-                    fields.Date.to_string(date.today() + relativedelta(days=1)),
+                    date.today() + relativedelta(days=1),
                 ),
                 (
                     "visa_expire",
                     "<=",
-                    fields.Date.to_string(date.today() + relativedelta(days=1)),
+                    date.today() + relativedelta(days=1),
                 ),
             ]
         ).write({"state_ending": False})

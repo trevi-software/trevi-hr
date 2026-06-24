@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
     <record id="view_job_form" model="ir.ui.view">
@@ -7,7 +7,11 @@
         <field name="inherit_id" ref="hr.view_hr_job_form" />
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_title')]" position="inside">
-                <label for="category_ids" groups="hr.group_hr_manager" />
+                <label
+                    for="category_ids"
+                    class="oe_edit_only"
+                    groups="hr.group_hr_manager"
+                />
                 <field
                     name="category_ids"
                     widget="many2many_tags"

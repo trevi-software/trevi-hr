@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 from odoo.tests import common
 
 
-class TestContract(common.TransactionCase):
+class TestContract(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

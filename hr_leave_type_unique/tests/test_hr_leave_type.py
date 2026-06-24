@@ -9,7 +9,7 @@ from odoo.tests import common
 CODE = "XXX"
 
 
-class TestHrLeaveType(common.TransactionCase):
+class TestHrLeaveType(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

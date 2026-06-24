@@ -6,7 +6,7 @@ from datetime import date, datetime
 from odoo.tests import common
 
 
-class TestHrAttendance(common.TransactionCase):
+class TestHrAttendance(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
