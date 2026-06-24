@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_wizard_new_user,access_wizard_new,model_hr_employee_wizard_new,hr_recruitment.group_hr_recruitment_user,1,1,1,1
+access_wizard_benefit_user,access_wizard_benefit,model_hr_employee_wizard_benefit,hr_recruitment.group_hr_recruitment_user,1,1,1,1
