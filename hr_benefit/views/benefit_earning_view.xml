@@ -44,7 +44,7 @@
                             <field name="invert_jobs" />
                         </group>
                     </group>
-                    <group string="Allowance" attrs="{'invisible': [('type', '!=', 'allowance']}">
+                    <group string="Allowance" attrs="{'invisible': [('type', '!=', 'allowance')]}">
                         <group>
                             <group>
                                 <field
@@ -68,7 +68,7 @@
                             </group>
                         </group>
                     </group>
-                    <group string="Re-imbursement" invisible="type != 'reimburse'">
+                    <group string="Re-imbursement" attrs="{'invisible': [('type', '!=', 'reimburse')]}">
                         <group>
                             <field name="reim_nolimit" />
                         </group>
