@@ -6,6 +6,10 @@
 from odoo import api, fields, models
 
 
+import logging
+_logger = logging.getLogger(__name__)
+
+
 class EmployeeSetInactive(models.TransientModel):
 
     _name = "hr.contract.end"
@@ -21,19 +25,20 @@ class EmployeeSetInactive(models.TransientModel):
 
         contract_id = self.env.context.get("end_contract_id", False)
         if not contract_id:
+            _logger.warning("No end_contract_id found in context")
             return False
 
         data = self.env["hr.contract"].browse(contract_id).read(["employee_id"])
-        return data["employee_id"][0]
+        return data[0]["employee_id"] if data else False
 
     contract_id = fields.Many2one(
         comodel_name="hr.contract",
-        default=lambda self: self._get_contract,
+        default=lambda self: self._get_contract(),
         readonly=True,
     )
     employee_id = fields.Many2one(
         comodel_name="hr.employee",
-        default=lambda self: self._get_employee,
+        default=lambda self: self._get_employee(),
         required=True,
         readonly=True,
     )
