@@ -66,26 +66,21 @@ class HrEmployee(models.Model):
 
     def set_state_separation(self):
 
-        for ee in self:
-            ee.write(
-                {
-                    "status": "separation",
-                }
-            )
+        self.write(
+            { "status": "separation" }
+        )
 
     def set_state_inactive(self):
 
-        for ee in self:
-            ee.write(
-                {
-                    "active": False,
-                    "status": "inactive",
-                }
-            )
+        self.write(
+            {
+                "active": False,
+                "status": "inactive",
+            }
+        )
 
     def signal_reactivate(self):
 
-        for employee in self:
-            employee.set_state_active()
+        self.set_state_active()
 
         return True
