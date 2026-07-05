@@ -29,9 +29,14 @@ class HrContract(models.Model):
             if len(term_ids) == 0:
 
                 # Trigger a status change of the employee and his contract(s)
-                contract.employee_id.write({"active": True, "status": "active"})
-                if contract.state == "pending_done":
-                    contract.write({"state": "open"})
+                contract.employee_id.write({
+                    "active": True,
+                    "status": "active",
+                })
+                contract.write({
+                    "state": "open",
+                    "date_end": False,
+                })
             else:
 
                 for term in term_ids:
