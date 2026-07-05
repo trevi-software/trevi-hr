@@ -12,7 +12,7 @@
                         name="signal_reactivate"
                         type="object"
                         string="Re-Activate"
-                        attrs="{'invisible': [('status', '!=', 'inactive')]}"
+                        attrs="{'invisible': [('status', '!=', 'inactive'), ('status', '!=', 'separation')]}"
                         groups="hr.group_hr_manager"
                         class="oe_highlight"
                     />
