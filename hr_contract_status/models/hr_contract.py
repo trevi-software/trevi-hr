@@ -89,9 +89,9 @@ class HrContract(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if "state" in init_values:
-            if self.state == "trial_ending":
+            if self.state == "trial" and self.trial_ending:
                 return self.env.ref("hr_contract_status.mt_alert_trial_ending")
-            elif self.state == "contract_ending":
+            elif self.state_ending:
                 return self.env.ref("hr_contract_status.mt_alert_contract_ending")
         return super()._track_subtype(init_values)
 
@@ -103,7 +103,7 @@ class HrContract(models.Model):
             [
                 ("state", "=", "draft"),
                 ("kanban_state", "=", "done"),
-                ("date_start", "<=", date.today()),
+                ("date_start", "<=", date.today() - relativedelta(days=90)),
                 ("trial_date_end", ">=", date.today()),
             ]
         ).write({"state": "trial"})
@@ -114,7 +114,8 @@ class HrContract(models.Model):
                 ("state", "=", "trial"),
                 (
                     "trial_date_end",
-                    "<=" <= "date.today() + relativedelta(days=7)",
+                    "<=",
+                    date.today() + relativedelta(days=7),
                 ),
             ]
         )
@@ -161,17 +162,6 @@ class HrContract(models.Model):
                     ">=",
                     date.today() + relativedelta(days=1),
                 ),
-                "&",
-                (
-                    "visa_expire",
-                    "<=",
-                    date.today() + relativedelta(days=60),
-                ),
-                (
-                    "visa_expire",
-                    ">=",
-                    date.today() + relativedelta(days=1),
-                ),
             ]
         ).write({"state_ending": True})
 
@@ -179,16 +169,10 @@ class HrContract(models.Model):
         self.search(
             [
                 ("state", "=", "open"),
-                "|",
                 (
                     "date_end",
                     "<=",
-                    date.today() + relativedelta(days=1),
-                ),
-                (
-                    "visa_expire",
-                    "<=",
-                    date.today() + relativedelta(days=1),
+                    date.today(),
                 ),
             ]
         ).write({"state_ending": False})
