@@ -149,6 +149,8 @@ class ImportEmployee(models.Model):
                 "emergency_contact": rec.emergency_contact,
                 "emergency_phone": rec.emergency_phone,
                 "hire_date": rec.hire_date,
+                "country_id": country.id,
+                "country_of_birth": country.id,
             }
             if rec.education_level in [
                 "1",
@@ -213,7 +215,9 @@ class ImportEmployee(models.Model):
             }
             if data_id.date_end:
                 records.update({"date_end": data_id.date_end})
-            if data_id.trial_date_end:
+            if data_id.trial_date_end and (
+                data_id.date_start >= (data_id.trial_date_end - timedelta(days=90))
+            ):
                 records.update({"trial_date_end": data_id.trial_date_end})
             if data_id.resource_calendar_id:
                 records.update(
@@ -221,9 +225,15 @@ class ImportEmployee(models.Model):
                 )
             if data_id.contract_type_id:
                 records.update({"contract_type_id": data_id.contract_type_id.id})
+
+            ee.job_id = data_id.job_id.id
+            ee.department_id = data_id.job_id.department_id.id
             contracts_list.append(records)
 
-        self.env["hr.contract"].create(contracts_list).signal_confirm()
+        contracts = self.env["hr.contract"].create(contracts_list)
+        contracts.signal_confirm()
+        for c in contracts:
+            c.employee_id.contract_id = c.id
 
     def create_annual_leave_allocation(self, employees):
         leave_types = self.env["hr.leave.type"].search([("name", "=", "Annual Leave")])
