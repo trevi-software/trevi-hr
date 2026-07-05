@@ -97,8 +97,8 @@ class HrContract(models.Model):
                 ("state", "=", "trial"),
                 (
                     "trial_date_end",
-                    "<=",
-                    date.today() - relativedelta(days=1),
+                    "<",
+                    date.today(),
                 ),
             ]
         ).mapped("employee_id")
@@ -108,17 +108,11 @@ class HrContract(models.Model):
         contracts = self.search(
             [
                 ("state", "=", "open"),
-                "|",
                 (
                     "date_end",
-                    "<=",
-                    date.today() + relativedelta(days=1),
-                ),
-                (
-                    "visa_expire",
-                    "<=",
-                    date.today() + relativedelta(days=1),
-                ),
+                    "<",
+                    date.today(),
+                )
             ]
         )
         for c in contracts:
