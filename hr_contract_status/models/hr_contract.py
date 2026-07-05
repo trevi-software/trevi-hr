@@ -44,7 +44,7 @@ class HrContract(models.Model):
     # reference job_id don't include deactivated employees.
     # XXX ToDo: is it possible to change those references rather than using this hack?
     end_job_id = fields.Many2one(
-        comodel_name="hr.job", string="Job Title", readonly=True
+        comodel_name="hr.job", string="Last Job Position", readonly=True
     )
 
     # The following are redefined again to make them editable only in certain states
