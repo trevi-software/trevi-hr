@@ -43,10 +43,13 @@ class HrEmployee(models.Model):
         elif isinstance(dToday, datetime):
             dToday = dToday.date()
 
-        delta = relativedelta(dToday, dToday)
+        # Get contracts sorted by date_start
         contracts = self._get_contracts_list()
         if len(contracts) == 0:
             return 0.0
+        
+        dInitial = fields.Date.to_date(contracts[0].date_start)
+        delta = relativedelta(dInitial, dInitial)  # Initialize delta to zero
 
         for c in contracts:
             dStart = c.date_start
@@ -68,7 +71,7 @@ class HrEmployee(models.Model):
             delta += relativedelta(dEnd, dStart)
 
         # Set the number of months the employee has worked
-        date_part = float(delta.days) / float(self._get_days_in_month(dToday))
+        date_part = float(delta.days) / float(self._get_days_in_month(dInitial))
         return round(float((delta.years * 12) + delta.months) + date_part, 2)
 
     def _compute_employed_months(self):
