@@ -204,7 +204,9 @@ class HrContract(models.Model):
                 vals.update({"date_end": date.today()})
             c.write(vals)
 
-    def write(self, vals):
-        if vals.get("state") == "trial":
-            self._assign_open_contract()
-        return super().write(vals)
+    def signal_reactivate(self):
+        for c in self:
+            vals = {"state": "open"}
+            if c.date_end and c.date_end <= date.today():
+                vals.update({"date_end": False})
+            c.write(vals)
