@@ -47,14 +47,16 @@ class HrEmployee(models.Model):
                     ee.contract_id.trial_date_end
                     and ee.contract_id.trial_date_end > date.today()
                 ):
-                    raise UserError(_("The employee status may not be se to \
+                    raise UserError(_("The employee status may not be set to \
                         active before the trial period is over."))
         return super().write(vals)
 
     def set_state_active(self, status="active"):
 
         for ee in self:
-            if ee.status and ee.status == "separation":
+            if ee.status and ee.status in ("separation", "inactive"):
+                if ee.contract_id:
+                    ee.contract_id.signal_reactivate()
                 ee.write(
                     {
                         "active": True,
