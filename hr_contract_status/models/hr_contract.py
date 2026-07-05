@@ -24,6 +24,7 @@ class HrContract(models.Model):
             ("draft",),
             ("trial", "Trial"),
             ("open",),
+            ("pending_done", "Pending Separation"),
             ("close",),
             ("cancel",),
         ],
