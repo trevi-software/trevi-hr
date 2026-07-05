@@ -120,6 +120,12 @@ class ImportEmployee(models.Model):
     def import_records(self):
 
         partner_obj = self.env["res.partner"]
+        country = self.env.ref("base.et")
+        hr_responsible = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("hr_responsible.hr_responsible", False)
+        )
 
         values_list = []
         for rec in self:
