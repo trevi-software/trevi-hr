@@ -5,7 +5,7 @@
 {
     "name": "Employee contract status benefits",
     "summary": "Link hr_contract_status with hr_benefit",
-    "version": "16.0.1.0.0",
+    "version": "17.0.1.0.0",
     "category": "Human Resources",
     "images": ["static/src/img/main_screenshot.png"],
     "license": "AGPL-3",
