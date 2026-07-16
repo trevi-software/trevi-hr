@@ -1,13 +1,13 @@
 
+
+# TREVI Human Resource addons for Odoo
 <!-- /!\ Non OCA Context : Set here the badge of your runbot / runboat instance. -->
-[![Pre-commit Status](https://github.com/trevi-software/trevi-hr/actions/workflows/pre-commit.yml/badge.svg?branch=16.0)](https://github.com/trevi-software/trevi-hr/actions/workflows/pre-commit.yml?query=branch%3A16.0)
-[![Build Status](https://github.com/trevi-software/trevi-hr/actions/workflows/test.yml/badge.svg?branch=16.0)](https://github.com/trevi-software/trevi-hr/actions/workflows/test.yml?query=branch%3A16.0)
-[![codecov](https://codecov.io/gh/trevi-software/trevi-hr/branch/16.0/graph/badge.svg)](https://codecov.io/gh/trevi-software/trevi-hr)
+[![Pre-commit Status](https://github.com/trevi-software/trevi-hr/actions/workflows/pre-commit.yml/badge.svg?branch=17.0)](https://github.com/trevi-software/trevi-hr/actions/workflows/pre-commit.yml?query=branch%3A17.0)
+[![Build Status](https://github.com/trevi-software/trevi-hr/actions/workflows/test.yml/badge.svg?branch=17.0)](https://github.com/trevi-software/trevi-hr/actions/workflows/test.yml?query=branch%3A17.0)
+[![codecov](https://codecov.io/gh/trevi-software/trevi-hr/branch/17.0/graph/badge.svg)](https://codecov.io/gh/trevi-software/trevi-hr)
 <!-- /!\ Non OCA Context : Set here the badge of your translation instance. -->
 
 <!-- /!\ do not modify above this line -->
-
-# TREVI Human Resource addons for Odoo
 
 This repository contains Human Resource addons developed by TREVI Software
 
