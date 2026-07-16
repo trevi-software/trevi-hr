@@ -5,7 +5,7 @@
 {
     "name": "Departmental Transfer",
     "category": "HR",
-    "version": "16.0.1.0.0",
+    "version": "17.0.1.0.0",
     "images": ["static/src/img/main_screenshot.png"],
     "author": "TREVI Software, Michael Telahun Makonnen",
     "license": "AGPL-3",
