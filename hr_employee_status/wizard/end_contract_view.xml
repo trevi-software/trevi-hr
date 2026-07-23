@@ -13,7 +13,7 @@
         <field name="name">hr.contract.end.form</field>
         <field name="model">hr.contract.end</field>
         <field name="arch" type="xml">
-            <form string="Employee De-Activation Wizard" version="7.0">
+            <form string="Employee De-Activation Wizard">
                 <newline />
                 <div>
                     <b>
@@ -34,7 +34,7 @@
                     </group>
                     <group />
                 </group>
-                <group string="Notes" colspan="4">
+                <group string="Notes">
                     <field name="notes" nolabel="1" />
                 </group>
                 <footer>
