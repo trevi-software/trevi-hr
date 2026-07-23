@@ -140,24 +140,18 @@
                                 <field name="premium_override_total" invisible="1" />
                                 <field
                                     name="advantage_amount"
-                                    attrs="{
-                                        'readonly': [('advantage_override', '=', False)],
-                                        'required': [('advantage_override', '=', True)]
-                                    }"
+                                    readonly="not advantage_override"
+                                    required="advantage_override"
                                 />
                                 <field
                                     name="premium_amount"
-                                    attrs="{
-                                        'readonly': [('premium_override', '=', False)],
-                                        'required': [('premium_override', '=', True)]
-                                    }"
+                                    readonly="not premium_override"
+                                    required="premium_override"
                                 />
                                 <field
                                     name="premium_total"
-                                    attrs="{
-                                         'readonly': [('premium_override', '=', False)],
-                                         'required': [('premium_override', '=', True)]
-                                    }"
+                                    readonly="not premium_override"
+                                    required="premium_override"
                                 />
                                 <field name="premium_installments" readonly="1" />
                             </group>
