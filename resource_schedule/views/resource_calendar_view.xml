@@ -12,7 +12,7 @@
                     <field name="dayoff_type" />
                     <field
                         name="default_dayoff_ids"
-                        attrs="{'invisible': [('dayoff_type', '=', 'fix_all')]}"
+                        invisible="dayoff_type == 'fix_all'"
                     />
                 </group>
             </xpath>
@@ -42,22 +42,22 @@
                         />
                         <field
                             name="dayofweek"
-                            attrs="{'required': [('display_type', '=', False)]}"
+                            required="not display_type"
                         />
                         <field
                             name="day_period"
-                            attrs="{'required': [('display_type', '=', False)]}"
+                            required="not display_type"
                             optional="hide"
                         />
                         <field
                             name="hour_from"
                             widget="float_time"
-                            attrs="{'required': [('display_type', '=', False)]}"
+                            required="not display_type"
                         />
                         <field
                             name="hour_to"
                             widget="float_time"
-                            attrs="{'required': [('display_type', '=', False)]}"
+                            required="not display_type"
                         />
                         <field name="shift_type" optional="hide" />
                         <field
