@@ -12,7 +12,7 @@
                         name="signal_reactivate"
                         type="object"
                         string="Re-Activate"
-                        attrs="{'invisible': [('status', '!=', 'inactive'), ('status', '!=', 'separation')]}"
+                        invisible="status not in ('inactive', 'separation')"
                         groups="hr.group_hr_manager"
                         class="oe_highlight"
                     />
@@ -21,8 +21,8 @@
                 <xpath expr="//page[@name='hr_settings']" position="after">
                     <page string="Deactivation">
                         <group>
-                            <group string="Deactivation Records" colspan="4" col="4">
-                                <field name="inactive_ids" nolabel="1" colspan="4">
+                            <group string="Deactivation Records">
+                                <field name="inactive_ids" nolabel="1">
                                     <tree>
                                         <field name="name" />
                                         <field name="reason_id" />
