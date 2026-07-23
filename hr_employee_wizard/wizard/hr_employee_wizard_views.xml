@@ -48,15 +48,15 @@
                                 <field
                                     name="job_id"
                                     domain="[('company_id','=',company_id)]"
-                                    attrs="{'required': [('state', '!=', 'personal')]}"
+                                    required="state != 'personal'"
                                 />
                                 <field
                                     name="wage"
-                                    attrs="{'required': [('state', '!=', 'personal')]}"
+                                    required="state != 'personal'"
                                 />
                                 <field
                                     name="struct_id"
-                                    attrs="{'required': [('state', '!=', 'personal')]}"
+                                    required="state != 'personal'"
                                 />
                             </group>
                             <group string="Extra">
@@ -66,15 +66,15 @@
                                 />
                                 <field
                                     name="pps_id"
-                                    attrs="{'required': [('state', '!=', 'personal')]}"
+                                    required="state != 'personal'"
                                 />
                                 <field
                                     name="policy_group_id"
-                                    attrs="{'required': [('state', '!=', 'personal')]}"
+                                    required="state != 'personal'"
                                 />
                                 <field
                                     name="calendar_id"
-                                    attrs="{'required': [('state', '!=', 'personal')]}"
+                                    required="state != 'personal'"
                                 />
                             </group>
                         </group>
@@ -85,7 +85,7 @@
                                     <field
                                         name="date_start"
                                         class="oe_inline"
-                                        attrs="{'required': [('state', '!=', 'personal')]}"
+                                        required="state != 'personal'"
                                     /> - <field name="date_end" class="oe_inline" />
                                 </div>
                                 <label for="trial_date_start" string="Trial Period" />
@@ -93,7 +93,7 @@
                                     <field
                                         name="trial_date_start"
                                         class="oe_inline"
-                                        attrs="{'required': [('state', '!=', 'personal')]}"
+                                        required="state != 'personal'"
                                     /> - <field
                                         name="trial_date_end"
                                         class="oe_inline"
@@ -197,15 +197,15 @@
                         </div>
                         <field
                             name="adv_amount"
-                            attrs="{'readonly': [('adv_override', '=', False)]}"
+                            readonly="not adv_override"
                         />
                         <field
                             name="prm_amount"
-                            attrs="{'readonly': [('prm_override', '=', False)]}"
+                            readonly="not prm_override"
                         />
                         <field
                             name="prm_total"
-                            attrs="{'readonly': [('prm_override', '=', False)]}"
+                            readonly="not prm_override"
                         />
                     </group>
                 </group>
