@@ -5,7 +5,7 @@ from odoo import fields
 from odoo.tests import common
 
 
-class TestAccrual(common.SavepointCase):
+class TestAccrual(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
