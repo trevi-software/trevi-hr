@@ -15,10 +15,8 @@
                     <group>
                         <field
                             name="resource_calendar_id"
-                            attrs="{
-                                'invisible': [('sched_type', '!=', 'calendar')],
-                                'required': [('sched_type', '=', 'calendar')]
-                            }"
+                            invisible="sched_type != 'calendar'"
+                            required="sched_type == 'calendar'"
                         />
                     </group>
                 </group>
@@ -27,7 +25,7 @@
                 </group>
                 <group
                     string="Teams"
-                    attrs="{'invisible': [('sched_type', '!=', 'team')]}"
+                    invisible="sched_type != 'team'"
                 >
                     <field name="schedule_team_ids" />
                 </group>
