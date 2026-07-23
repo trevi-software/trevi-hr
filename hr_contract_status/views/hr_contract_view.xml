@@ -148,17 +148,17 @@
         <field name="priority" eval="99" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_id']" position="replace">
-                <field name="job_id" attrs="{'invisible': [('state', '=', 'close')]}" groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}" />
-                <field name="job_id" attrs="{'invisible': [('state', '=', 'close')]}" groups="hr_contract.group_hr_contract_manager"/>
+                <field name="job_id" invisible="state == 'close'" groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}" />
+                <field name="job_id" invisible="state == 'close'" groups="hr_contract.group_hr_contract_manager"/>
                 <field
                     name="end_job_id"
                     groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"
-                    attrs="{'invisible': [('state', '!=', 'close')]}"
+                    invisible="state != 'close'"
                 />
                 <field
                     name="end_job_id"
                     groups="hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"
-                    attrs="{'invisible': [('state', '!=', 'close')]}"
+                    invisible="state != 'close'"
                 />
             </xpath>
         </field>
