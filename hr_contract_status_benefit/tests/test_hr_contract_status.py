@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 from odoo.tests import common
 
 
-class TestEmployeeStatus(common.SavepointCase):
+class TestEmployeeStatus(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
