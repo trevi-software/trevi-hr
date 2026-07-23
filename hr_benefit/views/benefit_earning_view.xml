@@ -44,70 +44,56 @@
                             <field name="invert_jobs" />
                         </group>
                     </group>
-                    <group string="Allowance" attrs="{'invisible': [('type', '!=', 'allowance')]}">
+                    <group string="Allowance" invisible="type != 'allowance'">
                         <group>
                             <group>
                                 <field
                                     name="allowance_amount"
-                                    attrs="{
-                                        'required': [('type', '=', 'allowance')]
-                                    }"
+                                    required="type == 'allowance'"
                                 />
                             </group>
                         </group>
                     </group>
-                    <group string="Loan" attrs="{'invisible': [('type', '!=', 'loan')]}">
+                    <group string="Loan" invisible="type != 'loan'">
                         <group>
                             <group>
                                 <field
                                     name="loan_amount"
-                                    attrs="{
-                                        'required': [('type', '=', 'loan')]
-                                    }"
+                                    required="type == 'loan'"
                                 />
                             </group>
                         </group>
                     </group>
-                    <group string="Re-imbursement" attrs="{'invisible': [('type', '!=', 'reimburse')]}">
+                    <group string="Re-imbursement" invisible="type != 'reimburse'">
                         <group>
                             <field name="reim_nolimit" />
                         </group>
-                        <group string="Limit" attrs="{'invisible': [('reim_nolimit', '!=', False)]}">
+                        <group string="Limit" invisible="reim_nolimit != False">
                             <field name="reim_limit_amount" />
                             <field
                                 name="reim_limit_period"
-                                attrs="{
-                                    'required': [('type', '=', 'reimburse')]
-                                }"
+                                required="type == 'reimburse'"
                             />
                             <field
                                 name="reim_period_month_day"
-                                attrs="{
-                                    'invisible': [('reim_limit_period', '!=', 'monthly')]
-                                }"
+                                invisible="reim_limit_period != 'monthly'"
                             />
                             <label
                                 for="reim_period_annual_month"
                                 string="First Day of Cycle"
-                                attrs="{
-                                    'invisible': [('reim_limit_period', '!=', 'annual')]
-                                }"
+                                invisible="reim_limit_period != 'annual'"
                             />
                             <field
                                 name="reim_period_annual_month"
                                 nolabel="1"
                                 class="oe_inline"
-                                attrs="{
-                                    'invisible': [('reim_limit_period', '!=', 'annual')]
-                                }"
+                                invisible="reim_limit_period != 'annual'"
                             />
                             <field
                                 name="reim_period_annual_day"
                                 nolabel="1"
                                 class="oe_inline"
-                                attrs="{
-                                     'invisible': [('reim_limit_period', '!=', 'annual')]
-                                }"
+                                invisible="reim_limit_period != 'annual'"
                             />
                         </group>
                     </group>
