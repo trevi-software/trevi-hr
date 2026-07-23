@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 from odoo.tests import common
 
 
-class TestImport(common.SavepointCase):
+class TestImport(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
