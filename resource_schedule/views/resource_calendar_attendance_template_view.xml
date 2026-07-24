@@ -41,7 +41,7 @@
                         name="web_ribbon"
                         title="Archived"
                         bg_color="bg-danger"
-                        attrs="{'invisible': [('active', '=', True)]}"
+                        invisible="active"
                     />
                     <group>
                         <group>
@@ -68,7 +68,7 @@
                     <group
                         name="flex"
                         string="Flex Shift"
-                        attrs="{'invisible': [('shift_type', '!=', 'flex')]}"
+                        invisible="shift_type != 'flex'"
                     >
                         <group>
                             <label for="flex_core_from" string="Core Hours" />

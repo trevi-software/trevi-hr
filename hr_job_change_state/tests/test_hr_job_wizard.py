@@ -1,8 +1,8 @@
 from odoo.exceptions import AccessError
-from odoo.tests.common import Form, SavepointCase
+from odoo.tests.common import Form, TransactionCase
 
 
-class TestHrJobWizard(SavepointCase):
+class TestHrJobWizard(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

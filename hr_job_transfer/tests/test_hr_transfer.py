@@ -6,10 +6,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields
 from odoo.exceptions import AccessError, UserError
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class TestHrTransfer(SavepointCase):
+class TestHrTransfer(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

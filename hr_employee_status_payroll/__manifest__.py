@@ -5,7 +5,7 @@
 {
     "name": "Employment Status - Payroll Linkage",
     "summary": "Adds access records to employee separation records",
-    "version": "16.0.1.0.0",
+    "version": "17.0.1.0.0",
     "category": "Payroll",
     "images": ["static/src/img/main_screenshot.png"],
     "license": "AGPL-3",

@@ -5,7 +5,7 @@
 {
     "name": "Time Bank",
     "summary": "Basic framework for recording accruals to a time bank",
-    "version": "16.0.1.0.0",
+    "version": "17.0.1.0.0",
     "category": "Human Resources",
     "author": "TREVI Software, Michael Telahun Makonnen",
     "license": "AGPL-3",

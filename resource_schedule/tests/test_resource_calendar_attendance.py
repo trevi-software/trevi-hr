@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 from odoo.tests import Form, common
 
 
-class TestResourceCalendarAttendance(common.SavepointCase):
+class TestResourceCalendarAttendance(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

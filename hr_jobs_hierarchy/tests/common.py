@@ -5,10 +5,10 @@
 from datetime import timedelta
 
 from odoo.fields import Date
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class TestHrCommon(SavepointCase):
+class TestHrCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

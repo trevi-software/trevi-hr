@@ -74,7 +74,7 @@
                             />
                         </group>
                         <group>
-                            <group string="Earnings" attrs="{'invisible': [('has_advantage', '!=', True)]}">
+                            <group string="Earnings" invisible="not has_advantage">
                                 <field name="advantage_ids" nolabel="1">
                                     <tree>
                                         <field name="effective_date" />
@@ -87,7 +87,7 @@
                             </group>
                         </group>
                         <group>
-                            <group string="Premiums" attrs="{'invisible': [('has_premium', '!=', True)]}">
+                            <group string="Premiums" invisible="not has_premium">
                                 <field name="premium_ids" nolabel="1">
                                     <tree>
                                         <field name="effective_date" />

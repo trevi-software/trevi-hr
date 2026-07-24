@@ -6,7 +6,7 @@ from odoo import fields
 from odoo.tests import common
 
 
-class TestContractInit(common.SavepointCase):
+class TestContractInit(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

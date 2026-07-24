@@ -6,7 +6,7 @@ from datetime import date, timedelta
 from odoo.tests import Form, common
 
 
-class TestWizardValidateSchedule(common.SavepointCase):
+class TestWizardValidateSchedule(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
