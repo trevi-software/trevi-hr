@@ -10,50 +10,14 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//form[hasclass('oe_form_configuration')]" position="inside">
-                <div
-                    class="app_settings_block"
-                    data-string="Shift Scheduling"
-                    string="Shift Scheduling"
-                    data-key="resource_schedule"
-                    groups="resource_schedule.group_scheduling_manager"
-                >
-                    <h2>Defaults</h2>
-                    <div
-                        class="row mt16 o_settings_container"
-                        name="resource_schedule_setting_container"
-                    >
-                        <div
-                            id="defaults_setting"
-                            class="col-12 col-lg-6 o_setting_box"
-                            title="Defaults"
-                        >
-                            <div class="o_setting_right_pane">
-                                <label for="max_shift_length" />
-                                <span
-                                    class="fa fa-lg fa-building-o"
-                                    title="Values set here are company-specific."
-                                    role="img"
-                                    aria-label="Values set here are company-specific."
-                                    groups="base.group_multi_company"
-                                />
-                                <div class="row">
-                                    <div class="text-muted col-lg-8">
-                                        If an employee hasn't clocked out in this amount of time the system will automatically clock the employee out.
-                                    </div>
-                                </div>
-                                <div class="content-group">
-                                    <div class="mt16">
-                                        <field
-                                            name="max_shift_length"
-                                            required="1"
-                                            class="o_light_label"
-                                        /> Hrs
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- groups="resource_schedule.group_scheduling_manager" -->
+                <block title="Shift Scheduling" name="shift_scheduling_container">
+                    <setting
+                        help="If an employee hasn't clocked out in this amount of time the system will automatically clock the employee out.">
+                        <label for="max_shift_length" />
+                        <field name="max_shift_length" required="1" /> Hrs
+                    </setting>                    
+                </block>
             </xpath>
         </field>
     </record>
