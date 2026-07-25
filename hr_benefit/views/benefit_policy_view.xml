@@ -90,14 +90,14 @@
                     <button
                         name='state_open'
                         type="object"
-                        states="draft"
+                        invisible="state != 'draft'"
                         string="Start Policy"
                         class="oe_highlight"
                     />
                     <button
                         name='end_policy'
                         type="object"
-                        states="open"
+                        invisible="state != 'open'"
                         string="End Policy"
                         class="oe_highlight"
                     />

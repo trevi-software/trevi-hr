@@ -74,28 +74,28 @@
                     <button
                         name="signal_approve"
                         type="workflow"
-                        states="draft"
+                        invisible="state != 'draft'"
                         string="Approve"
                         class="oe_highlight"
                     />
                     <button
                         name="signal_decline"
                         type="workflow"
-                        states="draft,approve"
+                        invisible="state not in ['draft', 'approve']"
                         string="Decline"
                         class="oe_highlight"
                     />
                     <button
                         string="Reset to New"
                         name="set_to_draft"
-                        states="decline"
+                        invisible="state != 'decline'"
                         type="object"
                         groups="hr.group_hr_manager"
                     />
                     <field
                         name="state"
                         widget="statusbar"
-                        statusbar_visible="draft,approve"
+                        statusbar_visible="draft,approve,decline"
                     />
                 </header>
                 <group>
