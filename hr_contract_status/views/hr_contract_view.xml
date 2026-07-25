@@ -121,7 +121,7 @@
                         type="object"
                         string="Confirm"
                         groups="hr_contract.group_hr_contract_manager"
-                        states="draft"
+                        invisible="state != 'draft'"
                         class="oe_highlight"
                     />
                     <button
@@ -129,7 +129,7 @@
                         type="object"
                         string="End Contract"
                         groups="hr_contract.group_hr_contract_manager"
-                        states="trial,open"
+                        invisible="state not in ['trial','open']"
                         class="oe_highlight"
                     />
                 </xpath>
