@@ -9,7 +9,7 @@ from pytz import timezone, utc
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-from odoo.addons.resource.models.resource import float_to_time
+from odoo.addons.resource.models.utils import float_to_time
 
 
 class ResourceScheduleShift(models.Model):
