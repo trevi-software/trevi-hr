@@ -24,7 +24,7 @@
                     </group>
                 </group>
                 <notebook>
-                    <page string="Personal Info" states="personal,review">
+                    <page string="Personal Info" invisible="state not in ['personal','review']">
                         <group>
                             <group name="personal_1">
                                 <field name="gender" />
@@ -42,7 +42,7 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Contract" states="contract,review">
+                    <page string="Contract" invisible="state not in ['contract','review']">
                         <group>
                             <group string="Job">
                                 <field
@@ -102,7 +102,7 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Benefits" states="benefits,review">
+                    <page string="Benefits" invisible="state not in ['benefits', 'review']">
                         <group string="Additional Benefits">
                             <field
                                 name="new_benefit_ids"
@@ -125,42 +125,42 @@
                     <button
                         name="state_contract"
                         type="object"
-                        states="personal"
+                        invisible="state != 'personal'"
                         class="oe_highlight"
                         string="Next"
                     />
                     <button
                         name="state_benefits"
                         type="object"
-                        states="contract"
+                        invisible="state != 'contract'"
                         class="oe_highlight"
                         string="Next"
                     />
                     <button
                         name="state_review"
                         type="object"
-                        states="benefits"
+                        invisible="state != 'benefits'"
                         class="oe_highlight"
                         string="Review"
                     />
                     <button
                         name="create_applicant"
                         type="object"
-                        states="review"
+                        invisible="state != 'review'"
                         class="oe_highlight"
                         string="Start Recruitment"
                     />
                     <button
                         name="hire_applicant"
                         type="object"
-                        states="review"
+                        invisible="state != 'review'"
                         class="oe_highlight"
                         string="Hire"
                     />
                     <button
                         name="cancel_wizard"
                         type="object"
-                        states="personal,contract,benefits,review"
+                        invisible="state not in ['personal','contract','benefits','review']"
                         string="View New Hires"
                     />
                 </footer>
