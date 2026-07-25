@@ -21,6 +21,7 @@
         <field name="model">hr.contract.init</field>
         <field name="arch" type="xml">
             <form string="Contract Initial Values">
+                <field name="state" invisible="1" />"
                 <header>
                     <button
                         name="lock"
