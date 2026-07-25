@@ -53,7 +53,8 @@
 
     <!-- Default Settings -->
 
-    <function model="res.company" name="_update_data_resource_calendar" eval="[]" />
+    <function model="res.company" name="_update_data_resource_calendar" />
+       
 
     <function
         model="ir.config_parameter"
