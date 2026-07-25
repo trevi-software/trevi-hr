@@ -14,8 +14,6 @@ class BenefitClaim(models.Model):
 
     date = fields.Date(
         required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
         help="The date the claim was made",
         default=fields.Date.today(),
     )
@@ -23,24 +21,18 @@ class BenefitClaim(models.Model):
         string="Policy",
         required=True,
         comodel_name="hr.benefit.policy",
-        readonly=True,
-        states={"draft": [("readonly", False)]},
     )
     employee_id = fields.Many2one(
         comodel_name="hr.employee",
         required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
     )
     amount_requested = fields.Float(
         string="Requested Amount",
         digits="Account",
         required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
     )
     amount_approved = fields.Float(
-        string="Approved Amount", digits="Account", readonly=True
+        string="Approved Amount", digits="Account"
     )
     state = fields.Selection(
         selection=[
@@ -48,7 +40,6 @@ class BenefitClaim(models.Model):
             ("approve", "Approved"),
             ("decline", "Declined"),
         ],
-        readonly=True,
         default="draft",
     )
 
