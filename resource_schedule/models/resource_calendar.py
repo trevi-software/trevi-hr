@@ -109,31 +109,31 @@ class ResourceCalendar(models.Model):
         return super(ResourceCalendar, filtered)._check_attendance()
 
     # Over-ride parent class method to handle more than two weeks and flex schedule
-    def _compute_hours_per_day(self, attendances):
-        if not attendances:
-            return super()._compute_hours_per_day(attendances)
-
+    @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar')
+    def _compute_hours_per_day(self):
         hour_count = 0.0
-        for attendance in attendances:
-            if attendance.shift_type != "flex":
-                hour_count += attendance.hour_to - attendance.hour_from
-            elif attendance.shift_type == "flex":
-                hour_count += attendance.flex_scheduled_hrs
-            if (
-                attendance.shift_type != "flex"
-                and attendance.template_id
-                and attendance.template_id.autodeduct_break
-            ):
-                hour_count -= float(attendance.template_id.break_minutes) / 60.0
+        for calendar in self:
+            attendances = calendar._get_global_attendances()
+            for attendance in attendances:
+                if attendance.shift_type != "flex":
+                    hour_count += attendance.hour_to - attendance.hour_from
+                elif attendance.shift_type == "flex":
+                    hour_count += attendance.flex_scheduled_hrs
+                if (
+                    attendance.shift_type != "flex"
+                    and attendance.template_id
+                    and attendance.template_id.autodeduct_break
+                ):
+                    hour_count -= float(attendance.template_id.break_minutes) / 60.0
 
-        number_of_days = 0
-        dayofweek = False
-        for att in attendances.sorted("sequence"):
-            if dayofweek is False or att.dayofweek != dayofweek:
-                number_of_days += 1
-                dayofweek = att.dayofweek
-        return fields.Float.round(
-            hour_count / float(number_of_days), precision_digits=2
+            number_of_days = 0
+            dayofweek = False
+            for att in attendances.sorted("sequence"):
+                if dayofweek is False or att.dayofweek != dayofweek:
+                    number_of_days += 1
+                    dayofweek = att.dayofweek
+            return fields.Float.round(
+                hour_count / float(number_of_days), precision_digits=2
         )
 
     def switch_calendar_type(self):
