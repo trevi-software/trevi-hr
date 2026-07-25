@@ -72,8 +72,8 @@ class HrContract(models.Model):
             [
                 ("state", "=", "draft"),
                 ("kanban_state", "=", "done"),
-                ("date_start", "<=", date.today()),
-                ("trial_date_end", ">=", date.today()),
+                ("date_start", "<=", date.today().strftime("%Y-%m-%d")),
+                ("trial_date_end", ">=", date.today().strftime("%Y-%m-%d")),
             ]
         ).mapped("employee_id")
         employees.write({"status": "trial"})
@@ -83,10 +83,10 @@ class HrContract(models.Model):
             [
                 ("state", "=", "draft"),
                 ("kanban_state", "=", "done"),
-                ("date_start", "<=", date.today()),
+                ("date_start", "<=", date.today().strftime("%Y-%m-%d")),
                 "|",
                 ("trial_date_end", "=", False),
-                ("trial_date_end", "<", date.today()),
+                ("trial_date_end", "<", date.today().strftime("%Y-%m-%d")),
             ]
         ).mapped("employee_id")
         employees.write({"status": "active"})
@@ -98,7 +98,7 @@ class HrContract(models.Model):
                 (
                     "trial_date_end",
                     "<",
-                    date.today(),
+                    date.today().strftime("%Y-%m-%d"),
                 ),
             ]
         ).mapped("employee_id")
@@ -111,7 +111,7 @@ class HrContract(models.Model):
                 (
                     "date_end",
                     "<",
-                    date.today(),
+                    date.today().strftime("%Y-%m-%d"),
                 )
             ]
         )
