@@ -24,7 +24,7 @@
                     <button
                         name="action_confirm"
                         type="object"
-                        states="draft"
+                        invisible="state != 'draft'"
                         string="Confirm"
                         class="oe_highlight"
                         groups="hr_job_transfer.group_hr_transfer"
@@ -32,7 +32,7 @@
                     <button
                         name="action_transfer"
                         type="object"
-                        states="confirm"
+                        invisible="state != 'confirm'"
                         string="Transfer"
                         class="oe_highlight"
                         groups="hr_job_transfer.group_hr_transfer"
@@ -40,7 +40,7 @@
                     <button
                         name="action_cancel"
                         type="object"
-                        states="confirm,pending"
+                        invisible="state not in ['confirm', 'pending']"
                         string="Cancel"
                         class="oe_highlight"
                         groups="hr_job_transfer.group_hr_transfer"
