@@ -151,7 +151,6 @@ class HrContract(models.Model):
                 ("state", "=", "open"),
                 ("kanban_state", "!=", "blocked"),
                 "|",
-                "&",
                 (
                     "date_end",
                     "<=",
