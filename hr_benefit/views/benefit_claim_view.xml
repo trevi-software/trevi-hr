@@ -100,13 +100,13 @@
                 </header>
                 <group>
                     <group>
-                        <field name="employee_id" />
-                        <field name="benefit_policy_id" />
-                        <field name="date" />
-                        <field name="amount_requested" />
+                        <field name="employee_id" readonly="state != 'draft'" />
+                        <field name="benefit_policy_id" readonly="state != 'draft'" />
+                        <field name="date" readonly="state != 'draft'" />
+                        <field name="amount_requested" readonly="state != 'draft'" />
                         <label for="amount_approved" />
                         <h2>
-                            <field name="amount_approved" />
+                            <field name="amount_approved" readonly="1" />
                         </h2>
                     </group>
                     <group>
