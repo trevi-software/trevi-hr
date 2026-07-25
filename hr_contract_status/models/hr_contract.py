@@ -103,8 +103,8 @@ class HrContract(models.Model):
             [
                 ("state", "=", "draft"),
                 ("kanban_state", "=", "done"),
-                ("date_start", "<=", date.today() - relativedelta(days=90)),
-                ("trial_date_end", ">=", date.today()),
+                ("date_start", "<=", (date.today() - relativedelta(days=90)).strftime("%Y-%m-%d")),
+                ("trial_date_end", ">=", date.today().strftime("%Y-%m-%d")),
             ]
         ).write({"state": "trial"})
 
@@ -115,7 +115,7 @@ class HrContract(models.Model):
                 (
                     "trial_date_end",
                     "<=",
-                    date.today() + relativedelta(days=7),
+                    (date.today() + relativedelta(days=7)).strftime("%Y-%m-%d"),
                 ),
             ]
         )
@@ -136,7 +136,7 @@ class HrContract(models.Model):
                 (
                     "trial_date_end",
                     "<=",
-                    date.today() - relativedelta(days=1),
+                    (date.today() - relativedelta(days=1)).strftime("%Y-%m-%d"),
                 ),
             ]
         )
@@ -155,12 +155,12 @@ class HrContract(models.Model):
                 (
                     "date_end",
                     "<=",
-                    date.today() + relativedelta(days=7),
+                    (date.today() + relativedelta(days=7)).strftime("%Y-%m-%d"),
                 ),
                 (
                     "date_end",
                     ">=",
-                    date.today() + relativedelta(days=1),
+                    (date.today() + relativedelta(days=1)).strftime("%Y-%m-%d"),
                 ),
             ]
         ).write({"state_ending": True})
@@ -172,7 +172,7 @@ class HrContract(models.Model):
                 (
                     "date_end",
                     "<=",
-                    date.today(),
+                    date.today().strftime("%Y-%m-%d"),
                 ),
             ]
         ).write({"state_ending": False})
