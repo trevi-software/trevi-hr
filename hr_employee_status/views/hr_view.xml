@@ -89,14 +89,14 @@
                         <button
                             name="signal_done"
                             type="object"
-                            states="draft"
+                            invisible="state != 'draft'"
                             string="Deactivate"
                             class="oe_highlight"
                         />
                         <button
                             name="signal_cancel"
                             type="object"
-                            states="draft"
+                            invisible="state != 'draft'"
                             string="Cancel"
                             class="oe_highlight"
                         />
@@ -186,7 +186,7 @@
                         type="object"
                         string="End Contract"
                         groups="hr.group_hr_user"
-                        states="draft,trial,trial_ending,open,contract_ending"
+                        invisible="state not in ['draft', 'trial', 'trial_ending', 'open', 'contract_ending']"
                         class="oe_highlight"
                     />
                     <button
@@ -194,7 +194,7 @@
                         type="object"
                         string="Re-Activate"
                         groups="hr.group_hr_user"
-                        states="pending_done"
+                        invisible="state != 'pending_done'"
                         class="oe_highlight"
                     />
                 </xpath>
