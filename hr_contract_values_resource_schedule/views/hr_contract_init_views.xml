@@ -20,7 +20,7 @@
         <field name="inherit_id" ref="hr_contract_values.view_contract_init_form" />
         <field name="arch" type="xml">
             <xpath expr="//group[@name='grp2']" position="inside">
-                <field name="resource_calendar_id" />
+                <field name="resource_calendar_id" readonly="state != 'draft'" />
             </xpath>
         </field>
     </record>
