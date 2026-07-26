@@ -154,12 +154,6 @@
             <xpath expr="//field[@name='state']" position="attributes">
                 <attribute name="readonly">True</attribute>
             </xpath>
-            <xpath expr="//field[@name='date_end_effective']" position="attributes">
-                <attribute name="readonly">True</attribute>
-            </xpath>
-            <xpath expr="//field[@name='date_end_original']" position="attributes">
-                <attribute name="readonly">True</attribute>
-            </xpath>
 
             <xpath expr="//field[@name='date_end']" position="after">
                 <field name="trial_date_end" />
