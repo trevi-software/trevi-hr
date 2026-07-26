@@ -29,7 +29,7 @@ class HrJob(models.Model):
     all_child_ids = fields.Many2many(
         compute="_compute_all_child_ids", comodel_name="hr.job"
     )
-    parent_path = fields.Char(index=True)
+    parent_path = fields.Char(index=True, unaccent=False)
 
     def _compute_all_child_ids(self):
         for rec in self:
