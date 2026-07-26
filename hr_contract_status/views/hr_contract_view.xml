@@ -148,9 +148,6 @@
             <xpath expr="//field[@name='job_id']" position="attributes">
                 <attribute name="readonly">True</attribute>
             </xpath>
-            <xpath expr="//field[@name='end_job_id']" position="attributes">
-                <attribute name="readonly">True</attribute>
-            </xpath>
             <xpath expr="//field[@name='department_id']" position="attributes">
                 <attribute name="readonly">True</attribute>
             </xpath>
@@ -174,11 +171,13 @@
                 <field
                     name="end_job_id"
                     groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"
+                    readonly="1"
                     invisible="state != 'close'"
                 />
                 <field
                     name="end_job_id"
                     groups="hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"
+                    readonly="1"
                     invisible="state != 'close'"
                 />
             </xpath>
