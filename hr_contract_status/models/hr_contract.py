@@ -17,8 +17,8 @@ class HrContract(models.Model):
 
     trial_ending = fields.Boolean()
     state_ending = fields.Boolean()
-    date_end_effective = fields.Date(string="Effective End Date", readonly=True)
-    date_end_original = fields.Date(string="Original End Date", readonly=True)
+    date_end_effective = fields.Date(string="Effective End Date")
+    date_end_original = fields.Date(string="Original End Date")
     state = fields.Selection(
         selection_add=[
             ("draft",),
@@ -30,13 +30,12 @@ class HrContract(models.Model):
         ],
         ondelete={"trial": "set null"},
         default="draft",
-        readonly=True,
     )
 
     department_id = fields.Many2one(
+        comodel_name="hr.department",
         compute="_compute_department",
         store=True,
-        readonly=True,
     )
 
     # At contract end this field will hold the job_id, and the
@@ -44,21 +43,8 @@ class HrContract(models.Model):
     # reference job_id don't include deactivated employees.
     # XXX ToDo: is it possible to change those references rather than using this hack?
     end_job_id = fields.Many2one(
-        comodel_name="hr.job", string="Last Job Position", readonly=True
+        comodel_name="hr.job", string="Last Job Position"
     )
-
-    # The following are redefined again to make them editable only in certain states
-    employee_id = fields.Many2one(readonly=True)
-    structure_type_id = fields.Many2one(readonly=True)
-    job_id = fields.Many2one(
-        comodel_name="hr.job",
-        compute=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        required=False,
-        tracking=True,
-    )
-    date_start = fields.Date(readonly=True)
-    wage = fields.Monetary(readonly=True)
 
     @api.depends("job_id")
     def _compute_department(self):
