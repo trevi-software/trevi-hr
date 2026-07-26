@@ -12,10 +12,10 @@
                     <newline />
                     <group>
                         <widget
-                        name="webcam_widget"
-                        dst_model="hr.employee"
-                        dst_field="image_1920"
-                    />
+                            name="webcam_widget"
+                            dst_model="hr.employee"
+                            dst_field="image_1920"
+                        />
                     </group>
                     <footer />
                 </form>
