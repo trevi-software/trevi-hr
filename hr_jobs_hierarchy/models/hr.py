@@ -17,7 +17,7 @@ class HrJob(models.Model):
     _parent_store = True
     _order = "parent_path"
 
-    department_manager = fields.Boolean()
+    department_manager = fields.Boolean("Is Manager")
     parent_id = fields.Many2one(
         string="Immediate Superior", comodel_name="hr.job", ondelete="cascade"
     )
