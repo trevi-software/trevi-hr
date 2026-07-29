@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_employee_form_inherit_camera" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.camera</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <!-- Locate the main image field and replace or augment its widget -->
+            <xpath expr="//field[@name='image_1920']" position="attributes">
+                <attribute name="widget">camera_capture</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

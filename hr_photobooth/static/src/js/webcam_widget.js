@@ -1,116 +1,69 @@
-/**
- * Copyright 2021 TREVI Software <support@trevi.et>
- * License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
- *
- */
+/** @odoo-module **/
 
-odoo.define("hr_photobooth.webcam_widget", function (require) {
-    "use strict";
+import { Component, useRef, onWillDestroy } from "@odoo/owl";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { registry } from "@web/core/registry";
 
-    const IMG_WIDTH = 320;
-    const IMG_HEIGHT = 240;
-    const framework = require("web.framework");
-    const rpc = require("web.rpc");
-    const Widget = require("web.Widget");
-    const widgetRegistry = require("web.widget_registry");
+export class CameraCaptureField extends Component {
+    static template = "hr_photobooth.CameraCaptureField";
+    static props = { ...standardFieldProps };
 
-    var WebcamWidget = Widget.extend({
-        template: "photo.action",
-        xmlDependencies: ["/hr_photobooth/static/src/xml/webcam_widget.xml"],
-        events: {
-            "click .webcam_snap": "onClickSnap",
-            "click .webcam_close": "onClickSaveClose",
-            "click .webcam_cancel": "onClickCancel",
-        },
+    setup() {
+        this.videoRef = useRef("video");
+        this.canvasRef = useRef("canvas");
+        this.stream = null;
+    }
 
-        /**
-         * @override
-         */
-        init: function (parent, record, nodeInfo) {
-            this._super.apply(this, arguments);
-            this.res_model = nodeInfo.attrs.dst_model;
-            this.res_field = nodeInfo.attrs.dst_field;
-            this.res_id = record.data.employee_id.res_id;
-            this.flagStream = false;
-        },
-
-        /**
-         * @override
-         */
-        start: function () {
-            var self = this;
-            var $video = this.$("video.webcam_video");
-
-            if (navigator.mediaDevices) {
-                navigator.mediaDevices
-                    .getUserMedia({video: true, audio: false})
-                    .then(function (mediaStream) {
-                        $video[0].srcObject = mediaStream;
-                        self.flagStream = true;
-                    })
-                    .catch(function (err) {
-                        console.log(err.name + " : " + err.message);
-                    });
+    // 1. Start Webcam Stream
+    async startCamera() {
+        try {
+            this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            if (this.videoRef.el) {
+                this.videoRef.el.srcObject = this.stream;
             }
-        },
+        } catch (error) {
+            console.error("Camera access denied or unavailable:", error);
+        }
+    }
 
-        onClickSnap: function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            var $video = this.$("video.webcam_video");
-            var $canvas = this.$("canvas.webcam_canvas");
-            var ctx = $canvas[0].getContext("2d");
-            ctx.drawImage($video[0], 0, 0, IMG_WIDTH, IMG_HEIGHT);
-            this.$(".webcam_close").removeAttr("disabled");
-        },
+    // 2. Capture and Save Photo
+    capturePhoto() {
+        const video = this.videoRef.el;
+        const canvas = this.canvasRef.el;
+        if (!video || !canvas) return;
 
-        onClickSaveClose: function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            var $canvas = this.$("canvas.webcam_canvas");
-            var imgData = $canvas[0]
-                .toDataURL("image/png")
-                .replace(/^data:image\/(png|jpg);base64,/, "");
+        const context = canvas.getContext("2d");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
+        // Draw current video frame onto canvas
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            var $video = this.$("video.webcam_video");
-            var mediaStream = $video[0].srcObject;
-            var mediaTracks = mediaStream.getTracks();
-            for (var i = 0; i < mediaTracks.length; i++) {
-                mediaTracks[i].stop();
-            }
-            $video.srcObject = null;
+        // Convert canvas image to Base64 (Odoo's binary format)
+        const dataUrl = canvas.toDataURL("image/jpeg");
+        const base64Data = dataUrl.split(",")[1]; // Strip the data:image/jpeg;base64 prefix
 
-            const always = () => {
-                this.trigger_up("reload");
-                framework.unblockUI();
-                this.trigger_up("close_dialog");
-            };
-            framework.blockUI();
-            var vals = {};
-            vals[this.res_field] = imgData;
-            const rpcProm = rpc.query({
-                method: "write",
-                model: this.res_model,
-                args: [this.res_id, vals],
-            });
-            rpcProm.then(always).guardedCatch(always);
-            return rpcProm;
-        },
+        // Write data directly to the Odoo field
+        this.props.record.update({ [this.props.name]: base64Data });
 
-        onClickCancel: function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            var $video = this.$("video.webcam_video");
-            var mediaStream = $video[0].srcObject;
-            var mediaTracks = mediaStream.getTracks();
-            for (var i = 0; i < mediaTracks.length; i++) {
-                mediaTracks[i].stop();
-            }
-            $video.srcObject = null;
-            this.trigger_up("close_dialog");
-        },
-    });
+        this.stopCamera();
+    }
 
-    widgetRegistry.add("webcam_widget", WebcamWidget);
-    return WebcamWidget;
+    // 3. Stop Webcam Stream
+    stopCamera() {
+        if (this.stream) {
+            this.stream.getTracks().forEach(track => track.stop());
+            this.stream = null;
+        }
+    }
+
+    onWillDestroy() {
+        this.stopCamera();
+    }
+}
+
+// Register the field widget in Odoo's fields registry
+registry.category("fields").add("camera_capture", {
+    component: CameraCaptureField,
+    supportedTypes: ["binary"],
 });
