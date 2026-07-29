@@ -17,7 +17,7 @@
     ],
     "data": [
         "security/ir.model.access.csv",
-        "views/hr_photobooth_view.xml",
+        "views/hr_employee_view.xml",
     ],
     "assets": {
         "web.assets_backend": [
