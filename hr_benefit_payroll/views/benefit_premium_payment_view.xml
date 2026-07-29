@@ -70,21 +70,21 @@
                     <button
                         name="signal_pending"
                         type="workflow"
-                        states="draft"
+                        invisible="state != 'draft'"
                         string="Pending"
                         class="oe_highlight"
                     />
                     <button
                         name="signal_done"
                         type="workflow"
-                        states="pending"
+                        invisible="state != 'pending'"
                         string="Decline"
                         class="oe_highlight"
                     />
                     <button
                         name="signal_cancel"
                         type="workflow"
-                        states="draft,pending"
+                        invisible="state not in ['draft', 'pending']"
                         string="Cancel"
                         class="oe_highlight"
                     />
@@ -92,10 +92,10 @@
                 </header>
                 <group>
                     <group>
-                        <field name="employee_id" />
-                        <field name="policy_id" />
-                        <field name="date" />
-                        <field name="amount" />
+                        <field name="employee_id" readonly="state != 'draft'" />
+                        <field name="policy_id" readonly="state != 'draft'" />
+                        <field name="date" readonly="state != 'draft'" />
+                        <field name="amount" readonly="state != 'draft'" />
                     </group>
                     <group>
                         <field name="payslip_id" />

@@ -26,20 +26,14 @@ class PremiumPayment(models.Model):
         comodel_name="hr.benefit.policy",
         domain=_compute_policy_id_domain,
         required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
     )
     employee_id = fields.Many2one(
         comodel_name="hr.employee",
         required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
     )
     amount = fields.Float(
         digits="Account",
         required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
     )
     payslip_id = fields.Many2one(comodel_name="hr.payslip", ondelete="cascade")
     state = fields.Selection(
@@ -49,7 +43,6 @@ class PremiumPayment(models.Model):
             ("cancel", "Cancelled"),
             ("done", "Done"),
         ],
-        readonly=True,
         default="draft",
     )
 
