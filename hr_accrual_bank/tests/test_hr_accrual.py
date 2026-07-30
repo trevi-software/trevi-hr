@@ -21,7 +21,7 @@ class TestAccrual(common.TransactionCase):
         cls.accrual_type = LeaveType.create(
             {
                 "name": "accrual",
-                "allocation_type": "fixed",
+                "allocation_type": "fixed_allocation",
                 "validity_start": False,
             }
         )
