@@ -13,14 +13,14 @@
                 >
                     <group string="Benefits">
                         <field name="benefit_line_ids" nolabel="1">
-                            <tree>
+                            <list>
                                 <field name="name" />
                                 <field name="code" />
                                 <field name="qty" />
                                 <field name="ppf" />
                                 <field name="earnings" />
                                 <field name="deductions" />
-                            </tree>
+                            </list>
                         </field>
                     </group>
                 </xpath>
@@ -28,12 +28,12 @@
                     <page name="benefits" string="Benefits">
                         <group string="Benefit Premium Payments">
                             <field name="premium_payment_ids" nolabel="1" readonly="1">
-                                <tree>
+                                <list>
                                     <field name="date" />
                                     <field name="policy_id" />
                                     <field name="amount" />
                                     <field name="state" />
-                                </tree>
+                                </list>
                             </field>
                         </group>
                     </page>
