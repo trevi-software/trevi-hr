@@ -176,9 +176,9 @@ class HrPayslip(models.Model):
                     ]
                 )
                 if len(pol_ids) == 0:
-                    UserError(
+                    raise UserError(
                         _(
-                            "Error creating benefit premium payment records!"
+                            "Error creating benefit premium payment records!\n"
                             "Cannot find a valid benefit policy:\n"
                             "Employee: %(name)s\nBenefit: %(k)s"
                         )
@@ -204,14 +204,14 @@ class HrPayslip(models.Model):
     def finalize_benefit_premium_payments(self):
 
         payments = self.mapped("premium_payment_ids")
-        payments.state_done()
+        payments.action_done()
 
     def refund_sheet(self):
 
         res = super().refund_sheet()
         payments = self.mapped("premium_payment_ids")
         if payments:
-            payments.state_cancel()
+            payments.action_cancel()
 
         return res
 

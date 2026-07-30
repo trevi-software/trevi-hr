@@ -92,7 +92,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": 100.00,
             }
         )
-        ppPending.state_pending()
+        ppPending.action_pending()
         ppCancel = self.PremiumPayment.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -100,7 +100,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": 100.00,
             }
         )
-        ppCancel.state_cancel()
+        ppCancel.action_cancel()
         ppDone = self.PremiumPayment.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -108,7 +108,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": 100.00,
             }
         )
-        ppDone.state_done()
+        ppDone.action_done()
 
         self.assertEqual(ppDraft.state, "draft")
         try:
@@ -142,7 +142,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": 100.00,
             }
         )
-        ppPending.state_pending()
+        ppPending.action_pending()
         ppCancel = self.PremiumPayment.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -150,7 +150,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": 100.00,
             }
         )
-        ppCancel.state_cancel()
+        ppCancel.action_cancel()
         ppDone = self.PremiumPayment.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -158,7 +158,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": 100.00,
             }
         )
-        ppDone.state_done()
+        ppDone.action_done()
 
         self.assertEqual(ppPending.state, "pending")
         try:

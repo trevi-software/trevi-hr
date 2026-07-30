@@ -66,8 +66,8 @@ class PremiumPayment(models.Model):
             ):
                 raise UserError(
                     _(
-                        "Permission Denied"
-                        'You may not delete a premium payment that is not in "draft" stage.'
+                        "Permission Denied. "
+                        "You may not delete a payment that is not in 'draft' stage."
                         "\nPolicy: %(name)s\nPayment Date: %(date)s"
                     )
                     % {"name": payment.policy_id.name, "date": payment.date}
@@ -75,14 +75,11 @@ class PremiumPayment(models.Model):
 
         return super().unlink()
 
-    def state_pending(self):
-
+    def action_pending(self):
         return self.write({"state": "pending"})
 
-    def state_done(self):
-
+    def action_done(self):
         return self.write({"state": "done"})
 
-    def state_cancel(self):
-
+    def action_cancel(self):
         return self.write({"state": "cancel"})

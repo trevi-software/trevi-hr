@@ -17,7 +17,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
 
     def test_benefit_policy_allowance_default_amount(self):
 
-        today = date.today()    # noqa: DTZ011
+        today = date.today()  # noqa: DTZ011
         bn = self.create_benefit(self.benefit_create_vals)
         self.create_earning(bn, start=today, allowance=1000)
         pol = self.create_policy(self.eeJohn, bn, start=today)
@@ -31,7 +31,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
 
     def test_benefit_policy_allowance_override_amount(self):
 
-        today = date.today()    # noqa: DTZ011
+        today = date.today()  # noqa: DTZ011
         bn = self.create_benefit(self.benefit_create_vals)
         self.create_earning(bn, start=today, allowance=1000)
         pol = self.create_policy(self.eeJohn, bn, start=today, advantage=4400)
@@ -45,7 +45,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
 
     def test_benefit_policy_loan_amount(self):
 
-        today = date.today()    # noqa: DTZ011
+        today = date.today()  # noqa: DTZ011
         bn = self.create_benefit(self.benefit_create_vals)
         self.create_earning(bn, start=today, ptype="loan", loan=15000)
         pol = self.create_policy(self.eeJohn, bn, start=today)
@@ -62,25 +62,25 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         bn = self.create_benefit(self.benefit_create_vals)
         self.create_premium(
             bn,
-            date.today() - relativedelta(days=1),   # noqa: DTZ011
+            date.today() - relativedelta(days=1),  # noqa: DTZ011
             ptype="monthly",
             amount=100,
             total=300,
         )
-        pol = self.create_policy(self.eeJohn, bn, date.today()) # noqa: DTZ011
+        pol = self.create_policy(self.eeJohn, bn, date.today())  # noqa: DTZ011
 
         self.assertEqual(
             100,
             pol.calculate_premium(
-                date.today(),       # noqa: DTZ011
-                12
+                date.today(),  # noqa: DTZ011
+                12,
             ),
             "Initial premium amount and calculated premium should match",
         )
 
     def test_benefit_policy_last_premium(self):
 
-        today = date.today()    # noqa: DTZ011
+        today = date.today()  # noqa: DTZ011
         policy_start = today - relativedelta(days=4)
         dtPayment1 = today - relativedelta(days=3)
         dtPayment2 = today - relativedelta(days=2)
@@ -88,7 +88,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         bn = self.create_benefit(self.benefit_create_vals)
         self.create_premium(
             bn,
-            date.today() - relativedelta(days=3),   # noqa: DTZ011
+            date.today() - relativedelta(days=3),  # noqa: DTZ011
             ptype="monthly",
             amount=100,
             total=340,
@@ -102,7 +102,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": pol.calculate_premium(dtPayment1, 12),
                 "date": dtPayment1,
             }
-        ).state_cancel()
+        ).action_cancel()
         self.PremiumPayment.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -110,7 +110,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": pol.calculate_premium(dtPayment1, 12),
                 "date": dtPayment1,
             }
-        ).state_done()
+        ).action_done()
         self.PremiumPayment.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -118,7 +118,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": pol.calculate_premium(dtPayment2, 12),
                 "date": dtPayment2,
             }
-        ).state_done()
+        ).action_done()
         self.PremiumPayment.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -126,7 +126,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": pol.calculate_premium(dtPayment3, 12),
                 "date": dtPayment3,
             }
-        ).state_done()
+        ).action_done()
 
         self.assertEqual(
             len(pol.premium_payment_ids),
@@ -141,13 +141,13 @@ class TestBenefit(benefit_common.TestBenefitCommon):
 
     def test_benefit_policy_premium_override(self):
 
-        today = date.today()    # noqa: DTZ011
+        today = date.today()  # noqa: DTZ011
         policy_start = today - relativedelta(days=4)
         dtPayment1 = today - relativedelta(days=3)
         bn = self.create_benefit(self.benefit_create_vals)
         self.create_premium(
             bn,
-            date.today() - relativedelta(days=3),   # noqa: DTZ011
+            date.today() - relativedelta(days=3),  # noqa: DTZ011
             ptype="monthly",
             amount=100,
             total=340,
@@ -171,7 +171,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": pol.calculate_premium(dtPayment1, 12),
                 "date": dtPayment1,
             }
-        ).state_done()
+        ).action_done()
 
         self.assertEqual(
             len(pol.premium_payment_ids),
@@ -186,7 +186,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
 
     def test_benefit_policy_premium_refund(self):
 
-        today = date.today()    # noqa: DTZ011
+        today = date.today()  # noqa: DTZ011
         policy_start = today - relativedelta(days=4)
         dtPayment1 = today - relativedelta(days=3)
         dtPayment2 = today - relativedelta(days=2)
@@ -209,7 +209,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": pol.calculate_premium(dtPayment1, 12),
                 "date": dtPayment1,
             }
-        ).state_cancel()
+        ).action_cancel()
         self.assertEqual(
             0,
             pol.calculate_premium(today, 12, refund=True),
@@ -224,7 +224,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": pol.calculate_premium(dtPayment1, 12),
                 "date": dtPayment1,
             }
-        ).state_done()
+        ).action_done()
         self.PremiumPayment.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -232,7 +232,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": pol.calculate_premium(dtPayment2, 12),
                 "date": dtPayment2,
             }
-        ).state_done()
+        ).action_done()
         self.PremiumPayment.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -240,7 +240,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": pol.calculate_premium(dtPayment3, 12),
                 "date": dtPayment3,
             }
-        ).state_done()
+        ).action_done()
         self.PremiumPayment.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -248,7 +248,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "amount": pol.calculate_premium(dtPayment3, 12),
                 "date": today,
             }
-        ).state_done()
+        ).action_done()
         self.assertEqual(
             40,
             pol.calculate_premium(today, 12, refund=True),
