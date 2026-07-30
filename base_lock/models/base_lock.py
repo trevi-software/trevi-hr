@@ -11,7 +11,6 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as OE_DTFORMAT
 
 
 class Lock(models.Model):
-
     _name = "base.lock"
     _description = "Base Lock Object"
     _check_company_auto = True
