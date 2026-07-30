@@ -7,7 +7,6 @@ from odoo.exceptions import ValidationError
 
 
 class PolicyEnd(models.TransientModel):
-
     _name = "hr.benefit.policy.end"
     _description = "Benefit Policy Termination Wizard"
 

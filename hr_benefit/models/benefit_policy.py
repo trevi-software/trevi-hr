@@ -12,7 +12,6 @@ from odoo.exceptions import UserError
 
 
 class BenefitPolicy(models.Model):
-
     _name = "hr.benefit.policy"
     _description = "Benefit Enrollment"
     _check_company_auto = True
@@ -41,11 +40,13 @@ class BenefitPolicy(models.Model):
     active = fields.Boolean(default=True)
     advantage_override = fields.Boolean(
         string="Change Advantage Amount",
-        help="Check this field if the amount of the advantage should be changed in the policy.",
+        help="Check this field if the amount of the advantage "
+        "should be changed in the policy.",
     )
     premium_override = fields.Boolean(
         string="Change Premium Amount",
-        help="Check this field if the amount of the premium should be changed in the policy.",
+        help="Check this field if the amount of the premium "
+        "should be changed in the policy.",
     )
     advantage_override_amount = fields.Float(digits="Account")
     premium_override_amount = fields.Float(digits="Account")
@@ -86,7 +87,7 @@ class BenefitPolicy(models.Model):
     def name_get(self):
         res = []
         for rec in self:
-            res.append((rec.id, "{} {}".format(rec.name, rec.benefit_id.name)))
+            res.append((rec.id, f"{rec.name} {rec.benefit_id.name}"))
         return res
 
     @api.depends(
@@ -110,7 +111,7 @@ class BenefitPolicy(models.Model):
                 rec.write(res)
                 continue
 
-            d_today = date.today()
+            d_today = date.today()  # noqa: DTZ011
             if rec.advantage_override:
                 res["advantage_amount"] = rec.advantage_override_amount
             else:
@@ -145,8 +146,8 @@ class BenefitPolicy(models.Model):
                 rec.write(res)
                 return
 
-            installments = int(
-                math.ceil(float(rec.premium_total) / float(rec.premium_amount))
+            installments = math.ceil(
+                float(rec.premium_total) / float(rec.premium_amount)
             )
             if installments > 0:
                 d_end = rec.start_date + relativedelta(months=+installments)
@@ -183,7 +184,6 @@ class BenefitPolicy(models.Model):
     def create(self, vals_list):
 
         for vals in vals_list:
-
             # Check if the employee is already enrolled
             #
             benefit = self.env["hr.benefit"].browse(vals["benefit_id"])
@@ -224,7 +224,8 @@ class BenefitPolicy(models.Model):
                 raise UserError(
                     _(
                         "Eligibility Requirements Unmet. "
-                        "The employee does not meet eligibility requirements for this benefit."
+                        "The employee does not meet eligibility "
+                        "requirements for this benefit."
                     )
                 )
 
@@ -246,8 +247,8 @@ class BenefitPolicy(models.Model):
             ):
                 raise UserError(
                     _(
-                        'You may not delete a policy that is not in a "draft" state.'
-                        "\nPolicy No: %(name)s" % {"name": pol.name}
+                        "You may not delete a policy that is not in a 'draft' state."
+                        f"\nPolicy No: {pol.name}"
                     )
                 )
 
@@ -255,11 +256,12 @@ class BenefitPolicy(models.Model):
 
     def _check_state(self, to_state):
         for rec in self:
-            if to_state == "draft" and rec.state not in ["", "draft"]:
-                raise UserError(
-                    _("You cannot set an open policy back to 'draft' state.")
-                )
-            elif to_state == "done" and rec.state != "open":
+            if (
+                to_state == "draft"
+                and rec.state not in ["", "draft"]
+                or to_state == "done"
+                and rec.state != "open"
+            ):
                 raise UserError(
                     _("You cannot set an open policy back to 'draft' state.")
                 )

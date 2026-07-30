@@ -32,10 +32,13 @@ class TestBenefitAccess(common.TestBenefitCommon):
         bn = self.create_benefit(self.benefit_create_vals)
         create_vals = {
             "benefit_id": bn.id,
-            "effective_date": date.today(),
+            "effective_date": date.today(),  # noqa: DTZ011
             "type": "monthly",
         }
-        prm = self.create_premium(bn, date.today() + relativedelta(days=30))
+        prm = self.create_premium(
+            bn,
+            date.today() + relativedelta(days=30),  # noqa: DTZ011
+        )
 
         # HRM
         self.create_succeeds(self.userHRM, self.Premium, create_vals)
@@ -55,10 +58,13 @@ class TestBenefitAccess(common.TestBenefitCommon):
         bn = self.create_benefit(self.benefit_create_vals)
         create_vals = {
             "benefit_id": bn.id,
-            "effective_date": date.today(),
+            "effective_date": date.today(),  # noqa: DTZ011
             "type": "allowance",
         }
-        earn = self.create_earning(bn, date.today() + relativedelta(days=30))
+        earn = self.create_earning(
+            bn,
+            date.today() + relativedelta(days=30),  # noqa: DTZ011
+        )
 
         # HRM
         self.create_succeeds(self.userHRM, self.Earning, create_vals)
@@ -83,7 +89,7 @@ class TestBenefitAccess(common.TestBenefitCommon):
                 "multi_policy": True,
             }
         )
-        pol = self.create_policy(self.eeJohn, bn1, date.today())
+        pol = self.create_policy(self.eeJohn, bn1, date.today())  # noqa: DTZ011
 
         # HRM
         hroPol = self.create_succeeds(
@@ -93,7 +99,7 @@ class TestBenefitAccess(common.TestBenefitCommon):
                 "name": "tbp",
                 "employee_id": self.eeJohn.id,
                 "benefit_id": bn2.id,
-                "start_date": date.today(),
+                "start_date": date.today(),  # noqa: DTZ011
             },
         )
         self.unlink_succeeds(self.userHRM, hroPol)
@@ -108,7 +114,7 @@ class TestBenefitAccess(common.TestBenefitCommon):
                 "name": "tbp",
                 "employee_id": self.eeJohn.id,
                 "benefit_id": bn2.id,
-                "start_date": date.today(),
+                "start_date": date.today(),  # noqa: DTZ011
             },
         )
         self.unlink_fails(self.userHRO, hroPol)
@@ -119,8 +125,8 @@ class TestBenefitAccess(common.TestBenefitCommon):
         """A user can only read his/her own policies"""
 
         bn1 = self.create_benefit(self.benefit_create_vals)
-        polJohn = self.create_policy(self.eeJohn, bn1, date.today())
-        polPaul = self.create_policy(self.eePaul, bn1, date.today())
+        polJohn = self.create_policy(self.eeJohn, bn1, date.today())  # noqa: DTZ011
+        polPaul = self.create_policy(self.eePaul, bn1, date.today())  # noqa: DTZ011
         grpOfficer = self.env.ref("hr.group_hr_user")
         self.assertNotIn(grpOfficer, self.userJohn.groups_id)
         self.assertNotEqual(polJohn, polPaul)

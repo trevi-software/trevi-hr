@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <!-- All Claims -->
 
     <record id="view_claims_filter" model="ir.ui.view">
@@ -109,8 +108,7 @@
                             <field name="amount_approved" readonly="1" />
                         </h2>
                     </group>
-                    <group>
-                    </group>
+                    <group />
                 </group>
             </form>
         </field>
@@ -129,5 +127,4 @@
         groups="base.group_user"
         sequence="5"
     />
-
 </odoo>

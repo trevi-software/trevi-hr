@@ -11,7 +11,6 @@ from odoo import api, fields, models
 
 
 class EnrollEmployee(models.TransientModel):
-
     _name = "hr.benefit.enroll.multi.employee"
     _description = "Employee Benefit Enrollment Form"
 
@@ -27,7 +26,9 @@ class EnrollEmployee(models.TransientModel):
         column2="benefit_id",
     )
     start_date = fields.Date(
-        string="Enrollment Date", required=True, default=date.today()
+        string="Enrollment Date",
+        required=True,
+        default=date.today(),  # noqa: DTZ011
     )
     end_date = fields.Date(string="Termination Date")
     advantage_override = fields.Boolean(string="Override Advantage")
@@ -80,8 +81,8 @@ class EnrollEmployee(models.TransientModel):
                 rec.update(res)
                 return
 
-            installments = int(
-                math.ceil(float(rec.premium_total) / float(rec.premium_amount))
+            installments = math.ceil(
+                float(rec.premium_total) / float(rec.premium_amount)
             )
             if installments > 0:
                 d_end = rec.start_date + relativedelta(months=+installments)
@@ -95,7 +96,6 @@ class EnrollEmployee(models.TransientModel):
             return {"type": "ir.actions.act_window_close"}
 
         for employee in self.employee_ids:
-
             vals = {
                 "benefit_id": self.benefit_id.id,
                 "employee_id": employee.id,

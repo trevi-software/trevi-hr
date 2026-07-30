@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 
 
 class BenefitClaim(models.Model):
-
     _name = "hr.benefit.claim"
     _description = "Benefit claim"
     _rec_name = "date"
@@ -31,9 +30,7 @@ class BenefitClaim(models.Model):
         digits="Account",
         required=True,
     )
-    amount_approved = fields.Float(
-        string="Approved Amount", digits="Account"
-    )
+    amount_approved = fields.Float(string="Approved Amount", digits="Account")
     state = fields.Selection(
         selection=[
             ("draft", "Draft"),
@@ -94,7 +91,7 @@ class BenefitClaim(models.Model):
     def create(self, vals_list):
 
         records = super().create(vals_list)
-        for rec, vals in zip(records, vals_list):
+        for rec, vals in zip(records, vals_list, strict=True):
             approved = rec._get_approved_amount(vals["date"])
             rec.amount_approved = approved
 
@@ -115,7 +112,7 @@ class BenefitClaim(models.Model):
                 do_calc = True
                 break
 
-        if "state" in vals.keys():
+        if "state" in vals:
             for clm in self:
                 clm._check_state(vals["state"])
 

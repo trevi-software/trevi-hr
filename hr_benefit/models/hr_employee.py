@@ -8,7 +8,6 @@ from odoo import fields, models
 
 
 class HrEmployee(models.Model):
-
     _inherit = "hr.employee"
 
     benefit_policy_ids = fields.One2many(
@@ -23,7 +22,7 @@ class HrEmployee(models.Model):
 
     def _compute_policies_count(self):
         HrBenefitPolicy = self.env["hr.benefit.policy"]
-        dToday = date.today()
+        dToday = date.today()  # noqa: DTZ011
         for ee in self:
             ee.benefit_policies_count = HrBenefitPolicy.search_count(
                 [
