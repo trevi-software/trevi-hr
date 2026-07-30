@@ -15,7 +15,7 @@ class HrAttendance(models.Model):
     def _compute_day(self):
 
         for att in self:
-            local_tz = timezone(att.employee_id.tz)
+            local_tz = timezone(att.employee_id.tz or "UTC")
             utc_check_in = utc.localize(att.check_in)
             tz_check_in = utc_check_in.astimezone(local_tz)
             att.day = tz_check_in.date()

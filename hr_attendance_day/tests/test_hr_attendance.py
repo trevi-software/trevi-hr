@@ -23,8 +23,8 @@ class TestHrAttendance(common.TransactionCase):
 
     def test_utc_and_tz_match(self):
 
-        check_in = datetime(2022, 4, 1, 23, 59, 59)
-        check_out = datetime(2022, 4, 2, 8, 0)
+        check_in = datetime(2022, 4, 1, 23, 59, 59)  # noqa: DTZ001
+        check_out = datetime(2022, 4, 2, 8, 0)  # noqa: DTZ001
         att = self.Attendance.create(
             {
                 "employee_id": self.john.id,
@@ -39,8 +39,8 @@ class TestHrAttendance(common.TransactionCase):
             "Timezone with zero offset (1) from UTC has correct date",
         )
 
-        check_in = datetime(2022, 4, 3, 0, 0, 0)
-        check_out = datetime(2022, 4, 3, 8, 0)
+        check_in = datetime(2022, 4, 3, 0, 0, 0)  # noqa: DTZ001
+        check_out = datetime(2022, 4, 3, 8, 0)  # noqa: DTZ001
         att = self.Attendance.create(
             {
                 "employee_id": self.john.id,
@@ -60,8 +60,8 @@ class TestHrAttendance(common.TransactionCase):
         att = self.Attendance.create(
             {
                 "employee_id": self.sally.id,
-                "check_in": datetime(2022, 4, 1, 21, 0),
-                "check_out": datetime(2022, 4, 2, 5, 0),
+                "check_in": datetime(2022, 4, 1, 21, 0),  # noqa: DTZ001
+                "check_out": datetime(2022, 4, 2, 5, 0),  # noqa: DTZ001
             }
         )
 
@@ -76,8 +76,8 @@ class TestHrAttendance(common.TransactionCase):
         att = self.Attendance.create(
             {
                 "employee_id": self.sally.id,
-                "check_in": datetime(2022, 4, 1, 21, 0),
-                "check_out": datetime(2022, 4, 2, 5, 0),
+                "check_in": datetime(2022, 4, 1, 21, 0),  # noqa: DTZ001
+                "check_out": datetime(2022, 4, 2, 5, 0),  # noqa: DTZ001
             }
         )
 
@@ -87,7 +87,7 @@ class TestHrAttendance(common.TransactionCase):
             "Timezone with +3:00 offset (1) from UTC has correct date",
         )
 
-        att.check_in = datetime(2022, 4, 1, 20, 59, 59)
+        att.check_in = datetime(2022, 4, 1, 20, 59, 59)  # noqa: DTZ001
         self.assertEqual(
             att.day,
             date(2022, 4, 1),
