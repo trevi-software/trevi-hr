@@ -11,7 +11,6 @@ from odoo.addons.payroll.models.hr_payslip import BaseBrowsableObject
 
 
 class HrPayslip(models.Model):
-
     _inherit = "hr.payslip"
 
     benefit_line_ids = fields.One2many(
@@ -34,9 +33,8 @@ class HrPayslip(models.Model):
             )
             write_vals = [(0, 0, v) for _k, v in benefit_lines_dict.items()]
             rec.benefit_line_ids = write_vals
-        
-        return super().onchange_dates()
 
+        return super().onchange_dates()
 
     def get_payslip_vals(
         self, date_from, date_to, employee_id=False, contract_id=False, struct_id=False
@@ -109,7 +107,6 @@ class HrPayslip(models.Model):
             app = 12
 
         for policy in policy_ids:
-
             # Calculate partial period factor relative to the policy
             d_pol_start = policy.start_date
             d_pol_end = d_slip_end
@@ -197,15 +194,12 @@ class HrPayslip(models.Model):
                         "amount": payslip.credit_note and -v["amount"] or v["amount"],
                     }
                 )
-        return
 
     def remove_benefit_premium_payments(self):
 
         pay_obj = self.env["hr.benefit.premium.payment"]
         pay_ids = pay_obj.search([("payslip_id", "in", self.ids)])
         pay_ids.unlink()
-
-        return
 
     def finalize_benefit_premium_payments(self):
 

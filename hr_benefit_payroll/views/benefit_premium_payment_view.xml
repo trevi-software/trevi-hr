@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <!-- Premium Payments -->
 
     <record id="view_premium_payments_filter" model="ir.ui.view">
@@ -118,5 +117,4 @@
         groups="base.group_user"
         sequence="10"
     />
-
 </odoo>

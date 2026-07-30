@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <!-- Payslip -->
     <record id="view_hr_payslip_form" model="ir.ui.view">
         <field name="name">hr.payslip.form</field>
@@ -42,5 +41,4 @@
             </data>
         </field>
     </record>
-
 </odoo>

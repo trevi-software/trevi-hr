@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 
 
 class PremiumPayment(models.Model):
-
     _name = "hr.benefit.premium.payment"
     _description = "Benefit premium payment"
     _rec_name = "date"
@@ -53,9 +52,7 @@ class PremiumPayment(models.Model):
             res.append(
                 (
                     payment.id,
-                    "{} {} {}".format(
-                        payment.policy_id.name, payment.date, payment.amount
-                    ),
+                    f"{payment.policy_id.name} {payment.date} {payment.amount}",
                 )
             )
 
@@ -70,7 +67,7 @@ class PremiumPayment(models.Model):
                 raise UserError(
                     _(
                         "Permission Denied"
-                        'You may not delete a premium payment that is past the "draft" stage.'
+                        'You may not delete a premium payment that is not in "draft" stage.'
                         "\nPolicy: %(name)s\nPayment Date: %(date)s"
                     )
                     % {"name": payment.policy_id.name, "date": payment.date}

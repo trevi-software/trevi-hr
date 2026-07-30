@@ -42,7 +42,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "multi_policy": True,
             }
         )
-        pol = self.create_policy(self.eeJohn, bn1, date.today())
+        pol = self.create_policy(self.eeJohn, bn1, date.today())    # noqa: DTZ011
 
         # Mgr
         # Succeeds because of payroll user rights
@@ -53,7 +53,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "name": "tbp",
                 "employee_id": self.eeJohn.id,
                 "benefit_id": bn2.id,
-                "start_date": date.today(),
+                "start_date": date.today(), # noqa: DTZ011
             },
         )
         self.unlink_fails(self.userPM, pol)
@@ -69,7 +69,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "name": "tbp",
                 "employee_id": self.eeJohn.id,
                 "benefit_id": bn2.id,
-                "start_date": date.today(),
+                "start_date": date.today(), # noqa: DTZ011
             },
         )
         self.unlink_fails(self.userPU, pol)
@@ -80,8 +80,8 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         """A user can only read his/her own policies"""
 
         bn1 = self.create_benefit(self.benefit_create_vals)
-        polJohn = self.create_policy(self.eeJohn, bn1, date.today())
-        polPaul = self.create_policy(self.eePaul, bn1, date.today())
+        polJohn = self.create_policy(self.eeJohn, bn1, date.today())    # noqa: DTZ011
+        polPaul = self.create_policy(self.eePaul, bn1, date.today())    # noqa: DTZ011
         grpOfficer = self.env.ref("hr.group_hr_user")
         self.assertNotIn(grpOfficer, self.userJohn.groups_id)
         self.assertNotEqual(polJohn, polPaul)
