@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hr_benefit"
+version = "18.0.1.0.0"
+description = "Benefit Management module for Odoo 18.0"
+authors = [{name = "TREVI Software", email = "trevi.et"}]
+dependencies = [
+    "odoo-addon-hr",
+    "odoo-addon-hr_contract_status",
+    "odoo-addon-hr_employee_seniority_months",
+]
