@@ -53,7 +53,7 @@ class HrAccrual(models.Model):
                 }
                 lv = self.env["hr.leave.allocation"].create(leave_allocation)
                 lv.action_confirm()
-                lv.action_validate()
+                lv._validate_leave_request()
 
             # Create accrual line
             #
@@ -78,4 +78,4 @@ class HrAccrualLine(models.Model):
     accrual_id = fields.Many2one(comodel_name="hr.accrual", required=True)
     employee_id = fields.Many2one(comodel_name="hr.employee", required=True)
     leave_allocation_id = fields.Many2one("hr.leave.allocation")
-    amount = fields.Float(digits="Accruals", required=True)
+    amount = fields.Float(digits=("Accruals", 3), required=True)

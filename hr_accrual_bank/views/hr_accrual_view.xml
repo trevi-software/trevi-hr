@@ -4,10 +4,10 @@
         <field name="name">hr.accrual.tree</field>
         <field name="model">hr.accrual</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="holiday_status_id" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -16,18 +16,20 @@
         <field name="model">hr.accrual</field>
         <field name="arch" type="xml">
             <form string="Accrual">
-                <label for="name" string="Name" class="oe_edit_only" />
-                <h1>
-                    <field name="name" />
-                </h1>
-                <group>
+                <sheet>
+                    <label for="name" string="Name" class="oe_edit_only" />
+                    <h1>
+                        <field name="name" />
+                    </h1>
                     <group>
-                        <field name="holiday_status_id" />
+                        <group>
+                            <field name="holiday_status_id" />
+                        </group>
                     </group>
-                </group>
-                <group string="Accrual Lines">
-                    <field name="line_ids" nolabel="1" />
-                </group>
+                    <group string="Accrual Lines">
+                        <field name="line_ids" nolabel="1" />
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>
