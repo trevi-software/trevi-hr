@@ -38,8 +38,8 @@ class TestLock(common.TransactionCase):
         """Has read access to lock.lock"""
 
         # utc: 2020-12-31 21:00:00 - 2021-01-31 20:59:59
-        start = datetime(2021, 1, 1, 0, 0, 0, None)
-        end = datetime(2021, 1, 31, 23, 59, 59, None)
+        start = datetime(2021, 1, 1, 0, 0, 0)  # noqa: DTZ001
+        end = datetime(2021, 1, 31, 23, 59, 59)  # noqa: DTZ001
         lk = self.create_lock(start, end, "Africa/Addis_Ababa")
         try:
             lk.with_user(self.user.id).read([])
@@ -50,8 +50,8 @@ class TestLock(common.TransactionCase):
         """Write access fails"""
 
         # utc: 2020-12-31 21:00:00 - 2021-01-31 20:59:59
-        start = datetime(2021, 1, 1, 0, 0, 0, None)
-        end = datetime(2021, 1, 31, 23, 59, 59, None)
+        start = datetime(2021, 1, 1, 0, 0, 0)  # noqa: DTZ001
+        end = datetime(2021, 1, 31, 23, 59, 59)  # noqa: DTZ001
         lk = self.create_lock(start, end, "Africa/Addis_Ababa")
         with self.assertRaises(AccessError):
             lk.with_user(self.user.id).name = "B"
@@ -60,8 +60,8 @@ class TestLock(common.TransactionCase):
         """Create access fails"""
 
         # utc: 2020-12-31 21:00:00 - 2021-01-31 20:59:59
-        start = datetime(2021, 1, 1, 0, 0, 0, None)
-        end = datetime(2021, 1, 31, 23, 59, 59, None)
+        start = datetime(2021, 1, 1, 0, 0, 0)  # noqa: DTZ001
+        end = datetime(2021, 1, 31, 23, 59, 59)  # noqa: DTZ001
         with self.assertRaises(AccessError):
             self.Lock.with_user(self.user.id).create(
                 {
@@ -76,8 +76,8 @@ class TestLock(common.TransactionCase):
         """Unlink access fails"""
 
         # utc: 2020-12-31 21:00:00 - 2021-01-31 20:59:59
-        start = datetime(2021, 1, 1, 0, 0, 0, None)
-        end = datetime(2021, 1, 31, 23, 59, 59, None)
+        start = datetime(2021, 1, 1, 0, 0, 0)  # noqa: DTZ001
+        end = datetime(2021, 1, 31, 23, 59, 59)  # noqa: DTZ001
         lk = self.create_lock(start, end, "Africa/Addis_Ababa")
         with self.assertRaises(AccessError):
             lk.with_user(self.user.id).unlink()
@@ -86,8 +86,8 @@ class TestLock(common.TransactionCase):
         """Locking of datetime value"""
 
         # utc: 2020-12-31 21:00:00 - 2021-01-31 20:59:59
-        start = datetime(2021, 1, 1, 0, 0, 0, None)
-        end = datetime(2021, 1, 31, 23, 59, 59, None)
+        start = datetime(2021, 1, 1, 0, 0, 0)  # noqa: DTZ001
+        end = datetime(2021, 1, 31, 23, 59, 59)  # noqa: DTZ001
 
         lk = self.create_lock(start, end, "Africa/Addis_Ababa")
 
