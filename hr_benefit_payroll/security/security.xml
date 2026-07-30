@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo noupdate="1">
-
     <record id="hr_benefit_premium_payment_rule_own" model="ir.rule">
         <field name="name">Benefit Premium Payment: Own and Subordinates</field>
         <field name="model_id" ref="model_hr_benefit_policy" />
@@ -20,5 +19,4 @@
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('payroll.group_payroll_user'))]" />
     </record>
-
 </odoo>

@@ -6,7 +6,6 @@ from odoo import fields, models
 
 
 class Benefit(models.Model):
-
     _inherit = "hr.benefit"
 
     link2payroll = fields.Boolean(string="Link to Payroll")

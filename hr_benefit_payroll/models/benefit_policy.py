@@ -8,7 +8,6 @@ from odoo import fields, models
 
 
 class BenefitPolicy(models.Model):
-
     _inherit = "hr.benefit.policy"
 
     premium_payment_ids = fields.One2many(
@@ -59,8 +58,7 @@ class BenefitPolicy(models.Model):
                 prm_amount = (
                     (total - paid) > prm_amount and prm_amount or (total - paid)
                 )
-                if prm_amount < 0:
-                    prm_amount = 0
+                prm_amount = max(prm_amount, 0)
         elif prm:
             if prm.type == "annual":
                 prm_amount = math.floor(prm.amount / float(annual_pay_periods))

@@ -6,7 +6,6 @@ from odoo import fields, models
 
 
 class HrSalaryRule(models.Model):
-
     _inherit = "hr.salary.rule"
 
     benefit_id = fields.Many2one(comodel_name="hr.benefit")
