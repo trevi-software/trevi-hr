@@ -8,7 +8,6 @@ from odoo import _, api, fields, models
 
 
 class BenefitPremium(models.Model):
-
     _name = "hr.benefit.premium"
     _description = "Employee Benefit Premium Policy Line"
     _rec_name = "effective_date"
@@ -41,9 +40,7 @@ class BenefitPremium(models.Model):
     def name_get(self):
         res = []
         for rec in self:
-            res.append(
-                (rec.id, "{} {}".format(rec.benefit_id.name, rec.effective_date))
-            )
+            res.append((rec.id, f"{rec.benefit_id.name} {rec.effective_date}"))
         return res
 
     @api.depends("amount", "total_amount")
@@ -51,6 +48,6 @@ class BenefitPremium(models.Model):
         for prm in self:
             prm.no_of_installments = (
                 (prm.amount > 0 and prm.total_amount > 0)
-                and int(math.ceil(float(prm.total_amount) / float(prm.amount)))
+                and math.ceil(float(prm.total_amount) / float(prm.amount))
                 or 0
             )

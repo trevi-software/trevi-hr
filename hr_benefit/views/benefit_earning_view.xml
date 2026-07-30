@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <!-- Policy Advantages -->
 
     <record id="view_benefit_policy_advantage_tree" model="ir.ui.view">
@@ -57,10 +56,7 @@
                     <group string="Loan" invisible="type != 'loan'">
                         <group>
                             <group>
-                                <field
-                                    name="loan_amount"
-                                    required="type == 'loan'"
-                                />
+                                <field name="loan_amount" required="type == 'loan'" />
                             </group>
                         </group>
                     </group>
@@ -114,5 +110,4 @@
         groups="base.group_user"
         sequence="8"
     />
-
 </odoo>

@@ -17,11 +17,15 @@ class TestBenefit(common.TestBenefitCommon):
 
         bn1 = self.create_benefit(self.benefit_create_vals)
         self.create_premium(
-            bn1, date.today() - relativedelta(days=1), "monthly", 100, 100
+            bn1,
+            date.today() - relativedelta(days=1),  # noqa: DTZ011
+            "monthly",
+            100,
+            100,
         )
         bn2 = self.create_benefit({"name": "B", "code": "B"})
-        self.create_earning(bn2, date.today(), allowance=1000)
-        pol = self.create_policy(self.eeJohn, bn1, date.today())
+        self.create_earning(bn2, date.today(), allowance=1000)  # noqa: DTZ011
+        pol = self.create_policy(self.eeJohn, bn1, date.today())  # noqa: DTZ011
         self.assertEqual(bn1, pol.benefit_id)
         self.assertEqual(bn1.code, pol.benefit_code)
         self.assertEqual("draft", pol.state)
@@ -49,17 +53,21 @@ class TestBenefit(common.TestBenefitCommon):
         bn = self.create_benefit(self.benefit_create_vals)
         self.create_premium(
             bn,
-            date.today() - relativedelta(days=60),
+            date.today() - relativedelta(days=60),  # noqa: DTZ011
             ptype="monthly",
             amount=100,
         )
         self.create_premium(
             bn,
-            date.today() - relativedelta(days=30),
+            date.today() - relativedelta(days=30),  # noqa: DTZ011
             ptype="monthly",
             amount=200,
         )
-        pol = self.create_policy(self.eeJohn, bn, date.today() - relativedelta(days=45))
+        pol = self.create_policy(
+            self.eeJohn,
+            bn,
+            date.today() - relativedelta(days=45),  # noqa: DTZ011
+        )
 
         self.assertEqual(200, pol.premium_amount)
 
@@ -69,12 +77,12 @@ class TestBenefit(common.TestBenefitCommon):
         bn = self.create_benefit(self.benefit_create_vals)
         self.create_premium(
             bn,
-            date.today() - relativedelta(days=1),
+            date.today() - relativedelta(days=1),  # noqa: DTZ011
             ptype="monthly",
             amount=100,
             total=300,
         )
-        pol = self.create_policy(self.eeJohn, bn, date.today())
+        pol = self.create_policy(self.eeJohn, bn, date.today())  # noqa: DTZ011
 
         self.assertEqual(100, pol.premium_amount)
         self.assertEqual(300, pol.premium_total)
@@ -88,9 +96,13 @@ class TestBenefit(common.TestBenefitCommon):
 
         bn = self.create_benefit(self.benefit_create_vals)
         self.create_premium(
-            bn, date.today() - relativedelta(days=1), "monthly", 100, 350
+            bn,
+            date.today() - relativedelta(days=1),  # noqa: DTZ011
+            "monthly",
+            100,
+            350,
         )
-        pol = self.create_policy(self.eeJohn, bn, date.today())
+        pol = self.create_policy(self.eeJohn, bn, date.today())  # noqa: DTZ011
 
         self.assertEqual(100, pol.premium_amount)
         self.assertEqual(350, pol.premium_total)
@@ -103,14 +115,16 @@ class TestBenefit(common.TestBenefitCommon):
         """
 
         cc = self.create_contract(
-            "draft", "done", date.today() - relativedelta(days=10)
+            "draft",
+            "done",
+            date.today() - relativedelta(days=10),  # noqa: DTZ011
         )
         cc.signal_confirm()
         bn = self.create_benefit({"name": "B", "code": "B", "min_employed_days": 30})
-        self.create_earning(bn, date.today(), allowance=1000)
+        self.create_earning(bn, date.today(), allowance=1000)  # noqa: DTZ011
 
         with self.assertRaises(UserError):
-            self.create_policy(self.eeJohn, bn, date.today())
+            self.create_policy(self.eeJohn, bn, date.today())  # noqa: DTZ011
 
     def test_no_multipolicy(self):
         """
@@ -120,16 +134,16 @@ class TestBenefit(common.TestBenefitCommon):
 
         bnNoMulti = self.create_benefit({"name": "B", "code": "B"})
         bnMulti = self.create_benefit({"name": "C", "code": "C", "multi_policy": True})
-        self.create_earning(bnNoMulti, date.today(), allowance=1000)
-        self.create_earning(bnMulti, date.today(), allowance=3000)
-        self.create_policy(self.eeJohn, bnNoMulti, date.today())
-        self.create_policy(self.eeJohn, bnMulti, date.today())
+        self.create_earning(bnNoMulti, date.today(), allowance=1000)  # noqa: DTZ011
+        self.create_earning(bnMulti, date.today(), allowance=3000)  # noqa: DTZ011
+        self.create_policy(self.eeJohn, bnNoMulti, date.today())  # noqa: DTZ011
+        self.create_policy(self.eeJohn, bnMulti, date.today())  # noqa: DTZ011
 
         with self.assertRaises(UserError):
-            self.create_policy(self.eeJohn, bnNoMulti, date.today())
+            self.create_policy(self.eeJohn, bnNoMulti, date.today())  # noqa: DTZ011
 
         try:
-            self.create_policy(self.eeJohn, bnMulti, date.today())
+            self.create_policy(self.eeJohn, bnMulti, date.today())  # noqa: DTZ011
         except UserError:
             self.fail("An unexpected exception was raised")
 
@@ -137,8 +151,12 @@ class TestBenefit(common.TestBenefitCommon):
         """Deleting a policy not in 'Draft' state raises a UserError"""
 
         bn = self.create_benefit({"name": "B", "code": "B"})
-        self.create_earning(bn, date.today(), allowance=1000)
-        pol = self.create_policy(self.eeJohn, bn, date.today())
+        self.create_earning(
+            bn,
+            date.today(),  # noqa: DTZ011
+            allowance=1000,
+        )
+        pol = self.create_policy(self.eeJohn, bn, date.today())  # noqa: DTZ011
         pol.state_open()
 
         with self.assertRaises(UserError):
@@ -148,8 +166,12 @@ class TestBenefit(common.TestBenefitCommon):
         """Setting state to 'Draft' when it is 'open' raises an error"""
 
         bn = self.create_benefit({"name": "B", "code": "B"})
-        self.create_earning(bn, date.today(), allowance=1000)
-        pol = self.create_policy(self.eeJohn, bn, date.today())
+        self.create_earning(
+            bn,
+            date.today(),  # noqa: DTZ011
+            allowance=1000,
+        )
+        pol = self.create_policy(self.eeJohn, bn, date.today())  # noqa: DTZ011
         pol.state_open()
 
         with self.assertRaises(UserError):
@@ -159,8 +181,16 @@ class TestBenefit(common.TestBenefitCommon):
         """Setting state to 'Done' when it isn't 'open' raises an error"""
 
         bn = self.create_benefit({"name": "B", "code": "B"})
-        self.create_earning(bn, date.today(), allowance=1000)
-        pol = self.create_policy(self.eeJohn, bn, date.today())
+        self.create_earning(
+            bn,
+            date.today(),  # noqa: DTZ011
+            allowance=1000,
+        )
+        pol = self.create_policy(
+            self.eeJohn,
+            bn,
+            date.today(),  # noqa: DTZ011
+        )
 
         with self.assertRaises(UserError):
             pol.state_done()
@@ -169,8 +199,8 @@ class TestBenefit(common.TestBenefitCommon):
         """Setting state to any value when it is 'done' raises an error"""
 
         bn = self.create_benefit({"name": "B", "code": "B"})
-        self.create_earning(bn, date.today(), allowance=1000)
-        pol = self.create_policy(self.eeJohn, bn, date.today())
+        self.create_earning(bn, date.today(), allowance=1000)  # noqa: DTZ011
+        pol = self.create_policy(self.eeJohn, bn, date.today())  # noqa: DTZ011
         pol.state_open()
         pol.state_done()
 
@@ -183,8 +213,17 @@ class TestBenefit(common.TestBenefitCommon):
         """User can override the calculated earning amount"""
 
         bn = self.create_benefit({"name": "B", "code": "B"})
-        self.create_earning(bn, date.today(), allowance=1000)
-        pol = self.create_policy(self.eeJohn, bn, date.today(), advantage=4400)
+        self.create_earning(
+            bn,
+            date.today(),  # noqa: DTZ011
+            allowance=1000,
+        )
+        pol = self.create_policy(
+            self.eeJohn,
+            bn,
+            date.today(),  # noqa: DTZ011
+            advantage=4400,
+        )
         pol.state_open()
 
         self.assertEqual(4400, pol.advantage_amount)
@@ -193,34 +232,34 @@ class TestBenefit(common.TestBenefitCommon):
         """Calling end_policy() method of wizard sets end date and state = 'done'"""
 
         bn = self.create_benefit({"name": "B", "code": "B"})
-        self.create_earning(bn, date.today(), allowance=1000)
-        pol = self.create_policy(self.eeJohn, bn, date.today())
+        self.create_earning(bn, date.today(), allowance=1000)  # noqa: DTZ011
+        pol = self.create_policy(self.eeJohn, bn, date.today())  # noqa: DTZ011
         pol.state_open()
         self.assertFalse(pol.end_date)
         self.assertEqual("open", pol.state)
 
         wiz = self.EndWizard.with_context(end_benefit_policy_id=pol.id).create({})
-        wiz.date = date.today()
+        wiz.date = date.today()  # noqa: DTZ011
         wiz.end_policy()
 
-        self.assertEqual(date.today(), pol.end_date)
+        self.assertEqual(date.today(), pol.end_date)  # noqa: DTZ011
         self.assertEqual(pol.state, "done")
 
     def test_endroll_single_employee(self):
         """Running the enroll employee wizard creates a policy for the employee"""
 
         bn = self.create_benefit({"name": "B", "code": "B"})
-        self.create_earning(bn, date.today(), allowance=1000)
+        self.create_earning(bn, date.today(), allowance=1000)  # noqa: DTZ011
 
         wiz = self.EnrollWizard.with_context(active_id=bn.id).create(
-            {"employee_id": self.eeJohn.id, "start_date": date.today()}
+            {"employee_id": self.eeJohn.id, "start_date": date.today()}  # noqa: DTZ011
         )
         wiz.do_enroll()
 
         policy_ids = self.Policy.search([("employee_id", "=", self.eeJohn.id)])
         self.assertEqual(1, len(policy_ids))
         self.assertEqual(bn, policy_ids[0].benefit_id)
-        self.assertEqual(date.today(), policy_ids[0].start_date)
+        self.assertEqual(date.today(), policy_ids[0].start_date)  # noqa: DTZ011
         self.assertFalse(policy_ids[0].end_date)
 
     def test_endroll_multi_employee(self):
@@ -230,24 +269,24 @@ class TestBenefit(common.TestBenefitCommon):
         """
 
         bn = self.create_benefit({"name": "B", "code": "B"})
-        self.create_earning(bn, date.today(), allowance=1000)
+        self.create_earning(bn, date.today(), allowance=1000)  # noqa: DTZ011
 
         wiz = self.EnrollMultiWizard.with_context(active_id=bn.id).create(
-            {"employee_ids": [(6, 0, [self.eeJohn.id])], "start_date": date.today()}
+            {"employee_ids": [(6, 0, [self.eeJohn.id])], "start_date": date.today()}  # noqa: DTZ011
         )
         wiz.do_multi_enroll()
 
         policy_ids = self.Policy.search([("employee_id", "=", self.eeJohn.id)])
         self.assertEqual(1, len(policy_ids))
         self.assertEqual(bn, policy_ids[0].benefit_id)
-        self.assertEqual(date.today(), policy_ids[0].start_date)
+        self.assertEqual(date.today(), policy_ids[0].start_date)  # noqa: DTZ011
         self.assertFalse(policy_ids[0].end_date)
 
     def test_multicompany_nosearch(self):
         """A policy in one company does not appear in searches by another"""
 
         bn = self.create_benefit(self.benefit_create_vals)
-        pol = self.create_policy(self.eeJohn, bn, date.today())
+        pol = self.create_policy(self.eeJohn, bn, date.today())  # noqa: DTZ011
         self.assertNotEqual(
             pol.company_id,
             self.company1,
@@ -278,7 +317,7 @@ class TestBenefit(common.TestBenefitCommon):
         )
 
         with self.assertRaises(UserError):
-            pol = self.create_policy(self.eeJames, bn, date.today())
+            pol = self.create_policy(self.eeJames, bn, date.today())  # noqa: DTZ011
 
             self.assertNotEqual(
                 pol.company_id,

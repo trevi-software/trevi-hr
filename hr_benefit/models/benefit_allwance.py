@@ -45,7 +45,6 @@ DAY_SELECT = [
 
 
 class BenefitAdvantage(models.Model):
-
     _name = "hr.benefit.advantage"
     _description = "Employee Benefit Policy Earning Line"
     _rec_name = "effective_date"
@@ -62,7 +61,8 @@ class BenefitAdvantage(models.Model):
     effective_date = fields.Date(required=True)
     min_employed_days = fields.Integer(
         string="Minimum Employed Days",
-        help="Number of days of employment before employee is eligible for this advantage.",
+        help="Number of days of employment before "
+        "employee is eligible for this advantage.",
     )
     type = fields.Selection(
         string="Earning Type",
@@ -148,9 +148,7 @@ class BenefitAdvantage(models.Model):
     def name_get(self):
         res = []
         for rec in self:
-            res.append(
-                (rec.id, "{} {}".format(rec.benefit_id.name, rec.effective_date))
-            )
+            res.append((rec.id, f"{rec.benefit_id.name} {rec.effective_date}"))
         return res
 
     def get_claims_in_period(self, employee_id, day):
@@ -201,7 +199,7 @@ class BenefitAdvantage(models.Model):
         res = 0.00
         if len(claim_ids) > 0:
             self.env.cr.execute(
-                "SELECT SUM(amount_approved) FROM hr_benefit_claim " "WHERE id in %s",
+                "SELECT SUM(amount_approved) FROM hr_benefit_claim WHERE id in %s",
                 (tuple(claim_ids.ids),),
             )
             res = self.env.cr.fetchall()[0][0]
@@ -226,9 +224,7 @@ class BenefitAdvantage(models.Model):
                 ("end_date", ">=", day),
             ]
         )
-        if len(policies) == 0:
-            res = 0.0
-        elif self.reim_nolimit:
+        if len(policies) == 0 or self.reim_nolimit:
             res = 0.0
         elif self.reim_limit_period:
             claims = self.get_claims_in_period(employee_id, day)

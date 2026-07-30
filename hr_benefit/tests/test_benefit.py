@@ -15,21 +15,27 @@ class TestBenefit(common.TestBenefitCommon):
     def test_get_advantage_no_benefit(self):
         """#29 Try getting an advantage from an empty benefit recordset"""
 
-        self.Benefit.get_latest_advantage(date.today())
+        self.Benefit.get_latest_advantage(date.today())  # noqa: DTZ011
 
     def test_get_premium_no_benefit(self):
         """#29 Try getting a premium from an empty benefit recordset"""
 
-        self.Benefit.get_latest_premium(date.today())
+        self.Benefit.get_latest_premium(date.today())  # noqa: DTZ011
 
     def test_get_latest_earning(self):
         """Get the earning with the latest effective date that is not in the future"""
 
         bn = self.create_benefit(self.benefit_create_vals)
-        self.create_earning(bn, date.today() - relativedelta(days=1))
-        earnToday = self.create_earning(bn, date.today())
-        self.create_earning(bn, date.today() + relativedelta(days=1))
-        latest = bn.get_latest_advantage(date.today())
+        self.create_earning(
+            bn,
+            date.today() - relativedelta(days=1),  # noqa: DTZ011
+        )
+        earnToday = self.create_earning(bn, date.today())  # noqa: DTZ011
+        self.create_earning(
+            bn,
+            date.today() + relativedelta(days=1),  # noqa: DTZ011
+        )
+        latest = bn.get_latest_advantage(date.today())  # noqa: DTZ011
 
         self.assertEqual(3, len(bn.advantage_ids))
         self.assertEqual(earnToday, latest)
@@ -38,10 +44,13 @@ class TestBenefit(common.TestBenefitCommon):
         """Get the premium with the latest effective date that is not in the future"""
 
         bn = self.create_benefit(self.benefit_create_vals)
-        self.create_premium(bn, date.today() - relativedelta(days=1))
-        prmToday = self.create_premium(bn, date.today())
-        self.create_premium(bn, date.today() + relativedelta(days=1))
-        latest = bn.get_latest_premium(date.today())
+        self.create_premium(
+            bn,
+            date.today() - relativedelta(days=1),  # noqa: DTZ011
+        )
+        prmToday = self.create_premium(bn, date.today())  # noqa: DTZ011
+        self.create_premium(bn, date.today() + relativedelta(days=1))  # noqa: DTZ011
+        latest = bn.get_latest_premium(date.today())  # noqa: DTZ011
 
         self.assertEqual(3, len(bn.premium_ids))
         self.assertEqual(prmToday, latest)
@@ -51,7 +60,11 @@ class TestBenefit(common.TestBenefitCommon):
 
         bn = self.create_benefit(self.benefit_create_vals)
         prm = self.create_premium(
-            bn, date.today() - relativedelta(days=1), "monthly", 100, 100
+            bn,
+            date.today() - relativedelta(days=1),  # noqa: DTZ011
+            "monthly",
+            100,
+            100,
         )
 
         self.assertEqual(1, prm.no_of_installments)
@@ -63,7 +76,11 @@ class TestBenefit(common.TestBenefitCommon):
 
         bn = self.create_benefit(self.benefit_create_vals)
         prm = self.create_premium(
-            bn, date.today() - relativedelta(days=1), "monthly", 100, 300
+            bn,
+            date.today() - relativedelta(days=1),  # noqa: DTZ011
+            "monthly",
+            100,
+            300,
         )
 
         self.assertEqual(3, prm.no_of_installments)
@@ -78,7 +95,11 @@ class TestBenefit(common.TestBenefitCommon):
 
         bn = self.create_benefit(self.benefit_create_vals)
         prm = self.create_premium(
-            bn, date.today() - relativedelta(days=1), "monthly", 100, 350
+            bn,
+            date.today() - relativedelta(days=1),  # noqa: DTZ011
+            "monthly",
+            100,
+            350,
         )
 
         self.assertEqual(4, prm.no_of_installments)
@@ -92,11 +113,16 @@ class TestBenefit(common.TestBenefitCommon):
         """
 
         bn = self.create_benefit(self.benefit_create_vals)
-        earn = self.create_earning(bn, date.today(), "reimburse", 1000)
+        earn = self.create_earning(
+            bn,
+            date.today(),  # noqa: DTZ011
+            "reimburse",
+            1000,
+        )
 
         self.assertTrue(
             fields.Float.is_zero(
-                earn.get_reimburse_remaining(self.eeJohn, date.today()),
+                earn.get_reimburse_remaining(self.eeJohn, date.today()),  # noqa: DTZ011
                 precision_digits=2,
             )
         )
@@ -108,13 +134,13 @@ class TestBenefit(common.TestBenefitCommon):
         """
 
         bn = self.create_benefit(self.benefit_create_vals)
-        self.create_policy(self.eeJohn, bn, date.today())
-        earn = self.create_earning(bn, date.today(), "reimburse", 1000)
+        self.create_policy(self.eeJohn, bn, date.today())  # noqa: DTZ011
+        earn = self.create_earning(bn, date.today(), "reimburse", 1000)  # noqa: DTZ011
 
         self.assertEqual(
             0,
             fields.Float.compare(
-                earn.get_reimburse_remaining(self.eeJohn, date.today()),
+                earn.get_reimburse_remaining(self.eeJohn, date.today()),  # noqa: DTZ011
                 1000,
                 precision_digits=2,
             ),
@@ -127,14 +153,14 @@ class TestBenefit(common.TestBenefitCommon):
         """
 
         bn = self.create_benefit(self.benefit_create_vals)
-        earn = self.create_earning(bn, date.today(), "reimburse", 1000)
-        pol = self.create_policy(self.eeJohn, bn, date.today())
+        earn = self.create_earning(bn, date.today(), "reimburse", 1000)  # noqa: DTZ011
+        pol = self.create_policy(self.eeJohn, bn, date.today())  # noqa: DTZ011
         clm = self.create_claim(pol, 1000)
         clm.claim_approve()
 
         self.assertTrue(
             fields.Float.is_zero(
-                earn.get_reimburse_remaining(self.eeJohn, date.today()),
+                earn.get_reimburse_remaining(self.eeJohn, date.today()),  # noqa: DTZ011
                 precision_digits=2,
             )
         )
@@ -143,8 +169,13 @@ class TestBenefit(common.TestBenefitCommon):
         """A claim may not be deleted unless it's in a 'draft' state"""
 
         bn = self.create_benefit(self.benefit_create_vals)
-        self.create_earning(bn, date.today(), "reimburse", 1000)
-        pol = self.create_policy(self.eeJohn, bn, date.today())
+        self.create_earning(
+            bn,
+            date.today(),  # noqa: DTZ011
+            "reimburse",
+            1000,
+        )
+        pol = self.create_policy(self.eeJohn, bn, date.today())  # noqa: DTZ011
         clm = self.create_claim(pol, 500)
         clm2 = self.create_claim(pol, 500)
         clm2.claim_approve()
@@ -161,7 +192,7 @@ class TestBenefit(common.TestBenefitCommon):
         """Setting state to 'draft' when it is 'approv' raises an error"""
 
         bn = self.create_benefit(self.benefit_create_vals)
-        pol = self.create_policy(self.eeJohn, bn, date.today())
+        pol = self.create_policy(self.eeJohn, bn, date.today())  # noqa: DTZ011
         clm = self.create_claim(pol, 1000)
         clm.claim_approve()
         with self.assertRaises(UserError):

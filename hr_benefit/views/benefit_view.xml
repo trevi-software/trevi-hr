@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <!-- Main Menu Parent -->
     <menuitem
         id="menu_benefits_root"
@@ -54,10 +53,8 @@
                     <h1>
                         <field name="name" />
                     </h1>
-                    <label for="active" class="oe_inline" /> <field
-                        name="active"
-                        class="oe_inline"
-                    />
+                    <label for="active" class="oe_inline" />
+                    <field name="active" class="oe_inline" />
                     <newline />
                     <group>
                         <group>
@@ -116,5 +113,4 @@
         groups="hr.group_hr_manager"
         sequence="5"
     />
-
 </odoo>

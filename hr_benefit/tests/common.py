@@ -97,7 +97,7 @@ class TestBenefitCommon(common.TransactionCase):
         _dict = {
             "employee_id": employee.id,
             "benefit_id": benefit.id,
-            "start_date": start is False and date.today() or start,
+            "start_date": start is False and date.today() or start,  # noqa: DTZ011
             "end_date": end,
         }
         if advantage is not False:
@@ -114,7 +114,7 @@ class TestBenefitCommon(common.TransactionCase):
     ):
         _dict = {
             "benefit_id": benefit.id,
-            "effective_date": start is False and date.today() or start,
+            "effective_date": start is False and date.today() or start,  # noqa: DTZ011
             "type": ptype,
             "amount": amount,
         }
@@ -137,7 +137,7 @@ class TestBenefitCommon(common.TransactionCase):
     ):
         _dict = {
             "benefit_id": benefit.id,
-            "effective_date": start is False and date.today() or start,
+            "effective_date": start is False and date.today() or start,  # noqa: DTZ011
             "type": ptype,
             "allowance_amount": allowance,
             "loan_amount": loan,
@@ -152,7 +152,7 @@ class TestBenefitCommon(common.TransactionCase):
 
     def create_claim(self, policy, amount, dt=None):
         if dt is None:
-            dt = date.today()
+            dt = date.today()  # noqa: DTZ011
         return self.Claim.create(
             {
                 "date": dt,
@@ -189,7 +189,7 @@ class TestBenefitCommon(common.TransactionCase):
         try:
             res = obj.with_user(user).create(vals)
         except AccessError:
-            self.fail("Caught unexpected exception creating {}".format(obj._name))
+            self.fail(f"Caught unexpected exception creating {obj._name}")
         return res
 
     def unlink_fails(self, user, obj):
@@ -200,13 +200,13 @@ class TestBenefitCommon(common.TransactionCase):
         try:
             obj.with_user(user).unlink()
         except AccessError:
-            self.fail("Caught unexpected exception unlinking {}".format(obj._name))
+            self.fail(f"Caught unexpected exception unlinking {obj._name}")
 
     def read_succeeds(self, user, obj, obj_id):
         try:
             obj.with_user(user).browse(obj_id).read([])
         except AccessError:
-            self.fail("Caught an unexpected exception reading {}".format(obj._name))
+            self.fail(f"Caught an unexpected exception reading {obj._name}")
 
     def read_fails(self, user, obj, obj_id):
         with self.assertRaises(AccessError):
@@ -222,4 +222,4 @@ class TestBenefitCommon(common.TransactionCase):
         try:
             obj.with_user(user).browse(obj_id).write(write_vals)
         except AccessError:
-            self.fail("Caught an unexpected exception writing {}".format(obj._name))
+            self.fail(f"Caught an unexpected exception writing {obj._name}")

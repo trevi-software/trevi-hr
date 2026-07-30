@@ -6,7 +6,6 @@ from odoo import fields, models
 
 
 class Benefit(models.Model):
-
     _name = "hr.benefit"
     _description = "Employee Benefit"
     _check_company_auto = True
@@ -34,7 +33,7 @@ class Benefit(models.Model):
 
         res = []
         for rec in self:
-            res.append((rec.id, "[%s] %s" % (rec.code, rec.name)))
+            res.append((rec.id, "[%s] %s"))
 
         return res
 
@@ -57,11 +56,8 @@ class Benefit(models.Model):
 
         for line in line_ids:
             dLine = line.effective_date
-            if dLine <= dToday:
-                if res is None:
-                    res = line
-                elif dLine > res.effective_date:
-                    res = line
+            if dLine <= dToday and (res is None or dLine > res.effective_date):
+                res = line
 
         return res
 
@@ -77,7 +73,10 @@ class Benefit(models.Model):
         return self._get_latest(dToday, "advantage")
 
     def get_latest_premium(self, dToday):
-        """Return a premium with an effective date before dToday but greater than all others"""
+        """
+        Return a premium with an effective date before dToday
+        but greater than all others.
+        """
 
         if not dToday:
             return None

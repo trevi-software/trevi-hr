@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <!-- Premiums -->
 
     <record id="view_benefit_policy_premium_tree" model="ir.ui.view">
@@ -55,5 +54,4 @@
         groups="base.group_user"
         sequence="6"
     />
-
 </odoo>
