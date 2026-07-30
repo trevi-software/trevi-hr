@@ -18,7 +18,7 @@ class Lock(models.Model):
     @api.model
     def _tz_list(self):
 
-        res = tuple()
+        res = ()
         for name in common_timezones:
             res += ((name, name),)
         return res
@@ -57,10 +57,8 @@ class Lock(models.Model):
         lock_ids = self.search(
             ["&", ("start_time", "<=", dt_str), ("end_time", ">=", dt_str)]
         )
-        if len(lock_ids) > 0:
-            return True
 
-        return False
+        return len(lock_ids) > 0
 
     @api.model
     def is_locked_date(self, d_str, tz_str=None):
@@ -70,10 +68,11 @@ class Lock(models.Model):
 
         dt_str = d_str + " 00:00:00"
         if tz_str:
-            dt_tz = timezone(tz_str)
-            dt = datetime.strptime(dt_str, OE_DTFORMAT)
-            tzdt = dt_tz.localize(dt, is_dst=False)
-            utcdt = tzdt.astimezone(utc)
-            dt_str = utcdt.strftime(OE_DTFORMAT)
+            tz = timezone(tz_str)
+            dt_str = (
+                tz.localize(datetime.strptime(dt_str, OE_DTFORMAT), is_dst=False)  # noqa: DTZ007
+                .astimezone(utc)
+                .strftime(OE_DTFORMAT)
+            )
 
         return self.is_locked_datetime_utc(dt_str)
