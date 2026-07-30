@@ -2,17 +2,17 @@
 <odoo>
     <!-- Policy Advantages -->
 
-    <record id="view_benefit_policy_advantage_tree" model="ir.ui.view">
+    <record id="view_benefit_policy_advantage_list" model="ir.ui.view">
         <field name="name">hr.benefit.advantage.tree</field>
         <field name="model">hr.benefit.advantage</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="benefit_id" />
                 <field name="effective_date" />
                 <field name="type" />
                 <field name="min_employed_days" />
                 <field name="active" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -101,7 +101,7 @@
     <record id="open_benefits_policy_advantage_view" model="ir.actions.act_window">
         <field name="name">Earnings</field>
         <field name="res_model">hr.benefit.advantage</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <menuitem
         id="menu_benefits_policy_advantage"

@@ -5,7 +5,7 @@
     <record id="act_hr_employee_2_hr_benefit_policy" model="ir.actions.act_window">
         <field name="res_model">hr.benefit.policy</field>
         <field name="name">Benefits</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field
             name="context"
         >{'search_default_employee_id': [active_id], 'default_employee_id': active_id, 'search_default_group_employee_id': 0}</field>
@@ -13,7 +13,7 @@
     <record id="act_hr_employee_2_hr_benefit_claims" model="ir.actions.act_window">
         <field name="res_model">hr.benefit.claim</field>
         <field name="name">Claims on Benefits</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field
             name="context"
         >{'search_default_employee_id': [active_id], 'default_employee_id': active_id}</field>

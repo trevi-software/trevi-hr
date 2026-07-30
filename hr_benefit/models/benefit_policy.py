@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 import math
-from datetime import date, timedelta
+from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 
@@ -111,7 +111,7 @@ class BenefitPolicy(models.Model):
                 rec.write(res)
                 continue
 
-            d_today = date.today()  # noqa: DTZ011
+            d_today = fields.Date.today()
             if rec.advantage_override:
                 res["advantage_amount"] = rec.advantage_override_amount
             else:
@@ -234,7 +234,7 @@ class BenefitPolicy(models.Model):
             ref = self.env["ir.sequence"].next_by_code("benefit.policy.ref")
             if not ref:
                 raise UserError(
-                    _("Critical Error. ", "Unable to obtain a benefit policy number!")
+                    _("Critical Error. Unable to obtain a benefit policy number!")
                 )
             ben_id.name = ref
         return ben_ids
@@ -290,6 +290,7 @@ class BenefitPolicy(models.Model):
         if len(self.ids) == 0:
             return False
 
+        self.env.context = dict(self.env.context)
         self.env.context.update({"end_benefit_policy_id": self.ids[0]})
         return {
             "view_mode": "form",

@@ -2,11 +2,11 @@
 <odoo>
     <!-- Premiums -->
 
-    <record id="view_benefit_policy_premium_tree" model="ir.ui.view">
+    <record id="view_benefit_policy_premium_list" model="ir.ui.view">
         <field name="name">hr.benefit.premium.tree</field>
         <field name="model">hr.benefit.premium</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="benefit_id" />
                 <field name="effective_date" />
                 <field name="type" />
@@ -14,7 +14,7 @@
                 <field name="no_of_installments" />
                 <field name="total_amount" />
                 <field name="active" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -45,7 +45,7 @@
     <record id="open_benefits_policy_premium_view" model="ir.actions.act_window">
         <field name="name">Premiums</field>
         <field name="res_model">hr.benefit.premium</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <menuitem
         id="menu_benefits_policy_premium"

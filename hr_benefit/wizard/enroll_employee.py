@@ -24,7 +24,7 @@ class EnrollEmployee(models.TransientModel):
     def _get_benefit(self):
 
         if self.env.context is None:
-            self.env.with_context()
+            self.env.context = {}
         return self.env.context.get("active_id", False)
 
     def do_enroll(self):

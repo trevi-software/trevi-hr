@@ -27,11 +27,11 @@
         sequence="10"
     />
 
-    <record id="view_benefits_tree" model="ir.ui.view">
+    <record id="view_benefits_list" model="ir.ui.view">
         <field name="name">hr.benefit.tree</field>
         <field name="model">hr.benefit</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="code" />
                 <field name="has_advantage" />
@@ -39,7 +39,7 @@
                 <field name="min_employed_days" />
                 <field name="multi_policy" />
                 <field name="company_id" groups="base.group_multi_company" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -73,25 +73,25 @@
                         <group>
                             <group string="Earnings" invisible="not has_advantage">
                                 <field name="advantage_ids" nolabel="1">
-                                    <tree>
+                                    <list>
                                         <field name="effective_date" />
                                         <field name="type" />
                                         <field name="allowance_amount" />
                                         <field name="reim_limit_amount" />
                                         <field name="min_employed_days" />
-                                    </tree>
+                                    </list>
                                 </field>
                             </group>
                         </group>
                         <group>
                             <group string="Premiums" invisible="not has_premium">
                                 <field name="premium_ids" nolabel="1">
-                                    <tree>
+                                    <list>
                                         <field name="effective_date" />
                                         <field name="type" />
                                         <field name="amount" />
                                         <field name="total_amount" />
-                                    </tree>
+                                    </list>
                                 </field>
                             </group>
                         </group>
@@ -104,7 +104,7 @@
     <record id="open_benefits_view" model="ir.actions.act_window">
         <field name="name">Benefits</field>
         <field name="res_model">hr.benefit</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <menuitem
         id="menu_benefits"
