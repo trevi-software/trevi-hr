@@ -45,7 +45,7 @@ class BenefitClaim(models.Model):
         res = []
         data = self.read(["date", "benefit_policy_id"])
         for d in data:
-            res.append((d["id"], d["benefit_policy_id"][1] + " " + d["date"]))
+            res.append((d["id"], d["benefit_policy_id"][1] + " " + str(d["date"])))
         return res
 
     @api.onchange("employee_id")
@@ -119,7 +119,7 @@ class BenefitClaim(models.Model):
         res = super().write(vals)
         if do_calc:
             for clm in self:
-                approved = self._get_approved_amount(vals.get("date"))
+                approved = clm._get_approved_amount(clm.date)
                 clm.amount_approved = approved
 
         return res
@@ -133,7 +133,7 @@ class BenefitClaim(models.Model):
             ):
                 raise UserError(
                     _(
-                        "Error"
+                        "Error: "
                         'You may not a delete a claim that is not in a "Draft" state'
                     )
                 )

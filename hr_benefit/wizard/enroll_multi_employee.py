@@ -3,7 +3,6 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 import math
-from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
@@ -28,7 +27,7 @@ class EnrollEmployee(models.TransientModel):
     start_date = fields.Date(
         string="Enrollment Date",
         required=True,
-        default=date.today(),  # noqa: DTZ011
+        default=fields.Date.today(),
     )
     end_date = fields.Date(string="Termination Date")
     advantage_override = fields.Boolean(string="Override Advantage")

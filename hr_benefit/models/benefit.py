@@ -33,7 +33,7 @@ class Benefit(models.Model):
 
         res = []
         for rec in self:
-            res.append((rec.id, "[%s] %s"))
+            res.append((rec.id, "[%s] %s".format(rec.code, rec.name)))
 
         return res
 

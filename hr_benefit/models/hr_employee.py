@@ -2,7 +2,6 @@
 # Copyright (C) 2013,2014 Michael Telahun Makonnen <mmakonnen@gmail.com>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from datetime import date
 
 from odoo import fields, models
 
@@ -22,7 +21,7 @@ class HrEmployee(models.Model):
 
     def _compute_policies_count(self):
         HrBenefitPolicy = self.env["hr.benefit.policy"]
-        dToday = date.today()  # noqa: DTZ011
+        dToday = fields.Date.today()
         for ee in self:
             ee.benefit_policies_count = HrBenefitPolicy.search_count(
                 [
