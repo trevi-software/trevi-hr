@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <record id="hr_contract_values.default_europe" model="hr.contract.init">
         <field name="struct_id" ref="payroll.structure_base" />
     </record>
@@ -46,5 +45,4 @@
     <record id="hr_contract.hr_contract_vad" model="hr.contract">
         <field name="struct_id" ref="payroll.structure_base" />
     </record>
-
 </odoo>
