@@ -11,7 +11,6 @@ from odoo import _, api, fields, models
 
 
 class HrContract(models.Model):
-
     _name = "hr.contract"
     _inherit = "hr.contract"
 
@@ -42,9 +41,7 @@ class HrContract(models.Model):
     # job_id field will be set to null so that modules that
     # reference job_id don't include deactivated employees.
     # XXX ToDo: is it possible to change those references rather than using this hack?
-    end_job_id = fields.Many2one(
-        comodel_name="hr.job", string="Last Job Position"
-    )
+    end_job_id = fields.Many2one(comodel_name="hr.job", string="Last Job Position")
 
     @api.depends("job_id")
     def _compute_department(self):
@@ -89,8 +86,12 @@ class HrContract(models.Model):
             [
                 ("state", "=", "draft"),
                 ("kanban_state", "=", "done"),
-                ("date_start", "<=", (date.today() - relativedelta(days=90)).strftime("%Y-%m-%d")),
-                ("trial_date_end", ">=", date.today().strftime("%Y-%m-%d")),
+                (
+                    "date_start",
+                    "<=",
+                    (date.today() - relativedelta(days=90)).strftime("%Y-%m-%d"),  # noqa: DTZ011
+                ),
+                ("trial_date_end", ">=", date.today().strftime("%Y-%m-%d")),  # noqa: DTZ011
             ]
         ).write({"state": "trial"})
 
@@ -101,7 +102,7 @@ class HrContract(models.Model):
                 (
                     "trial_date_end",
                     "<=",
-                    (date.today() + relativedelta(days=7)).strftime("%Y-%m-%d"),
+                    (date.today() + relativedelta(days=7)).strftime("%Y-%m-%d"),  # noqa: DTZ011
                 ),
             ]
         )
@@ -122,7 +123,7 @@ class HrContract(models.Model):
                 (
                     "trial_date_end",
                     "<=",
-                    (date.today() - relativedelta(days=1)).strftime("%Y-%m-%d"),
+                    (date.today() - relativedelta(days=1)).strftime("%Y-%m-%d"),  # noqa: DTZ011
                 ),
             ]
         )
@@ -140,12 +141,12 @@ class HrContract(models.Model):
                 (
                     "date_end",
                     "<=",
-                    (date.today() + relativedelta(days=7)).strftime("%Y-%m-%d"),
+                    (date.today() + relativedelta(days=7)).strftime("%Y-%m-%d"),  # noqa: DTZ011
                 ),
                 (
                     "date_end",
                     ">=",
-                    (date.today() + relativedelta(days=1)).strftime("%Y-%m-%d"),
+                    (date.today() + relativedelta(days=1)).strftime("%Y-%m-%d"),  # noqa: DTZ011
                 ),
             ]
         ).write({"state_ending": True})
@@ -157,7 +158,7 @@ class HrContract(models.Model):
                 (
                     "date_end",
                     "<=",
-                    date.today().strftime("%Y-%m-%d"),
+                    date.today().strftime("%Y-%m-%d"),  # noqa: DTZ011
                 ),
             ]
         ).write({"state_ending": False})
@@ -167,11 +168,10 @@ class HrContract(models.Model):
     def condition_trial_period(self):
         self.ensure_one()
         dToday = fields.Date.today()
-        if not self.trial_date_end or (
+
+        return self.trial_date_end or (
             self.trial_date_end and self.trial_date_end < dToday
-        ):
-            return False
-        return True
+        )
 
     def signal_confirm(self):
         for rec in self:
@@ -185,13 +185,13 @@ class HrContract(models.Model):
     def signal_close(self):
         for c in self:
             vals = {"state": "close"}
-            if not c.date_end or c.date_end >= date.today():
-                vals.update({"date_end": date.today()})
+            if not c.date_end or c.date_end >= date.today():  # noqa: DTZ011
+                vals.update({"date_end": date.today()})  # noqa: DTZ011
             c.write(vals)
 
     def signal_reactivate(self):
         for c in self:
             vals = {"state": "open"}
-            if c.date_end and c.date_end <= date.today():
+            if c.date_end and c.date_end <= date.today():  # noqa: DTZ011
                 vals.update({"date_end": False})
             c.write(vals)
