@@ -9,15 +9,14 @@ from odoo.tools.translate import _
 
 
 class InitWage(models.Model):
-
     _name = "hr.contract.init.wage"
     _description = "Starting Wages"
-    _sql_constraints = [
+    _sql_constraints = [  # noqa: RUF012
         (
             "unique_job_cinit",
             "UNIQUE(job_id,contract_init_id)",
             _(
-                "A Job Position cannot be referenced more than once in"
+                "A Job Position cannot be referenced more than once in "
                 "a Contract Settings record."
             ),
         )
@@ -47,13 +46,13 @@ class InitWage(models.Model):
             d2 = (
                 self.env["hr.contract.init"]
                 .browse(d["contract_init_id"][0])
-                .read(["state"])
+                .read(["locked"])
             )
-            if d2["state"] in ["approve", "decline"]:
+            if d2["locked"]:
                 raise UserError(
                     _(
                         "Error"
-                        'You may not a delete a record that is not in a "Draft" state'
+                        "You may not delete a record that is locked. Unlock it first."
                     )
                 )
         return super().unlink()

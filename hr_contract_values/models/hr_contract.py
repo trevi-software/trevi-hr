@@ -10,7 +10,6 @@ from odoo.tools.translate import _
 
 
 class ContractInit(models.Model):
-
     _name = "hr.contract.init"
     _description = "Initial Contract Settings"
     _check_company_auto = True
@@ -55,28 +54,20 @@ class ContractInit(models.Model):
         for record in self:
             if record.locked:
                 raise UserError(
-                    _(
-                        "You may not delete a record that is locked. You must unlock it first."
-                    )
+                    _("You may not delete a record that is locked. Unlock it first.")
                 )
         return super().unlink()
 
     def write(self, vals):
         for record in self:
-            if record.locked:
-                if "locked" in vals.keys():
-                    if vals["locked"] is False:
-                        continue
+            if record.locked and "locked" in vals and vals["locked"] is not False:
                 raise UserError(
-                    _(
-                        "You may not update a record that is locked. You must unlock it first."
-                    )
+                    _("You may not update a record that is locked. Unlock it first.")
                 )
         return super().write(vals)
 
 
 class HrContract(models.Model):
-
     _inherit = "hr.contract"
 
     @api.model
@@ -154,7 +145,7 @@ class HrContract(models.Model):
 
         for vals in vals_list:
             # set default wage based on the job
-            if "wage" not in vals.keys() and "job_id" in vals.keys():
+            if "wage" not in vals and "job_id" in vals:
                 _wage = self._get_wage(job_id=vals["job_id"])
                 if _wage != 0:
                     vals.update({"wage": _wage})
@@ -210,10 +201,7 @@ class HrContract(models.Model):
             ids = init_obj.search(domain)
 
         for init in ids:
-            if init.date <= dToday:
-                if res is None:
-                    res = init
-                elif init.date > res.date:
-                    res = init
+            if init.date <= dToday and (res is None or init.date > res.date):
+                res = init
 
         return res
