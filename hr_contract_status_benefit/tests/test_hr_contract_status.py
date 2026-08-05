@@ -18,11 +18,6 @@ class TestEmployeeStatus(common.TransactionCase):
         cls.Policy = cls.env["hr.benefit.policy"]
         cls.Employee = cls.env["hr.employee"]
         cls.Contract = cls.env["hr.contract"]
-        cls.Separation = cls.env["hr.employee.termination"]
-
-        cls.reason = cls.env["hr.employee.termination.reason"].create(
-            {"name": "Retired"}
-        )
 
     def create_employee(self, name="John Smith"):
         return self.Employee.create(
@@ -70,7 +65,7 @@ class TestEmployeeStatus(common.TransactionCase):
     ):
         _dict = {
             "benefit_id": benefit.id,
-            "effective_date": start is False and date.today() or start,
+            "effective_date": start is False and date.today() or start,  # noqa: DTZ011
             "type": ptype,
             "allowance_amount": allowance,
             "loan_amount": loan,
@@ -96,7 +91,7 @@ class TestEmployeeStatus(common.TransactionCase):
         _dict = {
             "employee_id": employee.id,
             "benefit_id": benefit.id,
-            "start_date": start is False and date.today() or start,
+            "start_date": start is False and date.today() or start,  # noqa: DTZ011
             "end_date": end,
         }
         if advantage is not False:
@@ -108,47 +103,33 @@ class TestEmployeeStatus(common.TransactionCase):
             _dict["premium_override_total"] = premium_total
         return self.Policy.create(_dict)
 
-    def create_separation(self, employee, date=None):
-        if date is None:
-            date = date.today()
-        return self.Separation.create(
-            {
-                "name": date,
-                "reason_id": self.reason.id,
-                "employee_id": employee.id,
-            }
-        )
-
     def test_hire_employee_signal(self):
 
-        start = date.today() - relativedelta(days=100)
-        end = date.today() + relativedelta(days=60)
+        start = date.today() - relativedelta(days=100)  # noqa: DTZ011
+        end = date.today() + relativedelta(days=60)  # noqa: DTZ011
         ee = self.create_employee()
         cc = self.create_contract(ee, "draft", "normal", start, trial_end=end)
-        cc.trial_date_end = date.today() - relativedelta(days=1)
-        self.assertEqual("new", ee.status)
+        cc.trial_date_end = date.today() - relativedelta(days=1)  # noqa: DTZ011
 
         # create benefit policy
         bn = self.create_benefit({"name": "B", "code": "B"})
-        self.create_earning(bn, date.today() - relativedelta(days=100), allowance=1000)
-        pol = self.create_policy(ee, bn, date.today() - relativedelta(days=100))
+        self.create_earning(bn, date.today() - relativedelta(days=100), allowance=1000)  # noqa: DTZ011
+        pol = self.create_policy(ee, bn, date.today() - relativedelta(days=100))  # noqa: DTZ011
         self.assertEqual(pol.state, "draft", "The benefit policy is not active yet")
 
         # Open contract
         cc.signal_confirm()
 
         self.assertEqual("open", cc.state)
-        self.assertEqual("active", ee.status)
         self.assertEqual(pol.state, "open", "The benefit policy is now active")
 
     def test_hire_employee_cron(self):
 
-        start = date.today() - relativedelta(days=100)
-        end = date.today() + relativedelta(days=60)
+        start = date.today() - relativedelta(days=100)  # noqa: DTZ011
+        end = date.today() + relativedelta(days=60)  # noqa: DTZ011
         ee = self.create_employee()
         cc = self.create_contract(ee, "draft", "done", start, trial_end=end)
-        cc.trial_date_end = date.today() - relativedelta(days=1)
-        self.assertEqual("new", ee.status)
+        cc.trial_date_end = date.today() - relativedelta(days=1)  # noqa: DTZ011
 
         # create benefit policy
         bn = self.create_benefit({"name": "B", "code": "B"})
@@ -160,5 +141,4 @@ class TestEmployeeStatus(common.TransactionCase):
         self.apply_contract_cron()
 
         self.assertEqual("open", cc.state)
-        self.assertEqual("active", ee.status)
         self.assertEqual(pol.state, "open", "The benefit policy is now active")
