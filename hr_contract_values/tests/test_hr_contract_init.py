@@ -140,7 +140,8 @@ class TestContractInit(common.TransactionCase):
         self.assertEqual(1000, contract.wage)
 
     def test_get_wage_by_job_id(self):
-        """Creating a contract with a job that has an applicable initial value succeeds"""
+        """Creating a contract with a job that has an applicable
+        initial value succeeds"""
 
         self.HrContractInit.create(
             {

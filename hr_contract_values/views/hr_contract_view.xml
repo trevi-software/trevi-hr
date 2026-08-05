@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <record id="view_contract_init_tree" model="ir.ui.view">
         <field name="name">hr.contract.init.tree</field>
         <field name="model">hr.contract.init</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="date" />
                 <field name="trial_period" />
                 <field name="contract_type" />
                 <field name="locked" />
                 <field name="company_id" groups="base.group_multi_company" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -21,7 +20,7 @@
         <field name="model">hr.contract.init</field>
         <field name="arch" type="xml">
             <form string="Contract Initial Values">
-                <field name="locked" invisible="1" />"
+                <field name="locked" invisible="1" />
                 <header>
                     <button
                         name="lock"
@@ -52,12 +51,12 @@
                 </group>
                 <group string="Initial Wages">
                     <field name="wage_ids" nolabel="1">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="category_ids" widget="many2many_tags" />
                             <field name="job_id" />
                             <field name="starting_wage" />
                             <field name="is_default" />
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>
@@ -67,7 +66,7 @@
     <record id="open_contract_init" model="ir.actions.act_window">
         <field name="name">Contract Starting Values</field>
         <field name="res_model">hr.contract.init</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <menuitem
         id="menu_hr_contract_init"
@@ -82,12 +81,12 @@
         <field name="name">hr.contract.init.wage.tree</field>
         <field name="model">hr.contract.init.wage</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="category_ids" widget="many2many_tags" />
                 <field name="job_id" />
                 <field name="starting_wage" />
                 <field name="is_default" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -127,5 +126,4 @@
             </xpath>
         </field>
     </record>
-
 </odoo>
