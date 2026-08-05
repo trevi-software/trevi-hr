@@ -8,7 +8,6 @@ from odoo import api, models
 
 
 class HrContract(models.Model):
-
     _inherit = "hr.contract"
 
     @api.model
@@ -19,7 +18,7 @@ class HrContract(models.Model):
             [
                 ("state", "=", "draft"),
                 ("kanban_state", "=", "done"),
-                ("date_start", "<=", date.today()),
+                ("date_start", "<=", date.today()),  # noqa: DTZ011
             ]
         )
         for c in contracts:
@@ -37,7 +36,9 @@ class HrContract(models.Model):
 
         for contract in self:
             contract.employee_id.benefit_policy_ids.filtered(
-                lambda p: p.start_date == contract.date_start and p.state == "draft"
+                lambda p, contract=contract: (
+                    p.start_date == contract.date_start and p.state == "draft"
+                )
             ).state_open()
 
         return super().signal_confirm()
