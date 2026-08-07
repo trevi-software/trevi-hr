@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="res_config_settings_form" model="ir.ui.view">
+        <field
+            name="name"
+        >res.config.settings.view.form.inherit.resource_schedule</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="80" />
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form[hasclass('oe_form_configuration')]" position="inside">
+                <!-- groups="resource_schedule.group_scheduling_manager" -->
+                <block title="Shift Scheduling" name="shift_scheduling_container">
+                    <setting
+                        help="If an employee hasn't clocked out in this amount of time the system will automatically clock the employee out."
+                    >
+                        <label for="max_shift_length" />
+                        <field name="max_shift_length" required="1" /> Hrs
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_config_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="res_config_settings_form" />
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'resource_schedule'}</field>
+    </record>
+    <menuitem
+        id="menu_config_settings"
+        action="action_config_settings"
+        parent="menu_schedule_config"
+        name="Settings"
+        sequence="1"
+    />
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+        <!-- Scheduling submenu -->
+        <menuitem
+        id="menu_root_schedule"
+        name="Schedule"
+        groups="group_scheduling_manager,group_scheduling_user,base.group_user"
+        web_icon="resource_schedule,static/description/icon.png"
+        sequence="80"
+    />
+
+        <!-- Operations -->
+        <menuitem
+        id="menu_schedule_ops"
+        parent="menu_root_schedule"
+        name="Operations"
+        groups="group_scheduling_user"
+        sequence="20"
+    />
+
+        <!-- Scheduling configuration -->
+        <menuitem
+        id="menu_schedule_config"
+        parent="menu_root_schedule"
+        name="Configuration"
+        groups="group_scheduling_manager"
+        sequence="100"
+    />
+
+        <menuitem
+        id="menu_resource_resource"
+        action="resource.action_resource_resource_tree"
+        parent="menu_schedule_config"
+        name="Resources"
+        groups="group_scheduling_manager"
+        sequence="90"
+    />
+
+        <!-- Wizards
+
+        <menuitem id="menu_schedules_by_department"
+            action="action_schedules_by_department"
+            parent="menu_hr_root_schedule"
+            sequence="30"/>
+
+        <menuitem id="menu_restday_change"
+            action="action_restday_change"
+            parent="menu_hr_root_schedule"
+            groups="hr.group_hr_user"
+            sequence="50"/>
+
+        <menuitem id="menu_alerts_by_employee"
+            action="action_alerts_by_employee"
+            parent="menu_hr_root_schedule"
+            sequence="60"/> -->
+
+</odoo>
