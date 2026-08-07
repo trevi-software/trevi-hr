@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <record id="view_resource_calendar_attendance_tree" model="ir.ui.view">
         <field name="name">resource.calendar.attendance.schedule.tree</field>
         <field name="model">resource.calendar.attendance</field>
@@ -41,9 +40,7 @@
                 <field name="shift_type" />
             </xpath>
             <xpath expr="//sheet/group" position="after">
-                <group name="flex" string="Flex Shift"
-                    invisible="shift_type != 'flex'"
-                >
+                <group name="flex" string="Flex Shift" invisible="shift_type != 'flex'">
                     <group>
                         <label for="flex_core_from" string="Hours" />
                         <div class="o_row">
@@ -68,5 +65,4 @@
         action="resource.action_resource_calendar_form"
         sequence="40"
     />
-
 </odoo>

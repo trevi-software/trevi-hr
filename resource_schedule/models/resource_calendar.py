@@ -9,7 +9,6 @@ from odoo.exceptions import ValidationError
 
 
 class ResourceCalendar(models.Model):
-
     _inherit = "resource.calendar"
 
     dayoff_type = fields.Selection(
@@ -22,8 +21,8 @@ class ResourceCalendar(models.Model):
         string="Day off type",
         help="""
         Fixed for all - the unscheduled days in the working time apply to all resources.
-        Fixed individually - the days off will be specified in each resource's record. If
-        it is not, the default days off will be used.
+        Fixed individually - the days off will be specified in each resource's record.
+        If it is not, the default days off will be used.
         Rolling weekly - each reasource's day(s) off changes on a weekly basis. For
         example, if the resource was off on Saturday last week, this week it will be
         Friday, and next week it will be Thursday.
@@ -91,13 +90,14 @@ class ResourceCalendar(models.Model):
                     lambda att: att.display_type == "line_section"
                 )
                 attendance_ids = calendar.attendance_ids.filtered(
-                    lambda attendance: not attendance.resource_id
-                    and attendance.display_type is False
+                    lambda attendance: (
+                        not attendance.resource_id and attendance.display_type is False
+                    )
                 )
                 week_list = section_ids.mapped("week_nbr")
                 for nbr in week_list:
                     attendances = attendance_ids.filtered(
-                        lambda attendance: attendance.week_nbr == nbr
+                        lambda attendance, nb=nbr: attendance.week_nbr == nb
                     )
                     if attendances:
                         calendar._check_overlap(attendances)
@@ -109,7 +109,12 @@ class ResourceCalendar(models.Model):
         return super(ResourceCalendar, filtered)._check_attendance()
 
     # Over-ride parent class method to handle more than two weeks and flex schedule
-    @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar')
+    @api.depends(
+        "attendance_ids",
+        "attendance_ids.hour_from",
+        "attendance_ids.hour_to",
+        "two_weeks_calendar",
+    )
     def _compute_hours_per_day(self):
         hour_count = 0.0
         for calendar in self:
@@ -134,7 +139,7 @@ class ResourceCalendar(models.Model):
                     dayofweek = att.dayofweek
             return fields.Float.round(
                 hour_count / float(number_of_days), precision_digits=2
-        )
+            )
 
     def switch_calendar_type(self):
 
@@ -154,10 +159,11 @@ class ResourceCalendar(models.Model):
                 att.week_nbr = 1
 
     def get_rest_days(self):
-        """If the rest day(s) have been explicitly specified that's what is returned, otherwise
-        a guess is returned based on the week days that are not scheduled. If an explicit
-        rest day(s) has not been specified an empty list is returned. If it is able to figure
-        out the rest days it will return a list of week day integers with Monday being 0.
+        """If the rest day(s) have been explicitly specified that's what is
+        returned, otherwise a guess is returned based on the week days that
+        are not scheduled. If an explicit rest day(s) has not been specified
+        an empty list is returned. If it is able to figure out the rest days
+        it will return a list of week day integers with Monday being 0.
         """
 
         res = []
@@ -173,7 +179,8 @@ class ResourceCalendar(models.Model):
                     if wt.dayofweek not in scheddays
                 ]
                 res = [int(d) for d in weekdays if d not in scheddays]
-                # If there are no work days return nothing instead of *ALL* the days in the week
+                # If there are no work days return nothing, instead of
+                # *ALL* the days in the week
                 if len(res) == 7:
                     res = []
 
@@ -194,8 +201,8 @@ class ResourceCalendar(models.Model):
             if len(fromSep) == 0 or len(toSep) == 0:
                 raise ValidationError(_("Format of working hours is incorrect"))
 
-            delta += datetime.strptime(
+            delta += datetime.strptime(  # noqa: DTZ007
                 toHour + ":" + toMin, "%H:%M"
-            ) - datetime.strptime(fromHour + ":" + fromMin, "%H:%M")
+            ) - datetime.strptime(fromHour + ":" + fromMin, "%H:%M")  # noqa: DTZ007
 
         return float(delta.seconds / 60) / 60.0
