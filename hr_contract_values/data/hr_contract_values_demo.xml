@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <record id="initwage_2000" model="hr.contract.init.wage">
         <field name="starting_wage">2000</field>
         <field name="job_id" ref="hr.job_trainee" />
@@ -22,5 +21,4 @@
             eval="[(6, 0, [ref('initwage_2000'), ref('initwage_5000')])]"
         />
     </record>
-
 </odoo>
