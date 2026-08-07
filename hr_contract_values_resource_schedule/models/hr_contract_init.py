@@ -6,7 +6,6 @@ from odoo import fields, models
 
 
 class ContractInit(models.Model):
-
     _inherit = "hr.contract.init"
 
     resource_calendar_id = fields.Many2one(
