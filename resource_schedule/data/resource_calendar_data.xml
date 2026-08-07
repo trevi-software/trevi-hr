@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo noupdate="1">
-
     <!-- Template for default workdetails used in upstream Odoo -->
     <record id="attendance_template_0" model="resource.calendar.attendance.template">
         <field name="name">Morning</field>
@@ -54,7 +53,6 @@
     <!-- Default Settings -->
 
     <function model="res.company" name="_update_data_resource_calendar" />
-       
 
     <function
         model="ir.config_parameter"
@@ -63,5 +61,4 @@
         'resource_schedule.max_shift_length', 15
     )"
     />
-
 </odoo>
