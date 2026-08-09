@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class ResourceCalendarWeekday(models.Model):
-
     _name = "resource.calendar.weekday"
     _description = "Calendar Weekdays"
 

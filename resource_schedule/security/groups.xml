@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo noupdate="1">
-
     <!-- Scheduling Security -->
 
     <record id="group_scheduling_user" model="res.groups">
@@ -20,5 +19,4 @@
             name="comment"
         >the user will be able to configure the scheduling module</field>
     </record>
-
 </odoo>

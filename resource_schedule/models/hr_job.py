@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class HrJob(models.Model):
-
     _inherit = "hr.job"
 
     default_area_id = fields.Many2one("resource.schedule.area", "Default shift area")

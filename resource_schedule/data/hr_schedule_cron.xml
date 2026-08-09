@@ -1,54 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+    <!-- Create tentative schedule for all employee en-masse -->
 
-        <!-- Create tentative schedule for all employee en-masse -->
-
-        <record id="mass_schedule_cron" model="ir.cron">
-            <field name="name">Schedule: Mass Scheduling</field>
-            <field name="model_id" ref="model_resource_schedule_shift" />
-            <field name="type">ir.actions.server</field>
-            <field name="state">code</field>
-            <field name="code">model.create_mass_schedule()</field>
-            <field
+    <record id="mass_schedule_cron" model="ir.cron">
+        <field name="name">Schedule: Mass Scheduling</field>
+        <field name="model_id" ref="model_resource_schedule_shift" />
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="code">model.create_mass_schedule()</field>
+        <field
             name="nextcall"
             eval="(DateTime.now() + timedelta(days= +(7-DateTime.now().weekday())))"
         />
-            <field name="interval_number" eval="2" />
-            <field name="interval_type">weeks</field>
-            <field name="numbercall" eval="-1" />
-            <field name="active" eval="False" />
-        </record>
+        <field name="interval_number" eval="2" />
+        <field name="interval_type">weeks</field>
+        <field name="numbercall" eval="-1" />
+        <field name="active" eval="False" />
+    </record>
 
-        <!-- Auto-punch attendance -->
+    <!-- Auto-punch attendance -->
 
-        <record id="autopunch_schedule_cron" model="ir.cron">
-            <field name="name">Schedule: Auto-punch</field>
-            <field name="model_id" ref="model_resource_schedule_shift" />
-            <field name="type">ir.actions.server</field>
-            <field name="state">code</field>
-            <field name="code">model.autopunch_shifts()</field>
-            <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=30))" />
-            <field name="interval_number" eval="30" />
-            <field name="interval_type">minutes</field>
-            <field name="numbercall" eval="-1" />
-            <field name="active" eval="True" />
-        </record>
+    <record id="autopunch_schedule_cron" model="ir.cron">
+        <field name="name">Schedule: Auto-punch</field>
+        <field name="model_id" ref="model_resource_schedule_shift" />
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="code">model.autopunch_shifts()</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=30))" />
+        <field name="interval_number" eval="30" />
+        <field name="interval_type">minutes</field>
+        <field name="numbercall" eval="-1" />
+        <field name="active" eval="True" />
+    </record>
 
-        <!-- Automatically punch out attendances -->
+    <!-- Automatically punch out attendances -->
 
-        <record id="auto_clockout_schedule_cron" model="ir.cron">
-            <field
+    <record id="auto_clockout_schedule_cron" model="ir.cron">
+        <field
             name="name"
         >Schedule: Automatically clock-out after max. shift length</field>
-            <field name="model_id" ref="hr_attendance.model_hr_attendance" />
-            <field name="type">ir.actions.server</field>
-            <field name="state">code</field>
-            <field name="code">model.auto_punchout()</field>
-            <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=15))" />
-            <field name="interval_number" eval="30" />
-            <field name="interval_type">minutes</field>
-            <field name="numbercall" eval="-1" />
-            <field name="active" eval="True" />
-        </record>
-
+        <field name="model_id" ref="hr_attendance.model_hr_attendance" />
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="code">model.auto_punchout()</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=15))" />
+        <field name="interval_number" eval="30" />
+        <field name="interval_type">minutes</field>
+        <field name="numbercall" eval="-1" />
+        <field name="active" eval="True" />
+    </record>
 </odoo>
