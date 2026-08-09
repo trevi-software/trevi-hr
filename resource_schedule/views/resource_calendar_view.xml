@@ -20,7 +20,7 @@
             </xpath>
             <xpath expr="//field[@name='attendance_ids']" position="replace">
                 <field name="attendance_ids" widget="section_one2many">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <control>
                             <create name="add_day_control" string="Add a workday" />
                             <create
@@ -82,7 +82,7 @@
                             groups="base.group_no_one"
                             optional="show"
                         />
-                    </tree>
+                    </list>
                 </field>
             </xpath>
         </field>
