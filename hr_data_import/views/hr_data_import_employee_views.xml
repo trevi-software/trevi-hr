@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <record id="view_data_search" model="ir.ui.view">
         <field name="name">hr.data.import.employee.search</field>
         <field name="model">hr.data.import.employee</field>
@@ -70,7 +69,7 @@
         <field name="name">hr.data.import.employee.tree</field>
         <field name="model">hr.data.import.employee</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="birthday" />
                 <field name="gender" />
@@ -94,7 +93,7 @@
                 <field name="anlv_date" />
                 <field name="state" />
                 <field name="company_id" groups="base.group_multi_company" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -158,7 +157,7 @@
     <record id="open_employee_import" model="ir.actions.act_window">
         <field name="name">Employees</field>
         <field name="res_model">hr.data.import.employee</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{'search_default_state_new': '1'}</field>
     </record>
     <menuitem
@@ -192,5 +191,4 @@
         <field name="state">code</field>
         <field name="code">action = records.action_update_employees()</field>
     </record>
-
 </odoo>
