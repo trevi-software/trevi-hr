@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <record id="view_resource_schedule_search" model="ir.ui.view">
         <field name="name">resource.schedule.shift.search</field>
         <field name="model">resource.schedule.shift</field>
@@ -107,11 +106,11 @@
             >
                 <field name="resource_id" />
                 <field name="schedule_team_id" />
-                    <templates>
-                        <div t-name="timeline-item">
-                            <div t-out="record.display_name" />
-                        </div>
-                    </templates>
+                <templates>
+                    <div t-name="timeline-item">
+                        <div t-out="record.display_name" />
+                    </div>
+                </templates>
             </timeline>
         </field>
     </record>
@@ -120,7 +119,7 @@
         <field name="name">resource.schedule.shift.tree</field>
         <field name="model">resource.schedule.shift</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="template_id" invisible="1" />
                 <field name="display_name" />
                 <field name="resource_id" />
@@ -132,7 +131,7 @@
                 <field name="resource_type" />
                 <field name="calendar_id" />
                 <field name="published" widget="boolean_toggle" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -181,7 +180,7 @@
         </field>
     </record>
 
-<!--
+    <!--
     <record id="view_resource_schedule_shift_calendar" model="ir.ui.view">
         <field name="name">resource.schedule.shift.calendar</field>
         <field name="model">resource.schedule.shift</field>
@@ -212,14 +211,14 @@
     <record id="open_employee_schedule_view" model="ir.actions.act_window">
         <field name="name">Schedule</field>
         <field name="res_model">resource.schedule.shift</field>
-        <field name="view_mode">timeline,calendar,tree,form</field>
+        <field name="view_mode">timeline,calendar,list,form</field>
         <field name="search_view_id" ref="view_resource_schedule_search" />
     </record>
 
     <record id="open_my_schedule_view" model="ir.actions.act_window">
         <field name="name">My Schedule</field>
         <field name="res_model">resource.schedule.shift</field>
-        <field name="view_mode">timeline,calendar,tree,form</field>
+        <field name="view_mode">timeline,calendar,list,form</field>
         <field name="search_view_id" ref="view_resource_schedule_search" />
         <field name="context">{'search_default_my_schedule': 1}</field>
     </record>
@@ -227,7 +226,7 @@
     <record id="open_team_schedule_view" model="ir.actions.act_window">
         <field name="name">My Team Schedule</field>
         <field name="res_model">resource.schedule.shift</field>
-        <field name="view_mode">timeline,calendar,tree,form</field>
+        <field name="view_mode">timeline,calendar,list,form</field>
         <field name="search_view_id" ref="view_resource_schedule_search" />
         <field name="context">{'search_default_my_team': 1}</field>
     </record>
@@ -235,7 +234,7 @@
     <record id="open_dept_schedule_view" model="ir.actions.act_window">
         <field name="name">My Department Schedule</field>
         <field name="res_model">resource.schedule.shift</field>
-        <field name="view_mode">timeline,calendar,tree,form</field>
+        <field name="view_mode">timeline,calendar,list,form</field>
         <field name="search_view_id" ref="view_resource_schedule_search" />
         <field name="context">{'search_default_my_department': 1}</field>
     </record>
@@ -265,5 +264,4 @@
         parent="menu_schedule_schedule"
         sequence="30"
     />
-
 </odoo>
