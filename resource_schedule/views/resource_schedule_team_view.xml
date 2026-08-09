@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <record id="view_resource_schedule_team_search" model="ir.ui.view">
         <field name="name">resource.schedule.team.search</field>
         <field name="model">resource.schedule.team</field>
@@ -13,7 +12,7 @@
                     name="inactive"
                     domain="[('active', '=', False)]"
                 />
-        </search>
+            </search>
         </field>
     </record>
 
@@ -21,7 +20,7 @@
         <field name="name">resource.schedule.team.tree</field>
         <field name="model">resource.schedule.team</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="resource_count" />
                 <field name="resource_calendar_id" />
@@ -29,7 +28,7 @@
                 <field name="color" widget="color_picker" />
                 <field name="company_id" groups="base.group_multi_company" />
                 <field name="active" widget="boolean_toggle" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -72,7 +71,7 @@
     <record id="open_schedule_team_view" model="ir.actions.act_window">
         <field name="name">Scheduling Teams</field>
         <field name="res_model">resource.schedule.team</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_resource_schedule_team_search" />
     </record>
 
@@ -83,5 +82,4 @@
         groups="group_scheduling_manager"
         sequence="30"
     />
-
 </odoo>
