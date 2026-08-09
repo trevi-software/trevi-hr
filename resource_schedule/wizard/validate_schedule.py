@@ -6,7 +6,6 @@ from odoo import fields, models
 
 
 class DepartmentSelection(models.TransientModel):
-
     _name = "resource.schedule.validate.departments"
     _description = "Department Selection for Validation"
 

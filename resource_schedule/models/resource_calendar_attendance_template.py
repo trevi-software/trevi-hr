@@ -6,7 +6,6 @@ from odoo.exceptions import ValidationError
 
 
 class ResourceCalendarAttendanceTemplate(models.Model):
-
     _name = "resource.calendar.attendance.template"
     _description = "Work Detail Template"
 
@@ -92,5 +91,4 @@ class ResourceCalendarAttendanceTemplate(models.Model):
             if rec.flex_core_to != 0 and rec.hour_to < rec.flex_core_to:
                 rec.hour_to = rec.flex_core_to
             if rec.flex_core_from != 0 and rec.flex_core_to != 0:
-                if rec.flex_core_to < rec.flex_core_from:
-                    rec.flex_core_to = rec.flex_core_from
+                rec.flex_core_to = max(rec.flex_core_to, rec.flex_core_from)

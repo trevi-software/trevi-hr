@@ -10,7 +10,6 @@ from odoo import api, fields, models
 
 
 class ResourceScheduleGenerate(models.TransientModel):
-
     _name = "resource.schedule.generate"
     _description = "Generate Schedules Wizard"
 
@@ -74,7 +73,6 @@ class ResourceScheduleGenerate(models.TransientModel):
 
         shifts = self.env["resource.schedule.shift"]
         for ee in self.employee_ids:
-
             # If there are overlapping schedules, don't create
             #
             dTmp = dStart
@@ -85,9 +83,8 @@ class ResourceScheduleGenerate(models.TransientModel):
                     ("day", ">=", dTmp),
                 ]
             )
-            if len(overlap_sched_ids) > 0:
-                if overlap_sched_ids[-1].day < dEnd:
-                    dTmp = overlap_sched_ids[-1].day + timedelta(days=1)
+            if (len(overlap_sched_ids) > 0) and (overlap_sched_ids[-1].day < dEnd):
+                dTmp = overlap_sched_ids[-1].day + timedelta(days=1)
 
             shifts |= ee.create_schedule(dTmp, dEnd)
 

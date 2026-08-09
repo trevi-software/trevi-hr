@@ -8,7 +8,6 @@ from odoo import models
 
 
 class HrLeave(models.Model):
-
     _inherit = "hr.leave"
 
     def action_validate(self):
@@ -19,7 +18,6 @@ class HrLeave(models.Model):
 
         Attendance = self.env["hr.attendance"]
         for lv in lv_requests:
-
             # Adjust shifts around the leave
             dictIds = self.adjust_schedule_by_leave()
 
@@ -74,7 +72,6 @@ class HrLeave(models.Model):
         unlink_ids = self.env["resource.schedule.shift"]
         Shift = self.env["resource.schedule.shift"]
         for leave in self:
-
             shifts = Shift.search(
                 [
                     ("employee_id", "=", leave.employee_id.id),
@@ -84,7 +81,6 @@ class HrLeave(models.Model):
                 order="datetime_start",
             )
             for shift in shifts:
-
                 # Remove shifts completely covered by leave
                 if (
                     leave.date_from <= shift.datetime_start

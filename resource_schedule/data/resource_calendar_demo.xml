@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo noupdate="1">
-
     <!-- Scheduling Areas -->
     <record id="schedule_area0" model="resource.schedule.area">
         <field name="name">Main Dining Room</field>
@@ -265,5 +264,4 @@
         <field name="resource_calendar_id" ref="resource_calendar_dupont" />
         <field name="start_week" eval="3" />
     </record>
-
 </odoo>

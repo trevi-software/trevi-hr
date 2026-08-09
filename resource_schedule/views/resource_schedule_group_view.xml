@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <record id="view_resource_schedule_group_search" model="ir.ui.view">
         <field name="name">resource.schedule.group.search</field>
         <field name="model">resource.schedule.group</field>
@@ -13,7 +12,7 @@
                     name="inactive"
                     domain="[('active', '=', False)]"
                 />
-        </search>
+            </search>
         </field>
     </record>
 
@@ -100,5 +99,4 @@
         groups="group_scheduling_manager"
         sequence="20"
     />
-
 </odoo>

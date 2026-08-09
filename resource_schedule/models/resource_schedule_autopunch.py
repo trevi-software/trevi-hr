@@ -5,7 +5,6 @@ from odoo import api, fields, models
 
 
 class AutopunchLastrun(models.Model):
-
     _name = "resource.schedule.autopunch.lastrun"
     _description = "Schedule auto-punch last run-time"
     _order = "name desc"

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
-        <!-- Scheduling submenu -->
-        <menuitem
+    <!-- Scheduling submenu -->
+    <menuitem
         id="menu_root_schedule"
         name="Schedule"
         groups="group_scheduling_manager,group_scheduling_user,base.group_user"
@@ -10,8 +9,8 @@
         sequence="80"
     />
 
-        <!-- Operations -->
-        <menuitem
+    <!-- Operations -->
+    <menuitem
         id="menu_schedule_ops"
         parent="menu_root_schedule"
         name="Operations"
@@ -19,8 +18,8 @@
         sequence="20"
     />
 
-        <!-- Scheduling configuration -->
-        <menuitem
+    <!-- Scheduling configuration -->
+    <menuitem
         id="menu_schedule_config"
         parent="menu_root_schedule"
         name="Configuration"
@@ -28,7 +27,7 @@
         sequence="100"
     />
 
-        <menuitem
+    <menuitem
         id="menu_resource_resource"
         action="resource.action_resource_resource_tree"
         parent="menu_schedule_config"
@@ -37,7 +36,7 @@
         sequence="90"
     />
 
-        <!-- Wizards
+    <!-- Wizards
 
         <menuitem id="menu_schedules_by_department"
             action="action_schedules_by_department"
@@ -54,5 +53,4 @@
             action="action_alerts_by_employee"
             parent="menu_hr_root_schedule"
             sequence="60"/> -->
-
 </odoo>
