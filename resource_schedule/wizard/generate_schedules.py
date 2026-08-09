@@ -89,7 +89,7 @@ class ResourceScheduleGenerate(models.TransientModel):
             shifts |= ee.create_schedule(dTmp, dEnd)
 
         return {
-            "view_mode": "timeline,calendar,tree,form",
+            "view_mode": "timeline,calendar,list,form",
             "res_model": "resource.schedule.shift",
             "domain": [("id", "in", shifts.ids)],
             "type": "ir.actions.act_window",

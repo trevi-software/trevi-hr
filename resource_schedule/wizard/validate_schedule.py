@@ -18,7 +18,7 @@ class DepartmentSelection(models.TransientModel):
 
         data = self.read()[0]
         return {
-            "view_mode": "tree,form",
+            "view_mode": "list,form",
             "res_model": "resource.schedule.shift",
             "domain": [
                 ("department_id", "in", data["department_ids"]),
