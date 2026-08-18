@@ -12,7 +12,6 @@ from odoo.exceptions import UserError
 
 
 class SeparationReason(models.Model):
-
     _name = "hr.employee.termination.reason"
     _description = "Reason for Employee Separation"
 
@@ -20,7 +19,6 @@ class SeparationReason(models.Model):
 
 
 class Separation(models.Model):
-
     _name = "hr.employee.termination"
     _inherit = ["mail.thread"]
     _description = "Data Related to Separation of Employee"
@@ -105,7 +103,6 @@ class Separation(models.Model):
     def signal_cancel(self):
 
         for term in self:
-
             # Trigger a status change of the employee and his contract(s)
             term.employee_id.set_state_active(term.employee_state)
 

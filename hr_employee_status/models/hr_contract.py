@@ -5,19 +5,15 @@
 
 from datetime import date, datetime
 
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, models
 
 
 class HrContract(models.Model):
-
     _inherit = "hr.contract"
 
     def re_activate(self):
 
         for contract in self:
-
             term_obj = self.env["hr.employee.termination"]
             term_ids = term_obj.search(
                 [
@@ -27,20 +23,21 @@ class HrContract(models.Model):
             )
 
             if len(term_ids) == 0:
-
                 # Trigger a status change of the employee and his contract(s)
-                contract.employee_id.write({
-                    "active": True,
-                    "status": "active",
-                })
-                contract.write({
-                    "state": "open",
-                    "date_end": False,
-                })
+                contract.employee_id.write(
+                    {
+                        "active": True,
+                        "status": "active",
+                    }
+                )
+                contract.write(
+                    {
+                        "state": "open",
+                        "date_end": False,
+                    }
+                )
             else:
-
                 for term in term_ids:
-
                     # Trigger a status change of the employee and his contract(s)
                     if term.state == "confirm":
                         term.write({"state": "cancel"})
@@ -112,7 +109,7 @@ class HrContract(models.Model):
                     "date_end",
                     "<",
                     date.today().strftime("%Y-%m-%d"),
-                )
+                ),
             ]
         )
         for c in contracts:

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo noupdate="1">
-
     <!-- Alert-related subtypes for messaging / Chatter -->
 
     <record id="mt_alert_state_confirm" model="mail.message.subtype">
@@ -56,5 +55,4 @@
             action = env.ref("hr_employee_statuss.action_set_inactive")
         </field>
     </record>
-
 </odoo>
