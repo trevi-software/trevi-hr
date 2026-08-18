@@ -254,9 +254,7 @@ class ImportEmployee(models.Model):
             if anlv_allocation > 0:
                 leave_allocation = {
                     "employee_id": ee.id,
-                    "name": "Leave allocation for {} as of {}".format(
-                        data.name, date.today()
-                    ),
+                    "name": f"Leave allocation for {data.name} as of {date.today()}",
                     "state": "draft",
                     "holiday_status_id": al_status_id,
                     "number_of_days": data.anlv_earned - data.anlv_used,
