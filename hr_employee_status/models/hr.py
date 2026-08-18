@@ -14,7 +14,6 @@ _logger = logging.getLogger(__name__)
 
 
 class HrEmployee(models.Model):
-
     _inherit = "hr.employee"
 
     # 'state' was being used by hr_attendance (although not anymore)
@@ -47,8 +46,12 @@ class HrEmployee(models.Model):
                     ee.contract_id.trial_date_end
                     and ee.contract_id.trial_date_end > date.today()
                 ):
-                    raise UserError(_("The employee status may not be set to \
-                        active before the trial period is over."))
+                    raise UserError(
+                        _(
+                            "The employee status may not be set to \
+                        active before the trial period is over."
+                        )
+                    )
         return super().write(vals)
 
     def set_state_active(self, status="active"):
@@ -66,9 +69,7 @@ class HrEmployee(models.Model):
 
     def set_state_separation(self):
 
-        self.write(
-            { "status": "separation" }
-        )
+        self.write({"status": "separation"})
 
     def set_state_inactive(self):
 

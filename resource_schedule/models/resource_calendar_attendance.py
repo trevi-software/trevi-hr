@@ -7,7 +7,6 @@ from odoo.tools.float_utils import float_split
 
 
 class ResourceCalendarAttendance(models.Model):
-
     _inherit = "resource.calendar.attendance"
     _order = "sequence, week_nbr, dayofweek, hour_from"
 
@@ -121,8 +120,9 @@ class ResourceCalendarAttendance(models.Model):
             if not rec.calendar_id:
                 continue
             sections = rec.calendar_id.attendance_ids.filtered(
-                lambda a: a.display_type == "line_section"
-                and a.sequence <= rec.sequence
+                lambda a: (
+                    a.display_type == "line_section" and a.sequence <= rec.sequence
+                )
             ).sorted("sequence")
             if sections and sections[-1].sequence == rec.sequence:
                 # If workday was moved into the place of a section header, the section

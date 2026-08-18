@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo noupdate="1">
-
     <!-- Only show terminations in the user's current company -->
 
     <record id="hr_contract_comp_rule" model="ir.rule">
@@ -11,5 +10,4 @@
             name="domain_force"
         >['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
-
 </odoo>

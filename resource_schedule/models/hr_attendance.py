@@ -7,7 +7,6 @@ from odoo import api, fields, models
 
 
 class HrAttendance(models.Model):
-
     _inherit = "hr.attendance"
 
     autopunch = fields.Boolean(

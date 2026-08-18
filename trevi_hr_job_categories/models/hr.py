@@ -6,7 +6,6 @@ from odoo import api, fields, models
 
 
 class HrJob(models.Model):
-
     _inherit = "hr.job"
 
     category_ids = fields.Many2many(
@@ -19,7 +18,6 @@ class HrJob(models.Model):
 
 
 class HrContract(models.Model):
-
     _name = "hr.contract"
     _inherit = "hr.contract"
 

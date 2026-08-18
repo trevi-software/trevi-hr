@@ -3,15 +3,14 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 
+import logging
+
 from odoo import api, fields, models
 
-
-import logging
 _logger = logging.getLogger(__name__)
 
 
 class EmployeeSetInactive(models.TransientModel):
-
     _name = "hr.contract.end"
     _description = "Employee De-Activation Wizard"
 

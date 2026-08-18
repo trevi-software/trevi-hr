@@ -13,7 +13,6 @@ from odoo.addons.resource.models.utils import float_to_time
 
 
 class ResourceScheduleShift(models.Model):
-
     _name = "resource.schedule.shift"
     _inherit = "resource.calendar.attendance"
     _description = "Resource Shift"
@@ -105,7 +104,6 @@ class ResourceScheduleShift(models.Model):
             rec.hour_to = rec.time2float(
                 rec.localize_dt(rec.datetime_end, rec.tz).strftime("%H:%M")
             )
-        return
 
     @api.depends("resource_id")
     def _compute_employee_id(self):
@@ -461,7 +459,6 @@ class ResourceScheduleShift(models.Model):
         delta = timedelta(days=1)
         dTmp = date_start
         while dTmp <= date_end:
-
             if calendar.two_weeks_calendar:
                 scheduled_days = calendar.attendance_ids.filtered(
                     lambda a: a.week_nbr == schedule_week and a.display_type is False
@@ -474,7 +471,6 @@ class ResourceScheduleShift(models.Model):
             for attendance in calendar.attendance_ids.filtered(
                 lambda a: a.display_type is False and a.week_nbr == schedule_week
             ):
-
                 # skip ahead to the attendance_id corresponding to the
                 # week day of date_start
                 if startFlag and int(attendance.dayofweek) < dTmp.weekday():

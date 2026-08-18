@@ -6,13 +6,11 @@ from odoo import fields, models
 
 
 class HrEmployee(models.Model):
-
     _inherit = "hr.employee"
 
     def set_state_inactive(self):
 
         for ee in self:
-
             inactive_date = False
             for term in ee.inactive_ids:
                 if (

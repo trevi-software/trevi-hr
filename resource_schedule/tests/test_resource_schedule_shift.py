@@ -185,8 +185,9 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
                     "Duration of 1/2 workday without break is 16200 seconds",
                 )
             attendance_ids = self.default_calendar.attendance_ids.filtered(
-                lambda s: s.dayofweek == shift.dayofweek
-                and s.hour_from == shift.hour_from
+                lambda s: (
+                    s.dayofweek == shift.dayofweek and s.hour_from == shift.hour_from
+                )
             )
             self.assertEqual(
                 shift.duration,

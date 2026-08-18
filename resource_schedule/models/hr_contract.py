@@ -8,7 +8,6 @@ from odoo import api, fields, models
 
 
 class HrContract(models.Model):
-
     _inherit = "hr.contract"
 
     default_area_id = fields.Many2one("resource.schedule.area", "Default shift area")
@@ -24,7 +23,6 @@ class HrContract(models.Model):
         records = super().create(vals_list)
 
         for res, vals in zip(records, vals_list):
-
             # Update resource.calendar on employee resource record
             if "resource_calendar_id" in vals:
                 resource_ids = res.mapped("employee_id").mapped("resource_id")
@@ -53,8 +51,7 @@ class HrContract(models.Model):
 
             # The contract start date may be way back in the past, so use today's date
             # as the start date if the contract started before today.
-            if dStart < dToday:
-                dStart = dToday
+            dStart = max(dStart, dToday)
             # Go back to Monday of this week
             while dStart.weekday() != 0:
                 dStart += timedelta(days=-1)

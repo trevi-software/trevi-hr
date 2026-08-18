@@ -17,12 +17,13 @@ Employment Status - Payroll Linkage
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-trevi--software%2Ftrevi--hr-lightgray.png?logo=github
-    :target: https://github.com/trevi-software/trevi-hr/tree/17.0/hr_employee_status_payroll
+    :target: https://github.com/trevi-software/trevi-hr/tree/18.0/hr_employee_status_payroll
     :alt: trevi-software/trevi-hr
 
 |badge1| |badge2| |badge3|
 
-This module creates the necessary access records for the payroll manager to view employee separation records.
+This module creates the necessary access records for the payroll manager
+to view employee separation records.
 
 **Table of contents**
 
@@ -35,7 +36,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/trevi-software/trevi-hr/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/trevi-software/trevi-hr/issues/new?body=module:%20hr_employee_status_payroll%0Aversion:%2017.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/trevi-software/trevi-hr/issues/new?body=module:%20hr_employee_status_payroll%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -43,14 +44,14 @@ Credits
 =======
 
 Authors
-~~~~~~~
+-------
 
 * TREVI Software
 * Michael Telahun Makonnen
 
 Maintainers
-~~~~~~~~~~~
+-----------
 
-This module is part of the `trevi-software/trevi-hr <https://github.com/trevi-software/trevi-hr/tree/17.0/hr_employee_status_payroll>`_ project on GitHub.
+This module is part of the `trevi-software/trevi-hr <https://github.com/trevi-software/trevi-hr/tree/18.0/hr_employee_status_payroll>`_ project on GitHub.
 
 You are welcome to contribute.
