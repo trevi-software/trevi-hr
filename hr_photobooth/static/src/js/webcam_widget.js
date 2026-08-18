@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { Component, useRef, onWillDestroy } from "@odoo/owl";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { registry } from "@web/core/registry";
+import {Component, useRef, onWillDestroy} from "@odoo/owl";
+import {standardFieldProps} from "@web/views/fields/standard_field_props";
+import {registry} from "@web/core/registry";
 
 export class CameraCaptureField extends Component {
     static template = "hr_photobooth.CameraCaptureField";
-    static props = { ...standardFieldProps };
+    static props = {...standardFieldProps};
 
     setup() {
         this.videoRef = useRef("video");
@@ -17,7 +17,7 @@ export class CameraCaptureField extends Component {
     // 1. Start Webcam Stream
     async startCamera() {
         try {
-            this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            this.stream = await navigator.mediaDevices.getUserMedia({video: true});
             if (this.videoRef.el) {
                 this.videoRef.el.srcObject = this.stream;
             }
@@ -35,7 +35,7 @@ export class CameraCaptureField extends Component {
         const context = canvas.getContext("2d");
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-        
+
         // Draw current video frame onto canvas
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
@@ -44,7 +44,7 @@ export class CameraCaptureField extends Component {
         const base64Data = dataUrl.split(",")[1]; // Strip the data:image/jpeg;base64 prefix
 
         // Write data directly to the Odoo field
-        this.props.record.update({ [this.props.name]: base64Data });
+        this.props.record.update({[this.props.name]: base64Data});
 
         this.stopCamera();
     }
@@ -52,7 +52,7 @@ export class CameraCaptureField extends Component {
     // 3. Stop Webcam Stream
     stopCamera() {
         if (this.stream) {
-            this.stream.getTracks().forEach(track => track.stop());
+            this.stream.getTracks().forEach((track) => track.stop());
             this.stream = null;
         }
     }

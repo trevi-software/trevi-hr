@@ -12,7 +12,6 @@ _l = logging.getLogger(__name__)
 
 
 class HrJob(models.Model):
-
     _inherit = "hr.job"
     _parent_store = True
     _order = "parent_path"
@@ -79,7 +78,6 @@ class HrJob(models.Model):
 
 
 class HrContract(models.Model):
-
     _name = "hr.contract"
     _inherit = "hr.contract"
 
@@ -94,7 +92,6 @@ class HrContract(models.Model):
         Job = self.env["hr.job"]
 
         for vals in vals_list:
-
             job = Job.browse(vals["job_id"])
 
             if job and job.parent_id:
@@ -159,7 +156,6 @@ class HrContract(models.Model):
 
 
 class HrDepartment(models.Model):
-
     _inherit = "hr.department"
 
     def write(self, vals):

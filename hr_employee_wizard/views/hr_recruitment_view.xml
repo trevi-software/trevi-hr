@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <!-- Employee recruitment wizard -->
     <menuitem
         id="menu_new_labour"
@@ -9,5 +8,4 @@
         groups="hr_recruitment.group_hr_recruitment_user"
         sequence="4"
     />
-
 </odoo>

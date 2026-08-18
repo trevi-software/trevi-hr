@@ -32,7 +32,6 @@ class HrEmployee(models.Model):
 
 
 class HrContract(models.Model):
-
     _inherit = "hr.contract"
 
     @api.model
@@ -61,7 +60,6 @@ class HrContract(models.Model):
 
 
 class HrJob(models.Model):
-
     _name = "hr.job"
     _inherit = "hr.job"
 

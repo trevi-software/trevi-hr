@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <!-- Alert-related subtypes for messaging / Chatter -->
     <record id="mt_alert_xfer_confirmed" model="mail.message.subtype">
         <field name="name">Department Transfer - Confirmed</field>
@@ -19,5 +18,4 @@
         <field name="res_model">hr.department.transfer</field>
         <field name="description">Transfer complete</field>
     </record>
-
 </odoo>
