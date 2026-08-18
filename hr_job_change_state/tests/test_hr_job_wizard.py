@@ -57,19 +57,17 @@ class TestHrJobWizard(TransactionCase):
     def test_only_manager_can_change_recruitment_state(self):
         jobs = self.create_job_position()
 
-        with self.assertRaises(AccessError):
-            with Form(
-                self.Wizard.with_user(self.hr_user).with_context(
-                    **{"active_ids": jobs.ids}
-                )
-            ) as wizard1:
-                for job in wizard1.job_ids:
-                    self.assertIn(job, jobs)
+        with (
+            self.assertRaises(AccessError),
+            Form(
+                self.Wizard.with_user(self.hr_user).with_context(active_ids=jobs.ids)
+            ) as wizard1,
+        ):
+            for job in wizard1.job_ids:
+                self.assertIn(job, jobs)
 
         with Form(
-            self.Wizard.with_user(self.hr_officer).with_context(
-                **{"active_ids": jobs.ids}
-            )
+            self.Wizard.with_user(self.hr_officer).with_context(active_ids=jobs.ids)
         ) as wizard2:
             for job in wizard2.job_ids:
                 self.assertIn(job, jobs)
@@ -82,7 +80,7 @@ class TestHrJobWizard(TransactionCase):
 
         wizard = (
             self.Wizard.with_user(self.hr_officer)
-            .with_context(**{"active_ids": jobs.ids})
+            .with_context(active_ids=jobs.ids)
             .create({})
         )
         for job in wizard.job_ids:

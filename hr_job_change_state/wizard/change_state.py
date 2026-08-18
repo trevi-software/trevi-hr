@@ -6,7 +6,6 @@ from odoo import api, fields, models
 
 
 class HrJobStateWizard(models.TransientModel):
-
     _name = "hr.job.wizard.state.change"
     _description = "Change recruitment state of jobs in batches"
 
