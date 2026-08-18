@@ -7,7 +7,6 @@ from odoo import fields, models
 
 
 class ResConfig(models.TransientModel):
-
     _inherit = "res.config.settings"
 
     hr_responsible = fields.Boolean(
