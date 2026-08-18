@@ -7,7 +7,6 @@ from odoo import fields, models
 
 
 class HrApplicant(models.Model):
-
     _name = "hr.applicant"
     _inherit = "hr.applicant"
 

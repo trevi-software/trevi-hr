@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <record id="new_labour_form" model="ir.ui.view">
         <field name="name">hr.employee.wizard.new.form</field>
         <field name="model">hr.employee.wizard.new</field>
@@ -24,7 +23,10 @@
                     </group>
                 </group>
                 <notebook>
-                    <page string="Personal Info" invisible="state not in ['personal','review']">
+                    <page
+                        string="Personal Info"
+                        invisible="state not in ['personal','review']"
+                    >
                         <group>
                             <group name="personal_1">
                                 <field name="gender" />
@@ -42,7 +44,10 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Contract" invisible="state not in ['contract','review']">
+                    <page
+                        string="Contract"
+                        invisible="state not in ['contract','review']"
+                    >
                         <group>
                             <group string="Job">
                                 <field
@@ -50,10 +55,7 @@
                                     domain="[('company_id','=',company_id)]"
                                     required="state != 'personal'"
                                 />
-                                <field
-                                    name="wage"
-                                    required="state != 'personal'"
-                                />
+                                <field name="wage" required="state != 'personal'" />
                                 <field
                                     name="struct_id"
                                     required="state != 'personal'"
@@ -64,10 +66,7 @@
                                     name="department_id"
                                     domain="[('company_id','=',company_id)]"
                                 />
-                                <field
-                                    name="pps_id"
-                                    required="state != 'personal'"
-                                />
+                                <field name="pps_id" required="state != 'personal'" />
                                 <field
                                     name="policy_group_id"
                                     required="state != 'personal'"
@@ -83,26 +82,26 @@
                                 <label for="date_start" string="Contract Duration" />
                                 <div>
                                     <field
-                                        name="date_start"
-                                        class="oe_inline"
-                                        required="state != 'personal'"
-                                    /> - <field name="date_end" class="oe_inline" />
+                                    name="date_start"
+                                    class="oe_inline"
+                                    required="state != 'personal'"
+                                /> - <field name="date_end" class="oe_inline" />
                                 </div>
                                 <label for="trial_date_start" string="Trial Period" />
                                 <div>
                                     <field
-                                        name="trial_date_start"
-                                        class="oe_inline"
-                                        required="state != 'personal'"
-                                    /> - <field
-                                        name="trial_date_end"
-                                        class="oe_inline"
-                                    />
+                                    name="trial_date_start"
+                                    class="oe_inline"
+                                    required="state != 'personal'"
+                                /> - <field name="trial_date_end" class="oe_inline" />
                                 </div>
                             </group>
                         </group>
                     </page>
-                    <page string="Benefits" invisible="state not in ['benefits', 'review']">
+                    <page
+                        string="Benefits"
+                        invisible="state not in ['benefits', 'review']"
+                    >
                         <group string="Additional Benefits">
                             <field
                                 name="new_benefit_ids"
@@ -191,26 +190,16 @@
                         <label for="effective_date" string="Duration" />
                         <div>
                             <field name="effective_date" class="oe_inline" /> - <field
-                                name="end_date"
-                                class="oe_inline"
-                            />
+                            name="end_date"
+                            class="oe_inline"
+                        />
                         </div>
-                        <field
-                            name="adv_amount"
-                            readonly="not adv_override"
-                        />
-                        <field
-                            name="prm_amount"
-                            readonly="not prm_override"
-                        />
-                        <field
-                            name="prm_total"
-                            readonly="not prm_override"
-                        />
+                        <field name="adv_amount" readonly="not adv_override" />
+                        <field name="prm_amount" readonly="not prm_override" />
+                        <field name="prm_total" readonly="not prm_override" />
                     </group>
                 </group>
             </form>
         </field>
     </record>
-
 </odoo>

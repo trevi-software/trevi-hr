@@ -8,7 +8,6 @@ from odoo import _, api, exceptions, fields, models
 
 
 class NewLabour(models.TransientModel):
-
     _name = "hr.employee.wizard.new"
     _description = "New Employee Wizard"
 
@@ -163,7 +162,6 @@ class NewLabour(models.TransientModel):
     def onchange_job(self):
 
         for rec in self:
-
             if not rec.job_id:
                 rec.department_id = False
                 rec.wage = False

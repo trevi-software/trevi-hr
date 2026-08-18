@@ -8,7 +8,6 @@ from odoo import api, fields, models
 
 
 class Benefits(models.TransientModel):
-
     _name = "hr.employee.wizard.benefit"
     _description = "New Hire Benefits"
 
