@@ -17,20 +17,24 @@ Simplify Employee Records.
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-trevi--software%2Ftrevi--hr-lightgray.png?logo=github
-    :target: https://github.com/trevi-software/trevi-hr/tree/17.0/trevi_hr_usability
+    :target: https://github.com/trevi-software/trevi-hr/tree/18.0/trevi_hr_usability
     :alt: trevi-software/trevi-hr
 
 |badge1| |badge2| |badge3|
 
 Make Employee Records and Contracts Easier to Work With
-=======================================================
-#. Make the job id in employee object reference job id in latest contract.
-#. When moving from employee to contract pre-populate the employee field.
-#. In the contract form show only those positions belonging to the
+-------------------------------------------------------
+
+1. Make the job id in employee object reference job id in latest
+   contract.
+2. When moving from employee to contract pre-populate the employee
+   field.
+3. In the contract form show only those positions belonging to the
    department the employee belongs to.
-#. Make country (nationality) default to Ethiopia
-#. Make official identification document number unique
-#. Employees can only access their own contracts unless they're an HR Officer
+4. Make country (nationality) default to Ethiopia
+5. Make official identification document number unique
+6. Employees can only access their own contracts unless they're an HR
+   Officer
 
 **Table of contents**
 
@@ -43,7 +47,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/trevi-software/trevi-hr/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/trevi-software/trevi-hr/issues/new?body=module:%20trevi_hr_usability%0Aversion:%2017.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/trevi-software/trevi-hr/issues/new?body=module:%20trevi_hr_usability%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -51,18 +55,18 @@ Credits
 =======
 
 Authors
-~~~~~~~
+-------
 
 * TREVI Software
 
 Other credits
-~~~~~~~~~~~~~
+-------------
 
-* Michael Telahun Makonnen <mtm@trevi.et>
+- Michael Telahun Makonnen <mtm@trevi.et>
 
 Maintainers
-~~~~~~~~~~~
+-----------
 
-This module is part of the `trevi-software/trevi-hr <https://github.com/trevi-software/trevi-hr/tree/17.0/trevi_hr_usability>`_ project on GitHub.
+This module is part of the `trevi-software/trevi-hr <https://github.com/trevi-software/trevi-hr/tree/18.0/trevi_hr_usability>`_ project on GitHub.
 
 You are welcome to contribute.
