@@ -15,7 +15,6 @@
     </record>
 
     <data noupdate="1">
-
         <record id="hr_dept_tfr_comp_rule" model="ir.rule">
             <field name="name">Department Transfer multi-company rule</field>
             <field name="model_id" ref="model_hr_department_transfer" />
@@ -24,6 +23,5 @@
                 ['|',('company_id','=',False),('company_id', 'in', company_ids)]
             </field>
         </record>
-
     </data>
 </odoo>
