@@ -6,12 +6,15 @@
     "name": "Leave Type Unique",
     "summary": "Ensure leave types are unique",
     "version": "18.0.1.0.0",
-    "category": "Hidden",
+    "category": "Human Resources",
     "license": "AGPL-3",
     "author": "TREVI Software, Michael Telahun Makonnen",
     "images": ["static/src/img/main_screenshot.png"],
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
         "hr_holidays",
+    ],
+    "data": [
+        "data/hr_holidays_data.xml",
     ],
 }
