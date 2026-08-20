@@ -85,8 +85,8 @@ class ResourceScheduleShift(models.Model):
     @api.model
     def time2float(self, value):
         vals = value.split(":")
-        t, hours = divmod(float(vals[0]), 24)
-        t, minutes = divmod(float(vals[1]), 60)
+        _, hours = divmod(float(vals[0]), 24)
+        _, minutes = divmod(float(vals[1]), 60)
         minutes = minutes / 60.0
         return hours + minutes
 
@@ -136,7 +136,7 @@ class ResourceScheduleShift(models.Model):
     @api.onchange("calendar_id")
     def onchange_calendar_id(self):
         for rec in self:
-            today = date.today()
+            today = date.today()  # noqa: DTZ011
             if rec.datetime_start:
                 today = rec.datetime_start.date()
             if rec.calendar_id:
@@ -313,12 +313,12 @@ class ResourceScheduleShift(models.Model):
                 ]
             )
             employees = shifts.mapped("employee_id")
-            for ee in employees:
-                details = shifts.filtered(lambda sh: sh.employee_id == ee)
+            for e_id in employees:
+                details = shifts.filtered(lambda sh, e_id=e_id: sh.employee_id == e_id)
                 if len(details) == 0:
                     continue
 
-                res |= self.check_and_create_autopunch(ee, details, _now)
+                res |= self.check_and_create_autopunch(e_id, details, _now)
 
             today += timedelta(days=1)
 
@@ -461,7 +461,9 @@ class ResourceScheduleShift(models.Model):
         while dTmp <= date_end:
             if calendar.two_weeks_calendar:
                 scheduled_days = calendar.attendance_ids.filtered(
-                    lambda a: a.week_nbr == schedule_week and a.display_type is False
+                    lambda a, week=schedule_week: (
+                        a.week_nbr == week and not a.display_type
+                    )
                 ).mapped("dayofweek")
             else:
                 scheduled_days = calendar.attendance_ids.mapped("dayofweek")
@@ -469,7 +471,7 @@ class ResourceScheduleShift(models.Model):
             startFlag = True
             prev_weekday = str(dTmp.weekday())
             for attendance in calendar.attendance_ids.filtered(
-                lambda a: a.display_type is False and a.week_nbr == schedule_week
+                lambda a, week=schedule_week: not a.display_type and a.week_nbr == week
             ):
                 # skip ahead to the attendance_id corresponding to the
                 # week day of date_start
@@ -541,7 +543,7 @@ class ResourceScheduleShift(models.Model):
 
         # Create a two-week schedule beginning from Monday of next week.
         #
-        dt = datetime.today()
+        dt = datetime.today()  # noqa: DTZ002
         days = 7 - dt.weekday()
         dt += relativedelta(days=+days)
         dStart = dt.date()

@@ -77,7 +77,7 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         if employee_id is None:
             employee_id = self.employee.id
         if start is None:
-            start = date.today()
+            start = date.today()  # noqa: DTZ011
 
         res = {
             "name": "Contract",
@@ -102,7 +102,7 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
     def get_start_end_dates(self, weeks=1):
 
         total_days = (weeks * 7) - 1
-        dStart = date.today()
+        dStart = date.today()  # noqa: DTZ011
         while dStart.weekday() != 0:
             dStart -= timedelta(days=1)
         dEnd = dStart + timedelta(days=total_days)
@@ -150,8 +150,8 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
 
         shifts = self.ScheduleShift.create_schedule(
             self.employee.resource_id,
-            date.today(),
-            date.today() + timedelta(days=6),
+            date.today(),  # noqa: DTZ011
+            date.today() + timedelta(days=6),  # noqa: DTZ011
             self.default_calendar,
         )
         for shift in shifts:
@@ -165,8 +165,8 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
 
         shifts = self.ScheduleShift.create_schedule(
             self.employee.resource_id,
-            date.today(),
-            date.today() + timedelta(days=6),
+            date.today(),  # noqa: DTZ011
+            date.today() + timedelta(days=6),  # noqa: DTZ011
             self.default_calendar,
         )
         self.assertGreater(len(shifts), 0, "I was able to create shifts")
@@ -185,8 +185,8 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
                     "Duration of 1/2 workday without break is 16200 seconds",
                 )
             attendance_ids = self.default_calendar.attendance_ids.filtered(
-                lambda s: (
-                    s.dayofweek == shift.dayofweek and s.hour_from == shift.hour_from
+                lambda s, sh=shift: (
+                    s.dayofweek == sh.dayofweek and s.hour_from == sh.hour_from
                 )
             )
             self.assertEqual(
@@ -197,7 +197,7 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
 
     def test_end_middle_of_week(self):
 
-        start = date.today()
+        start = date.today()  # noqa: DTZ011
         # end the shift on a wednesday
         end = start + timedelta(days=7)
         while end.weekday() != 2:
@@ -213,7 +213,7 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
     # Because sunday is a boundary of Work Schedules (resource.calendar)
     def test_date_range_end_sunday(self):
 
-        start = date.today()
+        start = date.today()  # noqa: DTZ011
         # The end date is on a sunday
         end = start + timedelta(days=7)
         while end.weekday() != 6:
@@ -233,7 +233,7 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
     # Because of a bug I found when working with a 5-day work week
     def test_date_range_end_sunday_2(self):
 
-        start = date.today()
+        start = date.today()  # noqa: DTZ011
         # The end date is on a sunday
         end = start + timedelta(days=7)
         while end.weekday() != 6:
@@ -328,7 +328,7 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         )
 
         if not frmShift.datetime_start:
-            frmShift.datetime_start = date.today()
+            frmShift.datetime_start = date.today()  # noqa: DTZ011
 
         # Change to empty calendar
         frmShift.calendar_id = self.empty_calendar
@@ -341,7 +341,7 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         frmShift.calendar_id = self.std35_calendar
 
         # Today is monday - friday
-        if date.today().weekday() not in [5, 6]:
+        if date.today().weekday() not in [5, 6]:  # noqa: DTZ011
             self.assertEqual(
                 frmShift.day_period,
                 "morning",
@@ -361,7 +361,7 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
             self.assertFalse(frmShift.hour_to, "The end time is the default value")
         self.assertEqual(
             frmShift.dayofweek,
-            str(date.today().weekday()),
+            str(date.today().weekday()),  # noqa: DTZ011
             "The dayofweek fields is consistent with the start date",
         )
 
@@ -785,7 +785,10 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         tzLocal = timezone(self.std35_calendar.tz)
         now = (
             tzLocal.localize(
-                datetime.combine(dStart, datetime.strptime("7:59", "%H:%M").time()),
+                datetime.combine(
+                    dStart,
+                    datetime.strptime("7:59", "%H:%M").time(),  # noqa: DTZ007
+                ),
                 is_dst=False,
             )
             .astimezone(utc)
@@ -808,7 +811,10 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
 
         now = (
             tzLocal.localize(
-                datetime.combine(dStart, datetime.strptime("11:59", "%H:%M").time()),
+                datetime.combine(
+                    dStart,
+                    datetime.strptime("11:59", "%H:%M").time(),  # noqa: DTZ007
+                ),
                 is_dst=False,
             )
             .astimezone(utc)
@@ -850,7 +856,10 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
 
         now = (
             tzLocal.localize(
-                datetime.combine(dStart, datetime.strptime("12:00", "%H:%M").time()),
+                datetime.combine(
+                    dStart,
+                    datetime.strptime("12:00", "%H:%M").time(),  # noqa: DTZ007
+                ),
                 is_dst=False,
             )
             .astimezone(utc)
@@ -884,7 +893,10 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
 
         now = (
             tzLocal.localize(
-                datetime.combine(dStart, datetime.strptime("12:30", "%H:%M").time()),
+                datetime.combine(
+                    dStart,
+                    datetime.strptime("12:30", "%H:%M").time(),  # noqa: DTZ007
+                ),
                 is_dst=False,
             )
             .astimezone(utc)
@@ -913,7 +925,10 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
 
         now = (
             tzLocal.localize(
-                datetime.combine(dStart, datetime.strptime("13:00", "%H:%M").time()),
+                datetime.combine(
+                    dStart,
+                    datetime.strptime("13:00", "%H:%M").time(),  # noqa: DTZ007
+                ),
                 is_dst=False,
             )
             .astimezone(utc)
@@ -954,7 +969,10 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
 
         now = (
             tzLocal.localize(
-                datetime.combine(dStart, datetime.strptime("16:30", "%H:%M").time()),
+                datetime.combine(
+                    dStart,
+                    datetime.strptime("16:30", "%H:%M").time(),  # noqa: DTZ007
+                ),
                 is_dst=False,
             )
             .astimezone(utc)
@@ -1016,14 +1034,19 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
             {
                 "employee_id": self.employee.id,
                 "check_in": datetime.combine(
-                    dStart, datetime.strptime("3:00", "%H:%M").time()
+                    dStart,
+                    datetime.strptime("3:00", "%H:%M").time(),  # noqa: DTZ007
                 ),
                 "check_out": datetime.combine(
-                    dStart, datetime.strptime("12:00", "%H:%M").time()
+                    dStart,
+                    datetime.strptime("12:00", "%H:%M").time(),  # noqa: DTZ007
                 ),
             }
         )
-        now = datetime.combine(dStart, datetime.strptime("12:00", "%H:%M").time())
+        now = datetime.combine(
+            dStart,
+            datetime.strptime("12:00", "%H:%M").time(),  # noqa: DTZ007
+        )
 
         with self.assertRaises(ValidationError):
             self.ScheduleShift.check_and_create_autopunch(
@@ -1056,7 +1079,10 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         tzLocal = timezone(self.production_calendar.tz)
         now = (
             tzLocal.localize(
-                datetime.combine(dStart, datetime.strptime("15:45", "%H:%M").time()),
+                datetime.combine(
+                    dStart,
+                    datetime.strptime("15:45", "%H:%M").time(),  # noqa: DTZ007
+                ),
                 is_dst=False,
             )
             .astimezone(utc)
@@ -1137,9 +1163,13 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
 
         # when writing directly to DB it is assumed the datetime is already in UTC
         dtStart = datetime.combine(
-            date.today(), datetime.strptime("0530", "%H%M").time()
+            date.today(),  # noqa: DTZ011
+            datetime.strptime("0530", "%H%M").time(),  # noqa: DTZ007
         )
-        dtEnd = datetime.combine(date.today(), datetime.strptime("1330", "%H%M").time())
+        dtEnd = datetime.combine(
+            date.today(),  # noqa: DTZ011
+            datetime.strptime("1330", "%H%M").time(),  # noqa: DTZ007
+        )
         self.employee.resource_id.tz = "Africa/Addis_Ababa"
         shift = self.ScheduleShift.create(
             {

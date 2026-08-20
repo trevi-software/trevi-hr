@@ -24,7 +24,7 @@ class TestWizardValidateSchedule(common.TransactionCase):
     def get_start_end_dates(self, weeks=1):
 
         total_days = (weeks * 7) - 1
-        dStart = date.today()
+        dStart = date.today()  # noqa: DTZ011
         while dStart.weekday() != 0:
             dStart -= timedelta(days=1)
         dEnd = dStart + timedelta(days=total_days)

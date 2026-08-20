@@ -11,7 +11,7 @@ class HrAttendance(models.Model):
 
     autopunch = fields.Boolean(
         string="Auto-punch",
-        help="Designates whether or not this attendance record was created automatically.",
+        help="Whether or not this attendance record was created automatically.",
     )
     schedule_shift_id = fields.Many2one(
         "resource.schedule.shift", "Shift", help="The shift related to this attendance."

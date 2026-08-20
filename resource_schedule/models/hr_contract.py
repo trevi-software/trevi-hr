@@ -22,7 +22,7 @@ class HrContract(models.Model):
 
         records = super().create(vals_list)
 
-        for res, vals in zip(records, vals_list):
+        for res, vals in zip(records, vals_list, strict=True):
             # Update resource.calendar on employee resource record
             if "resource_calendar_id" in vals:
                 resource_ids = res.mapped("employee_id").mapped("resource_id")
@@ -37,7 +37,8 @@ class HrContract(models.Model):
             if len(ee.contract_ids) != 1 or (res.date_end and res.date_end < dToday):
                 continue
 
-            # Get End date by trying to figure out when the next mass schedule will be created
+            # Get End date by trying to figure out when the next mass schedule will
+            # be created.
             #
             dEnd = None
             xref = self.env.ref("resource_schedule.mass_schedule_cron")

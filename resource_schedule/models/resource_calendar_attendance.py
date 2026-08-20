@@ -120,7 +120,7 @@ class ResourceCalendarAttendance(models.Model):
             if not rec.calendar_id:
                 continue
             sections = rec.calendar_id.attendance_ids.filtered(
-                lambda a: (
+                lambda a, rec=rec: (
                     a.display_type == "line_section" and a.sequence <= rec.sequence
                 )
             ).sorted("sequence")
