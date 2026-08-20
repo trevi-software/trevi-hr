@@ -108,14 +108,14 @@
                                 nolabel="1"
                                 context="{'csdate': date_start}"
                             >
-                                <tree>
+                                <list>
                                     <field name="benefit_id" />
                                     <field name="effective_date" />
                                     <field name="adv_override" />
                                     <field name="adv_amount" />
                                     <field name="prm_override" />
                                     <field name="prm_amount" />
-                                </tree>
+                                </list>
                             </field>
                         </group>
                     </page>
