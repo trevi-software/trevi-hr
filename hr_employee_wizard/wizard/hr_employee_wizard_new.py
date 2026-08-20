@@ -177,7 +177,7 @@ class NewLabour(models.TransientModel):
             if rec.date_start:
                 rec.trial_date_start = rec.date_start
             else:
-                rec.trial_date_start = date.today()
+                rec.trial_date_start = date.today()  # noqa: DTZ011
             rec.onchange_trial()
 
     @api.onchange("trial_date_start")
@@ -361,7 +361,7 @@ class NewLabour(models.TransientModel):
 
         action = self.env.ref("hr.open_view_employee_list_my")
         dict_act_window = action.read([])[0]
-        dict_act_window["view_mode"] = "kanban,tree,form"
+        dict_act_window["view_mode"] = "kanban,list,form"
         dict_act_window["domain"] = [
             ("id", "in", self.env.context.get("new_employee_ids", False))
         ]
