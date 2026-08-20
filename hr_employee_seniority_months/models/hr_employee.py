@@ -11,7 +11,6 @@ from odoo import fields, models
 
 
 class HrEmployee(models.Model):
-
     _inherit = "hr.employee"
 
     def _get_contracts_list(self):
@@ -39,7 +38,7 @@ class HrEmployee(models.Model):
 
         self.ensure_one()
         if dToday is None:
-            dToday = date.today()
+            dToday = date.today()  # noqa: DTZ011
         elif isinstance(dToday, datetime):
             dToday = dToday.date()
 
@@ -62,8 +61,7 @@ class HrEmployee(models.Model):
                 dEnd = c.date_end
             else:
                 dEnd = dToday
-            if dEnd > dToday:
-                dEnd = dToday
+            dEnd = min(dEnd, dToday)
 
             delta += relativedelta(dEnd, dStart)
 

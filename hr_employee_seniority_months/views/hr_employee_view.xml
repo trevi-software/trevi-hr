@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <!-- Employee Records -->
 
     <record id="hr_employee_view_tree" model="ir.ui.view">
@@ -8,11 +7,9 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_tree" />
         <field name="arch" type="xml">
-            <data>
-                <xpath expr="//field[@name='work_phone']" position="before">
-                    <field name="length_of_service" />
-                </xpath>
-            </data>
+            <xpath expr="//field[@name='work_phone']" position="before">
+                <field name="length_of_service" />
+            </xpath>
         </field>
     </record>
 
@@ -30,5 +27,4 @@
             </xpath>
         </field>
     </record>
-
 </odoo>
