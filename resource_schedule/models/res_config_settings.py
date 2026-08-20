@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-
     _inherit = "res.config.settings"
 
     max_shift_length = fields.Integer(

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <!-- Root Menu -->
     <menuitem
         id="menu_import_root"
@@ -193,5 +192,4 @@
         sequence="60"
         groups="payroll.group_payroll_user"
     />
-
 </odoo>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="hr_photobooth.CameraCaptureField">
+        <div
+            class="o_camera_capture_container d-flex flex-column align-items-center gap-2"
+        >
+            <!-- Hidden Canvas utilized for image extraction -->
+            <canvas t-ref="canvas" class="d-none" />
+
+            <!-- Current Image Preview from Odoo Database -->
+            <div
+                class="current_image_preview mb-2"
+                t-if="props.record.data[props.name]"
+            >
+                <img
+                    t-attf-src="data:image/jpeg;base64,#{props.record.data[props.name]}"
+                    style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid #ccc;"
+                />
+            </div>
+
+            <!-- Live Video Stream -->
+            <video
+                t-ref="video"
+                autoplay="true"
+                playsinline="true"
+                style="max-width: 320px; background: #000; border-radius: 8px;"
+                t-att-class="stream ? '' : 'd-none'"
+            />
+
+            <!-- Action Controls -->
+            <div class="btn-group">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    t-if="!stream"
+                    t-on-click="startCamera"
+                >
+                    <i class="fa fa-camera me-1" /> Open Camera
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    t-if="stream"
+                    t-on-click="capturePhoto"
+                >
+                    <i class="fa fa-check me-1" /> Capture &amp; Save
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-danger"
+                    t-if="stream"
+                    t-on-click="stopCamera"
+                >
+                    <i class="fa fa-times me-1" /> Cancel
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

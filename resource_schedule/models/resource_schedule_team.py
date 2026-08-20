@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class ResourceScheduleTeam(models.Model):
-
     _name = "resource.schedule.team"
     _description = "Scheduling Shift Team"
 

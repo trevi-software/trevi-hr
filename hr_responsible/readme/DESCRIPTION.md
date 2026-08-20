@@ -1,0 +1,1 @@
+This module allows you to designate an employee as the HR responsible for all employees.
