@@ -46,7 +46,6 @@
         <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=15))" />
         <field name="interval_number" eval="30" />
         <field name="interval_type">minutes</field>
-        <field name="numbercall" eval="-1" />
         <field name="active" eval="True" />
     </record>
 </odoo>
