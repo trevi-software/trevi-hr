@@ -43,7 +43,6 @@
         <field name="code">model.update_state()</field>
         <field name="interval_number" eval="1" />
         <field name="interval_type">days</field>
-        <field name="numbercall" eval="-1" />
     </record>
 
     <!-- Prevent archiving -->
