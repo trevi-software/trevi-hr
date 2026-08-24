@@ -67,21 +67,21 @@
             <form string="Premium Payment">
                 <header>
                     <button
-                        name="state_pending"
+                        name="action_pending"
                         type="object"
                         invisible="state != 'draft'"
                         string="Pending"
                         class="oe_highlight"
                     />
                     <button
-                        name="state_done"
+                        name="action_done"
                         type="object"
                         invisible="state != 'pending'"
                         string="Confirm"
                         class="oe_highlight"
                     />
                     <button
-                        name="state_cancel"
+                        name="action_cancel"
                         type="object"
                         invisible="state not in ['draft', 'pending']"
                         string="Cancel"
