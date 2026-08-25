@@ -46,7 +46,7 @@
     <!-- Public Holidays -->
     <menuitem
         id="menu_public_holiday"
-        action="hr_holidays_public.open_holidays_public_view"
+        action="calendar_public_holiday.open_calendar_public_holiday_view"
         parent="menu_hrmaster_top"
         sequence="5"
         groups="hr.group_hr_user"
