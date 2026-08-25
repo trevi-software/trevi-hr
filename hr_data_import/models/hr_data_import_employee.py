@@ -103,7 +103,6 @@ class ImportEmployee(models.Model):
             ("Friday", "Friday"),
             ("Saturday", "Saturday"),
             ("Sunday", "Sunday"),
-            ("out", False),
         ]
     )
 
