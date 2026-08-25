@@ -19,7 +19,7 @@
         "hr_contract_status",
         "hr_employee_seniority_months",
         "hr_employee_status",
-        "hr_holidays_public",
+        "calendar_public_holiday",
         "payroll_default_salary_rules",
         "payroll_periods",
         "payroll_policy_absence",
