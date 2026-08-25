@@ -120,11 +120,6 @@ class ImportEmployee(models.Model):
 
         partner_obj = self.env["res.partner"]
         country = self.env.ref("base.et")
-        hr_responsible = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("hr_responsible.hr_responsible", False)
-        )
 
         values_list = []
         for rec in self:
@@ -253,7 +248,7 @@ class ImportEmployee(models.Model):
             if anlv_allocation > 0:
                 leave_allocation = {
                     "employee_id": ee.id,
-                    "name": f"Leave allocation for {data.name} as of {date.today()}",
+                    "name": f"Leave allocation for {data.name} as of {date.today()}",  # noqa: DTZ011
                     "state": "draft",
                     "holiday_status_id": al_status_id,
                     "number_of_days": data.anlv_earned - data.anlv_used,
@@ -267,7 +262,7 @@ class ImportEmployee(models.Model):
 
     def get_leave_days_accrued(self, employee, hire_date):
 
-        today = date.today()
+        today = date.today()  # noqa: DTZ011
         accrued_todate = 0
         extra_accrued = 0
         one_day = 0
