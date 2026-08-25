@@ -180,7 +180,6 @@
         </field>
     </record>
 
-    <!--
     <record id="view_resource_schedule_shift_calendar" model="ir.ui.view">
         <field name="name">resource.schedule.shift.calendar</field>
         <field name="model">resource.schedule.shift</field>
@@ -191,7 +190,6 @@
                 date_stop="datetime_end"
                 color="resource_id"
                 event_open_popup="true"
-                quick_add="False"
                 mode="week"
             >
                 <field name="company_id" invisible="1" />
@@ -206,7 +204,6 @@
             </calendar>
         </field>
     </record>
--->
 
     <record id="open_employee_schedule_view" model="ir.actions.act_window">
         <field name="name">Schedule</field>
