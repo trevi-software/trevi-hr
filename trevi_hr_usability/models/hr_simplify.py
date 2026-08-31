@@ -10,7 +10,7 @@ class HrEmployee(models.Model):
 
     _name = "hr.employee"
     _inherit = "hr.employee"
-    _sql_constraints = [
+    _sql_constraints = [  # noqa: RUF012
         (
             "unique_identification_id",
             "unique(identification_id)",
@@ -25,7 +25,7 @@ class HrEmployee(models.Model):
         if cid:
             return cid[0]
 
-    country_id = fields.Many2one(default=lambda self: self._default_country)
+    country_id = fields.Many2one(default=lambda self: self._default_country())
     job_id = fields.Many2one(
         related="contract_id.job_id", comodel_name="hr.job", string="Job", readonly=True
     )
@@ -42,7 +42,7 @@ class HrContract(models.Model):
             if e_ids:
                 return e_ids[0]
 
-    employee_id = fields.Many2one(default=lambda self: self._default_employee)
+    employee_id = fields.Many2one(default=lambda self: self._default_employee())
     employee_dept_id = fields.Many2one(
         string="Default Dept Id",
         related="employee_id.department_id",
@@ -71,7 +71,8 @@ class HrJob(models.Model):
     expected_employees = fields.Integer(
         compute="_compute_employees",
         string="Total Forecasted Employees",
-        help="Expected number of employees for this job position after new recruitment.",
+        help="Expected number of employees for this job position after new "
+        "recruitment.",
     )
 
     @api.depends("no_of_recruitment", "employee_ids.job_id", "employee_ids.active")
