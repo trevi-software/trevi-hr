@@ -36,19 +36,16 @@ class TestHrJobWizard(TransactionCase):
                 {
                     "name": "#Sales Associate",
                     "no_of_recruitment": 4,
-                    "no_of_hired_employee": 2,
                     "state": "recruit",
                 },
                 {
                     "name": "#Store Manager",
                     "no_of_recruitment": 2,
-                    "no_of_hired_employee": 1,
                     "state": "recruit",
                 },
                 {
                     "name": "#Product Manager",
                     "no_of_recruitment": 2,
-                    "no_of_hired_employee": 0,
                     "state": "recruit",
                 },
             ]
@@ -86,8 +83,8 @@ class TestHrJobWizard(TransactionCase):
         for job in wizard.job_ids:
             self.assertIn(job, jobs)
 
-        with Form(wizard) as wizard:
-            wizard.do_open = True
+        with Form(wizard) as wizard_form:
+            wizard_form.do_open = True
 
         wizard.change_state()
 
