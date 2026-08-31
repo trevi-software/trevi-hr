@@ -48,12 +48,11 @@ class TestHrTransfer(TransactionCase):
 
         # -- jobs
         cls.job_trainee = cls.Job.create(
-            {"name": "#trainee", "state": "recruit", "department_id": cls.dpt_temp.id}
+            {"name": "#trainee", "department_id": cls.dpt_temp.id}
         )
         cls.job_consultant = cls.Job.create(
             {
                 "name": "#consultant",
-                "state": "recruit",
                 "department_id": cls.dpt_parttime.id,
             }
         )

@@ -113,33 +113,33 @@ class NewLabour(models.TransientModel):
     struct_id = fields.Many2one(
         string="Salary Structure",
         comodel_name="hr.payroll.structure",
-        default=lambda self: self._get_struct,
+        default=lambda self: self._get_struct(),
     )
     pps_id = fields.Many2one(
         string="Payroll Period Schedule",
         comodel_name="hr.payroll.period.schedule",
-        default=lambda self: self._get_pps,
+        default=lambda self: self._get_pps(),
     )
     policy_group_id = fields.Many2one(
-        comodel_name="hr.policy.group", default=lambda self: self._get_policy_group
+        comodel_name="hr.policy.group", default=lambda self: self._get_policy_group()
     )
     wage = fields.Float(
         digits="Payroll",
-        default=lambda self: self._get_wage,
+        default=lambda self: self._get_wage(),
         help="Basic Salary of the employee",
     )
     calendar_id = fields.Many2one(
         string="Working Schedule Template",
         comodel_name="resource.calendar",
-        default=lambda self: self._get_resource_calendar,
+        default=lambda self: self._get_resource_calendar(),
     )
     date_start = fields.Date(string="Start Date", default=fields.Date.today())
     date_end = fields.Date(string="End Date")
     trial_date_start = fields.Date(
-        string="Trial Start Date", default=lambda self: self._get_trial_start
+        string="Trial Start Date", default=lambda self: self._get_trial_start()
     )
     trial_date_end = fields.Date(
-        string="Trial End Date", default=lambda self: self._get_trial_end
+        string="Trial End Date", default=lambda self: self._get_trial_end()
     )
 
     @api.onchange("company_id")
@@ -202,7 +202,6 @@ class NewLabour(models.TransientModel):
 
         self.ensure_one()
         values = {
-            "type": "private",
             "name": self.name,
             "phone": self.telephone,
             "mobile": self.mobile,
@@ -210,7 +209,6 @@ class NewLabour(models.TransientModel):
             "city": self.city,
             "country_id": self.country_id.id,
             "state_id": self.state_id and self.state_id.id or False,
-            "employee": True,
             "is_company": False,
             "company_id": self.company_id.id,
         }
@@ -220,12 +218,16 @@ class NewLabour(models.TransientModel):
     def _create_hr_applicant(self, partner):
 
         self.ensure_one()
+        candidate = self.env["hr.candidate"].create(
+            {
+                "partner_name": self.name,
+                "partner_id": partner.id,
+                "partner_phone": self.telephone,
+                "company_id": self.company_id.id,
+            }
+        )
         applicant_vals = {
-            "name": f"{self.job_id.name} {self.name}",
-            "partner_name": self.name,
-            "partner_id": partner.id,
-            "partner_phone": self.telephone,
-            "partner_mobile": self.mobile,
+            "candidate_id": candidate.id,
             "job_id": self.job_id.id,
             "department_id": self.department_id.id,
             "gender": self.gender,
@@ -261,23 +263,6 @@ class NewLabour(models.TransientModel):
             "context": self.env.context,
         }
 
-    def _get_employee_values(self, context):
-
-        return {
-            "name": context["default_name"],
-            "job_id": context["default_job_id"],
-            "job_title": context["default_job_title"],
-            "address_home_id": context["default_address_home_id"],
-            "department_id": context["default_department_id"],
-            "address_id": context["default_address_id"],
-            "work_email": context["default_work_email"],
-            "work_phone": context["default_work_phone"],
-            "applicant_id": context["default_applicant_id"],
-            "gender": context["default_gender"],
-            "birthday": context["default_birthday"],
-            "certificate": context["default_education"],
-        }
-
     def hire_applicant(self):
 
         if not self.name or not self.birth_date or not self.gender:
@@ -302,8 +287,7 @@ class NewLabour(models.TransientModel):
 
         # Create employee
         dict_act_window = applicant.create_employee_from_applicant()
-        employee_values = self._get_employee_values(dict_act_window["context"])
-        ee = self.env["hr.employee"].create(employee_values)
+        ee = self.env["hr.employee"].browse(dict_act_window["res_id"])
 
         # Create contract
         #

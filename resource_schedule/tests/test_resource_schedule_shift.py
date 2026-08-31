@@ -8,7 +8,7 @@ from pytz import timezone, utc
 from odoo.exceptions import ValidationError
 from odoo.tests import Form
 
-from odoo.addons.resource.models.resource import float_to_time
+from odoo.addons.resource.models.utils import float_to_time
 
 from .common import TestResourceScheduleCommon
 

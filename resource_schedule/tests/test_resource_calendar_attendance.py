@@ -364,8 +364,11 @@ class TestResourceCalendarAttendance(common.TransactionCase):
 
     def test_flex_invalid_values(self):
 
-        frmAtt = Form(self.CalendarAttendance)
-        frmAtt.calendar_id = self.default_calendar
+        frmAtt = Form(
+            self.CalendarAttendance.with_context(
+                default_calendar_id=self.default_calendar.id
+            )
+        )
         frmAtt.name = "Flex shift"
         frmAtt.day_period = "8day"
         frmAtt.shift_type = "flex"
@@ -390,8 +393,11 @@ class TestResourceCalendarAttendance(common.TransactionCase):
             att.hour_to, 15, "Invalid value for 'hour_to' resets to 'flex_core_to'"
         )
 
-        frmAtt = Form(self.CalendarAttendance)
-        frmAtt.calendar_id = self.default_calendar
+        frmAtt = Form(
+            self.CalendarAttendance.with_context(
+                default_calendar_id=self.default_calendar.id
+            )
+        )
         frmAtt.name = "Flex shift"
         frmAtt.day_period = "8day"
         frmAtt.shift_type = "flex"
