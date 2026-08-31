@@ -18,7 +18,7 @@ class HrContract(models.Model):
         return res
 
     resource_calendar_id = fields.Many2one(
-        default=lambda self: self._get_resource_calendar
+        default=lambda self: self._get_resource_calendar()
     )
 
     @api.model_create_multi
