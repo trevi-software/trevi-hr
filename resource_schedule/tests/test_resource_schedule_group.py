@@ -4,7 +4,7 @@
 from odoo.tests import common
 
 
-class TestScheduleGroup(common.SavepointCase):
+class TestScheduleGroup(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

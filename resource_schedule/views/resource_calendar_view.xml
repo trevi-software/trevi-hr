@@ -31,7 +31,7 @@
                         </control>
                         <field name="sequence" widget="handle" />
                         <!-- We do not display the type because we don't want the user to be bothered with that information if he has no section or note. -->
-                        <field name="display_type" invisible="1" />
+                        <field name="display_type" column_invisible="1" />
                         <field name="week_nbr" readonly="1" optional="show" />
                         <field name="template_id" />
                         <field

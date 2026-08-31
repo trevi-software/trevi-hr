@@ -14,7 +14,7 @@ class HrLeave(models.Model):
 
         res = super().action_validate()
 
-        lv_requests = self.filtered(lambda lv: lv.holiday_type == "employee")
+        lv_requests = self
 
         Attendance = self.env["hr.attendance"]
         for lv in lv_requests:

@@ -28,7 +28,7 @@ class TestResourceCalenar(TestResourceScheduleCommon):
         for att in cal.attendance_ids.sorted("sequence"):
             self.assertIn(
                 att.day_period,
-                ["morning", "afternoon"],
+                ["morning", "afternoon", "lunch"],
                 "The default workday has a day period of 'morning' or 'afternoon'",
             )
             if att.day_period == "morning":
@@ -54,7 +54,7 @@ class TestResourceCalenar(TestResourceScheduleCommon):
         for att in cal.attendance_ids:
             self.assertIn(
                 att.day_period,
-                ["morning", "afternoon"],
+                ["morning", "afternoon", "lunch"],
                 "The default workday has a day period of 'morning' or 'afternoon'",
             )
             if att.day_period == "morning":
@@ -87,10 +87,12 @@ class TestResourceCalenar(TestResourceScheduleCommon):
         )
 
         self.default_calendar.switch_calendar_type()
-        with Form(self.default_calendar) as frmCalendar:
-            with frmCalendar.attendance_ids.new() as line:
-                line.name = "Week 3"
-                line.display_type = "line_section"
+        with (
+            Form(self.default_calendar) as frmCalendar,
+            frmCalendar.attendance_ids.new() as line,
+        ):
+            line.name = "Week 3"
+            line.display_type = "line_section"
 
         self.assertEqual(
             len(
@@ -119,11 +121,13 @@ class TestResourceCalenar(TestResourceScheduleCommon):
         )
 
         self.default_calendar.switch_calendar_type()
-        with Form(self.default_calendar) as frmCalendar:
-            with frmCalendar.attendance_ids.new() as line:
-                line.template_id = self.wtpl_morning
-                line.dayofweek = "5"
-                line.sequence = 36
+        with (
+            Form(self.default_calendar) as frmCalendar,
+            frmCalendar.attendance_ids.new() as line,
+        ):
+            line.template_id = self.wtpl_morning
+            line.dayofweek = "5"
+            line.sequence = 50
         last_day = self.default_calendar.attendance_ids.sorted("sequence")[-1]
         last_section = self.default_calendar.attendance_ids.filtered(
             lambda a: a.display_type == "line_section"
@@ -136,7 +140,7 @@ class TestResourceCalenar(TestResourceScheduleCommon):
         )
         self.assertEqual(
             last_day.sequence,
-            36,
+            50,
             "The last day of the calendar is the value I just inserted",
         )
         self.assertEqual(last_section.sequence, 25, "I found the last section")

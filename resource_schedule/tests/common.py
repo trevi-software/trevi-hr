@@ -4,7 +4,7 @@
 from odoo.tests import common
 
 
-class TestResourceScheduleCommon(common.SavepointCase):
+class TestResourceScheduleCommon(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
