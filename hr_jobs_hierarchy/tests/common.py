@@ -50,7 +50,6 @@ class TestHrCommon(TransactionCase):
         return self.Job.create(
             {
                 "name": name,
-                "state": "open",
                 "parent_id": parent_job.id if parent_job else False,
                 "department_manager": is_manager,
                 "department_id": department.id if department else False,
