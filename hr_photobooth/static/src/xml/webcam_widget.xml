@@ -9,8 +9,8 @@
 
             <!-- Current Image Preview from Odoo Database -->
             <div
-                class="current_image_preview mb-2"
                 t-if="props.record.data[props.name]"
+                class="current_image_preview mb-2"
             >
                 <img
                     t-attf-src="data:image/jpeg;base64,#{props.record.data[props.name]}"
@@ -30,25 +30,25 @@
             <!-- Action Controls -->
             <div class="btn-group">
                 <button
-                    type="button"
-                    class="btn btn-secondary"
                     t-if="!stream"
+                    class="btn btn-secondary"
+                    type="button"
                     t-on-click="startCamera"
                 >
                     <i class="fa fa-camera me-1" /> Open Camera
                 </button>
                 <button
-                    type="button"
-                    class="btn btn-primary"
                     t-if="stream"
+                    class="btn btn-primary"
+                    type="button"
                     t-on-click="capturePhoto"
                 >
                     <i class="fa fa-check me-1" /> Capture &amp; Save
                 </button>
                 <button
-                    type="button"
-                    class="btn btn-danger"
                     t-if="stream"
+                    class="btn btn-danger"
+                    type="button"
                     t-on-click="stopCamera"
                 >
                     <i class="fa fa-times me-1" /> Cancel

@@ -130,7 +130,8 @@ class Separation(models.Model):
                     )
                 )
 
-            # Trigger a status change of the employee and any contracts pending termination.
+            # Trigger a status change of the employee and any contracts
+            # pending termination.
             term.employee_id.set_state_inactive()
             term.employee_id.contract_id.state = "close"
             term.employee_id.contract_ids.write({"active": False})

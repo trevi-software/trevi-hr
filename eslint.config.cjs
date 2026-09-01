@@ -194,7 +194,9 @@ const config = [{
     },
 
 }, {
-    files: ["**/*.esm.js", "**/*test.js"],
+    // Odoo <= 16 named ES-module addon assets *.esm.js; since 17 they are
+    // plain .js files carrying an /** @odoo-module **/ banner.
+    files: ["**/*.esm.js", "**/*test.js", "**/static/src/**/*.js"],
 
     languageOptions: {
         ecmaVersion: 2024,
