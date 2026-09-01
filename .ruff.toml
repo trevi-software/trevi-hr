@@ -3,6 +3,11 @@ target-version = "py310"
 fix = true
 
 [lint]
+# ruff's own default rule set widened enormously in the 0.1x series (v0.16
+# enables 429 rules across ~38 prefixes). The selection below was written
+# against the previous default of E4/E7/E9/F, so pin that explicitly instead
+# of inheriting whatever a future ruff release decides to turn on.
+select = ["E4", "E7", "E9", "F"]
 extend-select = [
     "B",
     "C90",

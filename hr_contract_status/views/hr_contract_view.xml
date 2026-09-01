@@ -112,6 +112,9 @@
         <field name="name">hr.contract.form.inherit.state</field>
         <field name="model">hr.contract</field>
         <field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
+        <!-- job_id is genuinely replaced (one field becomes four group- and
+             state-conditional ones), so this view must apply last. -->
+        <field name="priority" eval="99" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='state']" position="before">
                 <button

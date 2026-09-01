@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import {Component, useRef, onWillDestroy} from "@odoo/owl";
+import {Component, onWillDestroy, useRef} from "@odoo/owl";
 import {standardFieldProps} from "@web/views/fields/standard_field_props";
 import {registry} from "@web/core/registry";
 
@@ -12,6 +12,8 @@ export class CameraCaptureField extends Component {
         this.videoRef = useRef("video");
         this.canvasRef = useRef("canvas");
         this.stream = null;
+        // Release the camera if the view is left without capturing a photo.
+        onWillDestroy(() => this.stopCamera());
     }
 
     // 1. Start Webcam Stream
@@ -55,10 +57,6 @@ export class CameraCaptureField extends Component {
             this.stream.getTracks().forEach((track) => track.stop());
             this.stream = null;
         }
-    }
-
-    onWillDestroy() {
-        this.stopCamera();
     }
 }
 
