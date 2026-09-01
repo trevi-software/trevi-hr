@@ -38,7 +38,7 @@ class TestHrAttendance(common.TransactionCase):
         self.assertEqual(res, self.HrAttendance, "The returned attendace is empty")
         self.assertFalse(
             att.check_out,
-            "The attendance hasn't been punched out because it's not yet max shift length",
+            "The attendance hasn't been punched out: not yet max shift length",
         )
 
         self.env["ir.config_parameter"].set_param(
@@ -48,7 +48,7 @@ class TestHrAttendance(common.TransactionCase):
         res = self.HrAttendance._auto_punchout(now)
         self.assertFalse(
             att.check_out,
-            "The attendance hasn't been punched out because max shift length hasn't been set",
+            "The attendance hasn't been punched out: max shift length unset",
         )
 
         att2 = self.HrAttendance.create(
@@ -89,7 +89,7 @@ class TestHrAttendance(common.TransactionCase):
         self.HrAttendance.auto_punchout()
         self.assertFalse(
             att.check_out,
-            "The attendance hasn't been punched out because it's not yet max shift length",
+            "The attendance hasn't been punched out: not yet max shift length",
         )
 
         check_in = datetime.now() - timedelta(hours=16)
