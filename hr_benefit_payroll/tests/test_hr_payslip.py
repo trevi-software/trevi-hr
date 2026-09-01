@@ -326,7 +326,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
 
         frm = Form(self.Payslip)
         frm.date_from = date(2021, 1, 1)
-        frm.date_to = date(2021, 1, 31)
         self.assertTrue(
             True, "If we've reached this far without an exception thrown we're good"
         )

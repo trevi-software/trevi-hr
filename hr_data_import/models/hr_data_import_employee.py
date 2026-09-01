@@ -127,7 +127,6 @@ class ImportEmployee(models.Model):
             contact = partner_obj.create(
                 {
                     "name": rec.name,
-                    "type": "private",
                     "street": (rec.street) and rec.street or False,
                     "mobile": (rec.private_phone) and rec.private_phone or False,
                     "email": (rec.private_email) and rec.private_email or False,
@@ -139,7 +138,7 @@ class ImportEmployee(models.Model):
             val = {
                 "name": rec.name,
                 "import_data_id": rec.id,
-                "address_home_id": contact.id,
+                "work_contact_id": contact.id,
                 "birthday": rec.birthday,
                 "place_of_birth": rec.place_of_birth,
                 "gender": rec.gender,

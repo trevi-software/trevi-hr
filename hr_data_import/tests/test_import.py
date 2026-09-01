@@ -22,6 +22,14 @@ class TestImport(common.TransactionCase):
         cls.SalaryRule = cls.env["hr.salary.rule"]
         cls.SalaryRuleCateg = cls.env["hr.salary.rule.category"]
 
+        # import_records() looks up a leave type named "Annual Leave" by
+        # name; ensure it exists regardless of which demo data happens to
+        # be loaded alongside this module.
+        if not cls.env["hr.leave.type"].search([("name", "=", "Annual Leave")]):
+            cls.env["hr.leave.type"].create(
+                {"name": "Annual Leave", "requires_allocation": "yes"}
+            )
+
         # Payroll related
         #
         cls.categ_basic = cls.SalaryRuleCateg.create(
@@ -63,7 +71,7 @@ class TestImport(common.TransactionCase):
                 "name": "PPS",
                 "tz": "Africa/Addis_Ababa",
                 "type": "manual",
-                "initial_period_date": date.today(),
+                "initial_period_date": date.today(),  # noqa: DTZ011
             }
         )
         cls.policy_group = cls.PolicyGroup.create(
@@ -82,7 +90,7 @@ class TestImport(common.TransactionCase):
                     "emergency_contact": "John Doe",
                     "emergency_phone": "(555) 555-666",
                     "hire_date": date(2000, 1, 1),
-                    "date_start": date.today(),
+                    "date_start": date.today(),  # noqa: DTZ011
                     "wage": 5000.00,
                     "job_id": cls.job_sales_rep.id,
                     "struct_id": cls.pay_structure.id,
@@ -97,7 +105,7 @@ class TestImport(common.TransactionCase):
                     "marital": "single",
                     "street": "456 B Avenue",
                     "private_phone": "(555) 555-666",
-                    "date_start": date.today(),
+                    "date_start": date.today(),  # noqa: DTZ011
                     "wage": 4000.00,
                     "job_id": cls.job_sales_rep.id,
                     "struct_id": cls.pay_structure.id,
@@ -115,7 +123,7 @@ class TestImport(common.TransactionCase):
             "emergency_contact": "John Doe",
             "emergency_phone": "(555) 555-666",
             "hire_date": date(2000, 1, 1),
-            "date_start": date.today(),
+            "date_start": date.today(),  # noqa: DTZ011
             "wage": 5000.00,
             "job_id": cls.job_sales_rep.id,
             "struct_id": cls.pay_structure.id,
@@ -133,13 +141,8 @@ class TestImport(common.TransactionCase):
                 f"The created employee is linked to the data record: {rec.name}",
             )
             self.assertTrue(
-                rec.related_employee_id.address_home_id,
+                rec.related_employee_id.work_contact_id,
                 f"The employee has a home address record: {rec.name}",
-            )
-            self.assertEqual(
-                rec.related_employee_id.address_home_id.type,
-                "private",
-                f"The employee home address contact type is private: {rec.name}",
             )
             self.assertTrue(
                 rec.related_employee_id.contract_ids.ids,
@@ -190,7 +193,8 @@ class TestImport(common.TransactionCase):
             else:
                 self.assertFalse(
                     rec.related_employee_id.resource_id.dayoff_ids,
-                    f"Employee's rest day is empty as no value was imported: {rec.name}",
+                    f"Employee's rest day is empty as no value was imported: "
+                    f"{rec.name}",
                 )
 
             self.assertEqual(
@@ -215,14 +219,14 @@ class TestImport(common.TransactionCase):
         )
 
     def test_set_value_contract_trial_end_date(self):
-        self.sample01.update({"trial_date_end": date.today() + timedelta(days=15)})
+        self.sample01.update({"trial_date_end": date.today() + timedelta(days=15)})  # noqa: DTZ011
         data = self.DataImport.create(self.sample01)
         data.import_records()
         ee = self.Employee.search([("name", "=", data[0].name)])
         self.assertTrue(ee, f"Found employee: {data[0].name}")
         self.assertEqual(
             ee.contract_ids[0].trial_date_end,
-            date.today() + timedelta(days=15),
+            date.today() + timedelta(days=15),  # noqa: DTZ011
             f"Trial end date correctly set on employee contract: {ee.name}",
         )
 

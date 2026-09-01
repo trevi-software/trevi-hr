@@ -462,16 +462,24 @@ class ResourceScheduleShift(models.Model):
             if calendar.two_weeks_calendar:
                 scheduled_days = calendar.attendance_ids.filtered(
                     lambda a, week=schedule_week: (
-                        a.week_nbr == week and not a.display_type
+                        a.week_nbr == week
+                        and not a.display_type
+                        and a.day_period != "lunch"
                     )
                 ).mapped("dayofweek")
             else:
-                scheduled_days = calendar.attendance_ids.mapped("dayofweek")
+                scheduled_days = calendar.attendance_ids.filtered(
+                    lambda a: a.day_period != "lunch"
+                ).mapped("dayofweek")
 
             startFlag = True
             prev_weekday = str(dTmp.weekday())
             for attendance in calendar.attendance_ids.filtered(
-                lambda a, week=schedule_week: not a.display_type and a.week_nbr == week
+                lambda a, week=schedule_week: (
+                    not a.display_type
+                    and a.week_nbr == week
+                    and a.day_period != "lunch"
+                )
             ):
                 # skip ahead to the attendance_id corresponding to the
                 # week day of date_start

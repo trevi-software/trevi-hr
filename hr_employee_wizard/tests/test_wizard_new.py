@@ -25,7 +25,7 @@ class RecruitmentTestCase(TransactionCase):
         self.job = self.env["hr.job"].search([], limit=1)[0]
         self.department = self.env["hr.department"].search([], limit=1)[0]
         self.structure = self.env["hr.payroll.structure"].search([], limit=1)[0]
-        self.pps = self.create_payroll_schedule("monthly", date.today())
+        self.pps = self.create_payroll_schedule("monthly", date.today())  # noqa: DTZ011
         self.pgroup = self.PolicyGroup.create({"name": "PGroup"})
         self.calendar_id = self.env.ref("resource_schedule.resource_calendar_44h")
         self.benefits = self.env["hr.benefit"].create({"name": "A", "code": "A"})
@@ -120,11 +120,11 @@ class RecruitmentTestCase(TransactionCase):
             len(ee.contract_ids), 1, "The newly created employee has a contract"
         )
         self.assertTrue(
-            ee.applicant_id, "An applicant record is attached to the employee"
+            ee.candidate_id, "A candidate record is attached to the employee"
         )
         self.assertEqual(
-            ee.applicant_id.partner_id.address_get(["contact"])["contact"],
-            ee.address_home_id.id,
+            ee.candidate_id.partner_id.address_get(["contact"])["contact"],
+            ee.work_contact_id.id,
             "The employee home address is correct",
         )
         self.assertEqual(ee.gender, "male", "Gender field set according to wizard")

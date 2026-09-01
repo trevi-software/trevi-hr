@@ -14,13 +14,13 @@ class Benefits(models.TransientModel):
     @api.model
     def _find_contract_start_date(self):
         if not self.env.context.get("csdate"):
-            return datetime.now().date()
+            return datetime.now().date()  # noqa: DTZ005
         return fields.Date.to_date(self.env.context.get("csdate"))
 
     wizard_id = fields.Many2one("hr.employee.wizard.new")
     benefit_id = fields.Many2one("hr.benefit", required=True)
     effective_date = fields.Date(
-        required=True, default=lambda self: self._find_contract_start_date
+        required=True, default=lambda self: self._find_contract_start_date()
     )
     end_date = fields.Date()
     adv_override = fields.Boolean("Override Advantage")

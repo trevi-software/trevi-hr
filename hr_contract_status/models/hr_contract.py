@@ -69,6 +69,12 @@ class HrContract(models.Model):
             return
         return super()._check_current_contract()
 
+    def write(self, vals):
+        res = super().write(vals)
+        if vals.get("state") == "trial":
+            self._assign_open_contract()
+        return res
+
     def _track_subtype(self, init_values):
         self.ensure_one()
         if "state" in init_values:
@@ -86,11 +92,7 @@ class HrContract(models.Model):
             [
                 ("state", "=", "draft"),
                 ("kanban_state", "=", "done"),
-                (
-                    "date_start",
-                    "<=",
-                    (date.today() - relativedelta(days=90)).strftime("%Y-%m-%d"),  # noqa: DTZ011
-                ),
+                ("date_start", "<=", date.today().strftime("%Y-%m-%d")),  # noqa: DTZ011
                 ("trial_date_end", ">=", date.today().strftime("%Y-%m-%d")),  # noqa: DTZ011
             ]
         ).write({"state": "trial"})
@@ -154,7 +156,7 @@ class HrContract(models.Model):
         # Contract has expired
         self.search(
             [
-                ("state", "=", "open"),
+                ("state", "in", ["open", "close"]),
                 (
                     "date_end",
                     "<=",
@@ -169,9 +171,7 @@ class HrContract(models.Model):
         self.ensure_one()
         dToday = fields.Date.today()
 
-        return self.trial_date_end or (
-            self.trial_date_end and self.trial_date_end < dToday
-        )
+        return bool(self.trial_date_end and self.trial_date_end >= dToday)
 
     def signal_confirm(self):
         for rec in self:
@@ -191,7 +191,7 @@ class HrContract(models.Model):
 
     def signal_reactivate(self):
         for c in self:
-            vals = {"state": "open"}
+            vals = {"state": "trial" if c.condition_trial_period() else "open"}
             if c.date_end and c.date_end <= date.today():  # noqa: DTZ011
                 vals.update({"date_end": False})
             c.write(vals)
