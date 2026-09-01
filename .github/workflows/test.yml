@@ -55,10 +55,50 @@ jobs:
           - 5432:5432
     env:
       OCA_ENABLE_CHECKLOG_ODOO: "1"
+      # Cross-repo addon dependencies, see the step below and issue #123.
+      TREVI_PAYROLL_REPO: trevi-software/trevi-payroll
+      TREVI_PAYROLL_REF: "18.0"
+      # Build the addons at their plain manifest version. Without this, whool
+      # derives a post-release segment from the git history, which actions/checkout
+      # does not fetch (it clones with depth 1).
+      WHOOL_POST_VERSION_STRATEGY_OVERRIDE: none
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      # Three addons in this repo (hr_data_import, hr_employee_wizard and
+      # payroll_salary_code_hr) depend on addons that live in
+      # trevi-software/trevi-payroll. oca_install_addons turns every out-of-repo
+      # addon dependency into an `odoo-addon-<name>==18.0.*` requirement and
+      # installs it from the OCA wheelhouse, where these addons do not exist.
+      # Declaring them here as direct URL requirements takes priority:
+      # oca_list_addons_to_test_as_url_reqs skips addons that already have a URL
+      # requirement, and oca_install_addons appends its own computed requirements
+      # to this same file and installs the lot in one resolution pass. The
+      # trevi-hr addons these depend on are pulled back to this checkout by the
+      # test-constraints.txt that oca_install_addons generates.
+      #
+      # This has to be a workflow step rather than a committed test-requirements.txt
+      # because the `Detect unreleased dependencies` job rejects URL lines there.
+      #
+      # See https://github.com/trevi-software/trevi-hr/issues/123
+      - name: Declare trevi-payroll dependencies as git requirements
+        run: |
+          for addon in \
+              payroll_default_salary_rules \
+              payroll_period_contract_values \
+              payroll_periods \
+              payroll_policy_absence \
+              payroll_policy_accrual \
+              payroll_policy_group \
+              payroll_policy_ot \
+              payroll_policy_presence \
+              payroll_policy_rounding \
+              payroll_salary_code \
+          ; do
+            echo "odoo-addon-${addon} @ git+https://github.com/${TREVI_PAYROLL_REPO}@${TREVI_PAYROLL_REF}#subdirectory=${addon}"
+          done >> test-requirements.txt
+          cat test-requirements.txt
       - name: Install addons and dependencies
         run: oca_install_addons
       - name: Check licenses
