@@ -123,12 +123,14 @@ class HrContract(models.Model):
         return super().update_state()
 
     def signal_confirm(self):
-        super().signal_confirm()
+        res = super().signal_confirm()
         for c in self:
             if c.condition_trial_period():
                 c.employee_id.status = "trial"
             else:
                 c.employee_id.status = "active"
+
+        return res
 
     def setup_pending_done(self, term_vals):
         """Start employee deactivation process."""
