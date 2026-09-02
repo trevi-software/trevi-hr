@@ -56,7 +56,7 @@ class BenefitAdvantage(models.Model):
         (
             "unique_date_benefit_id",
             "UNIQUE(effective_date,benefit_id)",
-            _lt("Effective date must be unique per advantage in a benefit!"),
+            "Effective date must be unique per advantage in a benefit!",
         )
     ]
 
