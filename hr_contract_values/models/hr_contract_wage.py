@@ -4,9 +4,6 @@
 
 
 from odoo import fields, models
-from odoo.tools.translate import LazyTranslate
-
-_lt = LazyTranslate(__name__)
 from odoo.exceptions import UserError
 
 
@@ -17,10 +14,8 @@ class InitWage(models.Model):
         (
             "unique_job_cinit",
             "UNIQUE(job_id,contract_init_id)",
-            _lt(
-                "A Job Position cannot be referenced more than once in "
-                "a Contract Settings record."
-            ),
+            "A Job Position cannot be referenced more than once in "
+            "a Contract Settings record."
         )
     ]
 
