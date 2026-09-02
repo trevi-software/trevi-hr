@@ -2,7 +2,7 @@
 # Copyright (C) 2013 Michael Telahun Makonnen <mmakonnen@gmail.com>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class HrEmployee(models.Model):
@@ -14,7 +14,7 @@ class HrEmployee(models.Model):
         (
             "unique_identification_id",
             "unique(identification_id)",
-            _("Official Identifications must be unique!"),
+            ("Official Identifications must be unique!"),
         ),
     ]
 
