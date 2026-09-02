@@ -5,9 +5,6 @@
 import math
 
 from odoo import api, fields, models
-from odoo.tools.translate import LazyTranslate
-
-_lt = LazyTranslate(__name__)
 
 
 class BenefitPremium(models.Model):

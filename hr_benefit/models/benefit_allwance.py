@@ -7,9 +7,6 @@ from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models
-from odoo.tools.translate import LazyTranslate
-
-_lt = LazyTranslate(__name__)
 from odoo.exceptions import UserError
 
 DAY_SELECT = [

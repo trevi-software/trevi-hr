@@ -61,7 +61,7 @@ class ContractInit(models.Model):
 
     def write(self, vals):
         for record in self:
-            if record.locked and "locked" in vals and vals["locked"] is not False:
+            if record.locked and vals.get("locked") is not False:
                 raise UserError(
                     self.env._(
                         "You may not update a record that is locked. Unlock it first."
@@ -138,10 +138,10 @@ class HrContract(models.Model):
             res = init.contract_type
         return res
 
-    wage = fields.Monetary(default=lambda self: self._get_wage)
+    wage = fields.Monetary(default=lambda self: self._get_wage())
     trial_date_start = fields.Date(default=lambda self: self._get_trial_date_start())
     trial_date_end = fields.Date(default=lambda self: self._get_trial_date_end())
-    structure_type_id = fields.Many2one(default=lambda self: self._get_structure_type)
+    structure_type_id = fields.Many2one(default=lambda self: self._get_structure_type())
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -178,7 +178,7 @@ class HrContract(models.Model):
         """Return a record with an effective date before today_str but
         greater than all others"""
 
-        init_obj = self.env["hr.contract.init"]
+        init_obj = self.env["hr.contract.init"].sudo()
         if today_str is None:
             today_str = fields.Date.today()
         dToday = fields.Date.to_date(today_str)
