@@ -17,6 +17,7 @@
         "hr_contract_values",
         "trevi_hr_usability",
     ],
+    "pre_init_hook": "pre_init_hook",
     "data": [
         "security/ir.model.access.csv",
         "data/hr_contract_data.xml",
