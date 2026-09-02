@@ -6,7 +6,10 @@ from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, fields, models
+from odoo import fields, models
+from odoo.tools.translate import LazyTranslate
+
+_lt = LazyTranslate(__name__)
 from odoo.exceptions import UserError
 
 DAY_SELECT = [
@@ -53,7 +56,7 @@ class BenefitAdvantage(models.Model):
         (
             "unique_date_benefit_id",
             "UNIQUE(effective_date,benefit_id)",
-            _("Effective date must be unique per advantage in a benefit!"),
+            _lt("Effective date must be unique per advantage in a benefit!"),
         )
     ]
 
@@ -210,7 +213,7 @@ class BenefitAdvantage(models.Model):
         self.ensure_one()
         if self.type != "reimburse":
             raise UserError(
-                _(
+                self.env._(
                     "Wrong earning type for this operation. "
                     "Use 'Expense Re-imbursement' instead."
                 )

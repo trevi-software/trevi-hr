@@ -4,7 +4,10 @@
 
 import math
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
+from odoo.tools.translate import LazyTranslate
+
+_lt = LazyTranslate(__name__)
 
 
 class BenefitPremium(models.Model):
@@ -16,7 +19,7 @@ class BenefitPremium(models.Model):
         (
             "unique_date_benefit_id",
             "UNIQUE(effective_date,benefit_id)",
-            _("Effective dates must be unique per premium in a benefit!"),
+            _lt("Effective dates must be unique per premium in a benefit!"),
         )
     ]
 

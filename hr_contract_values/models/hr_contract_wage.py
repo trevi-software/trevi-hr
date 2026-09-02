@@ -4,8 +4,10 @@
 
 
 from odoo import fields, models
+from odoo.tools.translate import LazyTranslate
+
+_lt = LazyTranslate(__name__)
 from odoo.exceptions import UserError
-from odoo.tools.translate import _
 
 
 class InitWage(models.Model):
@@ -15,7 +17,7 @@ class InitWage(models.Model):
         (
             "unique_job_cinit",
             "UNIQUE(job_id,contract_init_id)",
-            _(
+            _lt(
                 "A Job Position cannot be referenced more than once in "
                 "a Contract Settings record."
             ),
@@ -50,7 +52,7 @@ class InitWage(models.Model):
             )
             if d2["locked"]:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Error"
                         "You may not delete a record that is locked. Unlock it first."
                     )
