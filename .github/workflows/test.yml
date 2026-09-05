@@ -98,6 +98,9 @@ jobs:
           ; do
             echo "odoo-addon-${addon} @ git+https://github.com/${TREVI_PAYROLL_REPO}@${TREVI_PAYROLL_REF}#subdirectory=${addon}"
           done >> test-requirements.txt
+          # pdfminer.six: optional dep of core attachment_indexation; without it
+          # a WARNING lands in the Odoo log and the checklog step fails the run.
+          echo "pdfminer.six" >> test-requirements.txt
           cat test-requirements.txt
       - name: Install addons and dependencies
         run: oca_install_addons
