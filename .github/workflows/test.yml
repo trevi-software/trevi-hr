@@ -100,7 +100,11 @@ jobs:
           done >> test-requirements.txt
           # pdfminer.six: optional dep of core attachment_indexation; without it
           # a WARNING lands in the Odoo log and the checklog step fails the run.
+          # Pin cryptography<36 so pdfminer.six can't upgrade it: the image's
+          # pinned pyOpenSSL breaks against newer cryptography, which makes
+          # `import odoo` fail ("could not obtain odoo.addons.__path__").
           echo "pdfminer.six" >> test-requirements.txt
+          echo "cryptography<36" >> test-requirements.txt
           cat test-requirements.txt
       - name: Install addons and dependencies
         run: oca_install_addons
