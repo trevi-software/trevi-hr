@@ -18,4 +18,7 @@ def pre_init_hook(env_or_cr):
     else:
         cr = env_or_cr
 
+    # On a fresh install the column does not exist yet (this module adds it);
+    # create it so existing rows can be backfilled.
+    cr.execute("ALTER TABLE hr_leave_type ADD COLUMN IF NOT EXISTS code VARCHAR")
     cr.execute("UPDATE hr_leave_type SET code = 'LT' || id WHERE code IS NULL")
