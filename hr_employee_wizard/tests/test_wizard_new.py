@@ -5,7 +5,7 @@
 from datetime import date
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import Form, TransactionCase
+from odoo.tests import Form, TransactionCase
 
 
 class RecruitmentTestCase(TransactionCase):
