@@ -28,7 +28,7 @@ class HrJob(models.Model):
     all_child_ids = fields.Many2many(
         compute="_compute_all_child_ids", comodel_name="hr.job"
     )
-    parent_path = fields.Char(index=True, unaccent=False)
+    parent_path = fields.Char(index=True)
 
     def _compute_all_child_ids(self):
         for rec in self:
@@ -36,7 +36,7 @@ class HrJob(models.Model):
 
     @api.constrains("parent_id")
     def _check_job_recursion(self):
-        if not self._check_recursion():
+        if self._has_cycle():
             raise ValidationError(_("Error! You cannot create recursive jobs."))
 
     def write(self, vals):

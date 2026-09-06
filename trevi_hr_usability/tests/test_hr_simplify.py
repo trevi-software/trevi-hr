@@ -5,7 +5,7 @@
 from datetime import timedelta
 
 from odoo.fields import Date
-from odoo.tests.common import Form, TransactionCase
+from odoo.tests import Form, TransactionCase
 
 
 class TestHrSimplify(TransactionCase):
