@@ -1,5 +1,5 @@
 from odoo.exceptions import AccessError
-from odoo.tests.common import Form, TransactionCase
+from odoo.tests import Form, TransactionCase
 
 
 class TestHrJobWizard(TransactionCase):
@@ -12,6 +12,10 @@ class TestHrJobWizard(TransactionCase):
 
         cls.group_hr_manager = cls.env.ref("hr.group_hr_manager")
         cls.group_hr_user = cls.env.ref("hr.group_hr_user")
+        # In 18.0, write access on hr.job belongs to hr_recruitment groups
+        cls.group_recruitment_manager = cls.env.ref(
+            "hr_recruitment.group_hr_recruitment_manager"
+        )
 
         # -- Users
         cls.hr_user = cls.User.create(
@@ -25,28 +29,36 @@ class TestHrJobWizard(TransactionCase):
             {
                 "name": "Hr Officer",
                 "login": "hrofficer",
-                "groups_id": [(4, cls.group_hr_manager.id)],
+                "groups_id": [
+                    (4, cls.group_hr_manager.id),
+                    (4, cls.group_recruitment_manager.id),
+                ],
             }
         )
 
     def create_job_position(self):
 
+        # hr_contract_status makes hr.job.department_id required
+        department = self.env["hr.department"].create({"name": "#Test Dept"})
         return self.Job.create(
             [
                 {
                     "name": "#Sales Associate",
                     "no_of_recruitment": 4,
                     "state": "recruit",
+                    "department_id": department.id,
                 },
                 {
                     "name": "#Store Manager",
                     "no_of_recruitment": 2,
                     "state": "recruit",
+                    "department_id": department.id,
                 },
                 {
                     "name": "#Product Manager",
                     "no_of_recruitment": 2,
                     "state": "recruit",
+                    "department_id": department.id,
                 },
             ]
         )

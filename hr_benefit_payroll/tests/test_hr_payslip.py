@@ -4,7 +4,7 @@
 from datetime import date, timedelta
 
 from odoo import fields
-from odoo.tests.common import Form
+from odoo.tests import Form
 
 from odoo.addons.hr_benefit.tests import common as benefit_common
 

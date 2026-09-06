@@ -5,6 +5,7 @@
 from psycopg2 import IntegrityError
 
 from odoo.tests import common
+from odoo.tools import mute_logger
 
 CODE = "XXX"
 
@@ -22,7 +23,7 @@ class TestHrLeaveType(common.TransactionCase):
         """Leave type codes should be unique"""
 
         self.HrLeaveType.create({"name": "X", "code": CODE})
-        with self.assertRaises(IntegrityError):
+        with self.assertRaises(IntegrityError), mute_logger("odoo.sql_db"):
             self.HrLeaveType.create({"name": "Y", "code": CODE})
 
     def test_unique_multicompany(self):

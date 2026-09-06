@@ -17,4 +17,5 @@
     "data": [
         "data/hr_holidays_data.xml",
     ],
+    "pre_init_hook": "pre_init_hook",
 }

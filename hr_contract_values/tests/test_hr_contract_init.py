@@ -25,16 +25,20 @@ class TestContractInit(common.TransactionCase):
         )
 
         # -- Jobs
+        # hr_contract_status makes hr.job.department_id required
+        cls.department = cls.env["hr.department"].create({"name": "#Test Dept"})
         cls.job_mkt_director = cls.HrJob.create(
             {
                 "name": "#Marketing Director",
                 "category_ids": [(4, cls.category_marketing.id)],
+                "department_id": cls.department.id,
             }
         )
         cls.job_ux_designer = cls.HrJob.create(
             {
                 "name": "#UX Designer",
                 "category_ids": [(4, cls.category_it.id)],
+                "department_id": cls.department.id,
             }
         )
 
