@@ -177,6 +177,7 @@
         <field
             name="attendance_ids"
             eval="[
+        (5, 0, 0),
         (0, 0, {'dayofweek': '0', 'template_id': ref('attendance_template_demo0')}),
         (0, 0, {'dayofweek': '1', 'template_id': ref('attendance_template_demo0')}),
         (0, 0, {'dayofweek': '2', 'template_id': ref('attendance_template_demo0')}),
@@ -199,6 +200,7 @@
         <field
             name="attendance_ids"
             eval="[
+        (5, 0, 0),
         (0, 0, {'dayofweek': '0', 'template_id': ref('attendance_template_demo0')}),
         (0, 0, {'dayofweek': '1', 'template_id': ref('attendance_template_demo0')}),
         (0, 0, {'dayofweek': '2', 'template_id': ref('attendance_template_demo0')}),
@@ -217,6 +219,7 @@
         <field
             name="attendance_ids"
             eval="[
+        (5, 0, 0),
         (0, 0, {'sequence': 10, 'dayofweek': '0', 'name': 'First Week', 'hour_from': 0, 'hour_to': 0, 'display_type': 'line_section'}),
         (0, 0, {'sequence': 11, 'dayofweek': '0', 'template_id': ref('attendance_template_demo9')}),
         (0, 0, {'sequence': 12, 'dayofweek': '1', 'template_id': ref('attendance_template_demo9')}),
