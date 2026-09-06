@@ -26,9 +26,11 @@ class TestImport(common.TransactionCase):
         # name; ensure it exists regardless of which demo data happens to
         # be loaded alongside this module.
         if not cls.env["hr.leave.type"].search([("name", "=", "Annual Leave")]):
-            cls.env["hr.leave.type"].create(
-                {"name": "Annual Leave", "requires_allocation": "yes"}
-            )
+            # hr_leave_type_unique adds a required 'code' field
+            leave_vals = {"name": "Annual Leave", "requires_allocation": "yes"}
+            if "code" in cls.env["hr.leave.type"]._fields:
+                leave_vals["code"] = "ANNULV"
+            cls.env["hr.leave.type"].create(leave_vals)
 
         # Payroll related
         #
