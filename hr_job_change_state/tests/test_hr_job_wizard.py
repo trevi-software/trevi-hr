@@ -31,22 +31,27 @@ class TestHrJobWizard(TransactionCase):
 
     def create_job_position(self):
 
+        # hr_contract_status makes hr.job.department_id required
+        department = self.env["hr.department"].create({"name": "#Test Dept"})
         return self.Job.create(
             [
                 {
                     "name": "#Sales Associate",
                     "no_of_recruitment": 4,
                     "state": "recruit",
+                    "department_id": department.id,
                 },
                 {
                     "name": "#Store Manager",
                     "no_of_recruitment": 2,
                     "state": "recruit",
+                    "department_id": department.id,
                 },
                 {
                     "name": "#Product Manager",
                     "no_of_recruitment": 2,
                     "state": "recruit",
+                    "department_id": department.id,
                 },
             ]
         )
