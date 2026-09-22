@@ -6,7 +6,6 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.translate import _
 
 
 class ContractInit(models.Model):
@@ -54,7 +53,9 @@ class ContractInit(models.Model):
         for record in self:
             if record.locked:
                 raise UserError(
-                    _("You may not delete a record that is locked. Unlock it first.")
+                    self.env._(
+                        "You may not delete a record that is locked. Unlock it first."
+                    )
                 )
         return super().unlink()
 
@@ -62,7 +63,9 @@ class ContractInit(models.Model):
         for record in self:
             if record.locked and vals.get("locked") is not False:
                 raise UserError(
-                    _("You may not update a record that is locked. Unlock it first.")
+                    self.env._(
+                        "You may not update a record that is locked. Unlock it first."
+                    )
                 )
         return super().write(vals)
 

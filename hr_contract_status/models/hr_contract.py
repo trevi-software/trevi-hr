@@ -7,7 +7,7 @@ from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class HrContract(models.Model):
@@ -114,7 +114,9 @@ class HrContract(models.Model):
             contract.activity_schedule(
                 "mail.mail_activity_data_todo",
                 contract.trial_date_end,
-                _("The trial period of %s is about to end.", contract.employee_id.name),
+                self.env._(
+                    "The trial period of %s is about to end.", contract.employee_id.name
+                ),
                 user_id=contract.hr_responsible_id.id or self.env.uid,
             )
 

@@ -4,7 +4,7 @@
 
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.payroll.models.hr_payslip import BaseBrowsableObject
@@ -177,7 +177,7 @@ class HrPayslip(models.Model):
                 )
                 if len(pol_ids) == 0:
                     raise UserError(
-                        _(
+                        self.env._(
                             "Error creating benefit premium payment records!\n"
                             "Cannot find a valid benefit policy:\n"
                             "Employee: %(name)s\nBenefit: %(k)s"
