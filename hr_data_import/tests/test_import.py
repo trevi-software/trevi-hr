@@ -253,12 +253,11 @@ class TestImport(common.TransactionCase):
         )
 
     def test_annual_leave_allocation(self):
-        self.env["hr.leave.type"].with_context(tracking_disable=True).create(
-            {
-                "name": "Annual Leave",
-                "allocation_type": "regular",
-            }
-        )
+        LeaveType = self.env["hr.leave.type"].with_context(tracking_disable=True)
+        vals = {"name": "Annual Leave"}
+        if "code" in LeaveType._fields:
+            vals["code"] = "ANLV"
+        LeaveType.create(vals)
         self.sample01.update({"anlv_earned": 20.0, "anlv_used": 5.0})
         data = self.DataImport.create(self.sample01)
         data.import_records()
