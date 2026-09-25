@@ -105,6 +105,7 @@ class ImportEmployee(models.Model):
             ("Sunday", "Sunday"),
         ]
     )
+    salary_code = fields.Char()
 
     def action_import_employees(self):
         if self.filtered(lambda so: so.state != "new"):
@@ -249,7 +250,7 @@ class ImportEmployee(models.Model):
                 leave_allocation = {
                     "employee_id": ee.id,
                     "name": f"Leave allocation for {data.name} as of {date.today()}",  # noqa: DTZ011
-                    "state": "draft",
+                    "state": "confirm",
                     "holiday_status_id": al_status_id,
                     "number_of_days": data.anlv_earned - data.anlv_used,
                 }
