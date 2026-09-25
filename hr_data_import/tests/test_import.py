@@ -63,7 +63,7 @@ class TestImport(common.TransactionCase):
                 "name": "PPS",
                 "tz": "Africa/Addis_Ababa",
                 "type": "manual",
-                "initial_period_date": date.today(),
+                "initial_period_date": date.today(),  # noqa: DTZ011
             }
         )
         cls.policy_group = cls.PolicyGroup.create(
@@ -82,7 +82,7 @@ class TestImport(common.TransactionCase):
                     "emergency_contact": "John Doe",
                     "emergency_phone": "(555) 555-666",
                     "hire_date": date(2000, 1, 1),
-                    "date_start": date.today(),
+                    "date_start": date.today(),  # noqa: DTZ011
                     "wage": 5000.00,
                     "job_id": cls.job_sales_rep.id,
                     "struct_id": cls.pay_structure.id,
@@ -97,7 +97,7 @@ class TestImport(common.TransactionCase):
                     "marital": "single",
                     "street": "456 B Avenue",
                     "private_phone": "(555) 555-666",
-                    "date_start": date.today(),
+                    "date_start": date.today(),  # noqa: DTZ011
                     "wage": 4000.00,
                     "job_id": cls.job_sales_rep.id,
                     "struct_id": cls.pay_structure.id,
@@ -115,7 +115,7 @@ class TestImport(common.TransactionCase):
             "emergency_contact": "John Doe",
             "emergency_phone": "(555) 555-666",
             "hire_date": date(2000, 1, 1),
-            "date_start": date.today(),
+            "date_start": date.today(),  # noqa: DTZ011
             "wage": 5000.00,
             "job_id": cls.job_sales_rep.id,
             "struct_id": cls.pay_structure.id,
@@ -190,7 +190,7 @@ class TestImport(common.TransactionCase):
             else:
                 self.assertFalse(
                     rec.related_employee_id.resource_id.dayoff_ids,
-                    f"Employee's rest day is empty as no value was imported: {rec.name}",
+                    f"Employee rest day empty: no value was imported: {rec.name}",
                 )
 
             self.assertEqual(
@@ -215,14 +215,18 @@ class TestImport(common.TransactionCase):
         )
 
     def test_set_value_contract_trial_end_date(self):
-        self.sample01.update({"trial_date_end": date.today() + timedelta(days=15)})
+        self.sample01.update(
+            {
+                "trial_date_end": date.today() + timedelta(days=15)  # noqa: DTZ011
+            }
+        )
         data = self.DataImport.create(self.sample01)
         data.import_records()
         ee = self.Employee.search([("name", "=", data[0].name)])
         self.assertTrue(ee, f"Found employee: {data[0].name}")
         self.assertEqual(
             ee.contract_ids[0].trial_date_end,
-            date.today() + timedelta(days=15),
+            date.today() + timedelta(days=15),  # noqa: DTZ011
             f"Trial end date correctly set on employee contract: {ee.name}",
         )
 
@@ -246,4 +250,30 @@ class TestImport(common.TransactionCase):
             ee.resource_id.dayoff_ids[0].name,
             self.default_rest_day,
             f"Calendar correctly set on employee contract: {ee.name}",
+        )
+
+    def test_annual_leave_allocation(self):
+        self.env["hr.leave.type"].with_context(tracking_disable=True).create(
+            {
+                "name": "Annual Leave",
+                "allocation_type": "regular",
+            }
+        )
+        self.sample01.update({"anlv_earned": 20.0, "anlv_used": 5.0})
+        data = self.DataImport.create(self.sample01)
+        data.import_records()
+        ee = self.Employee.search([("name", "=", data[0].name)])
+        allocation = self.env["hr.leave.allocation"].search(
+            [("employee_id", "=", ee.id)]
+        )
+        self.assertTrue(allocation, f"Leave allocation created for record: {ee.name}")
+        self.assertEqual(
+            allocation.number_of_days,
+            15.0,
+            "Allocated days is the difference between earned and used leave",
+        )
+        self.assertEqual(
+            allocation.state,
+            "validate",
+            "Leave allocation is confirmed and validated",
         )
