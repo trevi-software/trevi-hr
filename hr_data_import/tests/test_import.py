@@ -221,7 +221,11 @@ class TestImport(common.TransactionCase):
         )
 
     def test_set_value_contract_trial_end_date(self):
-        self.sample01.update({"trial_date_end": date.today() + timedelta(days=15)})  # noqa: DTZ011
+        self.sample01.update(
+            {
+                "trial_date_end": date.today() + timedelta(days=15)  # noqa: DTZ011
+            }
+        )
         data = self.DataImport.create(self.sample01)
         data.import_records()
         ee = self.Employee.search([("name", "=", data[0].name)])
@@ -252,4 +256,29 @@ class TestImport(common.TransactionCase):
             ee.resource_id.dayoff_ids[0].name,
             self.default_rest_day,
             f"Calendar correctly set on employee contract: {ee.name}",
+        )
+
+    def test_annual_leave_allocation(self):
+        LeaveType = self.env["hr.leave.type"].with_context(tracking_disable=True)
+        vals = {"name": "Annual Leave"}
+        if "code" in LeaveType._fields:
+            vals["code"] = "ANLV"
+        LeaveType.create(vals)
+        self.sample01.update({"anlv_earned": 20.0, "anlv_used": 5.0})
+        data = self.DataImport.create(self.sample01)
+        data.import_records()
+        ee = self.Employee.search([("name", "=", data[0].name)])
+        allocation = self.env["hr.leave.allocation"].search(
+            [("employee_id", "=", ee.id)]
+        )
+        self.assertTrue(allocation, f"Leave allocation created for record: {ee.name}")
+        self.assertEqual(
+            allocation.number_of_days,
+            15.0,
+            "Allocated days is the difference between earned and used leave",
+        )
+        self.assertEqual(
+            allocation.state,
+            "validate",
+            "Leave allocation is confirmed and validated",
         )

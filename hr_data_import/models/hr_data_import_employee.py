@@ -105,7 +105,6 @@ class ImportEmployee(models.Model):
             ("Sunday", "Sunday"),
         ]
     )
-    salary_code = fields.Char()
 
     def action_import_employees(self):
         if self.filtered(lambda so: so.state != "new"):
