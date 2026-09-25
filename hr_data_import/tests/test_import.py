@@ -22,6 +22,16 @@ class TestImport(common.TransactionCase):
         cls.SalaryRule = cls.env["hr.salary.rule"]
         cls.SalaryRuleCateg = cls.env["hr.salary.rule.category"]
 
+        # import_records() looks up a leave type named "Annual Leave" by
+        # name; ensure it exists regardless of which demo data happens to
+        # be loaded alongside this module.
+        if not cls.env["hr.leave.type"].search([("name", "=", "Annual Leave")]):
+            # hr_leave_type_unique adds a required 'code' field
+            leave_vals = {"name": "Annual Leave", "requires_allocation": "yes"}
+            if "code" in cls.env["hr.leave.type"]._fields:
+                leave_vals["code"] = "ANNULV"
+            cls.env["hr.leave.type"].create(leave_vals)
+
         # Payroll related
         #
         cls.categ_basic = cls.SalaryRuleCateg.create(
@@ -133,13 +143,8 @@ class TestImport(common.TransactionCase):
                 f"The created employee is linked to the data record: {rec.name}",
             )
             self.assertTrue(
-                rec.related_employee_id.address_home_id,
+                rec.related_employee_id.work_contact_id,
                 f"The employee has a home address record: {rec.name}",
-            )
-            self.assertEqual(
-                rec.related_employee_id.address_home_id.type,
-                "private",
-                f"The employee home address contact type is private: {rec.name}",
             )
             self.assertTrue(
                 rec.related_employee_id.contract_ids.ids,
@@ -190,7 +195,8 @@ class TestImport(common.TransactionCase):
             else:
                 self.assertFalse(
                     rec.related_employee_id.resource_id.dayoff_ids,
-                    f"Employee rest day empty: no value was imported: {rec.name}",
+                    f"Employee's rest day is empty as no value was imported: "
+                    f"{rec.name}",
                 )
 
             self.assertEqual(

@@ -10,11 +10,11 @@ from odoo import models
 class HrLeave(models.Model):
     _inherit = "hr.leave"
 
-    def action_validate(self):
+    def action_validate(self, check_state=True):
 
-        res = super().action_validate()
+        res = super().action_validate(check_state)
 
-        lv_requests = self.filtered(lambda lv: lv.holiday_type == "employee")
+        lv_requests = self
 
         Attendance = self.env["hr.attendance"]
         for lv in lv_requests:

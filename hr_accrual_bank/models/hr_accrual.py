@@ -45,15 +45,13 @@ class HrAccrual(models.Model):
                 leave_allocation = {
                     "name": name is not None and name or "Allocation from Accrual",
                     "allocation_type": "regular",
-                    "state": "draft",
                     "employee_id": employee_id,
                     "number_of_days": amount,
                     "holiday_status_id": accrual.holiday_status_id.id,
                     "from_accrual": True,
                 }
                 lv = self.env["hr.leave.allocation"].create(leave_allocation)
-                lv.action_confirm()
-                lv._validate_leave_request()
+                lv.action_validate()
 
             # Create accrual line
             #

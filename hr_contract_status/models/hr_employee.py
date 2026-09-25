@@ -27,20 +27,14 @@ class HrEmployee(models.Model):
                 or employee.contract_id.state not in ["open", "trial"]
             )
 
-    def _get_contracts(
-        self, date_start=None, date_end=None, use_latest_version=True, domain=None
-    ):
+    def _get_contracts(self, date_from, date_to, states=None, kanban_state=False):
 
         # Over-ride base class method to includes Closed/Ended contracts. Useful
         # when multiple consecutive contracts occur in a payroll period.
         #
-        if domain is None:
-            domain = []
-        domain += [("state", "in", ["trial", "open", "close"])]
+        if states is None:
+            states = ["trial", "open", "close"]
 
         return super()._get_contracts(
-            date_start=date_start,
-            date_end=date_end,
-            use_latest_version=use_latest_version,
-            domain=domain,
+            date_from, date_to, states=states, kanban_state=kanban_state
         )

@@ -123,12 +123,14 @@ class HrContract(models.Model):
         return super().update_state()
 
     def signal_confirm(self):
-        super().signal_confirm()
+        res = super().signal_confirm()
         for c in self:
             if c.condition_trial_period():
                 c.employee_id.status = "trial"
             else:
                 c.employee_id.status = "active"
+
+        return res
 
     def setup_pending_done(self, term_vals):
         """Start employee deactivation process."""
@@ -151,9 +153,10 @@ class HrContract(models.Model):
                 if (not c2.date_end or c2.date_end > dToday) and c2.state != "done":
                     open_contract = True
 
-            # Don't create an employment termination if the employee has an open contract or
-            # if this contract is already in the 'done' state. If there is an open contract
-            # simply terminate this one without any further action.
+            # Don't create an employment termination if the employee has an
+            # open contract or if this contract is already in the 'done' state.
+            # If there is an open contract simply terminate this one without
+            # any further action.
             if open_contract or contract.state == "close":
                 return
 

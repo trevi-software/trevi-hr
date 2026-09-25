@@ -24,14 +24,17 @@ class HrApplicant(models.Model):
 
     def create_employee_from_applicant(self):
 
+        self.ensure_one()
         res = super().create_employee_from_applicant()
 
-        for applicant in self:
-            vals = {
-                "default_gender": applicant.gender == "f" and "female" or "male",
-                "default_birthday": applicant.birth_date,
-                "default_education": applicant.education,
-            }
-            res["context"].update(vals)
+        employee = self.env["hr.employee"].browse(res.get("res_id"))
+        if employee:
+            employee.write(
+                {
+                    "gender": self.gender == "f" and "female" or "male",
+                    "birthday": self.birth_date,
+                    "certificate": self.education,
+                }
+            )
 
         return res

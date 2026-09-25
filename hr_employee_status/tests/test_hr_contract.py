@@ -51,7 +51,7 @@ class TestEmployee(common.TransactionCase):
         )
 
     def test_contract_autoclose(self):
-        """Closing a contract with automated action causes separation record to be created."""
+        """Closing a contract with an automated action creates a separation record."""
 
         start = date.today() - relativedelta(days=100)
         end = date.today() - relativedelta(days=1)
@@ -71,7 +71,7 @@ class TestEmployee(common.TransactionCase):
         self.assertEqual("close", cc.state)
 
     def test_end_contract_wizard(self):
-        """Running 'End Contract' wizard creates separation record and closes contract"""
+        """'End Contract' wizard creates a separation record, closes contract"""
 
         start = date.today() - relativedelta(days=100)
         end = date.today()

@@ -6,10 +6,16 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
-from odoo.tests import common
+from odoo.tests import common, tagged
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
+# These tests must run after all modules are installed: in CI the database
+# is pre-initialised with the full dependency set (including
+# hr_work_entry_contract, whose hr.contract.work_entry_source is NOT NULL),
+# but at-install tests run while that module's fields are not yet in the
+# registry, so contract inserts violate the constraint.
+@tagged("post_install", "-at_install")
 class TestHrEmployeeSeniority(common.TransactionCase):
     def setUp(self):
         super().setUp()

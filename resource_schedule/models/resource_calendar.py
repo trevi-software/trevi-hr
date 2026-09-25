@@ -116,8 +116,8 @@ class ResourceCalendar(models.Model):
         "two_weeks_calendar",
     )
     def _compute_hours_per_day(self):
-        hour_count = 0.0
         for calendar in self:
+            hour_count = 0.0
             attendances = calendar._get_global_attendances()
             for attendance in attendances:
                 if attendance.shift_type != "flex":
@@ -137,9 +137,13 @@ class ResourceCalendar(models.Model):
                 if dayofweek is False or att.dayofweek != dayofweek:
                     number_of_days += 1
                     dayofweek = att.dayofweek
-            return fields.Float.round(
-                hour_count / float(number_of_days), precision_digits=2
-            )
+
+            if number_of_days:
+                calendar.hours_per_day = fields.Float.round(
+                    hour_count / float(number_of_days), precision_digits=2
+                )
+            else:
+                calendar.hours_per_day = 0.0
 
     def switch_calendar_type(self):
 

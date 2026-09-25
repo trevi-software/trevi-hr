@@ -36,16 +36,25 @@ class TestHrLeave(TestResourceScheduleCommon):
         cls.holidays_type_1 = cls.LeaveType.create(
             {
                 "name": "NotLimitedHR",
-                "allocation_type": "no",
+                "requires_allocation": "no",
                 "leave_validation_type": "hr",
-                "validity_start": False,
             }
         )
+
+    def _force_leave_dates(self, leave, date_from, date_to):
+        """date_from/date_to on hr.leave are computed from request_date_from/to
+        and can no longer be set directly. These tests need exact datetime
+        boundaries (including mid-day cutoffs), so set them at the DB level."""
+        self.env.cr.execute(
+            "UPDATE hr_leave SET date_from=%s, date_to=%s WHERE id=%s",
+            (date_from, date_to, leave.id),
+        )
+        leave.invalidate_recordset(["date_from", "date_to"])
 
     def get_start_end_dates(self, weeks=1):
 
         total_days = (weeks * 7) - 1
-        dStart = date.today()
+        dStart = date.today()  # noqa: DTZ011
         while dStart.weekday() != 0:
             dStart -= timedelta(days=1)
         dEnd = dStart + timedelta(days=total_days)
@@ -70,17 +79,18 @@ class TestHrLeave(TestResourceScheduleCommon):
         self.assertEqual(len(startShift), 1, "There is one shift on Monday")
 
         leave_start = datetime.combine(dStart, datetime.min.time())
-        leave_end = datetime.combine(dStart, datetime.strptime("23:59", "%H:%M").time())
+        leave_end = datetime.combine(dStart, datetime.strptime("23:59", "%H:%M").time())  # noqa: DTZ007
         lv = self.HrLeave.with_user(self.userSally).create(
             {
                 "name": "PTO",
                 "employee_id": self.eeSally.id,
                 "holiday_status_id": self.holidays_type_1.id,
-                "date_from": leave_start,
-                "date_to": leave_end,
+                "request_date_from": leave_start.date(),
+                "request_date_to": leave_end.date(),
                 "number_of_days": 1,
             }
         )
+        self._force_leave_dates(lv, leave_start, leave_end)
         lv.with_user(self.userJohn).action_validate()
         self.assertEqual(lv.state, "validate", "I have validated the leave")
 
@@ -112,17 +122,18 @@ class TestHrLeave(TestResourceScheduleCommon):
         self.assertEqual(len(startShift), 1, "There is one shift on Monday")
 
         leave_start = datetime.combine(dStart - timedelta(days=2), datetime.min.time())
-        leave_end = datetime.combine(dStart, datetime.strptime("8:30", "%H:%M").time())
+        leave_end = datetime.combine(dStart, datetime.strptime("8:30", "%H:%M").time())  # noqa: DTZ007
         lv = self.HrLeave.with_user(self.userSally).create(
             {
                 "name": "PTO",
                 "employee_id": self.eeSally.id,
                 "holiday_status_id": self.holidays_type_1.id,
-                "date_from": leave_start,
-                "date_to": leave_end,
+                "request_date_from": leave_start.date(),
+                "request_date_to": leave_end.date(),
                 "number_of_days": 1,
             }
         )
+        self._force_leave_dates(lv, leave_start, leave_end)
         lv.with_user(self.userJohn).action_validate()
         self.assertEqual(lv.state, "validate", "I have validated the leave")
 
@@ -156,7 +167,8 @@ class TestHrLeave(TestResourceScheduleCommon):
         self.assertEqual(len(startShift), 1, "There is one shift on Monday")
 
         leave_start = datetime.combine(
-            dStart, datetime.strptime("13:30", "%H:%M").time()
+            dStart,
+            datetime.strptime("13:30", "%H:%M").time(),  # noqa: DTZ007
         )
         leave_end = datetime.combine(dEnd, datetime.max.time())
         lv = self.HrLeave.with_user(self.userSally).create(
@@ -164,11 +176,12 @@ class TestHrLeave(TestResourceScheduleCommon):
                 "name": "PTO",
                 "employee_id": self.eeSally.id,
                 "holiday_status_id": self.holidays_type_1.id,
-                "date_from": leave_start,
-                "date_to": leave_end,
+                "request_date_from": leave_start.date(),
+                "request_date_to": leave_end.date(),
                 "number_of_days": 1,
             }
         )
+        self._force_leave_dates(lv, leave_start, leave_end)
         lv.with_user(self.userJohn).action_validate()
         self.assertEqual(lv.state, "validate", "I have validated the leave")
 
@@ -231,17 +244,18 @@ class TestHrLeave(TestResourceScheduleCommon):
         # Create Leave
         #
         leave_start = datetime.combine(dStart, datetime.min.time())
-        leave_end = datetime.combine(dStart, datetime.strptime("23:59", "%H:%M").time())
+        leave_end = datetime.combine(dStart, datetime.strptime("23:59", "%H:%M").time())  # noqa: DTZ007
         lv = self.HrLeave.with_user(self.userSally).create(
             {
                 "name": "PTO",
                 "employee_id": self.eeSally.id,
                 "holiday_status_id": self.holidays_type_1.id,
-                "date_from": leave_start,
-                "date_to": leave_end,
+                "request_date_from": leave_start.date(),
+                "request_date_to": leave_end.date(),
                 "number_of_days": 1,
             }
         )
+        self._force_leave_dates(lv, leave_start, leave_end)
         lv.with_user(self.userJohn).action_validate()
         self.assertEqual(lv.state, "validate", "I have validated the leave")
 
@@ -308,18 +322,20 @@ class TestHrLeave(TestResourceScheduleCommon):
             dStart - relativedelta(days=4), datetime.min.time()
         )
         leave_end = datetime.combine(
-            dStart, datetime.strptime("8:29:59", "%H:%M:%S").time()
+            dStart,
+            datetime.strptime("8:29:59", "%H:%M:%S").time(),  # noqa: DTZ007
         )
         lv = self.HrLeave.with_user(self.userSally).create(
             {
                 "name": "PTO",
                 "employee_id": self.eeSally.id,
                 "holiday_status_id": self.holidays_type_1.id,
-                "date_from": leave_start,
-                "date_to": leave_end,
+                "request_date_from": leave_start.date(),
+                "request_date_to": leave_end.date(),
                 "number_of_days": 1,
             }
         )
+        self._force_leave_dates(lv, leave_start, leave_end)
         lv.with_user(self.userJohn).action_validate()
         self.assertEqual(lv.state, "validate", "I have validated the leave")
 
@@ -337,7 +353,7 @@ class TestHrLeave(TestResourceScheduleCommon):
         self.assertTrue(monAtt, "I found an attendance for Monday")
         self.assertEqual(
             monAtt.check_in,
-            datetime.combine(dStart, datetime.strptime("8:30", "%H:%M").time()),
+            datetime.combine(dStart, datetime.strptime("8:30", "%H:%M").time()),  # noqa: DTZ007
             "The attendance has been modified according to the leave",
         )
 
@@ -385,7 +401,8 @@ class TestHrLeave(TestResourceScheduleCommon):
         # Create Leave - first day of leave overlaps end time of shift
         #
         leave_start = datetime.combine(
-            dStart, datetime.strptime("12:30:00", "%H:%M:%S").time()
+            dStart,
+            datetime.strptime("12:30:00", "%H:%M:%S").time(),  # noqa: DTZ007
         )
         leave_end = datetime.combine(
             dStart + relativedelta(days=1), datetime.max.time()
@@ -395,11 +412,12 @@ class TestHrLeave(TestResourceScheduleCommon):
                 "name": "PTO",
                 "employee_id": self.eeSally.id,
                 "holiday_status_id": self.holidays_type_1.id,
-                "date_from": leave_start,
-                "date_to": leave_end,
+                "request_date_from": leave_start.date(),
+                "request_date_to": leave_end.date(),
                 "number_of_days": 1,
             }
         )
+        self._force_leave_dates(lv, leave_start, leave_end)
         lv.with_user(self.userJohn).action_validate()
         self.assertEqual(lv.state, "validate", "I have validated the leave")
 
@@ -417,6 +435,6 @@ class TestHrLeave(TestResourceScheduleCommon):
         self.assertTrue(monAtt, "I found an attendance for Monday")
         self.assertEqual(
             monAtt.check_out,
-            datetime.combine(dStart, datetime.strptime("12:29:59", "%H:%M:%S").time()),
+            datetime.combine(dStart, datetime.strptime("12:29:59", "%H:%M:%S").time()),  # noqa: DTZ007
             "The attendance has been modified according to the leave",
         )

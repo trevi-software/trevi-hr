@@ -15,7 +15,7 @@ class InitWage(models.Model):
         (
             "unique_job_cinit",
             "UNIQUE(job_id,contract_init_id)",
-            _(
+            (
                 "A Job Position cannot be referenced more than once in "
                 "a Contract Settings record."
             ),

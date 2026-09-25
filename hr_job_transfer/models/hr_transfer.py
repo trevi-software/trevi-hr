@@ -10,7 +10,7 @@ from odoo.exceptions import AccessError, UserError
 
 class HrTransfer(models.Model):
     _name = "hr.department.transfer"
-    _inherit = ["mail.thread"]
+    _inherit = ["mail.thread"]  # noqa: RUF012
     _description = "Departmental Transfer"
     _rec_name = "date"
     _check_company_auto = True
@@ -128,7 +128,8 @@ class HrTransfer(models.Model):
                     raise UserError(
                         _(
                             "Unable to Delete Transfer!\n"
-                            "Transfer has been initiated. Either cancel the transfer or\n"
+                            "Transfer has been initiated. Either cancel the "
+                            "transfer or\n"
                             "create another transfer to undo it."
                         )
                     )
@@ -185,7 +186,8 @@ class HrTransfer(models.Model):
             raise UserError(
                 _(
                     "Warning!\n"
-                    "The contract end date is on or before the effective date of the transfer."
+                    "The contract end date is on or before the effective date "
+                    "of the transfer."
                 )
             )
 
@@ -194,7 +196,7 @@ class HrTransfer(models.Model):
     def _check_permission_group(self, group=None):
 
         for transfer in self:
-            if group and not transfer.user_has_groups(group):
+            if group and not transfer.env.user.has_group(group):
                 raise AccessError(
                     _("You don't have the access rights to take this action.")
                 )
@@ -220,8 +222,9 @@ class HrTransfer(models.Model):
             [("employee_id", "=", contract.employee_id.id)]
         )
         _contract_name = _(
-            "%(name)s's Contract [%(number)d]"
-            % {"name": contract.employee_id.name, "number": (emp_contract_count + 1)}
+            "%(name)s's Contract [%(number)d]",
+            name=contract.employee_id.name,
+            number=(emp_contract_count + 1),
         )
 
         # Copy the contract and adjust start/end dates, job id, etc. accordingly.
@@ -286,7 +289,7 @@ class HrTransfer(models.Model):
             self._check_state(transfer.src_contract_id, transfer.date)
             # If the user is a member of 'approval' group, go straight to 'approval'
             if (
-                self.user_has_groups("hr_job_transfer.group_hr_transfer")
+                self.env.user.has_group("hr_job_transfer.group_hr_transfer")
                 and transfer.effective_date_in_future()
             ):
                 transfer.state = "pending"
