@@ -2,7 +2,7 @@
 # Copyright (C) 2014 Michael Telahun Makonnen <mmakonnen@gmail.com>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -21,7 +21,7 @@ class PolicyEnd(models.TransientModel):
 
         policy_id = self._get_policy()
         if not policy_id:
-            raise ValidationError(_("Unable to determine Benefit Policy."))
+            raise ValidationError(self.env._("Unable to determine Benefit Policy."))
 
         policy = self.env["hr.benefit.policy"].browse(policy_id)
         policy.end_date = self.date

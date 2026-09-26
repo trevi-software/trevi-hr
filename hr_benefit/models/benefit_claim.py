@@ -2,7 +2,7 @@
 # Copyright (C) 2013,2014 Michael Telahun Makonnen <mmakonnen@gmail.com>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -100,7 +100,7 @@ class BenefitClaim(models.Model):
     def _check_state(self, to_state):
         if self.state == "approve" and to_state == "draft":
             raise UserError(
-                _("You cannot set an approved claim back to 'draft' state.")
+                self.env._("You cannot set an approved claim back to 'draft' state.")
             )
 
     def write(self, vals):
@@ -132,7 +132,7 @@ class BenefitClaim(models.Model):
                 self.env.context and self.env.context.get("force_delete", False)
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Error: "
                         'You may not a delete a claim that is not in a "Draft" state'
                     )

@@ -2,7 +2,7 @@
 # Copyright (C) 2013,2014 Michael Telahun Makonnen <mmakonnen@gmail.com>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -65,7 +65,7 @@ class PremiumPayment(models.Model):
                 payment.env.context and payment.env.context.get("force_delete", False)
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Permission Denied. "
                         "You may not delete a payment that is not in 'draft' stage."
                         "\nPolicy: %(name)s\nPayment Date: %(date)s"
