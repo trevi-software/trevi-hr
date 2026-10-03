@@ -35,7 +35,7 @@
                 autoplay="autoplay"
                 muted="muted"
                 playsinline="playsinline"
-                t-on-loadedmetadata="onVideoReady"
+                t-on-loadeddata="onVideoReady"
             />
             <t t-set-slot="footer">
                 <button

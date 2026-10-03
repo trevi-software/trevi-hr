@@ -51,7 +51,9 @@ export class PhotoboothDialog extends Component {
                 audio: false,
             });
         } catch (error) {
-            this.state.error = this.describeError(error);
+            if (!this.closed) {
+                this.state.error = this.describeError(error);
+            }
             return;
         }
         if (this.closed) {
@@ -95,8 +97,8 @@ export class PhotoboothDialog extends Component {
     }
 
     onVideoReady() {
-        // VideoWidth/videoHeight are 0 until metadata is loaded; capturing
-        // before that would produce an empty image.
+        // Fired once the first frame is available; capturing earlier could
+        // produce a blank image even if videoWidth/videoHeight are known.
         this.state.ready = true;
     }
 
