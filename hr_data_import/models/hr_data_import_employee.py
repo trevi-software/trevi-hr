@@ -257,6 +257,8 @@ class ImportEmployee(models.Model):
         if len(records) > 0:
             leaves = self.env["hr.leave.allocation"].create(records)
             leaves.action_approve()
+            # Two-step validation types stop at "validate1" after the first approval
+            leaves.filtered(lambda a: a.state == "validate1").action_validate()
 
     def get_leave_days_accrued(self, employee, hire_date):
 
