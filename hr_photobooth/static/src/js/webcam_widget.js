@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {Component, onMounted, onWillUnmount, useRef, useState} from "@odoo/owl";
 import {ImageField, imageField} from "@web/views/fields/image/image_field";
 import {Dialog} from "@web/core/dialog/dialog";
