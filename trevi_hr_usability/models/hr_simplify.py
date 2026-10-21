@@ -20,7 +20,6 @@ class HrEmployee(models.Model):
 
     @api.model
     def _default_country(self):
-
         cid = self.env["res.country"].search([("code", "=", "ET")])
         if cid:
             return cid[0]
@@ -36,7 +35,6 @@ class HrContract(models.Model):
 
     @api.model
     def _default_employee(self):
-
         if self.env.context is not None:
             e_ids = self.env.context.get("search_default_employee_id", False)
             if e_ids:
@@ -51,7 +49,6 @@ class HrContract(models.Model):
 
     @api.onchange("employee_id")
     def onchange_employee_id(self):
-
         if self.employee_id:
             dept = self.employee_id.department_id
             self.employee_dept_id = dept.id
