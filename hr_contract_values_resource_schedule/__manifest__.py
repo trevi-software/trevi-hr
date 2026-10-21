@@ -4,14 +4,14 @@
 {
     "name": "Employee working hours in contract values",
     "summary": "Set working hours in default contract values.",
-    "version": "18.0.1.0.0",
+    "version": "19.0.1.0.0",
     "category": "Human Resources",
     "license": "AGPL-3",
     "author": "TREVI Software, Michael Telahun Makonnen",
     "images": ["static/src/img/main_screenshot.png"],
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
-        "hr_contract",
+        "hr",
         "hr_contract_values",
         "resource_schedule",
     ],

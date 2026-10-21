@@ -10,14 +10,28 @@ class TestContractInit(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
         cls.HrEmployee = cls.env["hr.employee"]
-        cls.HrContract = cls.env["hr.contract"]
+        # Odoo 19 merged ``hr_contract`` into ``hr``: ``hr.contract`` is now
+        # ``hr.version``, which is what carries the contract data.
+        cls.HrVersion = cls.env["hr.version"]
         cls.ResourceCalendar = cls.env["resource.calendar"]
         cls.HrContractInit = cls.env["hr.contract.init"]
 
-        cls.eeJohn = cls.HrEmployee.create({"name": "John"})
-        cls.std35_calendar = cls.env.ref("resource.resource_calendar_std_35h")
+        # Do not rely on demo data: create the working hours we need.  A
+        # calendar other than the company's default one is used so that the
+        # assertions below really check the value coming from the contract
+        # settings.
+        cls.std35_calendar = cls.ResourceCalendar.create(
+            {"name": "Standard 35 hours/week"}
+        )
+
+        # The employee always owns a version, so it is backdated to leave
+        # today's effective date free for the version created by the test.
+        cls.eeJohn = cls.HrEmployee.create(
+            {"name": "John", "date_version": "2000-01-01"}
+        )
 
     def test_load_from_policy(self):
         self.HrContractInit.create(
@@ -29,7 +43,7 @@ class TestContractInit(common.TransactionCase):
             }
         )
 
-        contract = self.HrContract.create(
+        contract = self.HrVersion.create(
             {
                 "name": "C1",
                 "employee_id": self.eeJohn.id,
