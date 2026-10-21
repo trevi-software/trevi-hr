@@ -16,7 +16,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         cls.PremiumPayment = cls.env["hr.benefit.premium.payment"]
 
     def test_benefit_policy_allowance_default_amount(self):
-
         today = date.today()  # noqa: DTZ011
         bn = self.create_benefit(self.benefit_create_vals)
         self.create_earning(bn, start=today, allowance=1000)
@@ -30,7 +29,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
 
     def test_benefit_policy_allowance_override_amount(self):
-
         today = date.today()  # noqa: DTZ011
         bn = self.create_benefit(self.benefit_create_vals)
         self.create_earning(bn, start=today, allowance=1000)
@@ -44,7 +42,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
 
     def test_benefit_policy_loan_amount(self):
-
         today = date.today()  # noqa: DTZ011
         bn = self.create_benefit(self.benefit_create_vals)
         self.create_earning(bn, start=today, ptype="loan", loan=15000)
@@ -58,7 +55,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
 
     def test_benefit_policy_first_premium(self):
-
         bn = self.create_benefit(self.benefit_create_vals)
         self.create_premium(
             bn,
@@ -79,7 +75,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
 
     def test_benefit_policy_last_premium(self):
-
         today = date.today()  # noqa: DTZ011
         policy_start = today - relativedelta(days=4)
         dtPayment1 = today - relativedelta(days=3)
@@ -140,7 +135,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
 
     def test_benefit_policy_premium_override(self):
-
         today = date.today()  # noqa: DTZ011
         policy_start = today - relativedelta(days=4)
         dtPayment1 = today - relativedelta(days=3)
@@ -185,7 +179,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
 
     def test_benefit_policy_premium_refund(self):
-
         today = date.today()  # noqa: DTZ011
         policy_start = today - relativedelta(days=4)
         dtPayment1 = today - relativedelta(days=3)

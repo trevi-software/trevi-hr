@@ -67,7 +67,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
 
     def test_get_benefit_policies_for_payslip_premium(self):
-
         start = date(2021, 1, 1)
         end = date(2021, 1, 31)
         bvals = self.benefit_create_vals.copy()
@@ -100,7 +99,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
 
     def test_get_benefit_policies_for_payslip_premium_override(self):
-
         start = date(2021, 1, 1)
         end = date(2021, 1, 31)
         bvals = self.benefit_create_vals.copy()
@@ -133,7 +131,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
 
     def test_get_benefit_policies_for_payslip_premium_total(self):
-
         start = date(2021, 1, 1)
         end = date(2021, 1, 31)
         bvals = self.benefit_create_vals.copy()
@@ -166,7 +163,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
 
     def test_get_benefit_policies_for_payslip_allowance(self):
-
         start = date(2021, 1, 1)
         end = date(2021, 1, 31)
         bvals = self.benefit_create_vals.copy()
@@ -201,7 +197,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
 
     def test_get_benefit_policy_partial(self):
-
         start = date(2021, 1, 1)
         end = date(2021, 1, 31)
         policy_end = date(2021, 1, 15)
@@ -226,7 +221,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
 
     def test_get_benefit_policy_allowance(self):
-
         start = date(2021, 1, 1)
         end = date(2021, 1, 31)
         self.benefit_create_vals.update({"link2payroll": True})
@@ -298,7 +292,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
 
     def test_onchange_deletes_old_values(self):
-
         start = date(2021, 1, 1)
         end = date(2021, 1, 31)
         self.benefit_create_vals.update({"link2payroll": True})
@@ -323,7 +316,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
 
     def test_no_employee_no_contract(self):
-
         frm = Form(self.Payslip)
         frm.date_from = date(2021, 1, 1)
         self.assertTrue(
@@ -331,7 +323,6 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
 
     def test_benefit_policy_premium_refund(self):
-
         start = date(2021, 1, 1)
         end = date(2021, 1, 31)
         self.benefit_create_vals.update({"link2payroll": True})

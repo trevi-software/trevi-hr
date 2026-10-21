@@ -46,7 +46,6 @@ class PremiumPayment(models.Model):
     )
 
     def name_get(self):
-
         res = []
         for payment in self:
             res.append(
@@ -59,7 +58,6 @@ class PremiumPayment(models.Model):
         return res
 
     def unlink(self):
-
         for payment in self:
             if payment.state != "draft" and not (
                 payment.env.context and payment.env.context.get("force_delete", False)

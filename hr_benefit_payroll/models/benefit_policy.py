@@ -18,7 +18,6 @@ class BenefitPolicy(models.Model):
     )
 
     def calculate_advantage(self, dE):
-
         self.ensure_one()
         adv_amount = 0
         adv = self.benefit_id.get_latest_advantage(dE)
@@ -32,7 +31,6 @@ class BenefitPolicy(models.Model):
         return adv_amount
 
     def _get_paid_amount(self):
-
         self.ensure_one()
         res = 0
         for payment in self.premium_payment_ids:
@@ -41,7 +39,6 @@ class BenefitPolicy(models.Model):
         return res
 
     def calculate_premium(self, dE, annual_pay_periods, refund=False):
-
         self.ensure_one()
         prm_amount = 0
         prm = self.benefit_id.get_latest_premium(dE)

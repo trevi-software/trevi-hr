@@ -58,7 +58,6 @@ class HrPayslip(models.Model):
 
     @api.model
     def get_benefit_lines(self, contracts, date_from, date_to, credit_note=False):
-
         res = {}
         if not contracts:
             return res
@@ -164,7 +163,6 @@ class HrPayslip(models.Model):
         return res
 
     def record_benefit_premium_payments(self, benefits):
-
         policy_obj = self.env["hr.benefit.policy"]
         premium_obj = self.env["hr.benefit.premium.payment"]
         for payslip in self:
@@ -196,18 +194,15 @@ class HrPayslip(models.Model):
                 )
 
     def remove_benefit_premium_payments(self):
-
         pay_obj = self.env["hr.benefit.premium.payment"]
         pay_ids = pay_obj.search([("payslip_id", "in", self.ids)])
         pay_ids.unlink()
 
     def finalize_benefit_premium_payments(self):
-
         payments = self.mapped("premium_payment_ids")
         payments.action_done()
 
     def refund_sheet(self):
-
         res = super().refund_sheet()
         payments = self.mapped("premium_payment_ids")
         if payments:
@@ -244,7 +239,6 @@ class HrPayslip(models.Model):
         return res
 
     def _get_baselocaldict(self, contracts):
-
         res = super()._get_baselocaldict(contracts)
         res.update(
             {
