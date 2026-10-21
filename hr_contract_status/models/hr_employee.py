@@ -28,7 +28,6 @@ class HrEmployee(models.Model):
             )
 
     def _get_contracts(self, date_from, date_to, states=None, kanban_state=False):
-
         # Over-ride base class method to includes Closed/Ended contracts. Useful
         # when multiple consecutive contracts occur in a payroll period.
         #
