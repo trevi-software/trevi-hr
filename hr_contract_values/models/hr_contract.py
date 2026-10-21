@@ -6,7 +6,6 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.translate import _
 
 
 class ContractInit(models.Model):
@@ -53,7 +52,9 @@ class ContractInit(models.Model):
         for record in self:
             if record.locked:
                 raise UserError(
-                    _("You may not delete a record that is locked. Unlock it first.")
+                    self.env._(
+                        "You may not delete a record that is locked. Unlock it first."
+                    )
                 )
         return super().unlink()
 
@@ -61,13 +62,23 @@ class ContractInit(models.Model):
         for record in self:
             if record.locked and vals.get("locked") is not False:
                 raise UserError(
-                    _("You may not update a record that is locked. Unlock it first.")
+                    self.env._(
+                        "You may not update a record that is locked. Unlock it first."
+                    )
                 )
         return super().write(vals)
 
 
-class HrContract(models.Model):
-    _inherit = "hr.contract"
+class HrVersion(models.Model):
+    """Seed a new employee contract from the latest ``hr.contract.init`` record.
+
+    In Odoo 19 ``hr_contract`` was merged into ``hr`` and ``hr.contract`` was
+    renamed to ``hr.version``: ``wage``, ``structure_type_id`` and
+    ``trial_date_end`` now live there, and the ``hr.employee``'s contract data
+    is delegated to its current version through ``_inherits``.
+    """
+
+    _inherit = "hr.version"
 
     @api.model
     def _get_wage(self, job_id=None):
@@ -129,27 +140,41 @@ class HrContract(models.Model):
             res = init.contract_type
         return res
 
-    wage = fields.Monetary(default=lambda self: self._get_wage())
-    trial_date_start = fields.Date(default=lambda self: self._get_trial_date_start())
-    trial_date_end = fields.Date(default=lambda self: self._get_trial_date_end())
-    structure_type_id = fields.Many2one(default=lambda self: self._get_structure_type())
+    # ``hr.version`` already declares ``wage``, ``trial_date_end`` and
+    # ``structure_type_id`` (with their own groups/tracking/compute), so the
+    # Odoo 18 field defaults cannot be re-declared here without losing those
+    # attributes.  Their defaults are applied in ``create`` instead, while the
+    # ``trial_date_start`` (trevi-specific, absent from core) keeps a real
+    # field default.
+    trial_date_start = fields.Date(
+        string="Start of Trial Period",
+        default=lambda self: self._get_trial_date_start(),
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            # set default wage based on the job
-            if "wage" not in vals and "job_id" in vals:
-                _wage = self._get_wage(job_id=vals["job_id"])
+            # pre-fill the wage from the initial values of the job, if any
+            if "wage" not in vals:
+                _wage = self._get_wage(job_id=vals.get("job_id"))
                 if _wage != 0:
-                    vals.update({"wage": _wage})
+                    vals["wage"] = _wage
+            if "trial_date_end" not in vals:
+                _trial_date_end = self._get_trial_date_end()
+                if _trial_date_end:
+                    vals["trial_date_end"] = _trial_date_end
+            if "structure_type_id" not in vals:
+                _structure_type = self._get_structure_type()
+                if _structure_type:
+                    vals["structure_type_id"] = _structure_type.id
 
         return super().create(vals_list)
 
     @api.onchange("job_id")
     def onchange_job(self):
-        for c in self:
-            if c.job_id:
-                c.wage = self._get_wage(job_id=c.job_id.id)
+        for version in self:
+            if version.job_id:
+                version.wage = self._get_wage(job_id=version.job_id.id)
 
     @api.onchange("trial_date_start")
     def onchange_trial(self):

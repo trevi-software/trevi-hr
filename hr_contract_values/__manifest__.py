@@ -4,7 +4,7 @@
 
 {
     "name": "Contracts - Initial Settings",
-    "version": "18.0.1.0.0",
+    "version": "19.0.1.0.0",
     "category": "Human Resources",
     "license": "AGPL-3",
     "author": "TREVI Software, Michael Telahun Makonnen",
@@ -13,7 +13,6 @@
     "depends": [
         "base",
         "hr",
-        "hr_contract",
         "trevi_hr_job_categories",
         "trevi_hr_usability",
     ],

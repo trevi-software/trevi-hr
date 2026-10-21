@@ -15,7 +15,7 @@
         <field name="name">Default Contract values for Europe</field>
         <field name="date" eval="datetime.now().strftime('%Y-1-1')" />
         <field name="trial_period">90</field>
-        <field name="contract_type" ref="hr_contract.structure_type_employee" />
+        <field name="contract_type" ref="hr.structure_type_employee" />
         <field
             name="wage_ids"
             eval="[(6, 0, [ref('initwage_2000'), ref('initwage_5000')])]"

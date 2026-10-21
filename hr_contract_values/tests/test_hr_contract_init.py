@@ -11,9 +11,13 @@ class TestContractInit(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
         cls.HrEmployee = cls.env["hr.employee"]
-        cls.HrContract = cls.env["hr.contract"]
+        # Odoo 19 merged ``hr_contract`` into ``hr``: ``hr.contract`` is now
+        # ``hr.version`` and it is what carries the contract (wage, job,
+        # trial period, ...) data.
+        cls.HrVersion = cls.env["hr.version"]
         cls.HrJob = cls.env["hr.job"]
         cls.HrCategory = cls.env["hr.employee.category"]
         cls.HrContractInit = cls.env["hr.contract.init"]
@@ -42,7 +46,19 @@ class TestContractInit(common.TransactionCase):
             }
         )
 
-        cls.eeJohn = cls.HrEmployee.create({"name": "John"})
+        # The employee always owns one version, so it is backdated to leave
+        # today's effective date free for the versions created by the tests.
+        cls.eeJohn = cls.HrEmployee.create(
+            {"name": "John", "date_version": "2000-01-01"}
+        )
+
+    def _create_contract(self, vals=None):
+        values = {
+            "name": "C1",
+            "employee_id": self.eeJohn.id,
+        }
+        values.update(vals or {})
+        return self.HrVersion.create(values)
 
     def test_load_latest_values(self):
         """Initial values are loaded from the latest values"""
@@ -65,13 +81,7 @@ class TestContractInit(common.TransactionCase):
             }
         )
 
-        contract = self.HrContract.create(
-            {
-                "name": "C1",
-                "employee_id": self.eeJohn.id,
-                "wage": 1.0,
-            }
-        )
+        contract = self._create_contract({"wage": 1.0})
         delta = (contract.trial_date_end - contract.trial_date_start).days
         cInits = self.HrContractInit.search([])
         self.assertEqual(countInits + 2, len(cInits))
@@ -135,12 +145,7 @@ class TestContractInit(common.TransactionCase):
                 "wage_ids": [(0, 0, {"starting_wage": 1000, "is_default": True})],
             }
         )
-        contract = self.HrContract.create(
-            {
-                "name": "C1",
-                "employee_id": self.eeJohn.id,
-            }
-        )
+        contract = self._create_contract()
         self.assertEqual(1000, contract.wage)
 
     def test_get_wage_by_job_id(self):
@@ -166,13 +171,7 @@ class TestContractInit(common.TransactionCase):
                 ],
             }
         )
-        contract = self.HrContract.create(
-            {
-                "name": "C1",
-                "employee_id": self.eeJohn.id,
-                "job_id": self.job_ux_designer.id,
-            }
-        )
+        contract = self._create_contract({"job_id": self.job_ux_designer.id})
         self.assertEqual(2000, contract.wage)
 
     def test_get_wage_by_category(self):
@@ -205,11 +204,5 @@ class TestContractInit(common.TransactionCase):
                 ],
             }
         )
-        contract = self.HrContract.create(
-            {
-                "name": "C1",
-                "employee_id": self.eeJohn.id,
-                "job_id": self.job_ux_designer.id,
-            }
-        )
+        contract = self._create_contract({"job_id": self.job_ux_designer.id})
         self.assertEqual(2000, contract.wage)
