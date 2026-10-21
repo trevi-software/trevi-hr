@@ -12,7 +12,6 @@ class HrContract(models.Model):
 
     @api.model
     def update_state(self):
-
         # New contract
         contracts = self.search(
             [
@@ -33,7 +32,6 @@ class HrContract(models.Model):
         return super().update_state()
 
     def signal_confirm(self):
-
         for contract in self:
             contract.employee_id.benefit_policy_ids.filtered(
                 lambda p, contract=contract: (

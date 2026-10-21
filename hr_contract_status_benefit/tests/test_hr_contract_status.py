@@ -48,7 +48,6 @@ class TestEmployeeStatus(common.TransactionCase):
         )
 
     def create_benefit(self, vals):
-
         return self.Benefit.create(vals)
 
     def create_earning(
@@ -104,7 +103,6 @@ class TestEmployeeStatus(common.TransactionCase):
         return self.Policy.create(_dict)
 
     def test_hire_employee_signal(self):
-
         start = date.today() - relativedelta(days=100)  # noqa: DTZ011
         end = date.today() + relativedelta(days=60)  # noqa: DTZ011
         ee = self.create_employee()
@@ -124,7 +122,6 @@ class TestEmployeeStatus(common.TransactionCase):
         self.assertEqual(pol.state, "open", "The benefit policy is now active")
 
     def test_hire_employee_cron(self):
-
         start = date.today() - relativedelta(days=100)  # noqa: DTZ011
         end = date.today() + relativedelta(days=60)  # noqa: DTZ011
         ee = self.create_employee()
