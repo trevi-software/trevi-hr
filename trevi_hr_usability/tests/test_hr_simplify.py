@@ -12,9 +12,10 @@ class TestHrSimplify(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
         # -- models
-        cls.Contract = cls.env["hr.contract"]
+        cls.Contract = cls.env["hr.version"]
         cls.Department = cls.env["hr.department"]
         cls.Employee = cls.env["hr.employee"]
         cls.Job = cls.env["hr.job"]
@@ -42,68 +43,69 @@ class TestHrSimplify(TransactionCase):
         )
 
         # -- employees
+        # Employees are created with a version dated in the past so that the
+        # contract versions created by the tests do not clash with the
+        # (employee_id, date_version) unique index of hr.version.
         cls.emp_adam = cls.Employee.create(
             {
                 "name": "Adam",
-                "gender": "male",
+                "sex": "male",
                 "department_id": cls.dept_marketing.id,
                 "job_id": cls.job_mkt_director.id,
                 "active": True,
+                "date_version": "2020-01-01",
             }
         )
 
         cls.emp_kal = cls.Employee.create(
             {
                 "name": "Kal",
-                "gender": "female",
+                "sex": "female",
                 "department_id": cls.dept_RandD.id,
                 "job_id": cls.job_rnd_manager.id,
                 "active": True,
+                "date_version": "2020-01-01",
             }
         )
 
         cls.emp_tim = cls.Employee.create(
             {
                 "name": "Tim",
-                "gender": "male",
+                "sex": "male",
                 "department_id": cls.dept_RandD.id,
                 "job_id": cls.job_rnd_technician.id,
                 "active": True,
+                "date_version": "2020-01-01",
             }
         )
 
         cls.emp_ed = cls.Employee.create(
             {
                 "name": "Ed",
-                "gender": "male",
+                "sex": "male",
                 "department_id": cls.dept_RandD.id,
                 "job_id": cls.job_rnd_technician.id,
                 "active": True,
+                "date_version": "2020-01-01",
             }
         )
-
-        # -- contract data
-        cls.contract_data = {
-            "state": "open",
-            "kanban_state": "normal",
-            "wage": 1,
-            "date_start": False,
-            "date_end": False,
-        }
 
     def create_contract(
         self, employee, job, start_date=None, end_date=None, name="Contract#1"
     ):
-        self.contract_data["name"] = name
-        self.contract_data["employee_id"] = employee.id
-        self.contract_data["job_id"] = job.id
-        self.contract_data["date_start"] = (
-            Date.today() if start_date is None else start_date
+        start_date = Date.today() if start_date is None else start_date
+        end_date = Date.today() + timedelta(days=90) if end_date is None else end_date
+        return self.Contract.create(
+            {
+                "name": name,
+                "employee_id": employee.id,
+                "job_id": job.id,
+                "wage": 1,
+                "date_version": start_date,
+                "contract_date_start": start_date,
+                "contract_date_end": end_date,
+            }
         )
-        self.contract_data["date_end"] = (
-            Date.today() + timedelta(days=90) if end_date is None else end_date
-        )
-        return self.Contract.create(self.contract_data)
 
     def test_employee_country_defaults_to_et(self):
         self.assertEqual(self.emp_adam.country_id, self.env.ref("base.et"))
@@ -114,12 +116,6 @@ class TestHrSimplify(TransactionCase):
         with Form(contract) as f:
             f.employee_id = self.emp_kal
             f.job_id = self.job_mkt_director
-            if "hr.payroll.structure" in self.env:
-                struct = self.env.ref(
-                    "payroll.structure_base", raise_if_not_found=False
-                )
-                if struct:
-                    f.struct_id = struct
             self.assertEqual(f.employee_dept_id, self.dept_RandD)
 
     def test_compute_employees(self):

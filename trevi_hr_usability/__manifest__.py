@@ -4,14 +4,13 @@
 
 {
     "name": "Simplify Employee Records.",
-    "version": "18.0.1.0.0",
+    "version": "19.0.1.0.0",
     "license": "AGPL-3",
     "category": "Human Resources",
     "author": "TREVI Software",
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
         "hr",
-        "hr_contract",
     ],
     "data": [
         "security/ir.model.access.csv",

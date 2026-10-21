@@ -2,14 +2,19 @@
 <odoo>
     <record id="view_contract_form" model="ir.ui.view">
         <field name="name">hr.contract.form.inherit</field>
-        <field name="model">hr.contract</field>
-        <field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.hr_contract_template_form_view" />
         <field name="priority" eval="99" />
         <field name="arch" type="xml">
             <data>
-                <field name="employee_id" position="replace">
-                    <field name="employee_id" required="1" />
-                </field>
+                <!-- In Odoo 19 the employee's version form is shared with the
+                     contract template form, so ``employee_id`` may stay empty
+                     for a template.  It is made available on the form (instead
+                     of being forced) so that the employee can be set and the
+                     job positions filtered on the employee's department. -->
+                <xpath expr="//group[@name='top_info_left']" position="inside">
+                    <field name="employee_id" options="{'no_create': True}" />
+                </xpath>
                 <field name="job_id" position="replace">
                     <field name="employee_dept_id" invisible="1" />
                     <field

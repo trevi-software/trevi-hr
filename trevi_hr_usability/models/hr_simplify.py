@@ -3,35 +3,28 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
-class HrEmployee(models.Model):
-    """Simplified Employee Record Interface."""
+class HrVersion(models.Model):
+    """Simplified Employee Contract/Version Interface.
 
-    _name = "hr.employee"
-    _inherit = "hr.employee"
-    _sql_constraints = [  # noqa: RUF012
-        (
-            "unique_identification_id",
-            "unique(identification_id)",
-            ("Official Identifications must be unique!"),
-        ),
-    ]
+    Odoo 19 merged ``hr_contract`` into ``hr`` and renamed ``hr.contract`` to
+    ``hr.version``.  The employee's personal data (nationality, official
+    identification, ...) now lives on the version and ``hr.employee`` only
+    exposes it through ``_inherits``/``version_id``, so the customisations that
+    used to be declared on ``hr.employee``/``hr.contract`` are declared here.
+    """
+
+    _inherit = "hr.version"
 
     @api.model
     def _default_country(self):
-        cid = self.env["res.country"].search([("code", "=", "ET")])
+        cid = self.env["res.country"].search([("code", "=", "ET")], limit=1)
         if cid:
             return cid[0]
 
     country_id = fields.Many2one(default=lambda self: self._default_country())
-    job_id = fields.Many2one(
-        related="contract_id.job_id", comodel_name="hr.job", string="Job", readonly=True
-    )
-
-
-class HrContract(models.Model):
-    _inherit = "hr.contract"
 
     @api.model
     def _default_employee(self):
@@ -41,6 +34,7 @@ class HrContract(models.Model):
                 return e_ids[0]
 
     employee_id = fields.Many2one(default=lambda self: self._default_employee())
+
     employee_dept_id = fields.Many2one(
         string="Default Dept Id",
         related="employee_id.department_id",
@@ -55,9 +49,36 @@ class HrContract(models.Model):
         else:
             self.employee_dept_id = False
 
+    @api.constrains("identification_id")
+    def _check_unique_identification_id(self):
+        """Official identification numbers must be unique.
+
+        Odoo 19 no longer stores ``identification_id`` on ``hr.employee`` (it is
+        a related field delegating to ``hr.version``), so the historical
+        ``unique(identification_id)`` SQL constraint cannot be kept as-is.  A
+        single employee may have several versions carrying the same number, so
+        the uniqueness is enforced per employee, i.e. one official
+        identification number cannot be used by two different employees.
+        """
+
+        for version in self.filtered("identification_id"):
+            duplicate = (
+                self.env["hr.version"]
+                .sudo()
+                .search_count(
+                    [
+                        ("identification_id", "=", version.identification_id),
+                        ("employee_id", "!=", version.employee_id.id),
+                    ]
+                )
+            )
+            if duplicate:
+                raise ValidationError(
+                    self.env._("Official Identifications must be unique!")
+                )
+
 
 class HrJob(models.Model):
-    _name = "hr.job"
     _inherit = "hr.job"
 
     no_of_employee = fields.Integer(
@@ -74,14 +95,15 @@ class HrJob(models.Model):
 
     @api.depends("no_of_recruitment", "employee_ids.job_id", "employee_ids.active")
     def _compute_employees(self):
-        contract_data = self.env["hr.contract"].read_group(
-            [("job_id", "in", self.ids), ("date_end", "<=", fields.Date.today())],
+        contract_data = self.env["hr.version"]._read_group(
+            [
+                ("job_id", "in", self.ids),
+                ("contract_date_end", "<=", fields.Date.today()),
+            ],
             ["job_id"],
-            ["job_id"],
+            ["__count"],
         )
-        result = {data["job_id"][0]: data["job_id_count"] for data in contract_data}
+        result = {job.id: count for job, count in contract_data}
         for record in self:
             record.no_of_employee = result.get(record.id, 0)
-            record.expected_employees = (
-                result.get(record.id, 0) + record.no_of_recruitment
-            )
+            record.expected_employees = record.no_of_employee + record.no_of_recruitment
