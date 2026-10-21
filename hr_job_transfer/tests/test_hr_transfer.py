@@ -13,8 +13,10 @@ class TestHrTransfer(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+
         # -- Models
-        cls.Contract = cls.env["hr.contract"]
+        cls.Version = cls.env["hr.version"]
         cls.Department = cls.env["hr.department"]
         cls.Job = cls.env["hr.job"]
         cls.Employee = cls.env["hr.employee"]
@@ -31,14 +33,14 @@ class TestHrTransfer(TransactionCase):
             {
                 "name": "#Hr User",
                 "login": "hruser",
-                "groups_id": [(4, cls.group_hr_user.id)],
+                "group_ids": [(4, cls.group_hr_user.id)],
             }
         )
         cls.hr_officer = cls.User.create(
             {
                 "name": "#Hr Officer",
                 "login": "hroffcer",
-                "groups_id": [(4, cls.group_hr_transfer.id)],
+                "group_ids": [(4, cls.group_hr_transfer.id)],
             }
         )
 
@@ -72,37 +74,41 @@ class TestHrTransfer(TransactionCase):
             ]
         )
 
-    def create_contract(
-        self, employee, state, kanban_start, start, end=None, trial_end=None, user=False
-    ):
-        _contract_name = f"{employee.name}'s Contract"
+    def create_contract(self, employee, start, end=None, trial_end=None, user=False):
+        """Give the employee's version a running contract.
+
+        Odoo 19 replaced ``hr.contract`` with ``hr.version``: every employee
+        owns one version (delegated through ``_inherits``) and its contract is
+        described by the native dates instead of a ``state``/``kanban_state``
+        pair.
+        """
         _user = self.hr_user if not user else user
-        return self.Contract.with_user(_user).create(
-            [
-                {
-                    "name": _contract_name,
-                    "employee_id": employee.id,
-                    "state": state,
-                    "kanban_state": kanban_start,
-                    "wage": 1,
-                    "date_start": start,
-                    "trial_date_end": trial_end if trial_end else False,
-                    "date_end": end if end else False,
-                }
-            ]
-        )
+        contract = employee.version_id
+        vals = {
+            "contract_date_start": start,
+            "date_version": start,
+        }
+        if end:
+            vals["contract_date_end"] = end
+        if trial_end:
+            vals["trial_date_end"] = trial_end
+        contract.with_user(_user).write(vals)
+        return contract
 
     def apply_transfer_cron(self):
-        self.env.ref(
-            "hr_job_transfer.hr_department_transfer_cron"
-        ).method_direct_trigger()
+        cron = self.env.ref("hr_job_transfer.hr_department_transfer_cron")
+        # The cron body runs on its own cursor; in registry test mode that
+        # cursor wraps the test one, so its writes are visible (and rolled
+        # back) with the test transaction.
+        with self.enter_registry_test_mode():
+            # method_direct_trigger() returns True on success, and an action
+            # dict when the job raised.
+            self.assertTrue(cron.method_direct_trigger() is True)
 
     def test_only_draft_transfer_can_be_deleted(self):
         employee = self.create_employee("#John", self.job_trainee.id)
         contract = self.create_contract(
             employee=employee,
-            state="open",
-            kanban_start="normal",
             start=self.two_month_ago,
             end=self.after_one_month,
             user=self.hr_officer,
@@ -115,7 +121,7 @@ class TestHrTransfer(TransactionCase):
             }
         )
         self.assertEqual(transfer1.src_id, contract.job_id)
-        self.assertEqual(transfer1.src_contract_id.state, "open")
+        self.assertTrue(transfer1.src_contract_id.is_in_contract)
         self.assertEqual(transfer1.state, "draft")
         transfer1.unlink()
 
@@ -126,7 +132,7 @@ class TestHrTransfer(TransactionCase):
                 "date": self.today,
             }
         )
-        self.assertEqual(transfer2.src_contract_id.state, "open")
+        self.assertTrue(transfer2.src_contract_id.is_in_contract)
         self.assertEqual(transfer2.state, "draft")
 
         transfer2.action_confirm()
@@ -136,6 +142,11 @@ class TestHrTransfer(TransactionCase):
 
         transfer2.action_transfer()
         self.assertEqual(transfer2.state, "done")
+        # The transfer closes the old version and opens a new one on the
+        # destination job.
+        self.assertTrue(transfer2.dst_contract_id)
+        self.assertEqual(transfer2.dst_contract_id.job_id, self.job_consultant)
+        self.assertEqual(transfer2.dst_contract_id.contract_date_start, self.today)
         with self.assertRaises(UserError):
             transfer2.unlink()
 
@@ -143,8 +154,6 @@ class TestHrTransfer(TransactionCase):
         employee = self.create_employee("#John", self.job_trainee.id)
         self.create_contract(
             employee=employee,
-            state="open",
-            kanban_start="normal",
             start=self.two_month_ago,
             end=self.after_one_month,
             user=self.hr_officer,
@@ -172,8 +181,6 @@ class TestHrTransfer(TransactionCase):
         employee = self.create_employee("#John", self.job_trainee.id)
         contract = self.create_contract(
             employee=employee,
-            state="open",
-            kanban_start="normal",
             start=self.two_month_ago,
             end=self.after_one_month,
             user=self.hr_officer,
@@ -187,7 +194,9 @@ class TestHrTransfer(TransactionCase):
         )
         transfer.with_user(self.hr_officer).action_confirm()
         self.assertEqual(transfer.state, "confirm")
-        contract.signal_close()
+        # End the contract: in 18.0 this was signal_close(), which set the
+        # custom state to "close"; the 19.0 equivalent is the native end date.
+        contract.contract_date_end = self.today
         with self.assertRaises(UserError):
             transfer.with_user(self.hr_officer).action_transfer()
 
@@ -195,8 +204,6 @@ class TestHrTransfer(TransactionCase):
         employee = self.create_employee("#John", self.job_trainee.id)
         self.create_contract(
             employee=employee,
-            state="open",
-            kanban_start="normal",
             start=self.two_month_ago,
             end=self.after_one_month,
             user=self.hr_officer,

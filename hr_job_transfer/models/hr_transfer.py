@@ -53,7 +53,7 @@ class HrTransfer(models.Model):
     )
     src_contract_id = fields.Many2one(
         string="From Contract",
-        comodel_name="hr.contract",
+        comodel_name="hr.version",
         compute="_compute_onchange_employee",
         store=True,
         readonly=True,
@@ -61,7 +61,7 @@ class HrTransfer(models.Model):
     )
     dst_contract_id = fields.Many2one(
         string="Destination Contract",
-        comodel_name="hr.contract",
+        comodel_name="hr.version",
         readonly=True,
         check_company=True,
     )
@@ -93,7 +93,7 @@ class HrTransfer(models.Model):
         for transfer in self:
             if transfer.employee_id:
                 transfer.src_id = transfer.employee_id.job_id
-                transfer.src_contract_id = transfer.employee_id.contract_id
+                transfer.src_contract_id = transfer.employee_id.version_id
             else:
                 transfer.src_id = False
                 transfer.src_contract_id = False
@@ -159,14 +159,20 @@ class HrTransfer(models.Model):
 
     @api.model
     def _check_state(self, contract, effective_date):
-        _state_kanban_state = [
-            ("trial", "normal"),
-            ("trial", "blocked"),
-            ("open", "normal"),
-            ("open", "blocked"),
-        ]
+        """Reject a transfer whose source contract is not a running version.
 
-        if (contract.state, contract.kanban_state) not in _state_kanban_state:
+        Odoo 19 dropped ``hr.contract`` (and with it trevi's custom
+        ``state``/``kanban_state`` machine), so a contract is now an
+        ``hr.version``. The 18.0 ("trial"/"open") check is expressed with the
+        native flags: the version must be active, started, and neither past
+        nor future.
+        """
+        if (
+            not contract.active
+            or not contract.contract_date_start
+            or contract.is_past
+            or contract.is_future
+        ):
             raise UserError(
                 _(
                     "Warning!\n"
@@ -174,7 +180,7 @@ class HrTransfer(models.Model):
                 )
             )
 
-        if contract.date_end and effective_date >= contract.date_end:
+        if contract.contract_date_end and effective_date >= contract.contract_date_end:
             raise UserError(
                 _(
                     "Warning!\n"
@@ -197,18 +203,18 @@ class HrTransfer(models.Model):
 
     @api.model
     def transfer_contract(self, contract, job, transfer, effective_date):
-        Contract = self.env["hr.contract"]
+        Contract = self.env["hr.version"]
 
-        # If the start and date is the same as the contract start date simply change
-        # the current contract.
-        if effective_date == contract.date_start:
+        # If the start date is the same as the contract start date simply change
+        # the current version.
+        if effective_date == contract.contract_date_start:
             contract.job_id = job
-            # Link to the new contract
+            # Link to the new version
             transfer.dst_contract_id = contract
             return
 
-        # generate unique contract name as it is a required field.
-        emp_contract_count = self.env["hr.contract"].search_count(
+        # generate unique version name as it is a required field.
+        emp_contract_count = Contract.search_count(
             [("employee_id", "=", contract.employee_id.id)]
         )
         _contract_name = _(
@@ -217,30 +223,30 @@ class HrTransfer(models.Model):
             number=(emp_contract_count + 1),
         )
 
-        # Copy the contract and adjust start/end dates, job id, etc. accordingly.
+        # Copy the version and adjust start/end dates, job id, etc. accordingly.
         default = {
             "job_id": job.id,
-            "date_start": effective_date,
+            "contract_date_start": effective_date,
+            "date_version": effective_date,
             "name": _contract_name,
-            "state": False,
             "message_ids": False,
             "trial_date_start": contract.trial_date_start,
             "trial_date_end": contract.trial_date_end,
         }
         data = contract.copy_data(default=default)
 
-        # Terminate the current contract (and trigger appropriate state change)
-        contract.date_end = effective_date - relativedelta(days=1)
-        contract.signal_close()
+        # End the current version the day before the effective date. In 18.0
+        # this also flipped the contract's custom ``state`` to ``close``;
+        # setting the native end date is the 19.0 replacement.
+        contract.contract_date_end = effective_date - relativedelta(days=1)
 
-        # create new contract
+        # create new version
         new_contract = Contract.create(data)
 
         if new_contract:
-            # Set the new contract to the appropriate state
-            new_contract.signal_confirm()
-
-            # Link to the new contract
+            # The new version is live by virtue of its dates, there is no
+            # longer a ``signal_confirm()`` state to set.
+            # Link to the new version
             transfer.dst_contract_id = new_contract
 
         return True
