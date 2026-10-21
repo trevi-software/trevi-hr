@@ -24,7 +24,6 @@ class TestHrEmployeeSeniority(common.TransactionCase):
         self.HrContract = self.env["hr.contract"]
 
     def _get_days_in_month(self, d):
-
         last_date = (
             d
             - timedelta(days=(d.day - 1))
