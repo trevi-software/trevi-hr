@@ -3,9 +3,9 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 {
-    "name": "Stateful Employee Contracts",
-    "summary": "Workflows and notifications on employee contracts.",
-    "version": "18.0.1.0.0",
+    "name": "Employee Contract Status",
+    "summary": "Notifications on employee contracts about to end.",
+    "version": "19.0.1.0.0",
     "category": "Human Resources",
     "license": "AGPL-3",
     "author": "TREVI Software, Michael Telahun Makonnen",
@@ -13,15 +13,14 @@
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
         "hr",
-        "hr_contract",
         "hr_contract_values",
         "trevi_hr_usability",
     ],
     "pre_init_hook": "pre_init_hook",
     "data": [
         "security/ir.model.access.csv",
-        "data/hr_contract_data.xml",
-        "views/hr_contract_view.xml",
+        "data/hr_version_data.xml",
+        "views/hr_version_view.xml",
         "views/res_config_view.xml",
     ],
 }

@@ -1,7 +1,8 @@
 # Copyright (C) 2026 Trevi Software (https://trevi.et)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo import SUPERUSER_ID, api
+from odoo import api
+from odoo.api import SUPERUSER_ID
 
 
 def pre_init_hook(env_or_cr):
