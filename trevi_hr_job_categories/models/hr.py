@@ -23,7 +23,6 @@ class HrContract(models.Model):
 
     @api.model
     def _remove_tags(self, employee_id, job_id):
-
         if not employee_id or not job_id:
             return
 
@@ -38,7 +37,6 @@ class HrContract(models.Model):
 
     @api.model
     def _tag_employees(self, employee_id, job_id):
-
         if not employee_id or not job_id:
             return
 
@@ -53,7 +51,6 @@ class HrContract(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-
         records = super().create(vals_list)
 
         for vals in vals_list:
@@ -63,7 +60,6 @@ class HrContract(models.Model):
         return records
 
     def write(self, vals):
-
         prev_data = self.read(["job_id"])
         res = super().write(vals)
 
