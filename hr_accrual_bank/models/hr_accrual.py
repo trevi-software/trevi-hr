@@ -19,7 +19,6 @@ class HrAccrual(models.Model):
     )
 
     def get_balance(self, employee_id, date=None):
-
         if date is None:
             date = fields.Date.today()
 
@@ -35,7 +34,6 @@ class HrAccrual(models.Model):
         return res
 
     def deposit(self, employee_id, amount, date, name=None):
-
         line_obj = self.env["hr.accrual.line"]
 
         res = []
