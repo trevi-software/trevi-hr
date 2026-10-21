@@ -115,7 +115,6 @@ class ResourceCalendarAttendance(models.Model):
 
     @api.onchange("sequence")
     def _onchange_sequence(self):
-
         for rec in self:
             if not rec.calendar_id:
                 continue
@@ -136,7 +135,6 @@ class ResourceCalendarAttendance(models.Model):
 
     @api.onchange("week_nbr")
     def _onchange_week_nbr(self):
-
         for rec in self:
             rec.week_type = rec.week_nbr % 2 == 0 and "0" or "1"
 
@@ -154,7 +152,6 @@ class ResourceCalendarAttendance(models.Model):
 
     @api.depends("hour_from", "hour_to")
     def _compute_duration(self):
-
         for rec in self:
             _duration = rec._compute_duration_common(
                 rec.hour_from, rec.hour_to, rec.span_midnight
@@ -173,7 +170,6 @@ class ResourceCalendarAttendance(models.Model):
     # the other place where the values were updated.
     #
     def _update_from_template(self, template, is_create=False, values=False):
-
         if values is False:
             values = {}
         if not template:
@@ -252,7 +248,6 @@ class ResourceCalendarAttendance(models.Model):
 
     @api.model_create_multi
     def create(self, values_list):
-
         for values in values_list:
             if (
                 "shift_type" in values
@@ -291,7 +286,6 @@ class ResourceCalendarAttendance(models.Model):
         return res
 
     def write(self, values):
-
         res = super().write(values)
         if "sequence" in values:
             self._onchange_sequence()

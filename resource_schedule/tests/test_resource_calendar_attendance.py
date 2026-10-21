@@ -53,7 +53,6 @@ class TestResourceCalendarAttendance(common.TransactionCase):
         )
 
     def test_copy_attendance(self):
-
         catt = self.CalendarAttendance.create(
             {
                 "name": "Monday",
@@ -131,7 +130,6 @@ class TestResourceCalendarAttendance(common.TransactionCase):
         )
 
     def test_duration(self):
-
         catt = self.CalendarAttendance.create(
             {
                 "name": "Monday",
@@ -148,7 +146,6 @@ class TestResourceCalendarAttendance(common.TransactionCase):
         )
 
     def test_duration_with_break(self):
-
         catt = self.CalendarAttendance.create(
             {
                 "template_id": self.workday_template.id,
@@ -162,7 +159,6 @@ class TestResourceCalendarAttendance(common.TransactionCase):
         )
 
     def test_duration_span_midnight(self):
-
         catt = self.CalendarAttendance.create(
             {
                 "template_id": self.night_template.id,
@@ -176,7 +172,6 @@ class TestResourceCalendarAttendance(common.TransactionCase):
         )
 
     def test_onchange_template(self):
-
         frmCA = Form(self.CalendarAttendance)
         self.assertFalse(frmCA.name, "Initialy name field is the default value")
         self.assertEqual(
@@ -214,7 +209,6 @@ class TestResourceCalendarAttendance(common.TransactionCase):
         )
 
     def test_span_midnight(self):
-
         catt = self.CalendarAttendance.create(
             {
                 "template_id": self.night_template.id,
@@ -242,7 +236,6 @@ class TestResourceCalendarAttendance(common.TransactionCase):
         )
 
     def test_flex_autopunch(self):
-
         with self.assertRaises(ValidationError):
             self.AttendanceTemplate.create(
                 {
@@ -294,7 +287,6 @@ class TestResourceCalendarAttendance(common.TransactionCase):
             attendance.autopunch = True
 
     def test_flex_template_invalid_values(self):
-
         frmAtt = Form(self.AttendanceTemplate)
         frmAtt.name = "Flex shift"
         frmAtt.day_period = "8day"
@@ -363,7 +355,6 @@ class TestResourceCalendarAttendance(common.TransactionCase):
         )
 
     def test_flex_invalid_values(self):
-
         frmAtt = Form(
             self.CalendarAttendance.with_context(
                 default_calendar_id=self.default_calendar.id

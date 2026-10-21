@@ -73,7 +73,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         wage=1,
         calendar_id=None,
     ):
-
         if employee_id is None:
             employee_id = self.employee.id
         if start is None:
@@ -100,7 +99,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         ).method_direct_trigger()
 
     def get_start_end_dates(self, weeks=1):
-
         total_days = (weeks * 7) - 1
         dStart = date.today()  # noqa: DTZ011
         while dStart.weekday() != 0:
@@ -124,7 +122,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         return res
 
     def test_record_order(self):
-
         c = self.create_contract(calendar_id=self.default_calendar.id)
         self.apply_cron()
 
@@ -141,7 +138,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
             )
 
     def test_compute_employee(self):
-
         self.assertGreater(
             len(self.default_calendar.attendance_ids),
             0,
@@ -162,7 +158,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
             )
 
     def test_duration(self):
-
         shifts = self.ScheduleShift.create_schedule(
             self.employee.resource_id,
             date.today(),  # noqa: DTZ011
@@ -196,7 +191,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
             )
 
     def test_end_middle_of_week(self):
-
         start = date.today()  # noqa: DTZ011
         # end the shift on a wednesday
         end = start + timedelta(days=7)
@@ -212,7 +206,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
 
     # Because sunday is a boundary of Work Schedules (resource.calendar)
     def test_date_range_end_sunday(self):
-
         start = date.today()  # noqa: DTZ011
         # The end date is on a sunday
         end = start + timedelta(days=7)
@@ -232,7 +225,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
 
     # Because of a bug I found when working with a 5-day work week
     def test_date_range_end_sunday_2(self):
-
         start = date.today()  # noqa: DTZ011
         # The end date is on a sunday
         end = start + timedelta(days=7)
@@ -257,7 +249,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         )
 
     def test_onchange_resource(self):
-
         self.employee.resource_id.calendar_id = self.std35_calendar
         self.eeSally.resource_id.calendar_id = self.default_calendar
 
@@ -281,7 +272,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         )
 
     def test_onchange_resource_2(self):
-
         self.att_template.default_area_id = self.area_1
         self.employee.resource_id.calendar_id = self.production_calendar
 
@@ -303,7 +293,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         )
 
     def test_onchange_calendar(self):
-
         self.employee.resource_id.calendar_id = self.production_calendar
         frmShift = Form(self.ScheduleShift)
         self.assertEqual(
@@ -366,7 +355,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         )
 
     def test_create_schedule_default_offday(self):
-
         dStart, dEnd = self.get_start_end_dates()
         self.employee.resource_id.calendar_id = self.production_calendar
         shifts = self.ScheduleShift.search(
@@ -387,7 +375,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         )
 
     def test_create_schedule_employee_offday(self):
-
         dStart, dEnd = self.get_start_end_dates()
         self.production_calendar.dayoff_type = "fix_one"
         self.employee.resource_id.calendar_id = self.production_calendar
@@ -411,7 +398,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         )
 
     def test_create_schedule_rolling_offday(self):
-
         dStart, dEnd = self.get_start_end_dates(weeks=3)
         self.production_calendar.dayoff_type = "rolling"
         self.employee.resource_id.calendar_id = self.production_calendar
@@ -453,7 +439,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         )
 
     def test_night_shift(self):
-
         dStart, dEnd = self.get_start_end_dates()
         self.employee.resource_id.calendar_id = (self.night_calendar,)
         shifts = self.ScheduleShift.search(
@@ -498,7 +483,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
             today += timedelta(days=1)
 
     def test_flex_night_shift(self):
-
         self.flex_workday_template.span_midnight = True
         self.flex_workday_template.hour_from = 18
         self.flex_workday_template.hour_to = 6
@@ -564,7 +548,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
             today += timedelta(days=1)
 
     def test_no_autopunch(self):
-
         dStart, dEnd = self.get_start_end_dates()
         self.employee.resource_id.calendar_id = self.production_calendar
         shifts = self.ScheduleShift.search(
@@ -600,7 +583,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         )
 
     def test_autopunch(self):
-
         dStart, dEnd = self.get_start_end_dates()
         self.employee.resource_id.calendar_id = self.production_calendar
         self.production_calendar.attendance_ids.autopunch = True
@@ -671,7 +653,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         )
 
     def test_autopunch_span_midnight(self):
-
         dStart, dEnd = self.get_start_end_dates()
         self.employee.resource_id.calendar_id = self.night_calendar
         shifts = self.ScheduleShift.search(
@@ -741,7 +722,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         )
 
     def test_autopunch_multiple_shifts(self):
-
         tpl_morn = self.AttendanceTemplate.create(
             {
                 "name": "Morning",
@@ -1012,7 +992,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         )
 
     def test_conflicting_autopunch(self):
-
         dStart, dEnd = self.get_start_end_dates()
         self.employee.resource_id.calendar_id = self.production_calendar
         self.production_calendar.attendance_ids.autopunch = True
@@ -1056,7 +1035,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
             )
 
     def test_autopunch_missed_run(self):
-
         LastRun = self.env["resource.schedule.autopunch.lastrun"]
         dStart, dEnd = self.get_start_end_dates()
         self.employee.resource_id.calendar_id = self.production_calendar
@@ -1160,7 +1138,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         )
 
     def test_datetimes(self):
-
         # when writing directly to DB it is assumed the datetime is already in UTC
         dtStart = datetime.combine(
             date.today(),  # noqa: DTZ011

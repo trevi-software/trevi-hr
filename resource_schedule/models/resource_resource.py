@@ -13,7 +13,6 @@ class ResourceResource(models.Model):
     schedule_team_id = fields.Many2one("resource.schedule.team", "Shift team")
 
     def create_schedule(self, date_start, date_end, calendar=None):
-
         resources = self
         ScheduleShift = self.env["resource.schedule.shift"]
         return ScheduleShift.create_schedule(resources, date_start, date_end, calendar)

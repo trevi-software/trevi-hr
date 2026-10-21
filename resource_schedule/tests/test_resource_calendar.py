@@ -20,7 +20,6 @@ class TestResourceCalenar(TestResourceScheduleCommon):
         cls.production_calendar = cls.seven_day_calendar
 
     def test_default_get(self):
-
         cal = self.ResourceCalendar.create({"name": "My Work Cal"})
         self.assertGreater(
             len(cal.attendance_ids), 0, "The new calendar has default work days"
@@ -45,7 +44,6 @@ class TestResourceCalenar(TestResourceScheduleCommon):
                 )
 
     def test_default_get2(self):
-
         company = self.env["res.company"].create({"name": "Company 2"})
         cal = company.resource_calendar_id
         self.assertGreater(
@@ -71,7 +69,6 @@ class TestResourceCalenar(TestResourceScheduleCommon):
                 )
 
     def test_field_two_weeks_calendar(self):
-
         self.assertEqual(
             len(
                 self.default_calendar.attendance_ids.filtered(
@@ -109,7 +106,6 @@ class TestResourceCalenar(TestResourceScheduleCommon):
         )
 
     def test_field_multi_calendar_change_sequence(self):
-
         self.assertEqual(
             len(
                 self.default_calendar.attendance_ids.filtered(
@@ -158,7 +154,6 @@ class TestResourceCalenar(TestResourceScheduleCommon):
         )
 
     def test_compute_hours_per_day(self):
-
         self.default_calendar.switch_calendar_type()
         self.assertEqual(
             len(
@@ -221,7 +216,6 @@ class TestResourceCalenar(TestResourceScheduleCommon):
         )
 
     def test_hours_per_day_autodeduct_break(self):
-
         cal = self.default_calendar.copy()
         # cal.switch_calendar_type()
         cal.attendance_ids.unlink()
@@ -237,7 +231,6 @@ class TestResourceCalenar(TestResourceScheduleCommon):
         )
 
     def test_flex_hours_per_day(self):
-
         cal = self.default_calendar.copy()
         cal.attendance_ids.unlink()
         self.wtpl_flex_weekday.flex_scheduled_hrs = 8

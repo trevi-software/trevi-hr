@@ -12,7 +12,6 @@ class ResCompany(models.Model):
         self.search([("resource_calendar_id", "!=", False)])._create_resource_calendar()
 
     def _create_resource_calendar(self):
-
         ret = super()._create_resource_calendar()
 
         for company in self:

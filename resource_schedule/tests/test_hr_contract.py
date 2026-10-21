@@ -36,7 +36,6 @@ class TestContract(TestResourceScheduleCommon):
         wage=1,
         calendar_id=None,
     ):
-
         if employee_id is None:
             employee_id = self.employee.id
         if start is None:
@@ -64,7 +63,6 @@ class TestContract(TestResourceScheduleCommon):
         ).method_direct_trigger()
 
     def test_no_work_detail(self):
-
         c = self.create_contract(calendar_id=self.empty_calendar.id)
         self.apply_cron()
 
@@ -80,7 +78,6 @@ class TestContract(TestResourceScheduleCommon):
         )
 
     def test_contract_in_past(self):
-
         prev_start = date(2021, 1, 1)
         prev_end = date(2021, 1, 31)
         c = self.create_contract(
@@ -95,7 +92,6 @@ class TestContract(TestResourceScheduleCommon):
         )
 
     def test_multiple_contracts(self):
-
         prev_start = date.today()
         prev_end = prev_start + relativedelta(days=31)
         start = prev_start + relativedelta(days=32)
@@ -132,7 +128,6 @@ class TestContract(TestResourceScheduleCommon):
         )
 
     def test_schedule_on_create(self):
-
         c = self.create_contract(calendar_id=self.empty_calendar.id)
         self.assertEqual(
             c.employee_id.resource_id.calendar_id,
@@ -141,7 +136,6 @@ class TestContract(TestResourceScheduleCommon):
         )
 
     def test_write_new_schedule(self):
-
         c = self.create_contract(calendar_id=self.empty_calendar.id)
         self.assertEqual(
             c.employee_id.resource_id.calendar_id,
@@ -157,7 +151,6 @@ class TestContract(TestResourceScheduleCommon):
         )
 
     def test_schedule_on_first_contract(self):
-
         c = self.create_contract(calendar_id=self.default_calendar.id)
 
         i = 0

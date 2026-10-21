@@ -18,7 +18,6 @@ class TestHrAttendance(common.TransactionCase):
         cls.eeSally = cls.HrEmployee.create({"name": "Sally"})
 
     def test_auto_punchout(self):
-
         self.env["ir.config_parameter"].set_param(
             "resource_schedule.max_shift_length", 15
         )
@@ -80,7 +79,6 @@ class TestHrAttendance(common.TransactionCase):
         )
 
     def test_auto_punchout2(self):
-
         check_in = datetime.now() - timedelta(hours=14)
         att = self.HrAttendance.create(
             {"employee_id": self.employee.id, "check_in": check_in}

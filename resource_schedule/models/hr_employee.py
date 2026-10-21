@@ -18,7 +18,6 @@ class HrEmployee(models.Model):
     )
 
     def action_view_schedule(self):
-
         action_schedule = self.env.ref(
             "resource_schedule.open_employee_schedule_view"
         ).read()[0]
@@ -29,6 +28,5 @@ class HrEmployee(models.Model):
         return action_schedule
 
     def create_schedule(self, date_start, date_end, calendar=None):
-
         resources = self.mapped("resource_id")
         return resources.create_schedule(date_start, date_end, calendar)

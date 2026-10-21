@@ -15,7 +15,6 @@ class DepartmentSelection(models.TransientModel):
     )
 
     def view_schedules(self):
-
         data = self.read()[0]
         return {
             "view_mode": "list,form",
@@ -31,7 +30,6 @@ class DepartmentSelection(models.TransientModel):
         }
 
     def do_validate(self):
-
         sched_ids = self.env["resource.schedule.shift"].search(
             [("department_id", "in", self.department_ids.ids)]
         )

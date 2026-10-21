@@ -62,7 +62,6 @@ class ResourceScheduleShift(models.Model):
     )
 
     def name_get(self):
-
         HOUR_FORMAT = "%I:%M %p"
         res = []
         for rec in self:
@@ -92,7 +91,6 @@ class ResourceScheduleShift(models.Model):
 
     @api.depends("datetime_start", "datetime_end")
     def _compute_name(self):
-
         for rec in self:
             if not rec.datetime_start or not rec.datetime_end:
                 continue
@@ -170,22 +168,18 @@ class ResourceScheduleShift(models.Model):
             rec._update_default_area()
 
     def datetimes_naive_utc(self):
-
         res = [shift._datetimes_naive_utc() for shift in self]
         return res
 
     def _datetimes_naive_utc(self):
-
         self.ensure_one()
         return (self.datetime_start, self.datetime_end, self)
 
     def datetimes_naive_tz(self):
-
         res = [shift._datetimes_naive_tz() for shift in self]
         return res
 
     def _datetimes_naive_tz(self):
-
         self.ensure_one()
         ltz = timezone(self.tz)
         return (
@@ -284,7 +278,6 @@ class ResourceScheduleShift(models.Model):
 
     @api.model
     def _autopunch_shifts(self, now):
-
         res = self.env["hr.attendance"]
         dToday = now.date()
         dLastRun = dToday
@@ -413,7 +406,6 @@ class ResourceScheduleShift(models.Model):
 
     @api.model
     def _get_calendar_and_start_week(self, resource, calendar):
-
         # If no calendar is specified use working time (calendar) in following order:
         #     - Team working time
         #     - Resource working time
@@ -429,7 +421,6 @@ class ResourceScheduleShift(models.Model):
 
     @api.model
     def create_schedule(self, resources, date_start, date_end, calendar=None):
-
         res = self.env["resource.schedule.shift"]
         for resource in resources:
             res |= self._create_schedule(resource, date_start, date_end, calendar)
@@ -548,7 +539,6 @@ class ResourceScheduleShift(models.Model):
 
     @api.model
     def creat_mass_schedule(self):
-
         # Create a two-week schedule beginning from Monday of next week.
         #
         dt = datetime.today()  # noqa: DTZ002
@@ -571,9 +561,7 @@ class ResourceScheduleShift(models.Model):
                 ee.create_schedule(dStart, dEnd)
 
     def publish(self):
-
         self.published = True
 
     def unpublish(self):
-
         self.published = False

@@ -15,7 +15,6 @@ class TestScheduleGroup(common.TransactionCase):
         cls.groupKitchen = cls.ScheduleGroup.create({"name": "Kitchen A"})
 
     def test_default_company(self):
-
         self.assertEqual(
             self.groupKitchen.company_id,
             self.env.company,
@@ -23,7 +22,6 @@ class TestScheduleGroup(common.TransactionCase):
         )
 
     def test_compute_template_count(self):
-
         self.assertEqual(
             self.ScheduleGroup.template_count, 0, "Initial resource count is zero"
         )

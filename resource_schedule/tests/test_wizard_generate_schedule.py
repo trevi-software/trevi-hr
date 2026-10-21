@@ -21,7 +21,6 @@ class TestWizardGenerateSchedule(common.TransactionCase):
         cls.eeSally.resource_id.calendar_id = cls.std35_calendar
 
     def get_start_end_dates(self, weeks=1):
-
         total_days = (weeks * 7) - 1
         dStart = date.today()  # noqa: DTZ011
         while dStart.weekday() != 0:
@@ -30,7 +29,6 @@ class TestWizardGenerateSchedule(common.TransactionCase):
         return dStart, dEnd
 
     def test_generate_one_employee(self):
-
         monday = date.today()  # noqa: DTZ011
         while monday.weekday() > 0:
             monday -= timedelta(days=1)
@@ -99,7 +97,6 @@ class TestWizardGenerateSchedule(common.TransactionCase):
         )
 
     def test_generate_by_calendar(self):
-
         start, end = self.get_start_end_dates(weeks=2)
 
         shift_ids = self.ScheduleShift.search(

@@ -15,7 +15,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         cls.eeSally = cls.HrEmployee.create({"name": "Sally"})
 
     def get_start_end_dates(self, weeks=1):
-
         total_days = (weeks * 7) - 1
         dStart = date.today()
         while dStart.weekday() != 0:
@@ -24,7 +23,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         return dStart, dEnd
 
     def test_schedule_team(self):
-
         dStart, dEnd = self.get_start_end_dates(weeks=1)
         employees = self.employee | self.eeSally
         teamA = self.team_alpha
@@ -102,7 +100,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         )
 
     def test_schedule_dupont(self):
-
         dStart, dEnd = self.get_start_end_dates(weeks=4)
         teamA = self.team_alpha
         teamA.resource_calendar_id = self.dupont_calendar

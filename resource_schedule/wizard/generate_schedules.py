@@ -41,7 +41,6 @@ class ResourceScheduleGenerate(models.TransientModel):
 
     @api.onchange("date_start")
     def onchange_date_start(self):
-
         for rec in self:
             # The schedule must start on a Monday
             if rec.date_start and rec.date_start.weekday() != 0:
@@ -52,7 +51,6 @@ class ResourceScheduleGenerate(models.TransientModel):
 
     @api.onchange("resource_calendar_id")
     def _onchange_resource_calendar_id(self):
-
         for rec in self:
             if rec.sched_type == "calendar" and rec.resource_calendar_id:
                 resources = self.env["resource.resource"].search(
@@ -66,7 +64,6 @@ class ResourceScheduleGenerate(models.TransientModel):
                 rec.employee_ids = [(4, 0, 0)]
 
     def generate_schedules(self):
-
         Schedule = self.env["resource.schedule.shift"]
         dStart = self.date_start
         dEnd = dStart + relativedelta(weeks=abs(self.no_weeks), days=-1)

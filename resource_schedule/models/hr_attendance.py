@@ -48,6 +48,5 @@ class HrAttendance(models.Model):
         return res
 
     def _exceeds_max_duration(self, now):
-
         duration = now - self.check_in
         return int(duration.total_seconds() / 60.0 / 60.0) >= 15

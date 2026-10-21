@@ -15,6 +15,5 @@ class AutopunchLastrun(models.Model):
 
     @api.depends("record_ids")
     def _compute_record_count(self):
-
         for rec in self:
             rec.record_count = len(rec.record_ids)

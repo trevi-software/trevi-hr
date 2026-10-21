@@ -25,7 +25,6 @@ class TestScheduleArea(common.TransactionCase):
         )
 
     def test_default_company(self):
-
         self.assertEqual(
             self.areaKitchen.company_id,
             self.env.company,
@@ -33,7 +32,6 @@ class TestScheduleArea(common.TransactionCase):
         )
 
     def test_compute_resource_count(self):
-
         self.assertEqual(
             self.ScheduleArea.resource_count, 0, "Initial resource count is zero"
         )

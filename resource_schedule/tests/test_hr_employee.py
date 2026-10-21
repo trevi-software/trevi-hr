@@ -19,7 +19,6 @@ class TestHrEmployee(TestResourceScheduleCommon):
         cls.default_calendar = cls.office_calendar
 
     def test_create_schedule(self):
-
         dStart = date.today()
         while dStart.weekday() != 0:
             dStart -= timedelta(days=1)

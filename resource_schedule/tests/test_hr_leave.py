@@ -52,7 +52,6 @@ class TestHrLeave(TestResourceScheduleCommon):
         leave.invalidate_recordset(["date_from", "date_to"])
 
     def get_start_end_dates(self, weeks=1):
-
         total_days = (weeks * 7) - 1
         dStart = date.today()  # noqa: DTZ011
         while dStart.weekday() != 0:
@@ -61,7 +60,6 @@ class TestHrLeave(TestResourceScheduleCommon):
         return dStart, dEnd
 
     def test_leave_subsumes_whole_shift(self):
-
         dStart, dEnd = self.get_start_end_dates()
         self.eeSally.resource_id.calendar_id = self.default_calendar
         shifts = self.ScheduleShift.search(
@@ -102,7 +100,6 @@ class TestHrLeave(TestResourceScheduleCommon):
         self.assertLess(len(shifts), count, "The shift has been removed by the leave")
 
     def test_leave_partial_start_shift(self):
-
         # Set timezone
         self.default_calendar.tz = "UTC"
         dStart, dEnd = self.get_start_end_dates()
@@ -150,7 +147,6 @@ class TestHrLeave(TestResourceScheduleCommon):
         )
 
     def test_leave_partial_end_shift(self):
-
         dStart, dEnd = self.get_start_end_dates()
         self.eeSally.resource_id.calendar_id = self.default_calendar
         shifts = self.ScheduleShift.search(
@@ -200,7 +196,6 @@ class TestHrLeave(TestResourceScheduleCommon):
         )
 
     def test_remove_autopunch(self):
-
         dStart, dEnd = self.get_start_end_dates()
         self.default_calendar.attendance_ids.autopunch = True
         self.eeSally.resource_id.calendar_id = self.default_calendar
@@ -276,7 +271,6 @@ class TestHrLeave(TestResourceScheduleCommon):
         self.assertFalse(punches, "The attendance record for Monday has been removed")
 
     def test_modify_autopunch(self):
-
         dStart, dEnd = self.get_start_end_dates()
         self.default_calendar.attendance_ids.autopunch = True
         self.eeSally.resource_id.calendar_id = self.default_calendar
@@ -358,7 +352,6 @@ class TestHrLeave(TestResourceScheduleCommon):
         )
 
     def test_modify_autopunch2(self):
-
         dStart, dEnd = self.get_start_end_dates()
         self.default_calendar.attendance_ids.autopunch = True
         self.eeSally.resource_id.calendar_id = self.default_calendar

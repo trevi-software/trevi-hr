@@ -19,7 +19,6 @@ class HrContract(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-
         records = super().create(vals_list)
 
         for res, vals in zip(records, vals_list, strict=True):
@@ -80,7 +79,6 @@ class HrContract(models.Model):
         return records
 
     def write(self, values):
-
         res = super().write(values)
 
         # Update resource.calendar on employee resource record

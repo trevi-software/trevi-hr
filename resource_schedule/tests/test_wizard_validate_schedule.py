@@ -22,7 +22,6 @@ class TestWizardValidateSchedule(common.TransactionCase):
         cls.eeJohn.resource_id.calendar_id = cls.std35_calendar
 
     def get_start_end_dates(self, weeks=1):
-
         total_days = (weeks * 7) - 1
         dStart = date.today()  # noqa: DTZ011
         while dStart.weekday() != 0:
@@ -31,7 +30,6 @@ class TestWizardValidateSchedule(common.TransactionCase):
         return dStart, dEnd
 
     def test_validate_department(self):
-
         start, end = self.get_start_end_dates()
         shifts = self.eeJohn.create_schedule(start, end)
         for shift in shifts:

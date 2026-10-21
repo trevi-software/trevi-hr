@@ -34,7 +34,6 @@ class ResourceCalendar(models.Model):
 
     @api.model
     def default_get(self, fields):
-
         res = super().default_get(fields)
 
         # Inject the default work detail templates into the default values
@@ -62,7 +61,6 @@ class ResourceCalendar(models.Model):
 
     @api.onchange("attendance_ids")
     def _onchange_attendance_ids(self):
-
         section_ids = self.attendance_ids.filtered(
             lambda a: a.display_type == "line_section"
         )
@@ -75,7 +73,6 @@ class ResourceCalendar(models.Model):
 
     @api.constrains("attendance_ids")
     def _check_attendance(self):
-
         filtered = self.env["resource.calendar"]
         for calendar in self:
             # For the moment, don't check work items that contain a night shift
@@ -146,7 +143,6 @@ class ResourceCalendar(models.Model):
                 calendar.hours_per_day = 0.0
 
     def switch_calendar_type(self):
-
         super().switch_calendar_type()
 
         if not self.two_weeks_calendar:
