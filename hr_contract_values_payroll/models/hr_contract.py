@@ -11,7 +11,6 @@ class HrContract(models.Model):
 
     @api.model
     def _get_struct(self):
-
         res = False
         init = self.get_latest_initial_values()
         if init is not None and init.struct_id:
