@@ -99,7 +99,6 @@ class BenefitPolicy(models.Model):
         "premium_override_total",
     )
     def _compute_amounts(self):
-
         for rec in self:
             res = {
                 "advantage_amount": 0,
@@ -139,7 +138,6 @@ class BenefitPolicy(models.Model):
 
     @api.depends("start_date", "premium_amount", "premium_total")
     def _compute_premium_installments(self):
-
         for rec in self:
             res = {"end_date": False, "premium_installments": 0}
             if rec.premium_amount == 0:
@@ -157,7 +155,6 @@ class BenefitPolicy(models.Model):
 
     @api.model
     def _fail_eligibility(self, benefit_id, employee_id):
-
         res = False
         benefit = self.env["hr.benefit"].browse(benefit_id)
 
@@ -182,7 +179,6 @@ class BenefitPolicy(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-
         for vals in vals_list:
             # Check if the employee is already enrolled
             #
@@ -240,7 +236,6 @@ class BenefitPolicy(models.Model):
         return ben_ids
 
     def unlink(self):
-
         for pol in self:
             if pol.state != "draft" and not (
                 self.env.context and self.env.context.get("force_delete", False)
@@ -276,17 +271,14 @@ class BenefitPolicy(models.Model):
         return super().write(vals)
 
     def state_open(self):
-
         self.write({"state": "open"})
         return True
 
     def state_done(self):
-
         self.write({"state": "done"})
         return True
 
     def end_policy(self):
-
         if len(self.ids) == 0:
             return False
 

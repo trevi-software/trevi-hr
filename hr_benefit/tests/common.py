@@ -163,7 +163,6 @@ class TestBenefitCommon(common.TransactionCase):
         )
 
     def create_benefit(self, vals):
-
         return self.Benefit.create(vals)
 
     def create_contract(self, state, kanban_state, start, end=None, trial_end=None):

@@ -152,7 +152,6 @@ class BenefitAdvantage(models.Model):
         return res
 
     def get_claims_in_period(self, employee_id, day):
-
         d = day
         period = self.reim_limit_period
         if period == "monthly":
@@ -206,7 +205,6 @@ class BenefitAdvantage(models.Model):
         return res
 
     def get_reimburse_remaining(self, employee_id, day):
-
         self.ensure_one()
         if self.type != "reimburse":
             raise UserError(

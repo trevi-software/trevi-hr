@@ -22,13 +22,11 @@ class EnrollEmployee(models.TransientModel):
 
     @api.model
     def _get_benefit(self):
-
         if self.env.context is None:
             self.env.context = {}
         return self.env.context.get("active_id", False)
 
     def do_enroll(self):
-
         if not self.benefit_id or not self.employee_id:
             return {"type": "ir.actions.act_window_close"}
 

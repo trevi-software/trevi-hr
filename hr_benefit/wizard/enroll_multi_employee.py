@@ -41,14 +41,12 @@ class EnrollEmployee(models.TransientModel):
 
     @api.model
     def _get_benefit(self):
-
         if self.env.context is None:
             self.env.context = {}
         return self.env.context.get("active_id", False)
 
     @api.depends("benefit_id")
     def _compute_amounts(self):
-
         for rec in self:
             res = {
                 "advantage_amount": 0,
@@ -73,7 +71,6 @@ class EnrollEmployee(models.TransientModel):
 
     @api.depends("start_date", "premium_amount", "premium_total")
     def _compute_premium_installments(self):
-
         for rec in self:
             res = {"end_date": False, "premium_installments": 0}
             if rec.premium_amount == 0:
@@ -90,7 +87,6 @@ class EnrollEmployee(models.TransientModel):
             rec.update(res)
 
     def do_multi_enroll(self):
-
         if not self.benefit_id or len(self.employee_ids) == 0:
             return {"type": "ir.actions.act_window_close"}
 

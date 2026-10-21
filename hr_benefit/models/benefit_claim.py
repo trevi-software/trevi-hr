@@ -41,7 +41,6 @@ class BenefitClaim(models.Model):
     )
 
     def name_get(self):
-
         res = []
         data = self.read(["date", "benefit_policy_id"])
         for d in data:
@@ -50,7 +49,6 @@ class BenefitClaim(models.Model):
 
     @api.onchange("employee_id")
     def onchange_employee(self):
-
         res = {"domain": {"benefit_policy_id": False}}
         if not self.employee_id:
             return res
@@ -62,7 +60,6 @@ class BenefitClaim(models.Model):
         return res
 
     def _get_approved_amount(self, dDate):
-
         self.ensure_one()
         approved = 0.00
         if dDate:
@@ -89,7 +86,6 @@ class BenefitClaim(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-
         records = super().create(vals_list)
         for rec, vals in zip(records, vals_list, strict=True):
             approved = rec._get_approved_amount(vals["date"])
@@ -104,7 +100,6 @@ class BenefitClaim(models.Model):
             )
 
     def write(self, vals):
-
         _fields = ["date", "employee_id", "amount_requested", "benefit_policy_id"]
         do_calc = False
         for k in vals:
@@ -125,7 +120,6 @@ class BenefitClaim(models.Model):
         return res
 
     def unlink(self):
-
         data = self.read(["state"])
         for d in data:
             if d["state"] in ["approve", "decline"] and not (
@@ -144,11 +138,9 @@ class BenefitClaim(models.Model):
         return True
 
     def claim_approve(self):
-
         self.write({"state": "approve"})
         return True
 
     def claim_decline(self):
-
         self.write({"state": "decline"})
         return True

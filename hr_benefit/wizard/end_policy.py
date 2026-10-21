@@ -14,11 +14,9 @@ class PolicyEnd(models.TransientModel):
 
     @api.model
     def _get_policy(self):
-
         return self.env.context.get("end_benefit_policy_id", False)
 
     def end_policy(self):
-
         policy_id = self._get_policy()
         if not policy_id:
             raise ValidationError(_("Unable to determine Benefit Policy."))
