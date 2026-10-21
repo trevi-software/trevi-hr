@@ -9,15 +9,21 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//form[hasclass('oe_form_configuration')]" position="inside">
-                <!-- groups="resource_schedule.group_scheduling_manager" -->
-                <block title="Shift Scheduling" name="shift_scheduling_container">
-                    <setting
-                        help="If an employee hasn't clocked out in this amount of time the system will automatically clock the employee out."
-                    >
-                        <label for="max_shift_length" />
-                        <field name="max_shift_length" required="1" /> Hrs
-                    </setting>
-                </block>
+                <!-- Since 19.0 settings blocks live inside an <app> element -->
+                <app
+                    data-string="Shift Scheduling"
+                    string="Shift Scheduling"
+                    name="resource_schedule"
+                >
+                    <block title="Shift Scheduling" name="shift_scheduling_container">
+                        <setting
+                            help="If an employee hasn't clocked out in this amount of time the system will automatically clock the employee out."
+                        >
+                            <label for="max_shift_length" />
+                            <field name="max_shift_length" required="1" /> Hrs
+                        </setting>
+                    </block>
+                </app>
             </xpath>
         </field>
     </record>
@@ -27,7 +33,8 @@
         <field name="res_model">res.config.settings</field>
         <field name="view_id" ref="res_config_settings_form" />
         <field name="view_mode">form</field>
-        <field name="target">inline</field>
+        <!-- 19.0 removed the 'inline' target -->
+        <field name="target">current</field>
         <field name="context">{'module': 'resource_schedule'}</field>
     </record>
     <menuitem

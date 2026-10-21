@@ -15,8 +15,16 @@ class TestContract(TestResourceScheduleCommon):
         super().setUpClass()
 
         cls.HrEmployee = cls.env["hr.employee"]
-        cls.HrContract = cls.env["hr.contract"]
-        cls.employee = cls.HrEmployee.create({"name": "John"})
+        cls.HrVersion = cls.env["hr.version"]
+        # Odoo 19 gives every employee a version dated today, and hr.version
+        # enforces a unique (employee_id, date_version). Backdate the employee's
+        # initial version so the contract versions created below (dated today)
+        # are the employee's *current* version - otherwise their computed
+        # date_end is capped to yesterday and the module treats the contract as
+        # being in the past.
+        cls.employee = cls.HrEmployee.create(
+            {"name": "John", "date_version": "2000-01-01"}
+        )
         cls.empty_calendar = cls.env["resource.calendar"].create(
             {
                 "name": "Standard 0 hours/week",
@@ -28,13 +36,12 @@ class TestContract(TestResourceScheduleCommon):
     def create_contract(
         self,
         employee_id=None,
-        state="draft",
-        kanban_state="normal",
         start=None,
         end=None,
         trial_end=None,
         wage=1,
         calendar_id=None,
+        date_version=None,
     ):
         if employee_id is None:
             employee_id = self.employee.id
@@ -46,25 +53,21 @@ class TestContract(TestResourceScheduleCommon):
         res = {
             "name": "Contract",
             "employee_id": employee_id,
-            "state": state,
-            "kanban_state": kanban_state,
             "wage": wage,
-            "date_start": start,
+            # 19.0 enforces a unique (employee_id, date_version) index; the
+            # employee's initial version is backdated in setUpClass, so the
+            # contract version can be dated today and still be the current one.
+            "date_version": date_version or date.today(),
+            "contract_date_start": start,
             "trial_date_end": trial_end,
-            "date_end": end,
+            "contract_date_end": end,
             "resource_calendar_id": calendar_id,
         }
 
-        return self.env["hr.contract"].create(res)
-
-    def apply_cron(self):
-        self.env.ref(
-            "hr_contract.ir_cron_data_contract_update_state"
-        ).method_direct_trigger()
+        return self.env["hr.version"].create(res)
 
     def test_no_work_detail(self):
         c = self.create_contract(calendar_id=self.empty_calendar.id)
-        self.apply_cron()
 
         self.assertEqual(
             len(c.resource_calendar_id.attendance_ids),
@@ -83,7 +86,6 @@ class TestContract(TestResourceScheduleCommon):
         c = self.create_contract(
             start=prev_start, end=prev_end, calendar_id=self.default_calendar.id
         )
-        self.apply_cron()
 
         self.assertEqual(
             len(c.employee_id.resource_id.scheduled_shift_ids),
@@ -114,7 +116,11 @@ class TestContract(TestResourceScheduleCommon):
             len(first_shift_ids), 0, "Shifts have been created for first contract"
         )
 
-        c = self.create_contract(start=start, calendar_id=self.default_calendar.id)
+        c = self.create_contract(
+            start=start,
+            calendar_id=self.default_calendar.id,
+            date_version=start,
+        )
         curr_shift_ids = c.employee_id.resource_id.scheduled_shift_ids
         self.assertEqual(
             len(first_shift_ids),

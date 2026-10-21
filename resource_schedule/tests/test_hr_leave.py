@@ -36,7 +36,7 @@ class TestHrLeave(TestResourceScheduleCommon):
         cls.holidays_type_1 = cls.LeaveType.create(
             {
                 "name": "NotLimitedHR",
-                "requires_allocation": "no",
+                "requires_allocation": False,
                 "leave_validation_type": "hr",
             }
         )
@@ -89,7 +89,7 @@ class TestHrLeave(TestResourceScheduleCommon):
             }
         )
         self._force_leave_dates(lv, leave_start, leave_end)
-        lv.with_user(self.userJohn).action_validate()
+        lv.with_user(self.userJohn).action_approve()
         self.assertEqual(lv.state, "validate", "I have validated the leave")
 
         shifts = self.ScheduleShift.search(
@@ -131,7 +131,7 @@ class TestHrLeave(TestResourceScheduleCommon):
             }
         )
         self._force_leave_dates(lv, leave_start, leave_end)
-        lv.with_user(self.userJohn).action_validate()
+        lv.with_user(self.userJohn).action_approve()
         self.assertEqual(lv.state, "validate", "I have validated the leave")
 
         shifts = self.ScheduleShift.search(
@@ -178,7 +178,7 @@ class TestHrLeave(TestResourceScheduleCommon):
             }
         )
         self._force_leave_dates(lv, leave_start, leave_end)
-        lv.with_user(self.userJohn).action_validate()
+        lv.with_user(self.userJohn).action_approve()
         self.assertEqual(lv.state, "validate", "I have validated the leave")
 
         shifts = self.ScheduleShift.search(
@@ -251,7 +251,7 @@ class TestHrLeave(TestResourceScheduleCommon):
             }
         )
         self._force_leave_dates(lv, leave_start, leave_end)
-        lv.with_user(self.userJohn).action_validate()
+        lv.with_user(self.userJohn).action_approve()
         self.assertEqual(lv.state, "validate", "I have validated the leave")
 
         # Test
@@ -330,7 +330,7 @@ class TestHrLeave(TestResourceScheduleCommon):
             }
         )
         self._force_leave_dates(lv, leave_start, leave_end)
-        lv.with_user(self.userJohn).action_validate()
+        lv.with_user(self.userJohn).action_approve()
         self.assertEqual(lv.state, "validate", "I have validated the leave")
 
         # Test
@@ -411,7 +411,7 @@ class TestHrLeave(TestResourceScheduleCommon):
             }
         )
         self._force_leave_dates(lv, leave_start, leave_end)
-        lv.with_user(self.userJohn).action_validate()
+        lv.with_user(self.userJohn).action_approve()
         self.assertEqual(lv.state, "validate", "I have validated the leave")
 
         # Test

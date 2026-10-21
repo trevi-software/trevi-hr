@@ -18,7 +18,7 @@ class TestWizardValidateSchedule(common.TransactionCase):
         cls.eeJohn = cls.env["hr.employee"].create(
             {"name": "John", "department_id": cls.dep_administration.id}
         )
-        cls.std35_calendar = cls.env.ref("resource.resource_calendar_std_35h")
+        cls.std35_calendar = cls.env.ref("resource.resource_calendar_std")
         cls.eeJohn.resource_id.calendar_id = cls.std35_calendar
 
     def get_start_end_dates(self, weeks=1):

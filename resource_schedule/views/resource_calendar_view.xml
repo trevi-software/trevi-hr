@@ -73,8 +73,6 @@
                             optional="hide"
                         />
                         <field name="flex_weekly_hrs" optional="hide" />
-                        <field name="date_from" optional="hide" />
-                        <field name="date_to" optional="hide" />
                         <field
                             name="week_type"
                             readonly="1"

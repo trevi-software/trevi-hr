@@ -47,7 +47,7 @@
                     domain="[('resource_type','=', 'material')]"
                 />
                 <separator />
-                <group expand="0" string="Group By...">
+                <group>
                     <filter
                         name="date"
                         string="Date"

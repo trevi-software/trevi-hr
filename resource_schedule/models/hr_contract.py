@@ -7,8 +7,8 @@ from datetime import timedelta
 from odoo import api, fields, models
 
 
-class HrContract(models.Model):
-    _inherit = "hr.contract"
+class HrVersion(models.Model):
+    _inherit = "hr.version"
 
     default_area_id = fields.Many2one("resource.schedule.area", "Default shift area")
 
@@ -31,9 +31,16 @@ class HrContract(models.Model):
             dToday = fields.Date.today()
             dStart = res.date_start
 
-            # Only create schedule when the employee is first hired. Do not
-            # create a schedule if the contract is in the past.
-            if len(ee.contract_ids) != 1 or (res.date_end and res.date_end < dToday):
+            # Only create a schedule when an employee is first hired. In Odoo 19
+            # every employee record already has an hr.version, so the "first
+            # contract" is the first version carrying a contract start date.
+            contract_versions = ee.version_ids.filtered("contract_date_start")
+            if not dStart or res not in contract_versions:
+                continue
+            if len(contract_versions) != 1:
+                continue
+            # Do not create a schedule if the contract is in the past.
+            if res.date_end and res.date_end < dToday:
                 continue
 
             # Get End date by trying to figure out when the next mass schedule will

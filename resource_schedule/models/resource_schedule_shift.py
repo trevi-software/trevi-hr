@@ -8,8 +8,7 @@ from pytz import timezone, utc
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-
-from odoo.addons.resource.models.utils import float_to_time
+from odoo.tools.date_utils import float_to_time
 
 
 class ResourceScheduleShift(models.Model):
@@ -20,6 +19,12 @@ class ResourceScheduleShift(models.Model):
     _check_company_auto = True
 
     calendar_id = fields.Many2one(ondelete="restrict")
+    # resource.calendar.attendance no longer has a resource (19.0), but a shift
+    # is always planned for one.
+    resource_id = fields.Many2one("resource.resource", "Resource", index=True)
+    resource_type = fields.Selection(
+        related="resource_id.resource_type", readonly=True, store=True, index=True
+    )
     name = fields.Char(
         compute="_compute_name", required=False, readonly=True, store=True
     )
@@ -61,24 +66,18 @@ class ResourceScheduleShift(models.Model):
         "hr.attendance", "schedule_shift_id", "Attendance Records"
     )
 
-    def name_get(self):
+    def _get_shift_name(self):
+        """Return the textual representation of the shift, e.g. '08:00 AM - 05:00 PM (9h0m)'."""
+        self.ensure_one()
         HOUR_FORMAT = "%I:%M %p"
-        res = []
-        for rec in self:
-            if not rec.datetime_start or not rec.datetime_end:
-                continue
-            local_tz = timezone(rec.tz)
-            tzDtStart = utc.localize(rec.datetime_start, is_dst=False).astimezone(
-                local_tz
-            )
-            tzDtEnd = utc.localize(rec.datetime_end, is_dst=False).astimezone(local_tz)
-            strFrom = tzDtStart.strftime(HOUR_FORMAT)
-            strTo = tzDtEnd.strftime(HOUR_FORMAT)
-            mins, _secs = divmod(rec.duration, 60)
-            hours, mins = divmod(mins, 60)
-            res.append((rec.id, f"{strFrom} - {strTo} ({hours}h{mins}m)"))
-
-        return res
+        local_tz = timezone(self.tz)
+        tzDtStart = utc.localize(self.datetime_start, is_dst=False).astimezone(local_tz)
+        tzDtEnd = utc.localize(self.datetime_end, is_dst=False).astimezone(local_tz)
+        strFrom = tzDtStart.strftime(HOUR_FORMAT)
+        strTo = tzDtEnd.strftime(HOUR_FORMAT)
+        mins, _secs = divmod(self.duration, 60)
+        hours, mins = divmod(mins, 60)
+        return f"{strFrom} - {strTo} ({hours}h{mins}m)"
 
     # https://www.odoo.com/forum/help-1/convert-hours-and-minute-into-float-value-168236
     @api.model
@@ -94,7 +93,7 @@ class ResourceScheduleShift(models.Model):
         for rec in self:
             if not rec.datetime_start or not rec.datetime_end:
                 continue
-            rec.name = rec.name_get()[0][1]
+            rec.name = rec._get_shift_name()
             rec.day = rec.datetime_start.date()
             rec.hour_from = rec.time2float(
                 rec.localize_dt(rec.datetime_start, rec.tz).strftime("%H:%M")
@@ -555,7 +554,7 @@ class ResourceScheduleShift(models.Model):
                 [("department_id", "=", dept.id)], order="name"
             )
             ee_ids.filtered(
-                lambda ee: ee.contract_id and ee.contract_id.resource_calendar_id
+                lambda ee: ee.version_id and ee.version_id.resource_calendar_id
             )
             for ee in ee_ids:
                 ee.create_schedule(dStart, dEnd)

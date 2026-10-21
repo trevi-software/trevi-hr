@@ -72,7 +72,7 @@ class ResourceCalendar(models.Model):
             return super()._onchange_attendance_ids()
 
     @api.constrains("attendance_ids")
-    def _check_attendance(self):
+    def _check_attendance_ids(self):
         filtered = self.env["resource.calendar"]
         for calendar in self:
             # For the moment, don't check work items that contain a night shift
@@ -87,9 +87,7 @@ class ResourceCalendar(models.Model):
                     lambda att: att.display_type == "line_section"
                 )
                 attendance_ids = calendar.attendance_ids.filtered(
-                    lambda attendance: (
-                        not attendance.resource_id and attendance.display_type is False
-                    )
+                    lambda attendance: attendance.display_type is False
                 )
                 week_list = section_ids.mapped("week_nbr")
                 for nbr in week_list:
@@ -103,7 +101,7 @@ class ResourceCalendar(models.Model):
             # Pass on all the rest
             filtered |= calendar
 
-        return super(ResourceCalendar, filtered)._check_attendance()
+        return super(ResourceCalendar, filtered)._check_attendance_ids()
 
     # Over-ride parent class method to handle more than two weeks and flex schedule
     @api.depends(

@@ -86,7 +86,7 @@ class TestResourceCalenar(TestResourceScheduleCommon):
         self.default_calendar.switch_calendar_type()
         with (
             Form(self.default_calendar) as frmCalendar,
-            frmCalendar.attendance_ids.new() as line,
+            frmCalendar.attendance_ids_1st_week.new() as line,
         ):
             line.name = "Week 3"
             line.display_type = "line_section"
@@ -119,7 +119,7 @@ class TestResourceCalenar(TestResourceScheduleCommon):
         self.default_calendar.switch_calendar_type()
         with (
             Form(self.default_calendar) as frmCalendar,
-            frmCalendar.attendance_ids.new() as line,
+            frmCalendar.attendance_ids_1st_week.new() as line,
         ):
             line.template_id = self.wtpl_morning
             line.dayofweek = "5"
@@ -172,7 +172,7 @@ class TestResourceCalenar(TestResourceScheduleCommon):
         hours_per_day = self.default_calendar.hours_per_day
 
         with Form(self.default_calendar) as frmCalendar:
-            with frmCalendar.attendance_ids.new() as line:
+            with frmCalendar.attendance_ids_1st_week.new() as line:
                 line.name = "Week 3"
                 line.display_type = "line_section"
                 line.dayofweek = "0"
@@ -181,11 +181,11 @@ class TestResourceCalenar(TestResourceScheduleCommon):
                 line.hour_to = 0
             sequence = 41
             for idx in range(5):
-                with frmCalendar.attendance_ids.new() as line:
+                with frmCalendar.attendance_ids_1st_week.new() as line:
                     line.template_id = self.wtpl_morning
                     line.dayofweek = str(idx)
                     line.sequence = sequence
-                with frmCalendar.attendance_ids.new() as line:
+                with frmCalendar.attendance_ids_1st_week.new() as line:
                     line.template_id = self.wtpl_afternoon
                     line.dayofweek = str(idx)
                     line.sequence = sequence + 1

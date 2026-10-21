@@ -16,7 +16,7 @@ class TestWizardGenerateSchedule(common.TransactionCase):
 
         cls.eeJohn = cls.env["hr.employee"].create({"name": "John"})
         cls.eeSally = cls.env["hr.employee"].create({"name": "Sally"})
-        cls.std35_calendar = cls.env.ref("resource.resource_calendar_std_35h")
+        cls.std35_calendar = cls.env.ref("resource.resource_calendar_std")
         cls.eeJohn.resource_id.calendar_id = cls.std35_calendar
         cls.eeSally.resource_id.calendar_id = cls.std35_calendar
 

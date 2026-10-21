@@ -7,8 +7,7 @@ from pytz import timezone, utc
 
 from odoo.exceptions import ValidationError
 from odoo.tests import Form
-
-from odoo.addons.resource.models.utils import float_to_time
+from odoo.tools.date_utils import float_to_time
 
 from .common import TestResourceScheduleCommon
 
@@ -20,16 +19,23 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
 
         cls.HrAttendance = cls.env["hr.attendance"]
         cls.HrEmployee = cls.env["hr.employee"]
-        cls.HrContract = cls.env["hr.contract"]
+        cls.HrContract = cls.env["hr.version"]
         cls.ScheduleShift = cls.env["resource.schedule.shift"]
         cls.AttendanceTemplate = cls.env["resource.calendar.attendance.template"]
 
-        cls.employee = cls.HrEmployee.create({"name": "John"})
-        cls.eeSally = cls.HrEmployee.create({"name": "Sally"})
+        # Odoo 19 gives every employee a version dated today and hr.version
+        # enforces a unique (employee_id, date_version); backdate the initial
+        # versions so the contract versions created by the tests are current.
+        cls.employee = cls.HrEmployee.create(
+            {"name": "John", "date_version": "2000-01-01"}
+        )
+        cls.eeSally = cls.HrEmployee.create(
+            {"name": "Sally", "date_version": "2000-01-01"}
+        )
         cls.sunday = cls.env.ref("resource_schedule.wd_sun")
         cls.tuesday = cls.env.ref("resource_schedule.wd_tue")
         cls.default_calendar = cls.office_calendar
-        cls.std35_calendar = cls.env.ref("resource.resource_calendar_std_35h")
+        cls.std35_calendar = cls.env.ref("resource.resource_calendar_std")
         cls.production_calendar = cls.seven_day_calendar
         cls.empty_calendar = cls.env["resource.calendar"].create(
             {
@@ -65,8 +71,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
     def create_contract(
         self,
         employee_id=None,
-        state="draft",
-        kanban_state="normal",
         start=None,
         end=None,
         trial_end=None,
@@ -81,22 +85,17 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
         res = {
             "name": "Contract",
             "employee_id": employee_id,
-            "state": state,
-            "kanban_state": kanban_state,
             "wage": wage,
-            "date_start": start,
+            # hr.version enforces a unique (employee_id, date_version).
+            "date_version": start,
+            "contract_date_start": start,
             "trial_date_end": trial_end,
-            "date_end": end,
+            "contract_date_end": end,
         }
         if calendar_id is not None:
             res.update({"resource_calendar_id": calendar_id})
 
-        return self.env["hr.contract"].create(res)
-
-    def apply_cron(self):
-        self.env.ref(
-            "hr_contract.ir_cron_data_contract_update_state"
-        ).method_direct_trigger()
+        return self.env["hr.version"].create(res)
 
     def get_start_end_dates(self, weeks=1):
         total_days = (weeks * 7) - 1
@@ -123,7 +122,6 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
 
     def test_record_order(self):
         c = self.create_contract(calendar_id=self.default_calendar.id)
-        self.apply_cron()
 
         prevShift = None
         for shift in c.employee_id.resource_id.scheduled_shift_ids:

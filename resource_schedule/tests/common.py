@@ -11,7 +11,7 @@ class TestResourceScheduleCommon(common.TransactionCase):
 
         cls.HrAttendance = cls.env["hr.attendance"]
         cls.HrEmployee = cls.env["hr.employee"]
-        cls.HrContract = cls.env["hr.contract"]
+        cls.HrVersion = cls.env["hr.version"]
         cls.ScheduleShift = cls.env["resource.schedule.shift"]
         cls.AttendanceTemplate = cls.env["resource.calendar.attendance.template"]
         cls.ScheduleGroup = cls.env["resource.schedule.group"]

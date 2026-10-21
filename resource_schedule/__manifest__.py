@@ -5,7 +5,7 @@
 {
     "name": "Employee Shift Scheduling",
     "summary": "Easily create, manage, and track employee shift planning.",
-    "version": "18.0.1.0.0",
+    "version": "19.0.1.0.0",
     "category": "Human Resources",
     "license": "AGPL-3",
     "author": "TREVI Software, Michael Telahun Makonnen",
@@ -14,7 +14,6 @@
     "depends": [
         "hr",
         "hr_attendance",
-        "hr_contract",
         "hr_holidays",
         "resource",
         "web_timeline",
@@ -27,7 +26,7 @@
         "security/ir.model.access.csv",
         "views/menus.xml",
         "views/hr_employee_view.xml",
-        "views/hr_contract_view.xml",
+        "views/hr_version_view.xml",
         "views/hr_job_view.xml",
         "views/resource_calendar_view.xml",
         "views/resource_calendar_attendance_template_view.xml",

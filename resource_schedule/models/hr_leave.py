@@ -10,8 +10,8 @@ from odoo import models
 class HrLeave(models.Model):
     _inherit = "hr.leave"
 
-    def action_validate(self, check_state=True):
-        res = super().action_validate(check_state)
+    def _action_validate(self, check_state=True):
+        res = super()._action_validate(check_state)
 
         lv_requests = self
 

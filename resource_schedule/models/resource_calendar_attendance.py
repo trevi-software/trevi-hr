@@ -45,9 +45,6 @@ class ResourceCalendarAttendance(models.Model):
     )
     default_area_id = fields.Many2one("resource.schedule.area", check_company=True)
     schedule_group_ids = fields.Many2many("resource.schedule.group", check_company=True)
-    resource_type = fields.Selection(
-        related="resource_id.resource_type", readonly=True, store=True, index=True
-    )
     shift_type = fields.Selection(
         selection=[("std", "Standard Shift"), ("flex", "Flex Shift")],
         default="std",
