@@ -49,7 +49,7 @@ class HrAccrual(models.Model):
                     "from_accrual": True,
                 }
                 lv = self.env["hr.leave.allocation"].create(leave_allocation)
-                lv.action_validate()
+                lv.action_approve()
 
             # Create accrual line
             #
