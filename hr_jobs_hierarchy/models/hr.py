@@ -40,7 +40,6 @@ class HrJob(models.Model):
             raise ValidationError(_("Error! You cannot create recursive jobs."))
 
     def write(self, vals):
-
         res = super().write(vals)
 
         dept_obj = self.env["hr.department"]
@@ -118,7 +117,6 @@ class HrContract(models.Model):
         return res
 
     def write(self, vals):
-
         res = super().write(vals)
 
         if not vals.get("job_id", False):
@@ -159,7 +157,6 @@ class HrDepartment(models.Model):
     _inherit = "hr.department"
 
     def write(self, vals):
-
         # Get previous manager(s)
         manager_ids = []
         if "manager_id" in vals:
