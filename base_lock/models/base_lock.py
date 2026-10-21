@@ -17,7 +17,6 @@ class Lock(models.Model):
 
     @api.model
     def _tz_list(self):
-
         res = ()
         for name in common_timezones:
             res += ((name, name),)
