@@ -13,43 +13,36 @@ class NewLabour(models.TransientModel):
 
     @api.model
     def _get_wage(self):
-
         Contract = self.env["hr.contract"].with_company(self.env.company)
         return Contract._get_wage()
 
     @api.model
     def _get_trial_start(self):
-
         Contract = self.env["hr.contract"].with_company(self.env.company)
         return Contract._get_trial_date_start()
 
     @api.model
     def _get_trial_end(self):
-
         Contract = self.env["hr.contract"].with_company(self.env.company)
         return Contract._get_trial_date_end()
 
     @api.model
     def _get_struct(self):
-
         Contract = self.env["hr.contract"].with_company(self.env.company)
         return Contract._get_struct()
 
     @api.model
     def _get_policy_group(self):
-
         Contract = self.env["hr.contract"].with_company(self.env.company)
         return Contract._get_policy_group()
 
     @api.model
     def _get_resource_calendar(self):
-
         Contract = self.env["hr.contract"].with_company(self.env.company)
         return Contract._get_resource_calendar()
 
     @api.model
     def _get_pps(self):
-
         Contract = self.env["hr.contract"].with_company(self.env.company)
         return Contract._get_pay_sched()
 
@@ -144,7 +137,6 @@ class NewLabour(models.TransientModel):
 
     @api.onchange("company_id")
     def onchange_company(self):
-
         for rec in self:
             if not self.company_id:
                 continue
@@ -160,7 +152,6 @@ class NewLabour(models.TransientModel):
 
     @api.onchange("job_id")
     def onchange_job(self):
-
         for rec in self:
             if not rec.job_id:
                 rec.department_id = False
@@ -172,7 +163,6 @@ class NewLabour(models.TransientModel):
 
     @api.onchange("date_start")
     def onchange_date(self):
-
         for rec in self:
             if rec.date_start:
                 rec.trial_date_start = rec.date_start
@@ -182,7 +172,6 @@ class NewLabour(models.TransientModel):
 
     @api.onchange("trial_date_start")
     def onchange_trial(self):
-
         for rec in self:
             contract = self.env["hr.contract"].with_company(rec.company_id)
             if rec.trial_date_start:
@@ -191,7 +180,6 @@ class NewLabour(models.TransientModel):
 
     @api.onchange("country_id")
     def onchange_country(self):
-
         res = {"domain": {"state_id": False}}
         if self.country_id:
             res["domain"]["state_id"] = [("country_id", "=", self.country_id.id)]
@@ -199,7 +187,6 @@ class NewLabour(models.TransientModel):
         return res
 
     def create_partner(self):
-
         self.ensure_one()
         values = {
             "name": self.name,
@@ -216,7 +203,6 @@ class NewLabour(models.TransientModel):
         return self.env["res.partner"].create(values)
 
     def _create_hr_applicant(self, partner):
-
         self.ensure_one()
         candidate = self.env["hr.candidate"].create(
             {
@@ -237,7 +223,6 @@ class NewLabour(models.TransientModel):
         return self.env["hr.applicant"].create(applicant_vals)
 
     def create_applicant(self):
-
         self.ensure_one()
         if not self.name or not self.birth_date or not self.gender:
             raise exceptions.ValidationError(
@@ -264,7 +249,6 @@ class NewLabour(models.TransientModel):
         }
 
     def hire_applicant(self):
-
         if not self.name or not self.birth_date or not self.gender:
             raise exceptions.ValidationError(
                 _(
@@ -342,7 +326,6 @@ class NewLabour(models.TransientModel):
         }
 
     def cancel_wizard(self):
-
         action = self.env.ref("hr.open_view_employee_list_my")
         dict_act_window = action.read([])[0]
         dict_act_window["view_mode"] = "kanban,list,form"
@@ -353,7 +336,6 @@ class NewLabour(models.TransientModel):
         return dict_act_window
 
     def state_contract(self):
-
         self.ensure_one()
         self.state = "contract"
         return {
@@ -367,7 +349,6 @@ class NewLabour(models.TransientModel):
         }
 
     def state_benefits(self):
-
         self.ensure_one()
         self.state = "benefits"
         return {
@@ -381,7 +362,6 @@ class NewLabour(models.TransientModel):
         }
 
     def state_review(self):
-
         self.ensure_one()
         self.state = "review"
         return {

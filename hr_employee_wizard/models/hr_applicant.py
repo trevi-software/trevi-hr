@@ -23,7 +23,6 @@ class HrApplicant(models.Model):
     )
 
     def create_employee_from_applicant(self):
-
         self.ensure_one()
         res = super().create_employee_from_applicant()
 

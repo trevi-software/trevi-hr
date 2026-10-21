@@ -94,7 +94,6 @@ class RecruitmentTestCase(TransactionCase):
         )
 
     def test_create_partner(self):
-
         wizard = self.create_wizard()
         wizard.create_partner()
 
@@ -105,7 +104,6 @@ class RecruitmentTestCase(TransactionCase):
         )
 
     def test_create_employee(self):
-
         wizard = self.create_wizard()
         wizard.hire_applicant()
 
@@ -140,7 +138,6 @@ class RecruitmentTestCase(TransactionCase):
         )
 
     def test_required_fields(self):
-
         f = Form(self.env["hr.employee.wizard.new"])
         wiz = f.save()
 
