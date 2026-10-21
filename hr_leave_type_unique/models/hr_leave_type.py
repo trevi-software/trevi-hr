@@ -7,12 +7,9 @@ from odoo import fields, models
 
 class LeaveType(models.Model):
     _inherit = "hr.leave.type"
-    _sql_constraints = [
-        (
-            "code_unique",
-            "UNIQUE(company_id,code)",
-            "Codes for leave type must be unique!",
-        )
-    ]
+    _code_unique = models.Constraint(
+        "UNIQUE(company_id,code)",
+        "Codes for leave type must be unique!",
+    )
 
     code = fields.Char(required=True)
