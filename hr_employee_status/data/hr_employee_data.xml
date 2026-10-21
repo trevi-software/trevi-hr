@@ -34,6 +34,21 @@
         <field name="name">Trial Period Evaluation</field>
     </record>
 
+    <!-- Update the employee status from the contract dates.
+         In 18.0 this was done by hr_contract's "Update Contract State" cron,
+         which called hr.contract.update_state(). That model and its cron are
+         gone in 19.0: the contract is an hr.version and the status is computed
+         from its dates. -->
+    <record id="ir_cron_data_hr_version_update_status" model="ir.cron">
+        <field name="name">HR Employee Status: update status</field>
+        <field name="model_id" ref="hr.model_hr_version" />
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="code">model.update_employee_status()</field>
+        <field name="interval_number" eval="1" />
+        <field name="interval_type">days</field>
+    </record>
+
     <!-- Finalize separations -->
     <record id="ir_cron_data_separation_update_state" model="ir.cron">
         <field name="name">HR Separation: update state</field>
@@ -51,7 +66,7 @@
         <field name="model_id" ref="hr.model_hr_employee" />
         <field name="state">code</field>
         <field name="code">
-            action = env.ref("hr_employee_statuss.action_set_inactive")
+            action = env.ref("hr_employee_status.action_set_inactive")
         </field>
     </record>
 </odoo>

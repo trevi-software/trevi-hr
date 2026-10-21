@@ -7,7 +7,7 @@ from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -78,31 +78,47 @@ class Separation(models.Model):
         for res in records:
             res.employee_state = res.employee_id.status
             res.employee_id.set_state_separation()
-            if res.employee_id.contract_id:
-                c = res.employee_id.contract_id
-                res.contract_date_end = c.date_end
-                c.date_end = res.name
+            version = res.employee_id.version_id
+            if version:
+                # Keep the end date the contract had and end the contract on
+                # the separation's effective date instead.
+                res.contract_date_end = version.contract_date_end
+                version.contract_date_end = res.name
         return records
 
-    def unlink(self):
+    def _restore_contract_end_date(self):
+        """Give the version back the end date it had before the separation."""
+        for term in self:
+            version = term.employee_id.version_id
+            if version:
+                version.contract_date_end = term.contract_date_end or False
+
+        return True
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_done_separation(self):
         for term in self:
             if term.state == "done":
                 raise UserError(
-                    _(
+                    self.env._(
                         "Unable to delete record!"
                         "Employment separation already completed."
                     )
                 )
 
+    def unlink(self):
+        for term in self:
             # Trigger employee status change back to Active
             term.employee_id.set_state_active(term.employee_state)
+            term._restore_contract_end_date()
 
         return super().unlink()
 
     def signal_cancel(self):
         for term in self:
-            # Trigger a status change of the employee and his contract(s)
+            # Trigger a status change of the employee and his contract
             term.employee_id.set_state_active(term.employee_state)
+            term._restore_contract_end_date()
 
             term.state = "cancel"
 
@@ -119,18 +135,19 @@ class Separation(models.Model):
         for term in self:
             if term.effective_date_in_future():
                 raise UserError(
-                    _(
+                    self.env._(
                         "Unable to deactivate employee!"
                         "Effective date is still in the future. Change the date \
                       and try again"
                     )
                 )
 
-            # Trigger a status change of the employee and any contracts
-            # pending termination.
+            # Trigger a status change of the employee and end the contract at
+            # the separation's effective date.
+            version = term.employee_id.version_id
             term.employee_id.set_state_inactive()
-            term.employee_id.contract_id.state = "close"
-            term.employee_id.contract_ids.write({"active": False})
+            if version:
+                version.signal_close(term.name)
             term.state = "done"
 
         return True
@@ -150,5 +167,8 @@ class Separation(models.Model):
         if len(separations) > 0:
             employees = separations.mapped("employee_id")
             employees.set_state_inactive()
-            employees.mapped("contract_id").write({"state": "close"})
+            for sep in separations:
+                version = sep.employee_id.version_id
+                if version:
+                    version.signal_close(sep.name)
             separations.write({"state": "done"})

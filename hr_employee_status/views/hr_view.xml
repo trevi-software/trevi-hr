@@ -17,6 +17,19 @@
                     />
                     <field name="status" widget="statusbar" />
                 </xpath>
+                <!-- Odoo 19 merged hr.contract into hr.version: the contract is
+                     not a standalone record anymore but a version of the
+                     employee, so its actions live on the employee form. -->
+                <xpath expr="//div[@name='contract_dates']" position="after">
+                    <button
+                        name="action_end_contract"
+                        type="object"
+                        string="End Contract"
+                        groups="hr.group_hr_manager"
+                        invisible="not is_in_contract"
+                        class="oe_highlight"
+                    />
+                </xpath>
                 <xpath expr="//page[@name='hr_settings']" position="after">
                     <page string="Deactivation">
                         <group>
@@ -51,7 +64,7 @@
                     domain="[('state','in', ['draft','confirm'])]"
                     help="To be processed"
                 />
-                <group expand="0" string="Group By...">
+                <group>
                     <filter
                         name="group_department"
                         string="Department"
@@ -167,34 +180,4 @@
         parent="hr.menu_human_resources_configuration"
         sequence="5"
     />
-
-    <!-- HR Contract -->
-    <record id="view_contract_form" model="ir.ui.view">
-        <field name="name">hr.contract.form.inherit.1</field>
-        <field name="model">hr.contract</field>
-        <field name="priority" eval="99" />
-        <field name="inherit_id" ref="hr_contract_status.view_contract_form" />
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//button[@name='signal_close']" position="replace">
-                    <button
-                        name="end_contract"
-                        type="object"
-                        string="End Contract"
-                        groups="hr.group_hr_user"
-                        invisible="state not in ['draft', 'trial', 'trial_ending', 'open', 'contract_ending']"
-                        class="oe_highlight"
-                    />
-                    <button
-                        name="re_activate"
-                        type="object"
-                        string="Re-Activate"
-                        groups="hr.group_hr_user"
-                        invisible="state != 'pending_done'"
-                        class="oe_highlight"
-                    />
-                </xpath>
-            </data>
-        </field>
-    </record>
 </odoo>

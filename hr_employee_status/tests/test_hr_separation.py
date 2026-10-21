@@ -10,79 +10,74 @@ from odoo.exceptions import UserError
 from odoo.tests import common
 
 
-class TestEmployee(common.TransactionCase):
+class TestEmployeeSeparation(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
         cls.Employee = cls.env["hr.employee"]
-        cls.Contract = cls.env["hr.contract"]
         cls.Separation = cls.env["hr.employee.termination"]
         cls.reason = cls.env["hr.employee.termination.reason"].create(
             {"name": "Retired"}
         )
 
     def create_employee(self, name="John Smith"):
-        return self.Employee.create(
+        return self.Employee.create({"name": name})
+
+    def create_contract(self, employee, start, end=None, trial_end=None):
+        """Set the dates of the employee's version (their contract)."""
+        version = employee.version_id or employee.version_ids[:1]
+        version.write(
             {
-                "name": name,
+                "contract_date_start": start,
+                "contract_date_end": end,
+                "trial_date_end": trial_end,
+                "wage": 1,
             }
         )
+        return version
 
-    def apply_contract_cron(self):
-        self.env.ref(
-            "hr_contract.ir_cron_data_contract_update_state"
-        ).method_direct_trigger()
+    def update_status(self):
+        """Run the status update the module's cron calls."""
+        self.env["hr.version"].update_employee_status()
 
     def apply_separation_cron(self):
+        # Odoo 19 runs ``method_direct_trigger`` in its own transaction, whose
+        # changes the test cannot see, so run the action the cron schedules.
         self.env.ref(
             "hr_employee_status.ir_cron_data_separation_update_state"
-        ).method_direct_trigger()
+        ).ir_actions_server_id.run()
 
-    def create_contract(
-        self, employee, state, kanban_state, start, end=None, trial_end=None
-    ):
-        return self.Contract.create(
-            {
-                "name": "Contract",
-                "employee_id": employee.id,
-                "state": state,
-                "kanban_state": kanban_state,
-                "wage": 1,
-                "date_start": start,
-                "trial_date_end": trial_end,
-                "date_end": end,
-            }
-        )
-
-    def create_separation(self, employee, date=None):
-        if date is None:
-            date = date.today()
+    def create_separation(self, employee, effective_date=None):
+        if effective_date is None:
+            effective_date = date.today()
         return self.Separation.create(
             {
-                "name": date,
+                "name": effective_date,
                 "reason_id": self.reason.id,
                 "employee_id": employee.id,
             }
         )
 
     def test_separation_triggers_status_change(self):
-        """Employee separation changes employee/contract -> pending_separation"""
+        """Employee separation changes employee -> pending_separation and
+        ends the contract on the separation's effective date"""
 
         start = date.today() - relativedelta(days=100)
         sep_date = date.today() + relativedelta(days=5)
         ee = self.create_employee()
-        cc = self.create_contract(ee, "draft", "done", start)
-        cc.signal_confirm()
-        self.assertEqual("open", cc.state)
+        cc = self.create_contract(ee, start)
+        self.update_status()
         self.assertEqual("active", ee.status)
+        self.assertTrue(cc.is_in_contract)
 
         # Create separation
         sep = self.create_separation(ee, sep_date)
         self.assertEqual("draft", sep.state)
         self.assertEqual("separation", ee.status)
-        self.assertEqual("open", cc.state)
-        self.assertEqual(sep_date, cc.date_end)
+        self.assertTrue(ee.active)
+        self.assertEqual(sep_date, cc.contract_date_end)
         self.assertFalse(sep.contract_date_end)
 
     def test_cancel_separation_trial(self):
@@ -94,36 +89,34 @@ class TestEmployee(common.TransactionCase):
         trial_end = date.today() + relativedelta(days=50)
         sep_date = date.today() + relativedelta(days=5)
         ee = self.create_employee()
-        cc = self.create_contract(ee, "draft", "done", start, end, trial_end)
-        cc.signal_confirm()
-        self.assertEqual("trial", cc.state)
+        cc = self.create_contract(ee, start, end, trial_end)
+        self.update_status()
         self.assertEqual("trial", ee.status)
 
         # Create separation
         sep = self.create_separation(ee, sep_date)
         self.assertEqual("draft", sep.state)
         self.assertEqual("separation", ee.status)
-        self.assertEqual("trial", cc.state)
-        self.assertEqual(sep_date, cc.date_end)
+        self.assertEqual(sep_date, cc.contract_date_end)
         self.assertEqual(end, sep.contract_date_end)
 
         # cancel separation
         sep.signal_cancel()
-        self.assertEqual("trial", cc.state)
         self.assertEqual("trial", ee.status)
+        self.assertEqual(end, cc.contract_date_end)
+        self.assertTrue(cc.is_in_contract)
         self.assertEqual("cancel", sep.state)
 
-    def test_cancel_separation_open(self):
-        """Cancelling of sepration of employee with active status reverts
-        contract and employee back to open/active"""
+    def test_cancel_separation_active(self):
+        """Cancelling of separation of employee with active status reverts
+        contract and employee back to active"""
 
         start = date.today() - relativedelta(days=100)
         end = date.today() + relativedelta(days=100)
         sep_date = date.today() + relativedelta(days=5)
         ee = self.create_employee()
-        cc = self.create_contract(ee, "draft", "done", start, end)
-        cc.signal_confirm()
-        self.assertEqual("open", cc.state)
+        cc = self.create_contract(ee, start, end)
+        self.update_status()
         self.assertEqual("active", ee.status)
 
         # Create separation
@@ -131,15 +124,15 @@ class TestEmployee(common.TransactionCase):
         self.assertEqual("draft", sep.state)
         self.assertEqual("separation", ee.status)
         self.assertTrue(ee.active)
-        self.assertEqual("open", cc.state)
-        self.assertEqual(sep_date, cc.date_end)
+        self.assertEqual(sep_date, cc.contract_date_end)
         self.assertEqual(end, sep.contract_date_end)
 
         # cancel separation
         sep.signal_cancel()
-        self.assertEqual("open", cc.state)
         self.assertEqual("active", ee.status)
         self.assertTrue(ee.active)
+        self.assertEqual(end, cc.contract_date_end)
+        self.assertTrue(cc.is_in_contract)
         self.assertEqual("cancel", sep.state)
 
     def test_unlink_separation_trial(self):
@@ -151,35 +144,33 @@ class TestEmployee(common.TransactionCase):
         trial_end = date.today() + relativedelta(days=50)
         sep_date = date.today() + relativedelta(days=5)
         ee = self.create_employee()
-        cc = self.create_contract(ee, "draft", "done", start, end, trial_end)
-        cc.signal_confirm()
-        self.assertEqual("trial", cc.state)
+        cc = self.create_contract(ee, start, end, trial_end)
+        self.update_status()
         self.assertEqual("trial", ee.status)
 
         # Create separation
         sep = self.create_separation(ee, sep_date)
         self.assertEqual("draft", sep.state)
         self.assertEqual("separation", ee.status)
-        self.assertEqual("trial", cc.state)
-        self.assertEqual(sep_date, cc.date_end)
+        self.assertEqual(sep_date, cc.contract_date_end)
         self.assertEqual(end, sep.contract_date_end)
 
         # Unlink() separation
         sep.unlink()
-        self.assertEqual("trial", cc.state)
         self.assertEqual("trial", ee.status)
+        self.assertEqual(end, cc.contract_date_end)
+        self.assertTrue(cc.is_in_contract)
 
-    def test_unlink_separation_open(self):
-        """Unlinking of sepration of employee with active status reverts
-        contract and employee back to open/active"""
+    def test_unlink_separation_active(self):
+        """Unlinking of separation of employee with active status reverts
+        contract and employee back to active"""
 
         start = date.today() - relativedelta(days=100)
         end = date.today() + relativedelta(days=100)
         sep_date = date.today() + relativedelta(days=5)
         ee = self.create_employee()
-        cc = self.create_contract(ee, "draft", "done", start, end)
-        cc.signal_confirm()
-        self.assertEqual("open", cc.state)
+        cc = self.create_contract(ee, start, end)
+        self.update_status()
         self.assertEqual("active", ee.status)
 
         # Create separation
@@ -187,36 +178,34 @@ class TestEmployee(common.TransactionCase):
         self.assertEqual("draft", sep.state)
         self.assertEqual("separation", ee.status)
         self.assertTrue(ee.active)
-        self.assertEqual("open", cc.state)
-        self.assertEqual(sep_date, cc.date_end)
+        self.assertEqual(sep_date, cc.contract_date_end)
         self.assertEqual(end, sep.contract_date_end)
 
         # Unlink() separation
         sep.unlink()
-        self.assertEqual("open", cc.state)
         self.assertEqual("active", ee.status)
         self.assertTrue(ee.active)
+        self.assertEqual(end, cc.contract_date_end)
+        self.assertTrue(cc.is_in_contract)
 
     def test_autoconfirm_separation(self):
-        """When separation date arrives, cron changes the status of
-        separation, employee, and contract"""
+        """When the separation date arrives, the cron changes the status of
+        the separation, the employee and the contract"""
 
         start = date.today() - relativedelta(days=100)
         end = date.today() + relativedelta(days=100)
         sep_date = date.today() + relativedelta(days=5)
         ee = self.create_employee()
-        cc = self.create_contract(ee, "draft", "done", start, end)
-        cc.signal_confirm()
-        self.assertEqual("open", cc.state)
+        cc = self.create_contract(ee, start, end)
+        self.update_status()
         self.assertEqual("active", ee.status)
 
         # Create separation
         sep = self.create_separation(ee, sep_date)
         self.assertEqual("draft", sep.state)
         self.assertEqual("separation", ee.status)
-        self.assertEqual("open", cc.state)
         self.assertTrue(ee.active)
-        self.assertEqual(sep_date, cc.date_end)
+        self.assertEqual(sep_date, cc.contract_date_end)
         self.assertEqual(end, sep.contract_date_end)
 
         # Update separation date to yesterday and run cron
@@ -226,29 +215,27 @@ class TestEmployee(common.TransactionCase):
         self.assertEqual("done", sep.state)
         self.assertEqual("inactive", ee.status)
         self.assertFalse(ee.active)
-        self.assertEqual("close", cc.state)
-        self.assertEqual("done", sep.state)
+        self.assertEqual(date.today() - relativedelta(days=1), cc.contract_date_end)
+        self.assertTrue(cc.is_past)
 
     def test_done_separation(self):
-        """When user clicks the 'done' button it changes the status of
-        separation, employee, and contract"""
+        """When the user clicks the 'done' button it changes the status of
+        the separation, the employee and the contract"""
 
         start = date.today() - relativedelta(days=100)
         end = date.today() + relativedelta(days=100)
         sep_date = date.today() + relativedelta(days=5)
         ee = self.create_employee()
-        cc = self.create_contract(ee, "draft", "done", start, end)
-        cc.signal_confirm()
-        self.assertEqual("open", cc.state)
+        cc = self.create_contract(ee, start, end)
+        self.update_status()
         self.assertEqual("active", ee.status)
 
         # Create separation
         sep = self.create_separation(ee, sep_date)
         self.assertEqual("draft", sep.state)
         self.assertEqual("separation", ee.status)
-        self.assertEqual("open", cc.state)
         self.assertTrue(ee.active)
-        self.assertEqual(sep_date, cc.date_end)
+        self.assertEqual(sep_date, cc.contract_date_end)
         self.assertEqual(end, sep.contract_date_end)
 
         # Update separation date to today and set done
@@ -258,57 +245,72 @@ class TestEmployee(common.TransactionCase):
         self.assertEqual("done", sep.state)
         self.assertEqual("inactive", ee.status)
         self.assertFalse(ee.active)
-        self.assertEqual("close", cc.state)
-        self.assertEqual("done", sep.state)
+        self.assertEqual(date.today(), cc.contract_date_end)
 
-    def test_done_separation_archives_all(self):
-        """When the separation is done employee and contracts should be archived"""
+    def test_done_separation_archives_employee(self):
+        """When the separation is done the employee is archived.
+
+        The contract is ended, not archived: ``hr.version`` forbids archiving
+        every version of an employee.
+        """
 
         start = date.today() - relativedelta(days=100)
         end = date.today() + relativedelta(days=100)
         sep_date = date.today() + relativedelta(days=5)
         ee = self.create_employee()
-        cc = self.create_contract(ee, "draft", "done", start, end)
-        cc.signal_confirm()
-        self.assertEqual("open", cc.state)
+        cc = self.create_contract(ee, start, end)
+        self.update_status()
         self.assertEqual("active", ee.status)
 
         # Create separation
         sep = self.create_separation(ee, sep_date)
         self.assertEqual("draft", sep.state)
         self.assertEqual("separation", ee.status)
-        self.assertEqual("open", cc.state)
-        self.assertTrue(ee.active)
-        self.assertEqual(sep_date, cc.date_end)
-        self.assertEqual(end, sep.contract_date_end)
 
         # Update separation date to today and set done
         sep.name = date.today()
         sep.signal_done()
 
         self.assertFalse(ee.active)
-        self.assertFalse(cc.active)
+        self.assertEqual(date.today(), cc.contract_date_end)
+
+    def test_unlink_done_separation(self):
+        """A completed separation may not be deleted"""
+
+        start = date.today() - relativedelta(days=100)
+        end = date.today() + relativedelta(days=100)
+        sep_date = date.today() + relativedelta(days=5)
+        ee = self.create_employee()
+        self.create_contract(ee, start, end)
+        self.update_status()
+        self.assertEqual("active", ee.status)
+
+        sep = self.create_separation(ee, sep_date)
+        sep.name = date.today()
+        sep.signal_done()
+        self.assertEqual("done", sep.state)
+
+        with self.assertRaises(UserError):
+            sep.unlink()
 
     def test_done_separation_in_future(self):
-        """When user clicks the 'done' button before the separation date
+        """When the user clicks the 'done' button before the separation date
         it refuses"""
 
         start = date.today() - relativedelta(days=100)
         end = date.today() + relativedelta(days=100)
         sep_date = date.today() + relativedelta(days=5)
         ee = self.create_employee()
-        cc = self.create_contract(ee, "draft", "done", start, end)
-        cc.signal_confirm()
-        self.assertEqual("open", cc.state)
+        cc = self.create_contract(ee, start, end)
+        self.update_status()
         self.assertEqual("active", ee.status)
 
         # Create separation
         sep = self.create_separation(ee, sep_date)
         self.assertEqual("draft", sep.state)
         self.assertEqual("separation", ee.status)
-        self.assertEqual("open", cc.state)
         self.assertTrue(ee.active)
-        self.assertEqual(sep_date, cc.date_end)
+        self.assertEqual(sep_date, cc.contract_date_end)
         self.assertEqual(end, sep.contract_date_end)
 
         with self.assertRaises(UserError):

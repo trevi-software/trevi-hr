@@ -11,26 +11,26 @@ _logger = logging.getLogger(__name__)
 
 
 class EmployeeSetInactive(models.TransientModel):
-    _name = "hr.contract.end"
+    _name = "hr.version.end"
     _description = "Employee De-Activation Wizard"
 
     @api.model
-    def _get_contract(self):
-        return self.env.context.get("end_contract_id", False)
+    def _get_version(self):
+        return self.env.context.get("end_version_id", False)
 
     @api.model
     def _get_employee(self):
-        contract_id = self.env.context.get("end_contract_id", False)
-        if not contract_id:
-            _logger.warning("No end_contract_id found in context")
+        version_id = self.env.context.get("end_version_id", False)
+        if not version_id:
+            _logger.warning("No end_version_id found in context")
             return False
 
-        data = self.env["hr.contract"].browse(contract_id).read(["employee_id"])
+        data = self.env["hr.version"].browse(version_id).read(["employee_id"])
         return data[0]["employee_id"] if data else False
 
-    contract_id = fields.Many2one(
-        comodel_name="hr.contract",
-        default=lambda self: self._get_contract(),
+    version_id = fields.Many2one(
+        comodel_name="hr.version",
+        default=lambda self: self._get_version(),
         readonly=True,
     )
     employee_id = fields.Many2one(
@@ -39,7 +39,7 @@ class EmployeeSetInactive(models.TransientModel):
         required=True,
         readonly=True,
     )
-    date = fields.Date(required=True, default=fields.Date.today())
+    date = fields.Date(required=True, default=fields.Date.today)
     reason_id = fields.Many2one(
         comodel_name="hr.employee.termination.reason", required=True
     )
@@ -53,7 +53,8 @@ class EmployeeSetInactive(models.TransientModel):
             "reason_id": self.reason_id.id,
             "notes": self.notes,
         }
-        self.contract_id.setup_pending_done(vals)
-        self.contract_id.signal_close()
+        # The separation ends the contract on its effective date (see
+        # ``hr.employee.termination.create``).
+        self.version_id.start_separation(vals)
 
         return {"type": "ir.actions.act_window_close"}
