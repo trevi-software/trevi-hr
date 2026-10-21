@@ -90,7 +90,6 @@ class HrTransfer(models.Model):
 
     @api.depends("employee_id")
     def _compute_onchange_employee(self):
-
         for transfer in self:
             if transfer.employee_id:
                 transfer.src_id = transfer.employee_id.job_id
@@ -100,7 +99,6 @@ class HrTransfer(models.Model):
                 transfer.src_contract_id = False
 
     def _track_subtype(self, init_values):
-
         self.ensure_one()
 
         if "state" in init_values:
@@ -114,14 +112,12 @@ class HrTransfer(models.Model):
         return super()._track_subtype(init_values)
 
     def effective_date_in_future(self):
-
         for transfer in self:
             if transfer.date <= fields.Date.today():
                 return False
         return True
 
     def unlink(self):
-
         if not self.env.context.get("force_delete", False):
             for transfer in self:
                 if transfer.state not in ["draft"]:
@@ -136,7 +132,6 @@ class HrTransfer(models.Model):
         return super().unlink()
 
     def action_transfer(self):
-
         self.ensure_one()
         has_permission = self._check_permission_group(
             "hr_job_transfer.group_hr_transfer"
@@ -147,7 +142,6 @@ class HrTransfer(models.Model):
             self.write({"state": "pending"})
 
     def action_confirm(self):
-
         self.ensure_one()
         has_permission = self._check_permission_group(
             "hr_job_transfer.group_hr_transfer"
@@ -156,7 +150,6 @@ class HrTransfer(models.Model):
             self.signal_confirm()
 
     def action_cancel(self):
-
         self.ensure_one()
         has_permission = self._check_permission_group(
             "hr_job_transfer.group_hr_transfer"
@@ -166,7 +159,6 @@ class HrTransfer(models.Model):
 
     @api.model
     def _check_state(self, contract, effective_date):
-
         _state_kanban_state = [
             ("trial", "normal"),
             ("trial", "blocked"),
@@ -194,7 +186,6 @@ class HrTransfer(models.Model):
         return True
 
     def _check_permission_group(self, group=None):
-
         for transfer in self:
             if group and not transfer.env.user.has_group(group):
                 raise AccessError(
@@ -206,7 +197,6 @@ class HrTransfer(models.Model):
 
     @api.model
     def transfer_contract(self, contract, job, transfer, effective_date):
-
         Contract = self.env["hr.contract"]
 
         # If the start and date is the same as the contract start date simply change
@@ -256,7 +246,6 @@ class HrTransfer(models.Model):
         return True
 
     def state_confirm(self):
-
         for transfer in self:
             self._check_state(transfer.src_contract_id, transfer.date)
             transfer.state = "confirm"
@@ -264,7 +253,6 @@ class HrTransfer(models.Model):
         return True
 
     def state_done(self):
-
         today = fields.Date.today()
 
         for transfer in self:
@@ -284,7 +272,6 @@ class HrTransfer(models.Model):
         return True
 
     def signal_confirm(self):
-
         for transfer in self:
             self._check_state(transfer.src_contract_id, transfer.date)
             # If the user is a member of 'approval' group, go straight to 'approval'
