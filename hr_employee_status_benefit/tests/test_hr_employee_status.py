@@ -53,7 +53,6 @@ class TestEmployeeStatus(common.TransactionCase):
         )
 
     def create_benefit(self, vals):
-
         return self.Benefit.create(vals)
 
     def create_earning(
@@ -120,7 +119,6 @@ class TestEmployeeStatus(common.TransactionCase):
         )
 
     def test_deactivate_employee(self):
-
         start = date.today() - relativedelta(days=100)
         end = date.today() + relativedelta(days=60)
         ee = self.create_employee()
