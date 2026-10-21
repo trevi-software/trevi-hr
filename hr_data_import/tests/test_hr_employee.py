@@ -17,7 +17,6 @@ class TestHrEmployeeSeniority(common.TransactionCase):
         self.HrContract = self.env["hr.contract"]
 
     def test_hire_date(self):
-
         dHire = fields.Date.today() - relativedelta(months=12)
         dStart = fields.Date.today() - relativedelta(months=3)
         ee = self.HrEmployee.create({"name": "EE 1"})

@@ -117,7 +117,6 @@ class ImportEmployee(models.Model):
         self.write({"state": "updated"})
 
     def import_records(self):
-
         partner_obj = self.env["res.partner"]
         country = self.env.ref("base.et")
 
@@ -188,7 +187,6 @@ class ImportEmployee(models.Model):
         return employees
 
     def update_records(self):
-
         employees = self.env["hr.employee"].search(
             [("id", "in", self.mapped("related_employee_id.id"))]
         )
@@ -261,7 +259,6 @@ class ImportEmployee(models.Model):
             leaves.filtered(lambda a: a.state == "validate1").action_validate()
 
     def get_leave_days_accrued(self, employee, hire_date):
-
         today = date.today()  # noqa: DTZ011
         accrued_todate = 0
         extra_accrued = 0
@@ -283,7 +280,6 @@ class ImportEmployee(models.Model):
         return accrued_todate
 
     def set_rest_day(self, employees):
-
         mon = self.env.ref("resource_schedule.wd_mon")
         tue = self.env.ref("resource_schedule.wd_tue")
         wed = self.env.ref("resource_schedule.wd_wed")
