@@ -36,23 +36,23 @@ class TestHrContract(TestHrCommon):
             employees=emp_SR,
         )
 
-        c_data_SM = self.contract_data.copy()
-        c_data_SR = self.contract_data.copy()
-        c_data_SA = self.contract_data.copy()
+        v_data_SM = self.version_data.copy()
+        v_data_SR = self.version_data.copy()
+        v_data_SA = self.version_data.copy()
 
-        c_data_SM.update(
+        v_data_SM.update(
             {"name": "#CONTRACT SM", "employee_id": emp_SM.id, "job_id": job_SM.id}
         )
-        c_data_SR.update(
+        v_data_SR.update(
             {"name": "#CONTRACT SR", "employee_id": emp_SR.id, "job_id": job_SR.id}
         )
-        c_data_SA.update(
+        v_data_SA.update(
             {"name": "#CONTRACT SA", "employee_id": emp_SA.id, "job_id": job_SA.id}
         )
 
-        self.create_contract_multi([c_data_SA, c_data_SR, c_data_SM])
+        self.create_version_multi([v_data_SA, v_data_SR, v_data_SM])
 
-        test_contracts = self.Contract.search([("name", "like", "#CONTRACT")])
-        self.assertEqual(len(test_contracts), 3)
+        test_versions = self.Version.search([("name", "like", "#CONTRACT")])
+        self.assertEqual(len(test_versions), 3)
         self.assertEqual(emp_SA.parent_id, emp_SM)
         self.assertEqual(emp_SR.parent_id, emp_SM)

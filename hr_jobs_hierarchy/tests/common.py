@@ -12,9 +12,11 @@ class TestHrCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
         # -- models
-        cls.Contract = cls.env["hr.contract"]
+        # ``hr.contract`` was merged into ``hr`` and renamed to ``hr.version``.
+        cls.Version = cls.env["hr.version"]
         cls.Department = cls.env["hr.department"]
         cls.Employee = cls.env["hr.employee"]
         cls.Job = cls.env["hr.job"]
@@ -22,15 +24,18 @@ class TestHrCommon(TransactionCase):
         # departments
         cls.dept_sales = cls.Department.create({"name": "#Sales"})
 
-        cls.contract_data = {
+        # Creating an employee already creates an ``hr.version`` dated today, and
+        # ``hr.version`` enforces a unique ``(employee_id, date_version)`` index.
+        # The version under test is therefore dated one day earlier; its effective
+        # contract dates are still driven by ``contract_date_start``/``_end``.
+        cls.version_data = {
             "name": "Contract #1",
             "employee_id": False,
             "job_id": False,
             "wage": 1,
-            "state": "open",
-            "kanban_state": "normal",
-            "date_start": Date.today(),
-            "date_end": Date.today() + timedelta(days=90),
+            "date_version": Date.today() - timedelta(days=1),
+            "contract_date_start": Date.today(),
+            "contract_date_end": Date.today() + timedelta(days=90),
         }
 
     def create_department(self, name):
@@ -57,16 +62,16 @@ class TestHrCommon(TransactionCase):
             }
         )
 
-    def create_contract(self, name, employee, job=None, start_date=None, end_date=None):
-        c_data = self.contract_data.copy()
-        c_data.update(
+    def create_version(self, name, employee, job=None, start_date=None, end_date=None):
+        v_data = self.version_data.copy()
+        v_data.update(
             {
-                "name": name if name else c_data["name"],
+                "name": name if name else v_data["name"],
                 "employee_id": employee.id,
                 "job_id": job.id if job else False,
             }
         )
-        return self.Contract.create(c_data)
+        return self.Version.create(v_data)
 
-    def create_contract_multi(self, contracts):
-        return self.Contract.create(contracts)
+    def create_version_multi(self, versions):
+        return self.Version.create(versions)

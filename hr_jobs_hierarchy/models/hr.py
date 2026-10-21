@@ -6,7 +6,6 @@ import logging
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools.translate import _
 
 _l = logging.getLogger(__name__)
 
@@ -30,6 +29,17 @@ class HrJob(models.Model):
     )
     parent_path = fields.Char(index=True)
 
+    def _get_job_employees(self):
+        """Employees whose version holds this job.
+
+        ``hr.job.employee_ids`` cannot be relied upon on 19.0: its inverse
+        ``hr.employee.job_id`` is an inherited field delegating to the
+        non-stored ``version_id``, so an o2m read returns stale/empty results
+        depending on the ORM cache. Odoo's own ``_compute_employees`` searches
+        ``hr.employee`` by ``job_id`` instead; do the same.
+        """
+        return self.env["hr.employee"].search([("job_id", "in", self.ids)])
+
     def _compute_all_child_ids(self):
         for rec in self:
             rec.child_ids = self.search([("parent_id", "child_of", rec.id)])
@@ -37,7 +47,9 @@ class HrJob(models.Model):
     @api.constrains("parent_id")
     def _check_job_recursion(self):
         if self._has_cycle():
-            raise ValidationError(_("Error! You cannot create recursive jobs."))
+            raise ValidationError(
+                self.env._("Error! You cannot create recursive jobs.")
+            )
 
     def write(self, vals):
         res = super().write(vals)
@@ -51,7 +63,7 @@ class HrJob(models.Model):
                 else:
                     dept_id = job.department_id.id
                 employee_id = False
-                for ee in job.employee_ids:
+                for ee in job._get_job_employees():
                     employee_id = ee.id
                 if employee_id:
                     dept_obj.browse(dept_id).write({"manager_id": employee_id})
@@ -59,7 +71,7 @@ class HrJob(models.Model):
             for job in self:
                 if job.department_manager:
                     employee_id = False
-                    for ee in job.employee_ids:
+                    for ee in job._get_job_employees():
                         employee_id = ee.id
                     dept_obj.browse(vals["department_id"]).write(
                         {"manager_id": employee_id}
@@ -67,18 +79,22 @@ class HrJob(models.Model):
         elif vals.get("parent_id", False):
             parent_job = self.browse(vals["parent_id"])
             parent_id = False
-            for ee in parent_job.employee_ids:
+            for ee in parent_job._get_job_employees():
                 parent_id = ee.id
             for job in self:
-                for ee in job.employee_ids:
+                for ee in job._get_job_employees():
                     ee.parent_id = parent_id
 
         return res
 
 
-class HrContract(models.Model):
-    _name = "hr.contract"
-    _inherit = "hr.contract"
+class HrVersion(models.Model):
+    """``hr.contract`` was merged into ``hr`` in Odoo 19 and renamed to
+    ``hr.version``. Only the hierarchy side effects of creating/updating an
+    employee version are kept here.
+    """
+
+    _inherit = "hr.version"
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -95,7 +111,7 @@ class HrContract(models.Model):
 
             if job and job.parent_id:
                 parent_ee_id = False
-                for employee in job.parent_id.employee_ids:
+                for employee in job.parent_id._get_job_employees():
                     parent_ee_id = employee.id
                 if parent_ee_id and vals.get("employee_id"):
                     Employee.browse(vals["employee_id"]).write(
@@ -110,7 +126,7 @@ class HrContract(models.Model):
                     ee_ids = Employee.search([("job_id", "in", job_child_ids)])
                     if len(ee_ids) > 0:
                         parent_ee_id = False
-                        for employee in job.employee_ids:
+                        for employee in job._get_job_employees():
                             parent_ee_id = employee.id
                         if parent_ee_id:
                             ee_ids.write({"parent_id": parent_ee_id})
@@ -129,11 +145,11 @@ class HrContract(models.Model):
         # Write the employee's manager
         if job and job.parent_id:
             parent_id = False
-            for ee in job.parent_id.employee_ids:
+            for ee in job.parent_id._get_job_employees():
                 parent_id = ee.id
             if parent_id:
-                for contract in self:
-                    contract.employee_id.parent_id = parent_id
+                for version in self:
+                    version.employee_id.parent_id = parent_id
 
         # Write any employees with jobs that are immediate descendants of this job
         if job:
@@ -145,7 +161,7 @@ class HrContract(models.Model):
                 )
                 if len(ee_ids) > 0:
                     parent_id = False
-                    for ee in job.employee_ids:
+                    for ee in job._get_job_employees():
                         parent_id = ee.id
                     if parent_id:
                         ee_ids.write({"parent_id": parent_id})
