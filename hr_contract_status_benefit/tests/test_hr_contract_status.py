@@ -8,134 +8,111 @@ from dateutil.relativedelta import relativedelta
 from odoo.tests import common
 
 
-class TestEmployeeStatus(common.TransactionCase):
+class TestContractStatusBenefit(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
         cls.Benefit = cls.env["hr.benefit"]
-        cls.Earning = cls.env["hr.benefit.advantage"]
         cls.Policy = cls.env["hr.benefit.policy"]
         cls.Employee = cls.env["hr.employee"]
-        cls.Contract = cls.env["hr.contract"]
 
     def create_employee(self, name="John Smith"):
-        return self.Employee.create(
-            {
-                "name": name,
-            }
-        )
+        return self.Employee.create({"name": name})
 
     def apply_contract_cron(self):
-        self.env.ref(
-            "hr_contract.ir_cron_data_contract_update_state"
-        ).method_direct_trigger()
+        # ``hr_contract_status`` owns the "Update Contract Status" cron; it
+        # calls ``hr.version.update_status()``, which this module extends.
+        cron = self.env.ref("hr_contract_status.ir_cron_data_hr_version_update_status")
+        with self.enter_registry_test_mode():
+            self.assertTrue(cron.method_direct_trigger())
 
-    def create_contract(
-        self, employee, state, kanban_state, start, end=None, trial_end=None
-    ):
-        return self.env["hr.contract"].create(
-            {
-                "name": "Contract",
-                "employee_id": employee.id,
-                "state": state,
-                "kanban_state": kanban_state,
-                "wage": 1,
-                "date_start": start,
-                "trial_date_end": trial_end,
-                "date_end": end,
-            }
-        )
+    def set_contract(self, employee, start, end=None):
+        """Set the contract dates of the employee's only contract version.
+
+        ``hr.contract`` is an ``hr.version`` in Odoo 19: an employee always
+        owns one version and its contract dates live in ``contract_date_start``
+        / ``contract_date_end``.
+        """
+        contract = employee.version_id
+        contract.write({"contract_date_start": start, "contract_date_end": end})
+        # The native flags are non-stored computed fields without a declared
+        # dependency, so they keep their previous value in the cache after a
+        # write; clear it before reading them.
+        self.env.invalidate_all()
+        return contract
 
     def create_benefit(self, vals):
         return self.Benefit.create(vals)
 
-    def create_earning(
-        self,
-        benefit,
-        start=False,
-        ptype="allowance",
-        limit=0,
-        limit_period="monthly",
-        limit_mo_day="1",
-        allowance=0,
-        loan=0,
-        mindays=0,
-    ):
-        _dict = {
-            "benefit_id": benefit.id,
-            "effective_date": start is False and date.today() or start,  # noqa: DTZ011
-            "type": ptype,
-            "allowance_amount": allowance,
-            "loan_amount": loan,
-            "min_employed_days": mindays,
-        }
-        if ptype == "reimburse":
-            _dict["reim_limit_amount"] = limit
-            _dict["reim_limit_period"] = limit_period
-            _dict["reim_period_month_day"] = limit_mo_day
-        benefit.has_advantage = True
-        return self.Earning.create(_dict)
+    def create_policy(self, employee, benefit, start=False, end=False):
+        return self.Policy.create(
+            {
+                "employee_id": employee.id,
+                "benefit_id": benefit.id,
+                "start_date": start is False and date.today() or start,  # noqa: DTZ011
+                "end_date": end,
+            }
+        )
 
-    def create_policy(
-        self,
-        employee,
-        benefit,
-        start=False,
-        end=False,
-        advantage=False,
-        premium=False,
-        premium_total=False,
-    ):
-        _dict = {
-            "employee_id": employee.id,
-            "benefit_id": benefit.id,
-            "start_date": start is False and date.today() or start,  # noqa: DTZ011
-            "end_date": end,
-        }
-        if advantage is not False:
-            _dict["advantage_override"] = True
-            _dict["advantage_amount"] = advantage
-        if premium is not False:
-            _dict["premium_override"] = True
-            _dict["premium_override_amount"] = premium
-            _dict["premium_override_total"] = premium_total
-        return self.Policy.create(_dict)
+    def test_contract_in_effect_opens_policy(self):
+        """A policy sharing the contract's start date is opened at contract start"""
 
-    def test_hire_employee_signal(self):
         start = date.today() - relativedelta(days=100)  # noqa: DTZ011
-        end = date.today() + relativedelta(days=60)  # noqa: DTZ011
         ee = self.create_employee()
-        cc = self.create_contract(ee, "draft", "normal", start, trial_end=end)
-        cc.trial_date_end = date.today() - relativedelta(days=1)  # noqa: DTZ011
+        contract = self.set_contract(ee, start)
+        self.assertTrue(contract.is_current)
 
-        # create benefit policy
         bn = self.create_benefit({"name": "B", "code": "B"})
-        self.create_earning(bn, date.today() - relativedelta(days=100), allowance=1000)  # noqa: DTZ011
-        pol = self.create_policy(ee, bn, date.today() - relativedelta(days=100))  # noqa: DTZ011
-        self.assertEqual(pol.state, "draft", "The benefit policy is not active yet")
-
-        # Open contract
-        cc.signal_confirm()
-
-        self.assertEqual("open", cc.state)
-        self.assertEqual(pol.state, "open", "The benefit policy is now active")
-
-    def test_hire_employee_cron(self):
-        start = date.today() - relativedelta(days=100)  # noqa: DTZ011
-        end = date.today() + relativedelta(days=60)  # noqa: DTZ011
-        ee = self.create_employee()
-        cc = self.create_contract(ee, "draft", "done", start, trial_end=end)
-        cc.trial_date_end = date.today() - relativedelta(days=1)  # noqa: DTZ011
-
-        # create benefit policy
-        bn = self.create_benefit({"name": "B", "code": "B"})
-        self.create_earning(bn, start, allowance=1000)
         pol = self.create_policy(ee, bn, start)
         self.assertEqual(pol.state, "draft", "The benefit policy is not active yet")
 
-        # Open contract
         self.apply_contract_cron()
 
-        self.assertEqual("open", cc.state)
         self.assertEqual(pol.state, "open", "The benefit policy is now active")
+
+    def test_future_contract_leaves_policy_draft(self):
+        """A policy is left alone while its contract has not started"""
+
+        start = date.today() + relativedelta(days=30)  # noqa: DTZ011
+        ee = self.create_employee()
+        contract = self.set_contract(ee, start)
+        self.assertTrue(contract.is_future)
+
+        bn = self.create_benefit({"name": "B", "code": "B"})
+        pol = self.create_policy(ee, bn, start)
+
+        self.apply_contract_cron()
+
+        self.assertEqual(pol.state, "draft", "The benefit policy is not active yet")
+
+    def test_policy_with_other_start_date_left_draft(self):
+        """Only the policy carrying the contract's start date is opened"""
+
+        start = date.today() - relativedelta(days=100)  # noqa: DTZ011
+        ee = self.create_employee()
+        self.set_contract(ee, start)
+
+        bn = self.create_benefit({"name": "B", "code": "B"})
+        pol = self.create_policy(ee, bn, start + relativedelta(days=10))  # noqa: DTZ011
+
+        self.apply_contract_cron()
+
+        self.assertEqual(pol.state, "draft")
+
+    def test_expired_contract_leaves_policy_draft(self):
+        """A contract that has already ended does not activate policies"""
+
+        start = date.today() - relativedelta(days=100)  # noqa: DTZ011
+        end = date.today() - relativedelta(days=10)  # noqa: DTZ011
+        ee = self.create_employee()
+        contract = self.set_contract(ee, start, end)
+        self.assertTrue(contract.is_past)
+
+        bn = self.create_benefit({"name": "B", "code": "B"})
+        pol = self.create_policy(ee, bn, start)
+
+        self.apply_contract_cron()
+
+        self.assertEqual(pol.state, "draft")
