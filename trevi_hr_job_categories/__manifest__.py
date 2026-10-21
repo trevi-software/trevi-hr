@@ -4,12 +4,12 @@
 
 {
     "name": "Job Categories",
-    "version": "18.0.1.0.0",
+    "version": "19.0.1.0.0",
     "license": "AGPL-3",
     "category": "Human Resources",
     "author": "TREVI Software",
     "website": "https://github.com/trevi-software/trevi-hr",
-    "depends": ["hr", "hr_contract"],
+    "depends": ["hr"],
     "data": [
         "views/hr_view.xml",
     ],

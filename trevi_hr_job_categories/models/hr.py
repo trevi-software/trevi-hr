@@ -17,9 +17,8 @@ class HrJob(models.Model):
     )
 
 
-class HrContract(models.Model):
-    _name = "hr.contract"
-    _inherit = "hr.contract"
+class HrVersion(models.Model):
+    _inherit = "hr.version"
 
     @api.model
     def _remove_tags(self, employee_id, job_id):
@@ -66,9 +65,9 @@ class HrContract(models.Model):
         # Go through each record and delete tags associated with the previous job, then
         # add the tags of the new job.
         #
-        for contract in self:
+        for version in self:
             for data in prev_data:
-                if data["id"] == contract.id:
+                if data["id"] == version.id:
                     if not vals.get("job_id", False) or (
                         data.get("job_id", False)
                         and data["job_id"][0] != vals["job_id"]
@@ -76,10 +75,10 @@ class HrContract(models.Model):
                         prev_job_id = (
                             data.get("job_id", False) and data["job_id"][0] or False
                         )
-                        self._remove_tags(contract.employee_id.id, prev_job_id)
+                        self._remove_tags(version.employee_id.id, prev_job_id)
                         if vals.get("job_id", False):
                             self._tag_employees(
-                                contract.employee_id.id, contract.job_id.id
+                                version.employee_id.id, version.job_id.id
                             )
 
         return res
