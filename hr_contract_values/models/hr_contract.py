@@ -50,7 +50,6 @@ class ContractInit(models.Model):
             record.locked = False
 
     def unlink(self):
-
         for record in self:
             if record.locked:
                 raise UserError(
@@ -72,7 +71,6 @@ class HrContract(models.Model):
 
     @api.model
     def _get_wage(self, job_id=None):
-
         res = 0
         default = 0
         job = False
@@ -104,7 +102,6 @@ class HrContract(models.Model):
 
     @api.model
     def _get_trial_date_start(self):
-
         res = False
         init = self.get_latest_initial_values()
         if init is not None and init.trial_period and init.trial_period > 0:
@@ -113,12 +110,10 @@ class HrContract(models.Model):
 
     @api.model
     def _get_trial_date_end(self):
-
         return self._get_trial_date_end_from_start(fields.Date.today())
 
     @api.model
     def _get_trial_date_end_from_start(self, dToday):
-
         res = False
         init = self.get_latest_initial_values()
         if dToday and init is not None and init.trial_period and init.trial_period > 0:
@@ -128,7 +123,6 @@ class HrContract(models.Model):
 
     @api.model
     def _get_structure_type(self):
-
         res = False
         init = self.get_latest_initial_values()
         if init is not None and init.contract_type:
@@ -142,7 +136,6 @@ class HrContract(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-
         for vals in vals_list:
             # set default wage based on the job
             if "wage" not in vals and "job_id" in vals:
@@ -154,14 +147,12 @@ class HrContract(models.Model):
 
     @api.onchange("job_id")
     def onchange_job(self):
-
         for c in self:
             if c.job_id:
                 c.wage = self._get_wage(job_id=c.job_id.id)
 
     @api.onchange("trial_date_start")
     def onchange_trial(self):
-
         self.trial_date_end = False
 
         init = self.get_latest_initial_values()

@@ -38,7 +38,6 @@ class InitWage(models.Model):
     )
 
     def unlink(self):
-
         data = self.read(["contract_init_id"])
         for d in data:
             if not d.get("contract_init_id", False):
