@@ -20,7 +20,6 @@ class TestContractInit(common.TransactionCase):
         cls.std35_calendar = cls.env.ref("resource.resource_calendar_std_35h")
 
     def test_load_from_policy(self):
-
         self.HrContractInit.create(
             {
                 "name": "Contract Default values",

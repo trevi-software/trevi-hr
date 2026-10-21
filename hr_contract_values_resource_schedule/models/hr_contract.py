@@ -10,7 +10,6 @@ class HrContract(models.Model):
 
     @api.model
     def _get_resource_calendar(self):
-
         res = self.env.company.resource_calendar_id.id
         init = self.get_latest_initial_values()
         if init is not None and init.resource_calendar_id:
@@ -23,7 +22,6 @@ class HrContract(models.Model):
 
     @api.model_create_multi
     def create(self, lst):
-
         res = super().create(lst)
         for r in res:
             if r and r.resource_calendar_id:
