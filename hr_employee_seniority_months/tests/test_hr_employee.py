@@ -10,18 +10,34 @@ from odoo.tests import common, tagged
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
-# These tests must run after all modules are installed: in CI the database
-# is pre-initialised with the full dependency set (including
-# hr_work_entry_contract, whose hr.contract.work_entry_source is NOT NULL),
-# but at-install tests run while that module's fields are not yet in the
-# registry, so contract inserts violate the constraint.
+# These tests build their own records: in Odoo 19 a contract is an
+# ``hr.version`` record, and the ``hr_contract`` module no longer exists.
+# They must run after all modules are installed, because the versions created
+# here carry fields that are only added to ``hr.version`` by modules installed
+# alongside this one (``hr_work_entry``, whose ``work_entry_source`` is a
+# required field).
 @tagged("post_install", "-at_install")
 class TestHrEmployeeSeniority(common.TransactionCase):
     def setUp(self):
         super().setUp()
 
+        self.env = self.env(context=dict(self.env.context, tracking_disable=True))
         self.HrEmployee = self.env["hr.employee"]
-        self.HrContract = self.env["hr.contract"]
+        self.HrVersion = self.env["hr.version"]
+
+    def _create_contract(self, employee, date_start, date_end=False, name="C"):
+        """Create the ``hr.version`` that represents a contract."""
+
+        return self.HrVersion.create(
+            {
+                "name": name,
+                "employee_id": employee.id,
+                "date_version": date_start,
+                "contract_date_start": date_start,
+                "contract_date_end": date_end,
+                "wage": 1.0,
+            }
+        )
 
     def _get_days_in_month(self, d):
         last_date = (
@@ -46,24 +62,8 @@ class TestHrEmployeeSeniority(common.TransactionCase):
         dStart2 = dEnd1 + relativedelta(days=1)
         dEnd2 = dStart2 + relativedelta(months=6)
         ee = self.HrEmployee.create({"name": "EE 1"})
-        self.HrContract.create(
-            {
-                "name": "C1",
-                "employee_id": ee.id,
-                "wage": 1.0,
-                "date_start": dStart1,
-                "date_end": dEnd1,
-            }
-        )
-        self.HrContract.create(
-            {
-                "name": "C2",
-                "employee_id": ee.id,
-                "wage": 1.0,
-                "date_start": dStart2,
-                "date_end": dEnd2,
-            }
-        )
+        self._create_contract(ee, dStart1, dEnd1, "C1")
+        self._create_contract(ee, dStart2, dEnd2, "C2")
         self.assertEqual(
             float_compare(18.0, ee.length_of_service, precision_digits=2), 0
         )
@@ -74,15 +74,7 @@ class TestHrEmployeeSeniority(common.TransactionCase):
         dStart = fields.Date.today() - relativedelta(months=3)
         dEnd = fields.Date.today() + relativedelta(months=12)
         ee = self.HrEmployee.create({"name": "EE 1"})
-        self.HrContract.create(
-            {
-                "name": "C",
-                "employee_id": ee.id,
-                "wage": 1.0,
-                "date_start": dStart,
-                "date_end": dEnd,
-            }
-        )
+        self._create_contract(ee, dStart, dEnd)
         self.assertEqual(
             float_compare(3.0, ee.length_of_service, precision_digits=2), 0
         )
@@ -95,24 +87,8 @@ class TestHrEmployeeSeniority(common.TransactionCase):
         dStart2 = fields.Date.today() - relativedelta(months=7)
         dEnd2 = dStart2 + relativedelta(months=2)
         ee = self.HrEmployee.create({"name": "EE"})
-        self.HrContract.create(
-            {
-                "name": "C1",
-                "employee_id": ee.id,
-                "wage": 1.0,
-                "date_start": dStart1,
-                "date_end": dEnd1,
-            }
-        )
-        self.HrContract.create(
-            {
-                "name": "C2",
-                "employee_id": ee.id,
-                "wage": 1.0,
-                "date_start": dStart2,
-                "date_end": dEnd2,
-            }
-        )
+        self._create_contract(ee, dStart1, dEnd1, "C1")
+        self._create_contract(ee, dStart2, dEnd2, "C2")
 
         self.assertEqual(
             float_compare(
@@ -128,13 +104,8 @@ class TestHrEmployeeSeniority(common.TransactionCase):
         """Contract with dates in the future returns a zero result"""
 
         ee = self.HrEmployee.create({"name": "EE"})
-        self.HrContract.create(
-            {
-                "name": "C",
-                "employee_id": ee.id,
-                "wage": 1.0,
-                "date_start": fields.Date.today() + relativedelta(months=3),
-            }
+        self._create_contract(
+            ee, fields.Date.today() + relativedelta(months=3), False, "C"
         )
         self.assertEqual(
             float_compare(0.0, ee.length_of_service, precision_digits=2), 0
@@ -145,14 +116,11 @@ class TestHrEmployeeSeniority(common.TransactionCase):
 
         ee = self.HrEmployee.create({"name": "EE"})
         contract_start = fields.Date.today() - relativedelta(months=3, days=14)
-        self.HrContract.create(
-            {
-                "name": "C",
-                "employee_id": ee.id,
-                "wage": 1.0,
-                "date_start": contract_start,
-                "date_end": fields.Date.today() + relativedelta(months=3),
-            }
+        self._create_contract(
+            ee,
+            contract_start,
+            fields.Date.today() + relativedelta(months=3),
+            "C",
         )
         delta = abs(
             relativedelta(
@@ -178,6 +146,31 @@ class TestHrEmployeeSeniority(common.TransactionCase):
             float_compare(months, ee.length_of_service, precision_digits=1), 0
         )
 
+    def test_version_on_same_contract_is_not_double_counted(self):
+        """A new version of the same contract does not add seniority twice
+
+        A wage revision creates a new hr.version that keeps the contract
+        dates, so the contract period must only be counted once.
+        """
+
+        dStart = fields.Date.today() - relativedelta(months=12)
+        dEnd = dStart + relativedelta(months=12)
+        ee = self.HrEmployee.create({"name": "EE"})
+        self._create_contract(ee, dStart, dEnd, "C")
+        self.HrVersion.create(
+            {
+                "name": "C (revision)",
+                "employee_id": ee.id,
+                "date_version": dStart + relativedelta(months=6),
+                "contract_date_start": dStart,
+                "contract_date_end": dEnd,
+                "wage": 2.0,
+            }
+        )
+        self.assertEqual(
+            float_compare(12.0, ee.length_of_service, precision_digits=2), 0
+        )
+
     def test_no_contract_no_employment_date(self):
         """An employee without a contract has no employment date"""
 
@@ -189,13 +182,6 @@ class TestHrEmployeeSeniority(common.TransactionCase):
 
         START = "2021-01-01"
         ee = self.HrEmployee.create({"name": "EE"})
-        self.HrContract.create(
-            {
-                "name": "C",
-                "employee_id": ee.id,
-                "wage": 1.0,
-                "date_start": START,
-            }
-        )
+        self._create_contract(ee, START)
         start = fields.Date.to_date(START)
         self.assertEqual(ee.get_employment_date(), start)

@@ -13,15 +13,27 @@ from odoo import fields, models
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
-    def _get_contracts_list(self):
-        """Return list of contracts in chronological order"""
+    def _get_contract_periods(self):
+        """Return the employee's contract periods in chronological order.
+
+        Since Odoo 19 a contract is an ``hr.version`` record, and a single
+        contract is described by several versions: a wage revision, for
+        instance, creates a new version that keeps the contract dates (see
+        ``hr.employee.create_version``). The distinct
+        ``(contract_date_start, contract_date_end)`` periods are therefore
+        returned, so that a contract is never counted twice. An open-ended
+        contract is returned with ``False`` as end date.
+        """
 
         self.ensure_one()
-        contracts = self.env["hr.contract"]
-        if len(self.contract_ids) > 0:
-            contracts = self.contract_ids.sorted(key=lambda c: c.date_start)
-
-        return contracts
+        return sorted(
+            {
+                (version.contract_date_start, version.contract_date_end)
+                for version in self.version_ids
+                if version.contract_date_start
+            },
+            key=lambda period: (period[0], period[1] or date.max),
+        )
 
     def _get_days_in_month(self, d):
         last_date = (
@@ -42,12 +54,11 @@ class HrEmployee(models.Model):
             dToday = dToday.date()
 
         delta = relativedelta(dToday, dToday)
-        contracts = self._get_contracts_list()
+        contracts = self._get_contract_periods()
         if len(contracts) == 0:
             return 0.0
 
-        for c in contracts:
-            dStart = c.date_start
+        for dStart, dEnd in contracts:
             if dStart >= dToday:
                 continue
 
@@ -56,11 +67,7 @@ class HrEmployee(models.Model):
             # the contract, otherwise consider only the months in the
             # contract until today.
             #
-            if c.date_end:
-                dEnd = c.date_end
-            else:
-                dEnd = dToday
-            dEnd = min(dEnd, dToday)
+            dEnd = min(dEnd or dToday, dToday)
 
             delta += relativedelta(dEnd, dStart)
 
@@ -79,8 +86,8 @@ class HrEmployee(models.Model):
     def get_employment_date(self):
         self.ensure_one()
 
-        contracts = self._get_contracts_list()
+        contracts = self._get_contract_periods()
         if len(contracts) > 0:
-            return contracts[0].date_start
+            return contracts[0][0]
 
         return None

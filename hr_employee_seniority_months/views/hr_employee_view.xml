@@ -18,7 +18,10 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='coach_id']" position="after">
+            <!-- Odoo 19 moved `coach_id` out of the employee form; the
+                 employee's manager (`parent_id`) is now the last field of the
+                 same group. -->
+            <xpath expr="//field[@name='parent_id']" position="after">
                 <label for="length_of_service" />
                 <div class="o_row" name="div_seniority">
                     <field name="length_of_service" />
