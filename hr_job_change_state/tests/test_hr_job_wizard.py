@@ -12,27 +12,20 @@ class TestHrJobWizard(TransactionCase):
 
         cls.group_hr_manager = cls.env.ref("hr.group_hr_manager")
         cls.group_hr_user = cls.env.ref("hr.group_hr_user")
-        # In 18.0, write access on hr.job belongs to hr_recruitment groups
-        cls.group_recruitment_manager = cls.env.ref(
-            "hr_recruitment.group_hr_recruitment_manager"
-        )
 
         # -- Users
         cls.hr_user = cls.User.create(
             {
                 "name": "Hr User",
                 "login": "hruser",
-                "groups_id": [(4, cls.group_hr_user.id)],
+                "group_ids": [(4, cls.group_hr_user.id)],
             }
         )
         cls.hr_officer = cls.User.create(
             {
                 "name": "Hr Officer",
                 "login": "hrofficer",
-                "groups_id": [
-                    (4, cls.group_hr_manager.id),
-                    (4, cls.group_recruitment_manager.id),
-                ],
+                "group_ids": [(4, cls.group_hr_manager.id)],
             }
         )
 
