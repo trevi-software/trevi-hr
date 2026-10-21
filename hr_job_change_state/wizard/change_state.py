@@ -11,7 +11,6 @@ class HrJobStateWizard(models.TransientModel):
 
     @api.model
     def _get_jobs(self):
-
         res = []
         if self.env.context.get("active_ids", False):
             res = self.env.context["active_ids"]
@@ -40,7 +39,6 @@ class HrJobStateWizard(models.TransientModel):
             self.do_open = False
 
     def change_state(self):
-
         if self.do_open:
             self.job_ids.set_open()
         elif self.do_recruit:

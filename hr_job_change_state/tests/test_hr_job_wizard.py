@@ -37,7 +37,6 @@ class TestHrJobWizard(TransactionCase):
         )
 
     def create_job_position(self):
-
         # hr_contract_status makes hr.job.department_id required
         department = self.env["hr.department"].create({"name": "#Test Dept"})
         return self.Job.create(
@@ -82,7 +81,6 @@ class TestHrJobWizard(TransactionCase):
                 self.assertIn(job, jobs)
 
     def test_can_change_multiple_job_position_state(self):
-
         jobs = self.create_job_position()
         for job in jobs:
             self.assertEqual(job.state, "recruit")
