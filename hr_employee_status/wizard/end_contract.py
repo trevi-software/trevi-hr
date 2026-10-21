@@ -16,12 +16,10 @@ class EmployeeSetInactive(models.TransientModel):
 
     @api.model
     def _get_contract(self):
-
         return self.env.context.get("end_contract_id", False)
 
     @api.model
     def _get_employee(self):
-
         contract_id = self.env.context.get("end_contract_id", False)
         if not contract_id:
             _logger.warning("No end_contract_id found in context")
@@ -48,7 +46,6 @@ class EmployeeSetInactive(models.TransientModel):
     notes = fields.Text()
 
     def set_employee_inactive(self):
-
         self.ensure_one()
         vals = {
             "name": self.date,

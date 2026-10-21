@@ -12,7 +12,6 @@ class HrContract(models.Model):
     _inherit = "hr.contract"
 
     def re_activate(self):
-
         for contract in self:
             term_obj = self.env["hr.employee.termination"]
             term_ids = term_obj.search(
@@ -47,7 +46,6 @@ class HrContract(models.Model):
         return True
 
     def end_contract(self):
-
         if len(self.ids) == 0:
             return False
 
@@ -63,7 +61,6 @@ class HrContract(models.Model):
 
     @api.model
     def update_state(self):
-
         # New contract with trial period
         employees = self.search(
             [

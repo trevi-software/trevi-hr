@@ -85,7 +85,6 @@ class Separation(models.Model):
         return records
 
     def unlink(self):
-
         for term in self:
             if term.state == "done":
                 raise UserError(
@@ -101,7 +100,6 @@ class Separation(models.Model):
         return super().unlink()
 
     def signal_cancel(self):
-
         for term in self:
             # Trigger a status change of the employee and his contract(s)
             term.employee_id.set_state_active(term.employee_state)
@@ -111,7 +109,6 @@ class Separation(models.Model):
         return True
 
     def effective_date_in_future(self):
-
         self.ensure_one()
         if self.name <= date.today():
             return False
@@ -119,7 +116,6 @@ class Separation(models.Model):
         return True
 
     def signal_done(self):
-
         for term in self:
             if term.effective_date_in_future():
                 raise UserError(

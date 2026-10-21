@@ -55,7 +55,6 @@ class HrEmployee(models.Model):
         return super().write(vals)
 
     def set_state_active(self, status="active"):
-
         for ee in self:
             if ee.status and ee.status in ("separation", "inactive"):
                 if ee.contract_id:
@@ -68,11 +67,9 @@ class HrEmployee(models.Model):
                 )
 
     def set_state_separation(self):
-
         self.write({"status": "separation"})
 
     def set_state_inactive(self):
-
         self.write(
             {
                 "active": False,
@@ -81,7 +78,6 @@ class HrEmployee(models.Model):
         )
 
     def signal_reactivate(self):
-
         self.set_state_active()
 
         return True
