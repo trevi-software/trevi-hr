@@ -84,11 +84,12 @@ class BenefitPolicy(models.Model):
         "res.company", required=True, default=lambda self: self.env.company
     )
 
-    def name_get(self):
-        res = []
+    @api.depends("name", "benefit_id")
+    def _compute_display_name(self):
+        # ``name_get`` was removed in Odoo 19; the display name is computed
+        # explicitly instead.
         for rec in self:
-            res.append((rec.id, f"{rec.name} {rec.benefit_id.name}"))
-        return res
+            rec.display_name = f"{rec.name} {rec.benefit_id.name}"
 
     @api.depends(
         "benefit_id",
@@ -163,7 +164,12 @@ class BenefitPolicy(models.Model):
         if benefit.min_employed_days > 0:
             ee = self.env["hr.employee"].browse(employee_id)
             d_today = fields.Date.today()
-            d_hire = ee.first_contract_date
+            # Odoo 19 dropped the stored ``hr.employee.first_contract_date``
+            # field: a contract is an ``hr.version`` record now and the date is
+            # derived from its ``contract_date_start``. The core helper below
+            # is the method the removed field used to compute itself, so the
+            # eligibility date keeps its 18.0 meaning.
+            d_hire = ee._get_first_contract_date()
             srvc_months = ee.get_months_service_to_date(dToday=d_today)
             srvc_months = int(srvc_months)
 
@@ -282,12 +288,13 @@ class BenefitPolicy(models.Model):
         if len(self.ids) == 0:
             return False
 
-        self.env.context = dict(self.env.context)
-        self.env.context.update({"end_benefit_policy_id": self.ids[0]})
+        # Odoo 19 environments are immutable: ``self.env.context = ...`` raises
+        # AttributeError. Build the context through ``dict()`` instead.
+        ctx = dict(self.env.context, end_benefit_policy_id=self.ids[0])
         return {
             "view_mode": "form",
             "res_model": "hr.benefit.policy.end",
             "type": "ir.actions.act_window",
             "target": "new",
-            "context": self.env.context,
+            "context": ctx,
         }

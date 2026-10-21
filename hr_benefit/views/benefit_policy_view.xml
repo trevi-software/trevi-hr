@@ -29,7 +29,7 @@
                     string="Current Policies"
                     domain="['&amp;', '|',  ('end_date', '=', False), ('end_date', '&gt;=', current_date), ('state', '!=', 'done')]"
                 />
-                <group expand="0" string="Group By...">
+                <group>
                     <filter
                         name="group_benefit_id"
                         string="Benefit"

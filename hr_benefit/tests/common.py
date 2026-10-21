@@ -11,6 +11,7 @@ class TestBenefitCommon(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
         cls.Benefit = cls.env["hr.benefit"]
         cls.Premium = cls.env["hr.benefit.premium"]
@@ -165,17 +166,22 @@ class TestBenefitCommon(common.TransactionCase):
     def create_benefit(self, vals):
         return self.Benefit.create(vals)
 
-    def create_contract(self, state, kanban_state, start, end=None, trial_end=None):
-        return self.env["hr.contract"].create(
+    def create_contract(self, start, end=None, trial_end=None):
+        """Create the ``hr.version`` record that represents a contract.
+
+        ``hr.contract`` was merged into ``hr`` in Odoo 19: an employee's
+        contract is now an ``hr.version`` and its dates live in
+        ``contract_date_start``/``contract_date_end``.
+        """
+        return self.env["hr.version"].create(
             {
                 "name": "Contract",
                 "employee_id": self.eeJohn.id,
-                "state": state,
-                "kanban_state": kanban_state,
+                "date_version": start,
+                "contract_date_start": start,
                 "wage": 1,
-                "date_start": start,
                 "trial_date_end": trial_end,
-                "date_end": end,
+                "contract_date_end": end,
             }
         )
 

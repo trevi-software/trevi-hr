@@ -115,11 +115,9 @@ class TestBenefit(common.TestBenefitCommon):
         """
 
         cc = self.create_contract(
-            "draft",
-            "done",
             date.today() - relativedelta(days=10),  # noqa: DTZ011
         )
-        cc.signal_confirm()
+        self.assertTrue(cc.contract_date_start)
         bn = self.create_benefit({"name": "B", "code": "B", "min_employed_days": 30})
         self.create_earning(bn, date.today(), allowance=1000)  # noqa: DTZ011
 
@@ -244,6 +242,30 @@ class TestBenefit(common.TestBenefitCommon):
 
         self.assertEqual(date.today(), pol.end_date)  # noqa: DTZ011
         self.assertEqual(pol.state, "done")
+
+    def test_end_policy_action(self):
+        """
+        end_policy() returns the termination wizard action carrying the policy
+        in the context (Odoo 19 environments are immutable, so the context must
+        be built explicitly)
+        """
+
+        bn = self.create_benefit({"name": "B", "code": "B"})
+        self.create_earning(bn, date.today(), allowance=1000)  # noqa: DTZ011
+        pol = self.create_policy(self.eeJohn, bn, date.today())  # noqa: DTZ011
+        pol.state_open()
+
+        action = pol.end_policy()
+
+        self.assertEqual("hr.benefit.policy.end", action["res_model"])
+        self.assertEqual("new", action["target"])
+        self.assertEqual(pol.id, action["context"]["end_benefit_policy_id"])
+
+        wiz = self.EndWizard.with_context(**action["context"]).create({})
+        wiz.date = date.today()  # noqa: DTZ011
+        wiz.end_policy()
+
+        self.assertEqual("done", pol.state)
 
     def test_endroll_single_employee(self):
         """Running the enroll employee wizard creates a policy for the employee"""

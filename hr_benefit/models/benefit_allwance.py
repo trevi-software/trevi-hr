@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 DAY_SELECT = [
@@ -49,13 +49,10 @@ class BenefitAdvantage(models.Model):
     _description = "Employee Benefit Policy Earning Line"
     _rec_name = "effective_date"
     _order = "benefit_id,effective_date desc"
-    _sql_constraints = [
-        (
-            "unique_date_benefit_id",
-            "UNIQUE(effective_date,benefit_id)",
-            ("Effective date must be unique per advantage in a benefit!"),
-        )
-    ]
+    _unique_date_benefit_id = models.Constraint(
+        "UNIQUE(effective_date,benefit_id)",
+        "Effective date must be unique per advantage in a benefit!",
+    )
 
     benefit_id = fields.Many2one(comodel_name="hr.benefit")
     effective_date = fields.Date(required=True)
@@ -145,11 +142,12 @@ class BenefitAdvantage(models.Model):
     )
     active = fields.Boolean(default=True)
 
-    def name_get(self):
-        res = []
+    @api.depends("benefit_id", "effective_date")
+    def _compute_display_name(self):
+        # ``name_get`` was removed in Odoo 19; the display name is computed
+        # explicitly instead.
         for rec in self:
-            res.append((rec.id, f"{rec.benefit_id.name} {rec.effective_date}"))
-        return res
+            rec.display_name = f"{rec.benefit_id.name} {rec.effective_date}"
 
     def get_claims_in_period(self, employee_id, day):
         d = day

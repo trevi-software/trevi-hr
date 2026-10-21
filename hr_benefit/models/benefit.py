@@ -29,12 +29,11 @@ class Benefit(models.Model):
         "res.company", required=True, default=lambda self: self.env.company
     )
 
-    def name_get(self):
-        res = []
+    def _compute_display_name(self):
+        # ``name_get`` was removed in Odoo 19; the display name is computed
+        # explicitly instead.
         for rec in self:
-            res.append((rec.id, "[%s] %s"))
-
-        return res
+            rec.display_name = f"[{rec.code}] {rec.name}"
 
     def _get_latest(self, dToday, ptype):
         """

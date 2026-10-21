@@ -40,12 +40,12 @@ class BenefitClaim(models.Model):
         default="draft",
     )
 
-    def name_get(self):
-        res = []
-        data = self.read(["date", "benefit_policy_id"])
-        for d in data:
-            res.append((d["id"], d["benefit_policy_id"][1] + " " + str(d["date"])))
-        return res
+    @api.depends("date", "benefit_policy_id")
+    def _compute_display_name(self):
+        # ``name_get`` was removed in Odoo 19; the display name is computed
+        # explicitly instead.
+        for rec in self:
+            rec.display_name = f"{rec.benefit_policy_id.display_name} {rec.date}"
 
     @api.onchange("employee_id")
     def onchange_employee(self):
