@@ -28,18 +28,12 @@ class HrVersion(models.Model):
     # the employee's current version in sync with its resource), so only the
     # default is overridden here: field definitions are merged on inheritance
     # and the core attributes (inverse, string, check_company, tracking) are
-    # preserved.
+    # preserved.  The employee's resource is therefore synced by the core
+    # inverse, which correctly limits the update to the current version;
+    # writing the employee resource for every created version here would change
+    # the employee's live working hours when a future-dated or historical
+    # version is created.
     resource_calendar_id = fields.Many2one(
         comodel_name="resource.calendar",
         default=lambda self: self._get_resource_calendar(),
     )
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        versions = super().create(vals_list)
-        for version in versions:
-            if version.resource_calendar_id:
-                resources = version.mapped("employee_id").mapped("resource_id")
-                resources.write({"calendar_id": version.resource_calendar_id.id})
-
-        return versions
