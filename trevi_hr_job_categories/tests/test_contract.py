@@ -103,7 +103,7 @@ class TestContract(common.TransactionCase):
         return self.Employee.browse(employee_id).write({"job_id": job_id})
 
     def test_add_tag_to_employee(self):
-        self.assign_job_to_employee(self.job_store_manager, self.employee.id)
+        self.assign_job_to_employee(self.job_store_manager.id, self.employee.id)
         contract = self.create_contract(self.dstart, self.dend)
         contract._tag_employees(self.employee.id, self.job_store_manager.id)
         self.assertIn(self.category_sales, self.employee.category_ids)
