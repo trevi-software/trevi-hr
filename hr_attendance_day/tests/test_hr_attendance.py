@@ -122,5 +122,18 @@ class TestHrAttendance(common.TransactionCase):
             "Changing the employee's timezone refreshes the day",
         )
 
-    def test_clearing_check_in_PLACEHOLDER(self):
-        pass
+    def test_clearing_check_in(self):
+        """The compute must cope with an empty Check In.
+
+        ``day`` is recomputed as soon as the date is cleared while editing; the
+        record is not saved in that state (Check In is required), but the
+        compute runs first and must not raise.
+        """
+
+        att = self.Attendance.new({"employee_id": self.sally.id})
+        att.check_in = datetime(2022, 4, 1, 21, 0)  # noqa: DTZ001
+        att.check_out = datetime(2022, 4, 2, 5, 0)  # noqa: DTZ001
+        self.assertEqual(att.day, date(2022, 4, 2))
+
+        att.check_in = False
+        self.assertFalse(att.day, "Clearing Check In clears the day")

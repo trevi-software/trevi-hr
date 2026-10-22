@@ -16,6 +16,11 @@ class HrAttendance(models.Model):
     @api.depends("check_in", "employee_id.tz")
     def _compute_day(self):
         for att in self:
+            # the field can be empty while the user is editing the form, and the
+            # compute runs before anything is saved
+            if not att.check_in:
+                att.day = False
+                continue
             local_tz = timezone(att.employee_id.tz or "UTC")
             utc_check_in = utc.localize(att.check_in)
             tz_check_in = utc_check_in.astimezone(local_tz)
