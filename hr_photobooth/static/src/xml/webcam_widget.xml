@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <!-- Standard image widget plus a "take a photo" button next to edit/clear -->
+    <t
+        t-name="hr_photobooth.CameraCaptureField"
+        t-inherit="web.ImageField"
+        t-inherit-mode="primary"
+    >
+        <xpath expr="//FileUploader" position="after">
+            <button
+                class="o_photobooth_button btn btn-light border-0 rounded-circle m-1 p-1"
+                type="button"
+                data-tooltip="Take a photo"
+                aria-label="Take a photo"
+                t-on-click="openPhotobooth"
+            >
+                <i class="fa fa-camera fa-fw" />
+            </button>
+        </xpath>
+    </t>
+
+    <t t-name="hr_photobooth.PhotoboothDialog">
+        <Dialog title="title" size="'md'">
+            <div
+                t-if="state.error"
+                class="o_photobooth_error alert alert-warning mb-0"
+                role="alert"
+                t-esc="state.error"
+            />
+            <video
+                t-else=""
+                class="o_photobooth_video d-block w-100 rounded"
+                t-ref="video"
+                style="background: #000; max-height: 60vh;"
+                autoplay="autoplay"
+                muted="muted"
+                playsinline="playsinline"
+                t-on-loadeddata="onVideoReady"
+            />
+            <t t-set-slot="footer">
+                <button
+                    class="o_photobooth_capture btn btn-primary"
+                    type="button"
+                    t-att-disabled="!state.ready"
+                    t-on-click="capture"
+                >
+                    <i class="fa fa-camera me-1" /> Take Photo
+                </button>
+                <button
+                    class="btn btn-secondary"
+                    type="button"
+                    t-on-click="props.close"
+                >Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
