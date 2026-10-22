@@ -1,6 +1,4 @@
-/** @odoo-module **/
-
-import { expect, test } from "@odoo/hoot";
+import {Component, xml} from "@odoo/owl";
 import {
     click,
     manuallyDispatchProgrammaticEvent,
@@ -8,9 +6,6 @@ import {
     waitFor,
     waitForNone,
 } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
-import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import {
     clickSave,
     defineModels,
@@ -21,9 +16,11 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { useService } from "@web/core/utils/hooks";
-
-import { PhotoboothDialog } from "@hr_photobooth/js/webcam_widget";
+import {expect, test} from "@odoo/hoot";
+import {PhotoboothDialog} from "@hr_photobooth/js/webcam_widget.esm";
+import {animationFrame} from "@odoo/hoot-mock";
+import {defineMailModels} from "@mail/../tests/mail_test_helpers";
+import {useService} from "@web/core/utils/hooks";
 
 const CAPTURED_IMAGE = "CAPTURED_IMAGE";
 const DENIED_MESSAGE =
@@ -40,13 +37,16 @@ class HrEmployee extends models.Model {
 
     image_1920 = fields.Binary();
 
-    _records = [{ id: 1 }];
+    _records = [{id: 1}];
 }
 
-// the test environment starts every registered service, including mail's store
+// The test environment starts every registered service, including mail's store
 // and discuss' rtc, which query discuss.channel and friends
 defineMailModels();
 defineModels([HrEmployee]);
+
+/** Does nothing, for the places that need a callable and nothing else. */
+const noop = () => undefined;
 
 /** A real MediaStream (the video element refuses anything else) holding one fake track. */
 function makeStream() {
@@ -58,7 +58,7 @@ function makeStream() {
     };
     const stream = new MediaStream();
     stream.getTracks = () => [track];
-    return { stream, track };
+    return {stream, track};
 }
 
 /**
@@ -69,21 +69,21 @@ function makeStream() {
  * on every call.
  */
 function mockCamera(getUserMedia) {
-    patchWithCleanup(navigator, { mediaDevices: { getUserMedia } });
+    patchWithCleanup(navigator, {mediaDevices: {getUserMedia}});
 }
 
 /** A canvas that always "captures" the same picture. */
 function mockCanvas() {
     patchWithCleanup(HTMLCanvasElement.prototype, {
-        getContext: () => ({ drawImage: () => {} }),
+        getContext: () => ({drawImage: noop}),
         toDataURL: () => `data:image/jpeg;base64,${CAPTURED_IMAGE}`,
     });
 }
 
 /** Give the (fake) video element a picture size. */
 function setVideoSize(video, width = 640, height = 480) {
-    Object.defineProperty(video, "videoWidth", { value: width, configurable: true });
-    Object.defineProperty(video, "videoHeight", { value: height, configurable: true });
+    Object.defineProperty(video, "videoWidth", {value: width, configurable: true});
+    Object.defineProperty(video, "videoHeight", {value: height, configurable: true});
 }
 
 /**
@@ -99,19 +99,19 @@ class PhotoboothHost extends Component {
     }
 
     openPhotobooth(onCapture) {
-        this.dialog.add(PhotoboothDialog, { onCapture });
+        this.dialog.add(PhotoboothDialog, {onCapture});
     }
 }
 
 /** Mounts the host and opens the dialog (no wait: it may show an error instead). */
-async function mountPhotobooth(onCapture = () => {}) {
+async function mountPhotobooth(onCapture = noop) {
     const host = await mountWithCleanup(PhotoboothHost);
     host.openPhotobooth(onCapture);
     return host;
 }
 
 /** Opens the dialog and waits for the live video. */
-async function openPhotobooth(onCapture = () => {}) {
+async function openPhotobooth(onCapture = noop) {
     const host = await mountPhotobooth(onCapture);
     await waitFor(".o_photobooth_video");
     return host;
@@ -155,8 +155,8 @@ test("a missing camera is reported in the dialog", async () => {
 });
 
 test("a browser without a camera API is reported in the dialog", async () => {
-    // no getUserMedia at all, which is what an insecure context looks like
-    patchWithCleanup(navigator, { mediaDevices: {} });
+    // No getUserMedia at all, which is what an insecure context looks like
+    patchWithCleanup(navigator, {mediaDevices: {}});
 
     await mountPhotobooth();
     await waitFor(".o_photobooth_error");
@@ -165,13 +165,13 @@ test("a browser without a camera API is reported in the dialog", async () => {
 });
 
 test("closing the dialog while the permission prompt is open releases the camera", async () => {
-    const { stream, track } = makeStream();
-    let resolveStream;
+    const {stream, track} = makeStream();
+    let resolveStream = null;
     mockCamera(() => new Promise((resolve) => (resolveStream = resolve)));
 
     await openPhotobooth();
 
-    // cancel while the browser is still waiting for the user's answer
+    // Cancel while the browser is still waiting for the user's answer
     await click(".modal-footer .btn-secondary");
     await waitForNone(".o_photobooth_video");
 
@@ -184,14 +184,14 @@ test("closing the dialog while the permission prompt is open releases the camera
 });
 
 test("the picture can only be taken once the first frame is ready", async () => {
-    const { stream } = makeStream();
+    const {stream} = makeStream();
     mockCamera(() => Promise.resolve(stream));
     mockCanvas();
 
     let captured = null;
     await openPhotobooth((data) => (captured = data));
 
-    // the stream is attached, but no frame has arrived yet
+    // The stream is attached, but no frame has arrived yet
     expect(queryFirst(".o_photobooth_video")).toHaveProperty("srcObject", stream);
     expect(".o_photobooth_capture").not.toBeEnabled();
     expect(captured).toBe(null);
@@ -218,7 +218,7 @@ test("capturing without any picture in the video does nothing", async () => {
     await click(".o_photobooth_capture");
 
     expect(captured).toBe(null);
-    expect(".o_photobooth_video").toHaveCount(1, { message: "the dialog stays open" });
+    expect(".o_photobooth_video").toHaveCount(1, {message: "the dialog stays open"});
 });
 
 test("taking a photo updates the employee image", async () => {
@@ -226,7 +226,7 @@ test("taking a photo updates the employee image", async () => {
     mockCanvas();
 
     let savedImage = null;
-    onRpc("web_save", ({ args }) => {
+    onRpc("web_save", ({args}) => {
         savedImage = args[1].image_1920;
     });
 
@@ -234,7 +234,7 @@ test("taking a photo updates the employee image", async () => {
         type: "form",
         resModel: "hr.employee",
         resId: 1,
-        arch: /* xml */ `
+        arch: `
             <form>
                 <field name="image_1920" widget="camera_capture"/>
             </form>
