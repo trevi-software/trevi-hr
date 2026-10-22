@@ -104,9 +104,9 @@ class TestHrJobWizard(TransactionCase):
 
         button = "Change Recruitment State"
 
-        arch_manager = self.Job.with_user(self.hr_officer).get_view(
-            view_type="list"
-        )["arch"]
+        arch_manager = self.Job.with_user(self.hr_officer).get_view(view_type="list")[
+            "arch"
+        ]
         self.assertIn(button, arch_manager, "An HR manager is offered the button")
 
         arch_user = self.Job.with_user(self.hr_user).get_view(view_type="list")["arch"]
