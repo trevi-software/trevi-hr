@@ -209,10 +209,14 @@ class HrTransfer(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         # The ``state`` field is read-only in the form, but ``create`` is not
-        # otherwise restricted. Require the approval group to open a transfer
-        # directly in a non-draft state.
+        # otherwise restricted. The value reaches the new record either through
+        # ``vals`` or through a default (``default_state`` in the context, or
+        # the field default), and ``create`` honours both, so resolve the
+        # effective state before deciding. A transfer cannot be opened in a
+        # non-draft state without the approval group.
+        default_state = self.env.context.get("default_state") or "draft"
         for vals in vals_list:
-            if vals.get("state", "draft") != "draft":
+            if vals.get("state", default_state) != "draft":
                 self._check_permission_group("hr_job_transfer.group_hr_transfer")
         return super().create(vals_list)
 
@@ -277,6 +281,7 @@ class HrTransfer(models.Model):
         return True
 
     def state_confirm(self):
+        self._check_permission_group("hr_job_transfer.group_hr_transfer")
         for transfer in self:
             self._check_state(transfer.src_contract_id, transfer.date)
             transfer.state = "confirm"
@@ -284,6 +289,7 @@ class HrTransfer(models.Model):
         return True
 
     def state_done(self):
+        self._check_permission_group("hr_job_transfer.group_hr_transfer")
         today = fields.Date.today()
 
         for transfer in self:
@@ -303,6 +309,7 @@ class HrTransfer(models.Model):
         return True
 
     def signal_confirm(self):
+        self._check_permission_group("hr_job_transfer.group_hr_transfer")
         for transfer in self:
             self._check_state(transfer.src_contract_id, transfer.date)
             # If the user is a member of 'approval' group, go straight to 'approval'
