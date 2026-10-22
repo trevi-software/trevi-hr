@@ -4,6 +4,7 @@
 
 from datetime import timedelta
 
+from odoo.exceptions import ValidationError
 from odoo.fields import Date
 from odoo.tests import Form, TransactionCase
 
@@ -152,6 +153,33 @@ class TestHrSimplify(TransactionCase):
             self.job_rnd_technician.expected_employees,
             (self.job_rnd_technician.no_of_recruitment + 2),
         )
+
+    def test_identification_unique_when_a_version_moves_to_another_employee(self):
+        """Moving a version to another employee must not duplicate the number."""
+
+        # one employee may carry the same official identification on several
+        # versions of their own ...
+        adam_v1 = self.create_contract(
+            name="Adam #1",
+            employee=self.emp_adam,
+            job=self.job_mkt_director,
+            start_date="2021-01-01",
+            end_date="2021-12-31",
+        )
+        adam_v1.identification_id = "ET-12345"
+        adam_v2 = self.create_contract(
+            name="Adam #2",
+            employee=self.emp_adam,
+            job=self.job_mkt_director,
+            start_date="2022-01-01",
+            end_date=False,
+        )
+        adam_v2.identification_id = "ET-12345"
+
+        # ... but moving one of them to somebody else would leave two employees
+        # sharing the number
+        with self.assertRaises(ValidationError):
+            adam_v1.write({"employee_id": self.emp_kal.id})
 
     def test_compute_employees_counts_running_and_open_ended_versions(self):
         """An employee in post counts, whatever the end date of their version."""

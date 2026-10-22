@@ -49,7 +49,7 @@ class HrVersion(models.Model):
         else:
             self.employee_dept_id = False
 
-    @api.constrains("identification_id")
+    @api.constrains("identification_id", "employee_id")
     def _check_unique_identification_id(self):
         """Official identification numbers must be unique.
 
