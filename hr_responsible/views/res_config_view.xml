@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_hr_config_contract_state" model="ir.ui.view">
+        <field name="name">hr settings for contract state</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//app[@name='hr']//block[@name='employees_setting_container']"
+                position="inside"
+            >
+                <setting
+                    id="hr_responsible_setting"
+                    title="Default HR Responsible"
+                    help="Set the default HR responsible for employees. When enabled, the default HR responsible will be automatically assigned to new employees created in the system."
+                >
+                    <field name="hr_responsible" />
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
