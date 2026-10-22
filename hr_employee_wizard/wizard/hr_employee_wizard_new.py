@@ -4,7 +4,7 @@
 
 from datetime import date
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 
 
 class NewLabour(models.TransientModel):
@@ -226,7 +226,7 @@ class NewLabour(models.TransientModel):
         self.ensure_one()
         if not self.name or not self.birth_date or not self.gender:
             raise exceptions.ValidationError(
-                _(
+                self.env._(
                     "Mandatory Fields Missing "
                     "Make sure that at least the Name, Birth Date and Gender "
                     "fields have been filled in."
@@ -251,7 +251,7 @@ class NewLabour(models.TransientModel):
     def hire_applicant(self):
         if not self.name or not self.birth_date or not self.gender:
             raise exceptions.ValidationError(
-                _(
+                self.env._(
                     "Mandatory Fields Missing "
                     "Make sure that at least the Name, Birth Date and Gender "
                     "fields have been filled in."
