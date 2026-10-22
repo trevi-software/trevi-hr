@@ -99,3 +99,24 @@ class TestLock(common.TransactionCase):
         self.assertTrue(lk.is_locked_datetime_utc("2020-12-31 21:00:00"))
         # in the middle of the lock period
         self.assertTrue(lk.is_locked_datetime_utc("2021-01-15 03:00:00"))
+
+    def test_create_with_datetime_strings(self):
+        """Datetimes sent as strings are accepted and converted to UTC.
+
+        JSON-RPC payloads (and values taken from ``read()``) carry datetimes as
+        strings; the ORM only converts them after ``create()`` overrides have
+        run, so the override must normalise them itself.
+        """
+
+        lk = self.Lock.create(
+            {
+                "name": "A lock",
+                "start_time": "2021-01-01 00:00:00",
+                "end_time": "2021-01-31 23:59:59",
+                "tz": "Africa/Addis_Ababa",
+            }
+        )
+        self.assertTrue(lk.exists())
+        # Africa/Addis_Ababa is UTC+3 all year round
+        self.assertEqual(lk.start_time, datetime(2020, 12, 31, 21, 0, 0))  # noqa: DTZ001
+        self.assertEqual(lk.end_time, datetime(2021, 1, 31, 20, 59, 59))  # noqa: DTZ001

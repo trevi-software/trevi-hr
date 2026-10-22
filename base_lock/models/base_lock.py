@@ -36,15 +36,18 @@ class Lock(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            dt_tz = timezone(vals.get("tz", False))
-            dtStart = vals.get("start_time", False)
-            dtEnd = vals.get("end_time", False)
-            tzStart = dt_tz.localize(dtStart, is_dst=False)
-            tzEnd = dt_tz.localize(dtEnd, is_dst=False)
-            dtStart = tzStart.astimezone(utc).replace(tzinfo=None)
-            dtEnd = tzEnd.astimezone(utc).replace(tzinfo=None)
-            vals["start_time"] = dtStart
-            vals["end_time"] = dtEnd
+            # Datetimes arrive as strings from JSON-RPC payloads and from values
+            # taken off read(), and the ORM only converts them inside
+            # super().create(). pytz's localize() needs datetime objects, so
+            # normalise first (to_datetime returns None for False/missing).
+            dtStart = fields.Datetime.to_datetime(vals.get("start_time"))
+            dtEnd = fields.Datetime.to_datetime(vals.get("end_time"))
+            if dtStart and dtEnd and vals.get("tz"):
+                dt_tz = timezone(vals["tz"])
+                dtStart = dt_tz.localize(dtStart, is_dst=False)
+                dtEnd = dt_tz.localize(dtEnd, is_dst=False)
+                vals["start_time"] = dtStart.astimezone(utc).replace(tzinfo=None)
+                vals["end_time"] = dtEnd.astimezone(utc).replace(tzinfo=None)
 
         return super().create(vals_list)
 
