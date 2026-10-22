@@ -202,11 +202,23 @@ class HrVersion(models.Model):
         # that one, otherwise use the company associated with the parent
         # user record, if any.
         #
-        if self.env.context.get("force_company", False):
-            domain = domain + [("company_id", "=", self.env.context["force_company"])]
-        else:
-            if self.env.user.company_id:
-                domain = domain + [("company_id", "=", self.env.user.company_id.id)]
+        company = self.env.user.company_id
+        try:
+            force_company = int(self.env.context.get("force_company") or 0)
+        except (TypeError, ValueError):
+            force_company = 0
+        if force_company:
+            # ``force_company`` is caller-supplied context and the ``sudo()``
+            # search below is not subject to the multi-company record rule, so
+            # only honour it for a company the user is actually allowed to
+            # access.  Otherwise another company's initial values (default
+            # starting wage, trial period, ...) would leak into the caller's
+            # contract version.
+            requested = self.env["res.company"].browse(force_company).exists()
+            if requested and requested in self.env.user.company_ids:
+                company = requested
+        if company:
+            domain = domain + [("company_id", "=", company.id)]
 
         # If we can't find records for the employee's company, search for
         # ones without a specific company attached.

@@ -206,3 +206,58 @@ class TestContractInit(common.TransactionCase):
         )
         contract = self._create_contract({"job_id": self.job_ux_designer.id})
         self.assertEqual(2000, contract.wage)
+
+    def test_get_latest_values_ignores_unauthorized_force_company(self):
+        """An inaccessible ``force_company`` must not leak initial values.
+
+        ``get_latest_initial_values`` searches with ``sudo()``, so it cannot
+        trust the caller-supplied ``force_company``: otherwise another
+        company's initial values (default starting wage, trial period, ...)
+        would flow into the caller's contract version.
+        """
+
+        own_company = self.env.company
+        other_company = self.env["res.company"].create({"name": "#Other Company"})
+
+        own_init = self.HrContractInit.create(
+            {
+                "name": "#Own initial values",
+                "date": fields.Date.today(),
+                "company_id": own_company.id,
+                "wage_ids": [(0, 0, {"starting_wage": 1111, "is_default": True})],
+            }
+        )
+        self.HrContractInit.create(
+            {
+                "name": "#Other initial values",
+                "date": fields.Date.today(),
+                "company_id": other_company.id,
+                "wage_ids": [(0, 0, {"starting_wage": 9999, "is_default": True})],
+            }
+        )
+
+        user = self.env["res.users"].create(
+            {
+                "name": "#Limited HR User",
+                "login": "#limited_hr_user",
+                "company_id": own_company.id,
+                "company_ids": [(6, 0, [own_company.id])],
+                "group_ids": [
+                    (
+                        6,
+                        0,
+                        [
+                            self.env.ref("base.group_user").id,
+                            self.env.ref("hr.group_hr_user").id,
+                        ],
+                    )
+                ],
+            }
+        )
+
+        init = (
+            self.HrVersion.with_user(user)
+            .with_context(force_company=other_company.id)
+            .get_latest_initial_values()
+        )
+        self.assertEqual(own_init, init)
