@@ -158,6 +158,7 @@ class BenefitAdvantage(models.Model):
 
     @api.constrains(
         "type",
+        "reim_nolimit",
         "reim_limit_period",
         "reim_period_month_day",
         "reim_period_annual_month",
@@ -167,7 +168,7 @@ class BenefitAdvantage(models.Model):
         # ``exists()`` skips records that a concurrent or stale write refers to
         # but that are no longer in the database.
         for rec in self.exists():
-            if rec.type != "reimburse":
+            if rec.type != "reimburse" or rec.reim_nolimit:
                 continue
             if rec.reim_limit_period == "monthly" and not rec.reim_period_month_day:
                 raise ValidationError(

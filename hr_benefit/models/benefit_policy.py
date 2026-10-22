@@ -194,24 +194,27 @@ class BenefitPolicy(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        seen = set()
+        seen = {}
         for vals in vals_list:
             # Check if the employee is already enrolled
             #
             benefit = self.env["hr.benefit"].browse(vals["benefit_id"])
             key = (vals["employee_id"], vals["benefit_id"])
             if not benefit.multi_policy:
-                # An import or API call can carry several overlapping policies
-                # for the same employee and benefit; the database search below
-                # does not see records of this batch that are not created yet.
-                if key in seen:
-                    raise UserError(
-                        self.env._(
-                            "The employee is enrolled in this benefit program "
-                            "more than once in the same request."
+                new_start = vals.get("start_date")
+                new_end = vals.get("end_date", False)
+                # The database search below does not see records of this batch
+                # that are not created yet, so compare the validity ranges
+                # within the batch as well.
+                for other_start, other_end in seen.get(key, []):
+                    if self._ranges_overlap(new_start, new_end, other_start, other_end):
+                        raise UserError(
+                            self.env._(
+                                "The employee is enrolled in this benefit program "
+                                "more than once in the same request."
+                            )
                         )
-                    )
-                seen.add(key)
+                seen.setdefault(key, []).append((new_start, new_end))
                 domain = [
                     ("employee_id", "=", vals["employee_id"]),
                     ("benefit_id", "=", vals["benefit_id"]),
@@ -322,6 +325,22 @@ class BenefitPolicy(models.Model):
             "target": "new",
             "context": ctx,
         }
+
+    @api.model
+    def _ranges_overlap(self, start_a, end_a, start_b, end_b):
+        """Whether two policy validity ranges overlap (an empty end is open)."""
+        start_a = fields.Date.to_date(start_a)
+        start_b = fields.Date.to_date(start_b)
+        end_a = fields.Date.to_date(end_a) if end_a else None
+        end_b = fields.Date.to_date(end_b) if end_b else None
+        if start_a is None or start_b is None:
+            # A missing start date cannot be compared; be conservative.
+            return True
+        if end_b is not None and start_a > end_b:
+            return False
+        if end_a is not None and start_b > end_a:
+            return False
+        return True
 
     @api.model
     def _cron_refresh_amounts(self):

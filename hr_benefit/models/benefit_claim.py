@@ -145,11 +145,14 @@ class BenefitClaim(models.Model):
     def claim_approve(self):
         # Draft claims do not count towards the re-imbursement limit, so other
         # drafts may already have consumed part of it. Re-check the amount that
-        # is still available at approval time instead of reusing the value that
-        # was stored when the claim was drafted.
+        # is still available at approval time, and approve the claims one at a
+        # time so that a sibling in the same batch is taken into account.
         for clm in self:
+            if clm.state == "approve":
+                # Re-approving must not change an already saved amount.
+                continue
             clm.amount_approved = clm._get_approved_amount(clm.date)
-        self.write({"state": "approve"})
+            clm.write({"state": "approve"})
         return True
 
     def claim_decline(self):
