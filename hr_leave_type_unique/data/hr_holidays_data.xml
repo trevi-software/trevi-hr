@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <!-- Casual leave -->
+    <record id="hr_holidays.leave_type_paid_time_off" model="hr.leave.type">
+        <field name="code">LCASU</field>
+    </record>
+
+    <!-- Sick leave -->
+    <record id="hr_holidays.leave_type_sick_time_off" model="hr.leave.type">
+        <field name="code">LSICK</field>
+    </record>
+
+    <!-- Compensatory Days -->
+    <record id="hr_holidays.leave_type_compensatory_days" model="hr.leave.type">
+        <field name="code">LCOMP</field>
+    </record>
+
+    <!--Unpaid Leave -->
+    <record id="hr_holidays.leave_type_unpaid" model="hr.leave.type">
+        <field name="code">LUNPA</field>
+    </record>
+</odoo>
