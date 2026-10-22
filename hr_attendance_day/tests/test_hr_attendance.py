@@ -91,3 +91,36 @@ class TestHrAttendance(common.TransactionCase):
             "Changing check-in backwards by 1 second from midnight (in local tz) "
             "changes the day",
         )
+
+    def test_day_follows_employee_timezone(self):
+        """The stored day refreshes when the attendance moves to another employee."""
+
+        # 21:00 UTC on 1 April is the 1st in Accra (UTC+0) but the 2nd in Addis (UTC+3)
+        att = self.Attendance.create(
+            {
+                "employee_id": self.john.id,
+                "check_in": datetime(2022, 4, 1, 21, 0),  # noqa: DTZ001
+                "check_out": datetime(2022, 4, 2, 5, 0),  # noqa: DTZ001
+            }
+        )
+        self.assertEqual(att.day, date(2022, 4, 1))
+
+        att.employee_id = self.sally.id
+        self.assertEqual(
+            att.day,
+            date(2022, 4, 2),
+            "Re-assigning the attendance to another employee refreshes the day",
+        )
+
+        # and the same when the employee's own timezone changes
+        att.employee_id = self.john.id
+        self.assertEqual(att.day, date(2022, 4, 1))
+        self.john.tz = "Africa/Addis_Ababa"
+        self.assertEqual(
+            att.day,
+            date(2022, 4, 2),
+            "Changing the employee's timezone refreshes the day",
+        )
+
+    def test_clearing_check_in_PLACEHOLDER(self):
+        pass

@@ -11,7 +11,9 @@ class HrAttendance(models.Model):
 
     day = fields.Date(compute="_compute_day", store=True)
 
-    @api.depends("check_in")
+    # the compute reads employee_id.tz, so it must depend on it as well: for a
+    # 21:00 UTC check-in the day differs between Accra (UTC+0) and Addis (UTC+3)
+    @api.depends("check_in", "employee_id.tz")
     def _compute_day(self):
         for att in self:
             local_tz = timezone(att.employee_id.tz or "UTC")
