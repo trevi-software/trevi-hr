@@ -120,3 +120,32 @@ class TestLock(common.TransactionCase):
         # Africa/Addis_Ababa is UTC+3 all year round
         self.assertEqual(lk.start_time, datetime(2020, 12, 31, 21, 0, 0))  # noqa: DTZ001
         self.assertEqual(lk.end_time, datetime(2021, 1, 31, 20, 59, 59))  # noqa: DTZ001
+
+    def test_lock_is_company_scoped(self):
+        """A lock only applies to the company that owns it."""
+
+        company_b = self.env["res.company"].create({"name": "Company B"})
+        # the current user must be allowed to work in company B
+        self.env.user.write({"company_ids": [(4, company_b.id)]})
+
+        # utc: 2020-12-31 21:00:00 - 2021-01-31 20:59:59, owned by the current company
+        start = datetime(2021, 1, 1, 0, 0, 0)  # noqa: DTZ001
+        end = datetime(2021, 1, 31, 23, 59, 59)  # noqa: DTZ001
+        self.create_lock(start, end, "Africa/Addis_Ababa")
+
+        locked_dt = "2020-12-31 21:00:00"
+        self.assertTrue(self.Lock.is_locked_datetime_utc(locked_dt))
+        self.assertTrue(
+            self.Lock.is_locked_date("2021-01-01", "Africa/Addis_Ababa"),
+            "The lock applies to the company that owns it",
+        )
+
+        other = self.Lock.with_company(company_b)
+        self.assertFalse(
+            other.is_locked_datetime_utc(locked_dt),
+            "Another company is not locked by this company's lock",
+        )
+        self.assertFalse(
+            other.is_locked_date("2021-01-01", "Africa/Addis_Ababa"),
+            "is_locked_date() must be company scoped as well",
+        )

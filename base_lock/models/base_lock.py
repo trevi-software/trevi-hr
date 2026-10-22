@@ -54,10 +54,20 @@ class Lock(models.Model):
     @api.model
     def is_locked_datetime_utc(self, dt_str):
         """Determines whether a DateTime (string) value falls within a locked period.
-        The DateTime string is assumed to be a naive UTC (straight from DB)."""
+        The DateTime string is assumed to be a naive UTC (straight from DB).
+
+        Locks are company-scoped: neither ``_check_company_auto`` nor the
+        security file restricts the search, so the current company has to be
+        filtered explicitly, otherwise a lock owned by one company would lock
+        the same period for every other company.
+        """
 
         lock_ids = self.search(
-            ["&", ("start_time", "<=", dt_str), ("end_time", ">=", dt_str)]
+            [
+                ("company_id", "=", self.env.company.id),
+                ("start_time", "<=", dt_str),
+                ("end_time", ">=", dt_str),
+            ]
         )
 
         return len(lock_ids) > 0
