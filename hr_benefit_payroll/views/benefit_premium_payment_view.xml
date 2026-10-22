@@ -19,7 +19,7 @@
                 <separator />
                 <field name="employee_id" />
                 <field name="state" />
-                <group expand="0" string="Group By...">
+                <group>
                     <filter
                         name="group_date"
                         string="Date"

@@ -83,7 +83,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         polJohn = self.create_policy(self.eeJohn, bn1, date.today())  # noqa: DTZ011
         polPaul = self.create_policy(self.eePaul, bn1, date.today())  # noqa: DTZ011
         grpOfficer = self.env.ref("hr.group_hr_user")
-        self.assertNotIn(grpOfficer, self.userJohn.groups_id)
+        self.assertNotIn(grpOfficer, self.userJohn.group_ids)
         self.assertNotEqual(polJohn, polPaul)
         self.assertEqual(self.userJohn, polJohn.employee_id.user_id)
         self.assertEqual(self.userPaul, polPaul.employee_id.user_id)

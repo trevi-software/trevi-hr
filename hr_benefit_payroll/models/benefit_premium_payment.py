@@ -2,7 +2,7 @@
 # Copyright (C) 2013,2014 Michael Telahun Makonnen <mmakonnen@gmail.com>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -23,7 +23,7 @@ class PremiumPayment(models.Model):
     date = fields.Date(required=True, default=fields.Date.today())
     policy_id = fields.Many2one(
         comodel_name="hr.benefit.policy",
-        domain=_compute_policy_id_domain,
+        domain=lambda self: self._compute_policy_id_domain(),
         required=True,
     )
     employee_id = fields.Many2one(
@@ -45,33 +45,27 @@ class PremiumPayment(models.Model):
         default="draft",
     )
 
-    def name_get(self):
-        res = []
+    def _compute_display_name(self):
         for payment in self:
-            res.append(
-                (
-                    payment.id,
-                    f"{payment.policy_id.name} {payment.date} {payment.amount}",
-                )
+            payment.display_name = (
+                f"{payment.policy_id.name} {payment.date} {payment.amount}"
             )
 
-        return res
-
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_non_draft(self):
         for payment in self:
             if payment.state != "draft" and not (
                 payment.env.context and payment.env.context.get("force_delete", False)
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Permission Denied. "
                         "You may not delete a payment that is not in 'draft' stage."
-                        "\nPolicy: %(name)s\nPayment Date: %(date)s"
+                        "\nPolicy: %(name)s\nPayment Date: %(date)s",
+                        name=payment.policy_id.name,
+                        date=payment.date,
                     )
-                    % {"name": payment.policy_id.name, "date": payment.date}
                 )
-
-        return super().unlink()
 
     def action_pending(self):
         return self.write({"state": "pending"})
