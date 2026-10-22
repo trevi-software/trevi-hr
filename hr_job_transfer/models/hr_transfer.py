@@ -18,7 +18,6 @@ class HrTransfer(models.Model):
     employee_id = fields.Many2one(
         comodel_name="hr.employee",
         required=True,
-        readonly=True,
         check_company=True,
     )
     src_id = fields.Many2one(
@@ -33,7 +32,6 @@ class HrTransfer(models.Model):
         string="Destination",
         comodel_name="hr.job",
         required=True,
-        readonly=True,
         check_company=True,
     )
     src_department_id = fields.Many2one(
@@ -68,7 +66,6 @@ class HrTransfer(models.Model):
     date = fields.Date(
         string="Effective Date",
         required=True,
-        readonly=True,
     )
     state = fields.Selection(
         selection=[
@@ -119,7 +116,14 @@ class HrTransfer(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_not_draft(self):
-        if not self.env.context.get("force_delete", False):
+        # ``force_delete`` must not be honoured for anyone who can simply put
+        # it in the context: an HR user with delete access could otherwise
+        # erase a confirmed or completed transfer. Only a trusted
+        # administrative caller may bypass the draft-only guard.
+        force_delete = (
+            self.env.context.get("force_delete", False) and self.env.is_admin()
+        )
+        if not force_delete:
             for transfer in self:
                 if transfer.state not in ["draft"]:
                     raise UserError(
@@ -192,14 +196,35 @@ class HrTransfer(models.Model):
         return True
 
     def _check_permission_group(self, group=None):
-        for transfer in self:
-            if group and not transfer.env.user.has_group(group):
-                raise AccessError(
-                    self.env._("You don't have the access rights to take this action.")
-                )
-            else:
-                continue
+        # Check against ``self.env.user`` instead of looping over ``self``: the
+        # check must also hold for an empty recordset (``create`` and the
+        # ``@api.model`` cron entry point), where the loop would never run and
+        # silently pass.
+        if group and not self.env.user.has_group(group):
+            raise AccessError(
+                self.env._("You don't have the access rights to take this action.")
+            )
         return True
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        # The ``state`` field is read-only in the form, but ``create`` is not
+        # otherwise restricted. Require the approval group to open a transfer
+        # directly in a non-draft state.
+        for vals in vals_list:
+            if vals.get("state", "draft") != "draft":
+                self._check_permission_group("hr_job_transfer.group_hr_transfer")
+        return super().create(vals_list)
+
+    def write(self, vals):
+        # ``readonly`` only restricts the form, not ``write``. Guard the
+        # approval state machine so an ordinary HR user cannot push a transfer
+        # into ``pending`` and let the scheduled job complete it without
+        # approval. The action methods and the scheduled job (root) keep the
+        # same right, so their transitions are unaffected.
+        if "state" in vals:
+            self._check_permission_group("hr_job_transfer.group_hr_transfer")
+        return super().write(vals)
 
     @api.model
     def transfer_contract(self, contract, job, transfer, effective_date):

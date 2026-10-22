@@ -49,10 +49,10 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="employee_id" />
+                            <field name="employee_id" readonly="state != 'draft'" />
                             <field name="src_id" />
-                            <field name="dst_id" />
-                            <field name="date" />
+                            <field name="dst_id" readonly="state != 'draft'" />
+                            <field name="date" readonly="state != 'draft'" />
                         </group>
                         <group>
                             <field name="src_department_id" />
