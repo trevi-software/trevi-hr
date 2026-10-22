@@ -198,25 +198,16 @@ class HrVersion(models.Model):
         domain = [("date", "<=", today_str)]
         res = None
 
-        # Get company. If the caller wants to enforce a specific company use
-        # that one, otherwise use the company associated with the parent
-        # user record, if any.
+        # Restrict the search to the company in the environment.
         #
-        company = self.env.user.company_id
-        try:
-            force_company = int(self.env.context.get("force_company") or 0)
-        except (TypeError, ValueError):
-            force_company = 0
-        if force_company:
-            # ``force_company`` is caller-supplied context and the ``sudo()``
-            # search below is not subject to the multi-company record rule, so
-            # only honour it for a company the user is actually allowed to
-            # access.  Otherwise another company's initial values (default
-            # starting wage, trial period, ...) would leak into the caller's
-            # contract version.
-            requested = self.env["res.company"].browse(force_company).exists()
-            if requested and requested in self.env.user.company_ids:
-                company = requested
+        # Use the company the caller is working in.  ``self.env.company`` is set
+        # by ``with_company()``, which Odoo refuses for a company the user may
+        # not access; that matters here because the ``sudo()`` search below is
+        # not subject to the multi-company record rule.  Reading the deprecated
+        # ``force_company`` context key instead would let a caller reach another
+        # company's initial values (default starting wage, trial period, ...).
+        #
+        company = self.env.company
         if company:
             domain = domain + [("company_id", "=", company.id)]
 

@@ -3,7 +3,7 @@
 
 
 from odoo import fields
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import common
 
 
@@ -207,13 +207,14 @@ class TestContractInit(common.TransactionCase):
         contract = self._create_contract({"job_id": self.job_ux_designer.id})
         self.assertEqual(2000, contract.wage)
 
-    def test_get_latest_values_ignores_unauthorized_force_company(self):
-        """An inaccessible ``force_company`` must not leak initial values.
+    def test_get_latest_values_follow_the_environment_company(self):
+        """Initial values come from the company the caller works in.
 
-        ``get_latest_initial_values`` searches with ``sudo()``, so it cannot
-        trust the caller-supplied ``force_company``: otherwise another
-        company's initial values (default starting wage, trial period, ...)
-        would flow into the caller's contract version.
+        ``get_latest_initial_values`` searches with ``sudo()``, so the company
+        must come from the environment - ``with_company()``, which Odoo refuses
+        for a company the user may not access - and never from caller-supplied
+        context: otherwise another company's initial values (default starting
+        wage, trial period, ...) would flow into the caller's contract version.
         """
 
         own_company = self.env.company
@@ -227,7 +228,7 @@ class TestContractInit(common.TransactionCase):
                 "wage_ids": [(0, 0, {"starting_wage": 1111, "is_default": True})],
             }
         )
-        self.HrContractInit.create(
+        other_init = self.HrContractInit.create(
             {
                 "name": "#Other initial values",
                 "date": fields.Date.today(),
@@ -236,6 +237,18 @@ class TestContractInit(common.TransactionCase):
             }
         )
 
+        # the values follow the company in the environment
+        self.assertEqual(
+            own_init,
+            self.HrVersion.with_company(own_company).get_latest_initial_values(),
+        )
+        self.assertEqual(
+            other_init,
+            self.HrVersion.with_company(other_company).get_latest_initial_values(),
+        )
+
+        # a user restricted to their own company cannot reach the other one's
+        # values: Odoo either refuses the company or the search stays local
         user = self.env["res.users"].create(
             {
                 "name": "#Limited HR User",
@@ -255,9 +268,12 @@ class TestContractInit(common.TransactionCase):
             }
         )
 
-        init = (
-            self.HrVersion.with_user(user)
-            .with_context(force_company=other_company.id)
-            .get_latest_initial_values()
-        )
-        self.assertEqual(own_init, init)
+        try:
+            leaked = (
+                self.HrVersion.with_user(user)
+                .with_company(other_company)
+                .get_latest_initial_values()
+            )
+        except AccessError:
+            leaked = own_init
+        self.assertEqual(own_init, leaked)
