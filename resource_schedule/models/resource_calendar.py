@@ -4,7 +4,7 @@
 
 from datetime import datetime, timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -149,11 +149,11 @@ class ResourceCalendar(models.Model):
         for att in self.attendance_ids:
             if att.sequence < 25:
                 if att.sequence == 0:
-                    att.name = _("Week 0")
+                    att.name = self.env._("Week 0")
                 att.week_nbr = 0
             else:
                 if att.sequence == 25:
-                    att.name = _("Week 1")
+                    att.name = self.env._("Week 1")
                 att.week_nbr = 1
 
     def get_rest_days(self):
@@ -197,7 +197,9 @@ class ResourceCalendar(models.Model):
             fromHour, fromSep, fromMin = worktime.hour_from.partition(":")
             toHour, toSep, toMin = worktime.hour_to.partition(":")
             if len(fromSep) == 0 or len(toSep) == 0:
-                raise ValidationError(_("Format of working hours is incorrect"))
+                raise ValidationError(
+                    self.env._("Format of working hours is incorrect")
+                )
 
             delta += datetime.strptime(  # noqa: DTZ007
                 toHour + ":" + toMin, "%H:%M"

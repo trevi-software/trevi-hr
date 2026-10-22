@@ -1,7 +1,7 @@
 # Copyright (C) 2022 Trevi Software (https://trevi.et)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_split
 
@@ -68,7 +68,9 @@ class ResourceCalendarAttendance(models.Model):
     def _check_autopunch(self):
         for rec in self:
             if rec.shift_type == "flex" and rec.autopunch is True:
-                raise ValidationError(_("Auto-punch cannot be used with a Flex Shift"))
+                raise ValidationError(
+                    self.env._("Auto-punch cannot be used with a Flex Shift")
+                )
 
     def _copy_attendance_vals(self):
         self.ensure_one()
@@ -252,7 +254,9 @@ class ResourceCalendarAttendance(models.Model):
                 and "autopunch" in values
                 and values["autopunch"] is True
             ):
-                raise ValidationError(_("Auto-punch cannot be used with a Flex Shift"))
+                raise ValidationError(
+                    self.env._("Auto-punch cannot be used with a Flex Shift")
+                )
 
             if "template_id" in values:
                 tpl = self.env["resource.calendar.attendance.template"].browse(

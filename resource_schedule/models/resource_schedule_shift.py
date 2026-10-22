@@ -6,7 +6,7 @@ from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from pytz import timezone, utc
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.date_utils import float_to_time
 
@@ -21,7 +21,7 @@ class ResourceScheduleShift(models.Model):
     calendar_id = fields.Many2one(ondelete="restrict")
     # resource.calendar.attendance no longer has a resource (19.0), but a shift
     # is always planned for one.
-    resource_id = fields.Many2one("resource.resource", "Resource", index=True)
+    resource_id = fields.Many2one("resource.resource", index=True)
     resource_type = fields.Selection(
         related="resource_id.resource_type", readonly=True, store=True, index=True
     )
@@ -67,7 +67,10 @@ class ResourceScheduleShift(models.Model):
     )
 
     def _get_shift_name(self):
-        """Return the textual representation of the shift, e.g. '08:00 AM - 05:00 PM (9h0m)'."""
+        """Return the textual representation of the shift.
+
+        e.g. '08:00 AM - 05:00 PM (9h0m)'.
+        """
         self.ensure_one()
         HOUR_FORMAT = "%I:%M %p"
         local_tz = timezone(self.tz)
@@ -434,7 +437,9 @@ class ResourceScheduleShift(models.Model):
 
         if date_start > date_end:
             raise ValidationError(
-                _("While creating schedules end date cannot be less than start date.")
+                self.env._(
+                    "While creating schedules end date cannot be less than start date."
+                )
             )
 
         schedule_week = 0
@@ -548,16 +553,11 @@ class ResourceScheduleShift(models.Model):
 
         # Create schedules for each employee in each department
         #
-        depts = self.env["hr.department"].search([])
-        for dept in depts:
-            ee_ids = self.env["hr.employee"].search(
-                [("department_id", "=", dept.id)], order="name"
-            )
-            ee_ids.filtered(
-                lambda ee: ee.version_id and ee.version_id.resource_calendar_id
-            )
-            for ee in ee_ids:
-                ee.create_schedule(dStart, dEnd)
+        employees = self.env["hr.employee"].search(
+            [("department_id", "!=", False)], order="name"
+        )
+        for ee in employees:
+            ee.create_schedule(dStart, dEnd)
 
     def publish(self):
         self.published = True

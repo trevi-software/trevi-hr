@@ -1,7 +1,7 @@
 # Copyright (C) 2022 Trevi Software (https://trevi.et)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -65,14 +65,18 @@ class ResourceCalendarAttendanceTemplate(models.Model):
     def _check_autopunch(self):
         for rec in self:
             if rec.shift_type == "flex" and rec.autopunch is True:
-                raise ValidationError(_("Auto-punch cannot be used with a Flex Shift"))
+                raise ValidationError(
+                    self.env._("Auto-punch cannot be used with a Flex Shift")
+                )
 
     @api.constrains("shift_type", "autodeduct_break")
     def _check_autodeduct_break(self):
         for rec in self:
             if rec.shift_type == "flex" and rec.autodeduct_break is True:
                 raise ValidationError(
-                    _("Auto-deduct break time cannot be used with a Flex Shift")
+                    self.env._(
+                        "Auto-deduct break time cannot be used with a Flex Shift"
+                    )
                 )
 
     @api.onchange("flex_scheduled_hrs")
