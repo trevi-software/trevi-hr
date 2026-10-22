@@ -68,9 +68,17 @@ class HrVersion(models.Model):
 
     def _track_subtype(self, initial_values):
         self.ensure_one()
-        if self.trial_ending and not initial_values.get("trial_ending"):
+        if (
+            "trial_ending" in initial_values
+            and self.trial_ending
+            and not initial_values["trial_ending"]
+        ):
             return self.env.ref("hr_contract_status.mt_alert_trial_ending")
-        if self.state_ending and not initial_values.get("state_ending"):
+        if (
+            "state_ending" in initial_values
+            and self.state_ending
+            and not initial_values["state_ending"]
+        ):
             return self.env.ref("hr_contract_status.mt_alert_contract_ending")
         return super()._track_subtype(initial_values)
 
