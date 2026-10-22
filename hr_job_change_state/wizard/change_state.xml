@@ -42,10 +42,14 @@
         <field name="arch" type="xml">
             <field name="name" position="before">
                 <header>
+                    <!-- the wizard is restricted to hr.group_hr_manager; without
+                         this the button is offered to users who cannot use it
+                         and leads them into an AccessError -->
                     <button
                         name="%(action_change_job_state_wizard)d"
                         string="Change Recruitment State"
                         type="action"
+                        groups="hr.group_hr_manager"
                     />
                 </header>
             </field>

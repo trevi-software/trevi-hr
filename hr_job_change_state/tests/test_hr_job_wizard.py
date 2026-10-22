@@ -94,3 +94,24 @@ class TestHrJobWizard(TransactionCase):
         for job in jobs:
             self.assertEqual(job.state, "open")
             self.assertIn(job, wizard.job_ids)
+
+    def test_change_state_button_only_for_managers(self):
+        """The wizard button must not be offered to users who cannot use it.
+
+        The wizard's only ACL entry grants hr.group_hr_manager, so showing the
+        button to other HR users sends them straight into an AccessError.
+        """
+
+        button = "Change Recruitment State"
+
+        arch_manager = self.Job.with_user(self.hr_officer).get_view(
+            view_type="list"
+        )["arch"]
+        self.assertIn(button, arch_manager, "An HR manager is offered the button")
+
+        arch_user = self.Job.with_user(self.hr_user).get_view(view_type="list")["arch"]
+        self.assertNotIn(
+            button,
+            arch_user,
+            "A user who cannot use the wizard is not offered the button",
+        )
