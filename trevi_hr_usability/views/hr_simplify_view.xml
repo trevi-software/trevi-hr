@@ -17,10 +17,13 @@
                 </xpath>
                 <field name="job_id" position="replace">
                     <field name="employee_dept_id" invisible="1" />
+                    <!-- the job list is restricted to the employee's department,
+                         but a contract template has no employee, so the filter
+                         would hide every job that belongs to one -->
                     <field
                         name="job_id"
                         required="1"
-                        domain="[('department_id', '=', employee_dept_id)]"
+                        domain="[('department_id', '=', employee_dept_id)] if employee_id else []"
                     />
                 </field>
             </data>

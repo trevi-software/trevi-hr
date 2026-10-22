@@ -181,6 +181,13 @@ class TestHrSimplify(TransactionCase):
         with self.assertRaises(ValidationError):
             adam_v1.write({"employee_id": self.emp_kal.id})
 
+    def test_job_domain_only_filters_by_department_with_an_employee(self):
+        """A contract template has no employee, so its jobs must not be filtered."""
+
+        arch = self.env.ref("trevi_hr_usability.view_contract_form").arch
+        self.assertIn("[('department_id', '=', employee_dept_id)]", arch)
+        self.assertIn("if employee_id else []", arch)
+
     def test_compute_employees_counts_running_and_open_ended_versions(self):
         """An employee in post counts, whatever the end date of their version."""
 
