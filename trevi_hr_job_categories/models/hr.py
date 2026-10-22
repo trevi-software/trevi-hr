@@ -59,26 +59,28 @@ class HrVersion(models.Model):
         return records
 
     def write(self, vals):
-        prev_data = self.read(["job_id"])
+        # Only re-synchronize the employee tags when the job actually changes;
+        # any other write must leave the tags untouched.
+        if "job_id" not in vals:
+            return super().write(vals)
+
+        prev_jobs = {data["id"]: data.get("job_id") for data in self.read(["job_id"])}
         res = super().write(vals)
 
         # Go through each record and delete tags associated with the previous job, then
         # add the tags of the new job.
         #
         for version in self:
-            for data in prev_data:
-                if data["id"] == version.id:
-                    if not vals.get("job_id", False) or (
-                        data.get("job_id", False)
-                        and data["job_id"][0] != vals["job_id"]
-                    ):
-                        prev_job_id = (
-                            data.get("job_id", False) and data["job_id"][0] or False
-                        )
-                        self._remove_tags(version.employee_id.id, prev_job_id)
-                        if vals.get("job_id", False):
-                            self._tag_employees(
-                                version.employee_id.id, version.job_id.id
-                            )
+            prev_job = prev_jobs.get(version.id)
+            prev_job_id = prev_job and prev_job[0] or False
+            new_job_id = version.job_id.id or False
+
+            if prev_job_id == new_job_id:
+                continue
+
+            if prev_job_id:
+                self._remove_tags(version.employee_id.id, prev_job_id)
+            if new_job_id:
+                self._tag_employees(version.employee_id.id, new_job_id)
 
         return res

@@ -146,3 +146,26 @@ class TestContract(common.TransactionCase):
         self.assertNotIn(self.category_it, self.employee.category_ids)
         self.assertIn(self.category_marketing, self.employee.category_ids)
         self.assertIn(self.category_management, self.employee.category_ids)
+
+    def test_unrelated_write_keeps_job_tags(self):
+        self.assign_category_to_job(self.category_it.id, self.job_developer.id)
+        contract = self.create_contract(
+            self.dstart, self.dend, job_id=self.job_developer.id
+        )
+        self.assertIn(self.category_it, self.employee.category_ids)
+
+        # Writing a field other than job_id must not touch the tags.
+        contract.write({"wage": 2})
+
+        self.assertIn(self.category_it, self.employee.category_ids)
+
+    def test_job_added_to_existing_version_tags_employee(self):
+        contract = self.create_contract(self.dstart, self.dend)
+        self.assertFalse(contract.job_id)
+        self.assertNotIn(self.category_it, self.employee.category_ids)
+
+        self.assign_category_to_job(self.category_it.id, self.job_developer.id)
+        contract.write({"job_id": self.job_developer.id})
+
+        self.assertEqual(self.job_developer, contract.job_id)
+        self.assertIn(self.category_it, self.employee.category_ids)
