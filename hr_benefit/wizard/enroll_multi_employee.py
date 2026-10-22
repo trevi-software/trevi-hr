@@ -4,8 +4,6 @@
 
 import math
 
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, fields, models
 
 
@@ -27,7 +25,7 @@ class EnrollEmployee(models.TransientModel):
     start_date = fields.Date(
         string="Enrollment Date",
         required=True,
-        default=fields.Date.today(),
+        default=fields.Date.context_today,
     )
     end_date = fields.Date(string="Termination Date")
     advantage_override = fields.Boolean(string="Override Advantage")
@@ -70,19 +68,14 @@ class EnrollEmployee(models.TransientModel):
     @api.depends("start_date", "premium_amount", "premium_total")
     def _compute_premium_installments(self):
         for rec in self:
-            res = {"end_date": False, "premium_installments": 0}
-            if rec.premium_amount == 0:
-                rec.update(res)
-                return
-
-            installments = math.ceil(
-                float(rec.premium_total) / float(rec.premium_amount)
-            )
-            if installments > 0:
-                d_end = rec.start_date + relativedelta(months=+installments)
-                res["end_date"] = d_end
-            res["premium_installments"] = installments
-            rec.update(res)
+            installments = 0
+            if rec.premium_amount and rec.premium_total:
+                installments = math.ceil(
+                    float(rec.premium_total) / float(rec.premium_amount)
+                )
+            # The wizard's ``end_date`` is the termination date chosen by the
+            # user; it must not be overwritten by the calculated schedule.
+            rec.premium_installments = installments
 
     def do_multi_enroll(self):
         if not self.benefit_id or len(self.employee_ids) == 0:

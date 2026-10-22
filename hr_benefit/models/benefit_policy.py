@@ -74,6 +74,12 @@ class BenefitPolicy(models.Model):
         compute="_compute_premium_installments",
         store=True,
     )
+    installment_end_date = fields.Date(
+        compute="_compute_premium_installments",
+        store=True,
+        help="End of the premium installment schedule, calculated from the "
+        "enrollment date. Independent from the policy's termination date.",
+    )
     note = fields.Text(string="Remarks")
     state = fields.Selection(
         selection=[("draft", "Draft"), ("open", "Open"), ("done", "Done")],
@@ -98,6 +104,12 @@ class BenefitPolicy(models.Model):
         "advantage_override_amount",
         "premium_override_amount",
         "premium_override_total",
+        "benefit_id.advantage_ids.allowance_amount",
+        "benefit_id.advantage_ids.type",
+        "benefit_id.advantage_ids.effective_date",
+        "benefit_id.premium_ids.amount",
+        "benefit_id.premium_ids.total_amount",
+        "benefit_id.premium_ids.effective_date",
     )
     def _compute_amounts(self):
         for rec in self:
@@ -140,19 +152,16 @@ class BenefitPolicy(models.Model):
     @api.depends("start_date", "premium_amount", "premium_total")
     def _compute_premium_installments(self):
         for rec in self:
-            res = {"end_date": False, "premium_installments": 0}
-            if rec.premium_amount == 0:
-                rec.update(res)
-                return
-
-            installments = math.ceil(
-                float(rec.premium_total) / float(rec.premium_amount)
-            )
-            if installments > 0:
-                d_end = rec.start_date + relativedelta(months=+installments)
-                res["end_date"] = d_end
-            res["premium_installments"] = installments
-            rec.update(res)
+            installments = 0
+            end_date = False
+            if rec.premium_amount and rec.premium_total:
+                installments = math.ceil(
+                    float(rec.premium_total) / float(rec.premium_amount)
+                )
+                if installments > 0:
+                    end_date = rec.start_date + relativedelta(months=+installments)
+            rec.premium_installments = installments
+            rec.installment_end_date = end_date
 
     @api.model
     def _fail_eligibility(self, benefit_id, employee_id):
@@ -185,11 +194,24 @@ class BenefitPolicy(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        seen = set()
         for vals in vals_list:
             # Check if the employee is already enrolled
             #
             benefit = self.env["hr.benefit"].browse(vals["benefit_id"])
+            key = (vals["employee_id"], vals["benefit_id"])
             if not benefit.multi_policy:
+                # An import or API call can carry several overlapping policies
+                # for the same employee and benefit; the database search below
+                # does not see records of this batch that are not created yet.
+                if key in seen:
+                    raise UserError(
+                        self.env._(
+                            "The employee is enrolled in this benefit program "
+                            "more than once in the same request."
+                        )
+                    )
+                seen.add(key)
                 domain = [
                     ("employee_id", "=", vals["employee_id"]),
                     ("benefit_id", "=", vals["benefit_id"]),
@@ -300,3 +322,17 @@ class BenefitPolicy(models.Model):
             "target": "new",
             "context": ctx,
         }
+
+    @api.model
+    def _cron_refresh_amounts(self):
+        """Refresh stored amounts when a dated earning or premium becomes effective.
+
+        ``_compute_amounts`` resolves the applicable line "as of today", so a
+        line that is future-dated when the policy is created only takes effect
+        once the date is reached. This scheduled job re-evaluates every policy
+        that is not terminated so the stored values catch up.
+        """
+        policies = self.search([("state", "!=", "done")])
+        policies._compute_amounts()
+        policies._compute_premium_installments()
+        return True

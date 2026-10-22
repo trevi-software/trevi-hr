@@ -16,7 +16,7 @@ class EnrollEmployee(models.TransientModel):
     )
     employee_id = fields.Many2one(comodel_name="hr.employee", required=True)
     start_date = fields.Date(
-        string="Enrollment Date", required=True, default=fields.Date.today()
+        string="Enrollment Date", required=True, default=fields.Date.context_today
     )
     end_date = fields.Date(string="Termination Date")
 

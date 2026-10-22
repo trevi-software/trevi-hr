@@ -153,6 +153,7 @@
                                     required="premium_override"
                                 />
                                 <field name="premium_installments" readonly="1" />
+                                <field name="installment_end_date" readonly="1" />
                             </group>
                         </page>
                     </notebook>

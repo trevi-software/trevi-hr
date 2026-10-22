@@ -10,7 +10,9 @@ class PolicyEnd(models.TransientModel):
     _name = "hr.benefit.policy.end"
     _description = "Benefit Policy Termination Wizard"
 
-    date = fields.Date(string="End Date", required=True, default=fields.Date.today())
+    date = fields.Date(
+        string="End Date", required=True, default=fields.Date.context_today
+    )
 
     @api.model
     def _get_policy(self):

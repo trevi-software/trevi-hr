@@ -33,6 +33,12 @@ class BenefitPremium(models.Model):
         default=0,
     )
     active = fields.Boolean(default=True)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        related="benefit_id.company_id",
+        store=True,
+        index=True,
+    )
 
     @api.depends("benefit_id", "effective_date")
     def _compute_display_name(self):

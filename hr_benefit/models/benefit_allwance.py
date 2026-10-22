@@ -2,12 +2,13 @@
 # Copyright (C) 2013,2014 Michael Telahun Makonnen <mmakonnen@gmail.com>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from datetime import timedelta
+import calendar
+from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 DAY_SELECT = [
     ("1", "1"),
@@ -141,6 +142,12 @@ class BenefitAdvantage(models.Model):
         "the selected jobs.",
     )
     active = fields.Boolean(default=True)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        related="benefit_id.company_id",
+        store=True,
+        index=True,
+    )
 
     @api.depends("benefit_id", "effective_date")
     def _compute_display_name(self):
@@ -149,34 +156,65 @@ class BenefitAdvantage(models.Model):
         for rec in self:
             rec.display_name = f"{rec.benefit_id.name} {rec.effective_date}"
 
-    def get_claims_in_period(self, employee_id, day):
-        d = day
-        period = self.reim_limit_period
-        if period == "monthly":
-            diff = d.day - int(self.reim_period_month_day)
-            if diff == 0:
-                dStart = d
-            elif diff > 0:
-                dStart = d + timedelta(days=-(diff))
-            else:
-                dStart = d + relativedelta(months=-1, days=diff)
-            dNextStart = dStart + relativedelta(months=+1)
-        elif period == "annual":
-            day_diff = d.day - int(self.reim_period_annual_day)
-            month_diff = d.month - int(self.reim_period_annual_month)
-            if month_diff == 0:
-                dStart = d
-            elif month_diff > 0:
-                dStart = d + relativedelta(months=-(month_diff))
-            else:
-                # month_diff is negative, but: -(-) = +
-                dStart = d + relativedelta(months=-(month_diff))
-            if day_diff > 0:
-                dStart = dStart + timedelta(days=-(day_diff))
-            elif day_diff < 0:
-                dStart = dStart + relativedelta(months=-1, days=day_diff)
-            dNextStart = dStart + relativedelta(years=+1)
+    @api.constrains(
+        "type",
+        "reim_limit_period",
+        "reim_period_month_day",
+        "reim_period_annual_month",
+        "reim_period_annual_day",
+    )
+    def _check_reimbursement_settings(self):
+        # ``exists()`` skips records that a concurrent or stale write refers to
+        # but that are no longer in the database.
+        for rec in self.exists():
+            if rec.type != "reimburse":
+                continue
+            if rec.reim_limit_period == "monthly" and not rec.reim_period_month_day:
+                raise ValidationError(
+                    self.env._(
+                        "A monthly reimbursement limit requires the "
+                        "'First Day of Cycle'."
+                    )
+                )
+            if rec.reim_limit_period == "annual" and not (
+                rec.reim_period_annual_month and rec.reim_period_annual_day
+            ):
+                raise ValidationError(
+                    self.env._(
+                        "An annual reimbursement limit requires both the "
+                        "cycle start month and day."
+                    )
+                )
+
+    @staticmethod
+    def _clamp_day(year, month, day):
+        """Return ``date(year, month, day)`` clamped to the month's last day."""
+        last_day = calendar.monthrange(year, month)[1]
+        return date(year, month, min(day, last_day))
+
+    def _cycle_start(self, day):
+        """Return the (start, next start) boundaries of the cycle containing ``day``."""
+        if self.reim_limit_period == "monthly":
+            start_day = int(self.reim_period_month_day)
+            start = self._clamp_day(day.year, day.month, start_day)
+            if start > day:
+                previous = day - relativedelta(months=1)
+                start = self._clamp_day(previous.year, previous.month, start_day)
+            end = start + relativedelta(months=1)
+        elif self.reim_limit_period == "annual":
+            month = int(self.reim_period_annual_month)
+            start_day = int(self.reim_period_annual_day)
+            start = self._clamp_day(day.year, month, start_day)
+            if start > day:
+                start = self._clamp_day(day.year - 1, month, start_day)
+            end = self._clamp_day(start.year + 1, month, start_day)
         else:
+            return None, None
+        return start, end
+
+    def get_claims_in_period(self, employee_id, day):
+        dStart, dNextStart = self._cycle_start(day)
+        if dStart is None:
             return 0.00
 
         claim_obj = self.env["hr.benefit.claim"]
@@ -221,9 +259,13 @@ class BenefitAdvantage(models.Model):
             ]
         )
         if len(policies) == 0 or self.reim_nolimit:
-            res = 0.0
-        elif self.reim_limit_period:
-            claims = self.get_claims_in_period(employee_id, day)
-            unclaimed = self.reim_limit_amount - claims
-            res = (unclaimed < 0.01) and 0.00 or unclaimed
-        return res
+            return 0.0
+        if not self.reim_limit_period:
+            raise UserError(
+                self.env._(
+                    "The reimbursement earning line has no limit period configured."
+                )
+            )
+        claims = self.get_claims_in_period(employee_id, day)
+        unclaimed = self.reim_limit_amount - claims
+        return unclaimed if unclaimed >= 0.01 else 0.00

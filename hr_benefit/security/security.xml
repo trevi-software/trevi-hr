@@ -39,5 +39,47 @@
                 [('company_id', 'in', company_ids)]
             </field>
         </record>
+
+        <!-- Claims, premiums and earnings inherit their company from the parent
+             record, so they need their own rule to keep the amounts that belong
+             to another company out of reach of direct reads. -->
+        <record id="hr_benefit_claim_restricted_company_rule" model="ir.rule">
+            <field name="name">Benefit Claim: multi-company</field>
+            <field name="model_id" ref="hr_benefit.model_hr_benefit_claim" />
+            <field name="global" eval="True" />
+            <field name="perm_read" eval="True" />
+            <field name="perm_write" eval="False" />
+            <field name="perm_create" eval="False" />
+            <field name="perm_unlink" eval="False" />
+            <field name="domain_force">
+                [('company_id', 'in', company_ids)]
+            </field>
+        </record>
+
+        <record id="hr_benefit_premium_restricted_company_rule" model="ir.rule">
+            <field name="name">Benefit Premium: multi-company</field>
+            <field name="model_id" ref="hr_benefit.model_hr_benefit_premium" />
+            <field name="global" eval="True" />
+            <field name="perm_read" eval="True" />
+            <field name="perm_write" eval="False" />
+            <field name="perm_create" eval="False" />
+            <field name="perm_unlink" eval="False" />
+            <field name="domain_force">
+                [('company_id', 'in', company_ids)]
+            </field>
+        </record>
+
+        <record id="hr_benefit_advantage_restricted_company_rule" model="ir.rule">
+            <field name="name">Benefit Advantage: multi-company</field>
+            <field name="model_id" ref="hr_benefit.model_hr_benefit_advantage" />
+            <field name="global" eval="True" />
+            <field name="perm_read" eval="True" />
+            <field name="perm_write" eval="False" />
+            <field name="perm_create" eval="False" />
+            <field name="perm_unlink" eval="False" />
+            <field name="domain_force">
+                [('company_id', 'in', company_ids)]
+            </field>
+        </record>
     </data>
 </odoo>

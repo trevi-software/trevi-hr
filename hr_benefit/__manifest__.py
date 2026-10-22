@@ -29,5 +29,6 @@
         "views/benefit_claim_view.xml",
         "views/hr_employee_view.xml",
         "data/benefit_sequence.xml",
+        "data/benefit_cron.xml",
     ],
 }

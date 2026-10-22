@@ -14,7 +14,7 @@ class BenefitClaim(models.Model):
     date = fields.Date(
         required=True,
         help="The date the claim was made",
-        default=fields.Date.today(),
+        default=fields.Date.context_today,
     )
     benefit_policy_id = fields.Many2one(
         string="Policy",
@@ -38,6 +38,12 @@ class BenefitClaim(models.Model):
             ("decline", "Declined"),
         ],
         default="draft",
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        related="benefit_policy_id.company_id",
+        store=True,
+        index=True,
     )
 
     @api.depends("date", "benefit_policy_id")
@@ -87,9 +93,8 @@ class BenefitClaim(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
-        for rec, vals in zip(records, vals_list, strict=True):
-            approved = rec._get_approved_amount(vals["date"])
-            rec.amount_approved = approved
+        for rec in records:
+            rec.amount_approved = rec._get_approved_amount(rec.date)
 
         return records
 
@@ -138,6 +143,12 @@ class BenefitClaim(models.Model):
         return True
 
     def claim_approve(self):
+        # Draft claims do not count towards the re-imbursement limit, so other
+        # drafts may already have consumed part of it. Re-check the amount that
+        # is still available at approval time instead of reusing the value that
+        # was stored when the claim was drafted.
+        for clm in self:
+            clm.amount_approved = clm._get_approved_amount(clm.date)
         self.write({"state": "approve"})
         return True
 
