@@ -152,3 +152,106 @@ class TestHrSimplify(TransactionCase):
             self.job_rnd_technician.expected_employees,
             (self.job_rnd_technician.no_of_recruitment + 2),
         )
+
+    def test_compute_employees_counts_running_and_open_ended_versions(self):
+        """An employee in post counts, whatever the end date of their version."""
+
+        job = self.Job.create({"name": "Rolling Position"})
+
+        def add_employee(name, start, end):
+            return self.Employee.create(
+                {
+                    "name": name,
+                    "department_id": self.dept_RandD.id,
+                    "job_id": job.id,
+                    "date_version": start,
+                    "contract_date_start": start,
+                    "contract_date_end": end,
+                }
+            )
+
+        # an open-ended version
+        add_employee("Open Ended", "2020-01-01", False)
+        self.assertEqual(job.no_of_employee, 1)
+
+        # a version still running, with an end date in the future
+        add_employee(
+            "Running",
+            Date.today() - timedelta(days=30),
+            Date.today() + timedelta(days=60),
+        )
+        self.assertEqual(job.no_of_employee, 2)
+
+        # a version that has already ended
+        add_employee("Ended", "2021-01-01", "2021-12-31")
+        self.assertEqual(job.no_of_employee, 3)
+
+    def test_compute_employees_counts_each_employee_once(self):
+        """Historical and ended versions belong to the same employee."""
+
+        job = self.Job.create({"name": "Historic Position"})
+        employee = self.Employee.create(
+            {
+                "name": "Historic",
+                "department_id": self.dept_RandD.id,
+                "job_id": job.id,
+                "date_version": "2020-01-01",
+                "contract_date_start": "2020-01-01",
+                "contract_date_end": "2020-06-30",
+            }
+        )
+        # ended versions, with a day between them (hr.version forbids overlap)
+        for nbr, (start, end) in enumerate(((400, 300), (250, 150)), start=1):
+            self.create_contract(
+                name=f"Historic #{nbr}",
+                employee=employee,
+                job=job,
+                start_date=(Date.today() - timedelta(days=start)),
+                end_date=(Date.today() - timedelta(days=end)),
+            )
+        # the current version is open-ended
+        self.create_contract(
+            name="Historic current",
+            employee=employee,
+            job=job,
+            start_date=(Date.today() - timedelta(days=30)),
+            end_date=False,
+        )
+
+        self.assertEqual(job.no_of_employee, 1)
+        self.assertEqual(job.expected_employees, job.no_of_recruitment + 1)
+
+    def test_compute_employees_ignores_superseded_versions(self):
+        """A version replaced by a newer one no longer counts for its job."""
+
+        junior = self.Job.create({"name": "Junior Technician"})
+        senior = self.Job.create({"name": "Senior Technician"})
+        employee = self.Employee.create(
+            {
+                "name": "Moved On",
+                "department_id": self.dept_RandD.id,
+                "job_id": junior.id,
+                "date_version": "2020-01-01",
+            }
+        )
+        self.create_contract(
+            name="Moved On - junior",
+            employee=employee,
+            job=junior,
+            start_date=(Date.today() - timedelta(days=300)),
+            end_date=(Date.today() - timedelta(days=100)),
+        )
+        self.create_contract(
+            name="Moved On - senior",
+            employee=employee,
+            job=senior,
+            start_date=(Date.today() - timedelta(days=90)),
+            end_date=(Date.today() + timedelta(days=200)),
+        )
+
+        self.assertEqual(senior.no_of_employee, 1)
+        self.assertEqual(junior.no_of_employee, 0)
+        self.assertEqual(junior.expected_employees, junior.no_of_recruitment)
+
+        empty = self.Job.create({"name": "Nobody Here"})
+        self.assertEqual(empty.no_of_employee, 0)

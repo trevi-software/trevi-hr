@@ -78,32 +78,9 @@ class HrVersion(models.Model):
                 )
 
 
-class HrJob(models.Model):
-    _inherit = "hr.job"
-
-    no_of_employee = fields.Integer(
-        string="Current Number of Employees",
-        compute="_compute_employees",
-        help="Number of employees currently occupying this job position.",
-    )
-    expected_employees = fields.Integer(
-        compute="_compute_employees",
-        string="Total Forecasted Employees",
-        help="Expected number of employees for this job position after new "
-        "recruitment.",
-    )
-
-    @api.depends("no_of_recruitment", "employee_ids.job_id", "employee_ids.active")
-    def _compute_employees(self):
-        contract_data = self.env["hr.version"]._read_group(
-            [
-                ("job_id", "in", self.ids),
-                ("contract_date_end", "<=", fields.Date.today()),
-            ],
-            ["job_id"],
-            ["__count"],
-        )
-        result = {job.id: count for job, count in contract_data}
-        for record in self:
-            record.no_of_employee = result.get(record.id, 0)
-            record.expected_employees = record.no_of_employee + record.no_of_recruitment
+# ``hr.job`` is deliberately not overridden here.  Odoo 19 owns
+# ``no_of_employee``/``expected_employees`` and computes them by counting active
+# employees once, on their current version.  The 18.0 code copied into this
+# module counted ``hr.contract`` rows whose ``date_end`` was already past, so
+# expired contracts counted (once per version) while running or open-ended ones
+# did not.
