@@ -35,12 +35,19 @@ class TestHrLeaveType(common.TransactionCase):
             )
 
     def test_unique_multicompany(self):
-        """Multiple companies can have the same code"""
+        """Multiple companies may use the same code"""
 
-        self.HrLeaveType.with_company(self.company1).create({"name": "X", "code": CODE})
-        try:
-            self.HrLeaveType.with_company(self.company2).create(
-                {"name": "X", "code": CODE}
-            )
-        except Exception:
-            self.assertFail("An unexpected exception was raised")
+        # hr.leave.type.company_id lost its default in 19.0 and with_company()
+        # only sets the context, so the company has to be passed explicitly;
+        # asserting it also proves the two records really are in two different
+        # companies (a NULL company never collides in UNIQUE(company_id, code)).
+        lt1 = self.HrLeaveType.create(
+            {"name": "X", "code": CODE, "company_id": self.company1.id}
+        )
+        lt2 = self.HrLeaveType.create(
+            {"name": "X", "code": CODE, "company_id": self.company2.id}
+        )
+
+        self.assertEqual(lt1.company_id, self.company1)
+        self.assertEqual(lt2.company_id, self.company2)
+        self.assertNotEqual(lt1.company_id, lt2.company_id)
