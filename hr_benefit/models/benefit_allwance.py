@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 DAY_SELECT = [
@@ -206,7 +206,7 @@ class BenefitAdvantage(models.Model):
         self.ensure_one()
         if self.type != "reimburse":
             raise UserError(
-                _(
+                self.env._(
                     "Wrong earning type for this operation. "
                     "Use 'Expense Re-imbursement' instead."
                 )

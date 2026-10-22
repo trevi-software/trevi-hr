@@ -7,7 +7,7 @@ from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -108,7 +108,7 @@ class BenefitPolicy(models.Model):
             }
 
             if not rec.benefit_id or not rec.start_date:
-                rec.write(res)
+                rec.update(res)
                 continue
 
             d_today = fields.Date.today()
@@ -127,7 +127,7 @@ class BenefitPolicy(models.Model):
                     res["premium_amount"] = prm.amount
                     res["premium_total"] = prm.total_amount
 
-            rec.write(res)
+            rec.update(res)
 
     def _inverse_amounts(self):
         for rec in self:
@@ -142,7 +142,7 @@ class BenefitPolicy(models.Model):
         for rec in self:
             res = {"end_date": False, "premium_installments": 0}
             if rec.premium_amount == 0:
-                rec.write(res)
+                rec.update(res)
                 return
 
             installments = math.ceil(
@@ -152,7 +152,7 @@ class BenefitPolicy(models.Model):
                 d_end = rec.start_date + relativedelta(months=+installments)
                 res["end_date"] = d_end
             res["premium_installments"] = installments
-            rec.write(res)
+            rec.update(res)
 
     @api.model
     def _fail_eligibility(self, benefit_id, employee_id):
@@ -211,20 +211,18 @@ class BenefitPolicy(models.Model):
                 policy_ids = self.search(domain)
                 if len(policy_ids) > 0:
                     raise UserError(
-                        _(
+                        self.env._(
                             "The employee is already enrolled in this benefit program."
-                            "\n%(name)s\nPolicy: %(policy)s"
+                            "\n%(name)s\nPolicy: %(policy)s",
+                            name=policy_ids[0].employee_id.name,
+                            policy=policy_ids[0].name,
                         )
-                        % {
-                            "name": policy_ids[0].employee_id.name,
-                            "policy": policy_ids[0].name,
-                        }
                     )
 
             # Check if eligibility requirements have been met
             if self._fail_eligibility(vals["benefit_id"], vals["employee_id"]):
                 raise UserError(
-                    _(
+                    self.env._(
                         "Eligibility Requirements Unmet. "
                         "The employee does not meet eligibility "
                         "requirements for this benefit."
@@ -236,24 +234,26 @@ class BenefitPolicy(models.Model):
             ref = self.env["ir.sequence"].next_by_code("benefit.policy.ref")
             if not ref:
                 raise UserError(
-                    _("Critical Error. Unable to obtain a benefit policy number!")
+                    self.env._(
+                        "Critical Error. Unable to obtain a benefit policy number!"
+                    )
                 )
             ben_id.name = ref
         return ben_ids
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_not_draft(self):
         for pol in self:
             if pol.state != "draft" and not (
                 self.env.context and self.env.context.get("force_delete", False)
             ):
                 raise UserError(
-                    _(
+                    self.env._(
                         "You may not delete a policy that is not in a 'draft' state."
-                        f"\nPolicy No: {pol.name}"
+                        "\nPolicy No: %s",
+                        pol.name,
                     )
                 )
-
-        return super().unlink()
 
     def _check_state(self, to_state):
         for rec in self:
@@ -264,11 +264,13 @@ class BenefitPolicy(models.Model):
                 and rec.state != "open"
             ):
                 raise UserError(
-                    _("You cannot set an open policy back to 'draft' state.")
+                    self.env._("You cannot set an open policy back to 'draft' state.")
                 )
             elif rec.state == "done":
                 raise UserError(
-                    _("You cannot set a policy in 'Done' state to any other value.")
+                    self.env._(
+                        "You cannot set a policy in 'Done' state to any other value."
+                    )
                 )
 
     def write(self, vals):
