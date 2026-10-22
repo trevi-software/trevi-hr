@@ -91,6 +91,19 @@ class HrEmployee(models.Model):
         )
 
     def signal_reactivate(self):
-        self.set_state_active()
+        """Re-activate the employees through the version re-activation flow.
+
+        ``version.re_activate()`` also cancels a separation that is still
+        pending and restores the contract's original end date. Calling
+        :meth:`set_state_active` alone would leave the pending separation in
+        place, and the daily separation job would then archive the employee
+        again on the separation's effective date.
+        """
+        for ee in self:
+            version = ee.version_id
+            if version:
+                version.re_activate()
+            else:
+                ee.set_state_active()
 
         return True

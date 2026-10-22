@@ -136,6 +136,82 @@ class TestHrVersion(common.TransactionCase):
         self.assertEqual("hr.version.end", action["res_model"])
         self.assertEqual(cc.id, action["context"]["end_version_id"])
 
+    def test_signal_reactivate_cancels_pending_separation(self):
+        """The 'Re-Activate' action cancels a pending separation
+
+        Otherwise the daily separation job would archive the employee again
+        on the separation's effective date.
+        """
+
+        start = date.today() - relativedelta(days=100)
+        end = date.today() + relativedelta(days=100)
+        sep_date = date.today() + relativedelta(days=5)
+        ee = self.create_employee()
+        cc = self.create_contract(ee, start, end)
+        self.update_status()
+        self.assertEqual("active", ee.status)
+
+        self.Separation.create(
+            {
+                "name": sep_date,
+                "reason_id": self.reason.id,
+                "employee_id": ee.id,
+            }
+        )
+        self.assertEqual("separation", ee.status)
+        self.assertEqual(sep_date, cc.contract_date_end)
+
+        ee.signal_reactivate()
+
+        self.assertEqual("active", ee.status)
+        self.assertTrue(ee.active)
+        self.assertEqual(end, cc.contract_date_end)
+        self.assertFalse(
+            self.Separation.search(
+                [
+                    ("employee_id", "=", ee.id),
+                    ("state", "in", ["draft", "confirm"]),
+                ]
+            )
+        )
+
+    def test_unlink_cancelled_separation_keeps_current_dates(self):
+        """Deleting a cancelled separation leaves the current one alone"""
+
+        start = date.today() - relativedelta(days=100)
+        end = date.today() + relativedelta(days=100)
+        sep_date = date.today() + relativedelta(days=5)
+        new_sep_date = date.today() + relativedelta(days=40)
+        ee = self.create_employee()
+        cc = self.create_contract(ee, start, end)
+        self.update_status()
+
+        old = self.Separation.create(
+            {
+                "name": sep_date,
+                "reason_id": self.reason.id,
+                "employee_id": ee.id,
+            }
+        )
+        old.signal_cancel()
+        self.assertEqual(end, cc.contract_date_end)
+
+        new = self.Separation.create(
+            {
+                "name": new_sep_date,
+                "reason_id": self.reason.id,
+                "employee_id": ee.id,
+            }
+        )
+        self.assertEqual("separation", ee.status)
+        self.assertEqual(new_sep_date, cc.contract_date_end)
+
+        old.unlink()
+
+        self.assertTrue(new.exists())
+        self.assertEqual("separation", ee.status)
+        self.assertEqual(new_sep_date, cc.contract_date_end)
+
     def test_re_activate(self):
         """Re-activating cancels a pending separation and re-opens the contract"""
 

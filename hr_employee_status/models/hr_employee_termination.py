@@ -5,8 +5,6 @@
 
 from datetime import date
 
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
@@ -108,9 +106,13 @@ class Separation(models.Model):
 
     def unlink(self):
         for term in self:
-            # Trigger employee status change back to Active
-            term.employee_id.set_state_active(term.employee_state)
-            term._restore_contract_end_date()
+            # Only a separation that is still pending holds the employee in
+            # the separation state and the contract's end date. A cancelled
+            # one already gave them back when it was cancelled, so deleting
+            # it must not touch the - possibly newer - separation in effect.
+            if term.state == "draft":
+                term.employee_id.set_state_active(term.employee_state)
+                term._restore_contract_end_date()
 
         return super().unlink()
 
@@ -154,14 +156,13 @@ class Separation(models.Model):
 
     @api.model
     def update_state(self):
+        # A separation takes effect on its effective date; using tomorrow as
+        # the cutoff would archive the employee a day early (``signal_done``
+        # refuses future dates for the same reason).
         separations = self.search(
             [
                 ("state", "=", "draft"),
-                (
-                    "name",
-                    "<=",
-                    date.today() + relativedelta(days=1),
-                ),
+                ("name", "<=", date.today()),
             ]
         )
         if len(separations) > 0:

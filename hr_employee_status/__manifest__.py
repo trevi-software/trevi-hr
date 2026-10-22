@@ -13,7 +13,6 @@
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
         "hr",
-        "hr_contract_status",
     ],
     "data": [
         "security/ir.model.access.csv",

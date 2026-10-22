@@ -315,3 +315,44 @@ class TestEmployeeSeparation(common.TransactionCase):
 
         with self.assertRaises(UserError):
             sep.signal_done()
+
+    def test_ordinary_user_read_access(self):
+        """Ordinary users only read their own (and subordinates') separations
+
+        HR officers keep full access.
+        """
+
+        base_group_user = self.env.ref("base.group_user")
+        hr_group_user = self.env.ref("hr.group_hr_user")
+
+        plain_user = self.env["res.users"].create(
+            {
+                "name": "Plain Employee User",
+                "login": "plain_employee_user",
+                "group_ids": [(6, 0, [base_group_user.id])],
+            }
+        )
+        hr_user = self.env["res.users"].create(
+            {
+                "name": "HR Officer User",
+                "login": "hr_officer_user",
+                "group_ids": [(6, 0, [base_group_user.id, hr_group_user.id])],
+            }
+        )
+
+        own_ee = self.create_employee("Own Employee")
+        self.create_contract(own_ee, date.today() - relativedelta(days=100))
+        own_ee.user_id = plain_user
+        other_ee = self.create_employee("Other Employee")
+        self.create_contract(other_ee, date.today() - relativedelta(days=100))
+
+        own_sep = self.create_separation(own_ee, date.today())
+        other_sep = self.create_separation(other_ee, date.today())
+
+        visible = self.Separation.with_user(plain_user).search([])
+        self.assertIn(own_sep, visible)
+        self.assertNotIn(other_sep, visible)
+
+        visible_hr = self.Separation.with_user(hr_user).search([])
+        self.assertIn(own_sep, visible_hr)
+        self.assertIn(other_sep, visible_hr)
