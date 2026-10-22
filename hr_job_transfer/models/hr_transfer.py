@@ -4,7 +4,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError
 
 
@@ -117,19 +117,19 @@ class HrTransfer(models.Model):
                 return False
         return True
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_not_draft(self):
         if not self.env.context.get("force_delete", False):
             for transfer in self:
                 if transfer.state not in ["draft"]:
                     raise UserError(
-                        _(
+                        self.env._(
                             "Unable to Delete Transfer!\n"
                             "Transfer has been initiated. Either cancel the "
                             "transfer or\n"
                             "create another transfer to undo it."
                         )
                     )
-        return super().unlink()
 
     def action_transfer(self):
         self.ensure_one()
@@ -174,7 +174,7 @@ class HrTransfer(models.Model):
             or contract.is_future
         ):
             raise UserError(
-                _(
+                self.env._(
                     "Warning!\n"
                     "The current state of the contract does not permit changes."
                 )
@@ -182,7 +182,7 @@ class HrTransfer(models.Model):
 
         if contract.contract_date_end and effective_date >= contract.contract_date_end:
             raise UserError(
-                _(
+                self.env._(
                     "Warning!\n"
                     "The contract end date is on or before the effective date "
                     "of the transfer."
@@ -195,7 +195,7 @@ class HrTransfer(models.Model):
         for transfer in self:
             if group and not transfer.env.user.has_group(group):
                 raise AccessError(
-                    _("You don't have the access rights to take this action.")
+                    self.env._("You don't have the access rights to take this action.")
                 )
             else:
                 continue
@@ -217,7 +217,7 @@ class HrTransfer(models.Model):
         emp_contract_count = Contract.search_count(
             [("employee_id", "=", contract.employee_id.id)]
         )
-        _contract_name = _(
+        _contract_name = self.env._(
             "%(name)s's Contract [%(number)d]",
             name=contract.employee_id.name,
             number=(emp_contract_count + 1),
