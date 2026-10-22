@@ -77,7 +77,10 @@ class HrAccrualLine(models.Model):
     _description = "Accrual Line"
     _rec_name = "date"
 
-    date = fields.Date(required=True, default=fields.Date.today())
+    # pass fields.Date.today without calling it: with parentheses the date is
+    # resolved when the module is imported and stays frozen for the life of the
+    # worker, so lines created later are stamped with the reload date.
+    date = fields.Date(required=True, default=fields.Date.today)
     accrual_id = fields.Many2one(comodel_name="hr.accrual", required=True)
     employee_id = fields.Many2one(comodel_name="hr.employee", required=True)
     leave_allocation_id = fields.Many2one("hr.leave.allocation")

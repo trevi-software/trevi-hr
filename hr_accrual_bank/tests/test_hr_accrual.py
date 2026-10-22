@@ -14,6 +14,7 @@ class TestAccrual(common.TransactionCase):
 
         cls.Accrual = cls.env["hr.accrual"]
         cls.Allocation = cls.env["hr.leave.allocation"]
+        cls.Line = cls.env["hr.accrual.line"]
         cls.eeJohn = cls.env["hr.employee"].create({"name": "EE John"})
 
         # Make sure we have the rights to create, validate and delete the
@@ -55,6 +56,35 @@ class TestAccrual(common.TransactionCase):
                 self.eeJohn.id, date=fields.Date.today() - timedelta(days=1)
             ),
             "A date before the first deposit has a zero balance",
+        )
+
+    def test_line_date_default_is_evaluated_per_record(self):
+        """The default date must be resolved when a line is created.
+
+        ``default=fields.Date.today()`` is evaluated once, when Python imports
+        the module, which freezes the date for the lifetime of the worker: lines
+        created after midnight would carry the date of the last reload and shift
+        historical balances.
+        """
+
+        self.assertIs(
+            self.Line._fields["date"].default,
+            fields.Date.today,
+            "fields.Date.today must be passed as the callable default",
+        )
+
+        accrual = self.Accrual.create({"name": "A"})
+        line = self.Line.create(
+            {
+                "accrual_id": accrual.id,
+                "employee_id": self.eeJohn.id,
+                "amount": 1.0,
+            }
+        )
+        self.assertEqual(
+            line.date,
+            fields.Date.today(),
+            "A line created without a date defaults to today",
         )
 
     def test_create_leave_allocation(self):
