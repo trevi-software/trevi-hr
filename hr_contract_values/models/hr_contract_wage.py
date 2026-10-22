@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -31,7 +31,8 @@ class InitWage(models.Model):
         column2="category_id",
     )
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_not_locked(self):
         data = self.read(["contract_init_id"])
         for d in data:
             if not d.get("contract_init_id", False):
@@ -48,4 +49,3 @@ class InitWage(models.Model):
                         "You may not delete a record that is locked. Unlock it first."
                     )
                 )
-        return super().unlink()

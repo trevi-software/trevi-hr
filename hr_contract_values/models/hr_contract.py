@@ -48,7 +48,8 @@ class ContractInit(models.Model):
         for record in self:
             record.locked = False
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_not_locked(self):
         for record in self:
             if record.locked:
                 raise UserError(
@@ -56,7 +57,6 @@ class ContractInit(models.Model):
                         "You may not delete a record that is locked. Unlock it first."
                     )
                 )
-        return super().unlink()
 
     def write(self, vals):
         for record in self:
