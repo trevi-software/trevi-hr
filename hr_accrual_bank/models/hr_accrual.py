@@ -19,6 +19,13 @@ class HrAccrual(models.Model):
     )
 
     def get_balance(self, employee_id, date=None):
+        """Return the sum of the accrual lines deposited up to ``date``.
+
+        SUM() over an empty result set yields a single NULL row, so a bank with
+        no (matching) deposits has to be reported as 0.0 rather than None --
+        callers use the result in arithmetic.
+        """
+
         if date is None:
             date = fields.Date.today()
 
@@ -29,7 +36,7 @@ class HrAccrual(models.Model):
             (tuple(self.ids), employee_id, date),
         )
         for row in self.env.cr.fetchall():
-            res = row[0]
+            res = row[0] if row[0] is not None else 0.0
 
         return res
 

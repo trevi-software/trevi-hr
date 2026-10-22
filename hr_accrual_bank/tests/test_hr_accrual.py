@@ -1,6 +1,8 @@
 # Copyright (C) 2021 TREVI Software
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from datetime import timedelta
+
 from odoo import fields
 from odoo.tests import common
 
@@ -30,6 +32,30 @@ class TestAccrual(common.TransactionCase):
         accrual = self.Accrual.create({"name": "A"})
         accrual.deposit(self.eeJohn.id, 100, fields.Date.today(), "manual accrual")
         self.assertEqual(100, accrual.get_balance(self.eeJohn.id))
+
+    def test_balance_of_empty_bank_is_zero(self):
+        """An accrual with no matching lines has a zero balance, not None"""
+
+        accrual = self.Accrual.create({"name": "A"})
+        self.assertEqual(
+            0.0,
+            accrual.get_balance(self.eeJohn.id),
+            "An accrual with no deposits has a zero balance",
+        )
+
+        accrual.deposit(self.eeJohn.id, 100, fields.Date.today(), "manual accrual")
+        self.assertEqual(
+            100,
+            accrual.get_balance(self.eeJohn.id),
+            "The deposited amount is the balance",
+        )
+        self.assertEqual(
+            0.0,
+            accrual.get_balance(
+                self.eeJohn.id, date=fields.Date.today() - timedelta(days=1)
+            ),
+            "A date before the first deposit has a zero balance",
+        )
 
     def test_create_leave_allocation(self):
         """A deposit should create a corresponding leave allocation"""
