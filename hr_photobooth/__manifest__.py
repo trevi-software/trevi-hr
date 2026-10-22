@@ -24,5 +24,8 @@
             "hr_photobooth/static/src/js/webcam_widget.js",
             "hr_photobooth/static/src/xml/webcam_widget.xml",
         ],
+        "web.assets_unit_tests": [
+            "hr_photobooth/static/tests/**/*",
+        ],
     },
 }
