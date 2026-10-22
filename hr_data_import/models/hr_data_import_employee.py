@@ -3,7 +3,7 @@
 
 from datetime import date, timedelta
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import MissingError, UserError
 
 
@@ -108,7 +108,7 @@ class ImportEmployee(models.Model):
 
     def action_import_employees(self):
         if self.filtered(lambda so: so.state != "new"):
-            raise UserError(_("Only new records can be imported."))
+            raise UserError(self.env._("Only new records can be imported."))
         self.import_records()
         self.write({"state": "imported"})
 
@@ -235,7 +235,9 @@ class ImportEmployee(models.Model):
     def create_annual_leave_allocation(self, employees):
         leave_types = self.env["hr.leave.type"].search([("name", "=", "Annual Leave")])
         if len(leave_types) == 0:
-            raise MissingError(_("'hr.leave.type' with name 'Annual Leave' not found"))
+            raise MissingError(
+                self.env._("'hr.leave.type' with name 'Annual Leave' not found")
+            )
         al_status_id = leave_types[0].id
 
         records = []

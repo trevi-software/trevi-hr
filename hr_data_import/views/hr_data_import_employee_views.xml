@@ -29,7 +29,7 @@
                     domain="[('state', '=', 'updated')]"
                 />
                 <separator />
-                <group expand="0" string="Group By">
+                <group>
                     <filter
                         string="Job"
                         name="groupby_job"
