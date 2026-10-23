@@ -121,7 +121,12 @@ class TestResourceCalenar(TestResourceScheduleCommon):
             Form(self.default_calendar) as frmCalendar,
             frmCalendar.attendance_ids_1st_week.new() as line,
         ):
-            line.template_id = self.wtpl_morning
+            # Use the afternoon template: Odoo 19's switch_calendar_type() keeps
+            # the calendar's own attendances, so week 1 already contains the
+            # fixture's Saturday 08:00-12:30 half-day. Adding the morning
+            # template (08:00-12:00) on the same day/week would overlap it and
+            # the _check_attendance_ids constraint would (correctly) refuse it.
+            line.template_id = self.wtpl_afternoon
             line.dayofweek = "5"
             line.sequence = 50
         last_day = self.default_calendar.attendance_ids.sorted("sequence")[-1]
@@ -166,10 +171,18 @@ class TestResourceCalenar(TestResourceScheduleCommon):
         )
         self.assertEqual(
             self.default_calendar.hours_per_day,
-            8,
-            "Initially, calender working hours average 8 hrs/day",
+            7.42,
+            "Initially, calender working hours average 7.42 hrs/day",
         )
-        hours_per_day = self.default_calendar.hours_per_day
+        # The "44 Hour/Week" fixture is Mon-Fri 08:00-17:00 minus a 1h break
+        # (5 x 8 = 40h) plus a half-day Saturday 08:00-12:30 (4.5h) = 44.5h over
+        # 6 working days -> 44.5 / 6 = 7.42. Odoo 18's switch_calendar_type()
+        # replaced the calendar's own attendances with the company's default
+        # five 8-hour days (hence the old "8" expectation); Odoo 19's
+        # switch_calendar_type() copies the calendar's own attendances instead
+        # (resource/models/resource_calendar.py:299-321 ->
+        # _get_two_weeks_attendance()), so the half-day Saturday is kept and the
+        # average is 7.42. 8 is unreachable for this fixture.
 
         with Form(self.default_calendar) as frmCalendar:
             with frmCalendar.attendance_ids_1st_week.new() as line:
@@ -211,9 +224,15 @@ class TestResourceCalenar(TestResourceScheduleCommon):
 
         self.assertEqual(
             self.default_calendar.hours_per_day,
-            hours_per_day,
-            "After additional week calender working hours still average 8 hrs/day",
+            7.59,
+            "After additional week calender working hours average 7.59 hrs/day",
         )
+        # Three-week cycle: 44.5h + 44.5h (weeks 0/1, Mon-Fri + half-day Sat)
+        # + 40h (added week, Mon-Fri 4h morning + 4h afternoon) = 129h over
+        # 6 + 6 + 5 = 17 days -> 129 / 17 = 7.59. The added week does not have a
+        # half-day Saturday, so the average legitimately moves; the old
+        # "unchanged" expectation only held when switch_calendar_type() gave
+        # every week an identical five 8-hour days on Odoo 18.
 
     def test_hours_per_day_autodeduct_break(self):
         cal = self.default_calendar.copy()

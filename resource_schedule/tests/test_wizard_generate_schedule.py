@@ -121,9 +121,31 @@ class TestWizardGenerateSchedule(common.TransactionCase):
         frmWizard.resource_calendar_id = self.std35_calendar
         wizard = frmWizard.save()
 
+        # _onchange_resource_calendar_id loads every employee whose resource uses
+        # the selected working schedule, either directly or through its
+        # scheduling team (the team lookup was added in ee05564). Employees that
+        # ship with the database and share the schedule (e.g. Mitchell Admin's
+        # employee, whose resource falls back to the company calendar on builds
+        # without the hr demo data) are loaded as well, so assert against the
+        # exact set of employees attached to the schedule instead of only the two
+        # created in setUpClass.
+        schedule_resources = self.env["resource.resource"].search(
+            [
+                "|",
+                ("calendar_id", "=", self.std35_calendar.id),
+                (
+                    "schedule_team_id.resource_calendar_id",
+                    "=",
+                    self.std35_calendar.id,
+                ),
+            ]
+        )
+        attached = self.env["hr.employee"].search(
+            [("resource_id", "in", schedule_resources.ids)]
+        )
         self.assertEqual(
             wizard.employee_ids,
-            self.eeJohn | self.eeSally,
+            attached,
             "The wizard automatically loaded the employees attached to the calendar",
         )
 

@@ -33,13 +33,18 @@ class TestHrLeave(TestResourceScheduleCommon):
             {"name": "Sally", "user_id": cls.userSally.id}
         )
         cls.default_calendar = cls.seven_day_calendar
-        cls.holidays_type_1 = cls.LeaveType.create(
-            {
-                "name": "NotLimitedHR",
-                "requires_allocation": False,
-                "leave_validation_type": "hr",
-            }
-        )
+        leave_type_vals = {
+            "name": "NotLimitedHR",
+            "requires_allocation": False,
+            "leave_validation_type": "hr",
+        }
+        # hr_leave_type_unique makes hr.leave.type.code a required column
+        # (models/hr_leave_type.py). Set it when the field is present so the
+        # fixture also works on builds that install that add-on; builds that do
+        # not define the field at all would reject the unknown key, so skip it.
+        if "code" in cls.env["hr.leave.type"]._fields:
+            leave_type_vals["code"] = "NotLimitedHR"
+        cls.holidays_type_1 = cls.LeaveType.create(leave_type_vals)
 
     def _force_leave_dates(self, leave, date_from, date_to):
         """date_from/date_to on hr.leave are computed from request_date_from/to

@@ -931,8 +931,12 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
             .astimezone(utc)
             .replace(tzinfo=None)
         )
+        # The employee works resource.resource_calendar_std ("Standard 40
+        # hours/week", resource/data/resource_data.xml), whose afternoon period
+        # is 13:00-17:00. The migration used to point at the demo-only 35h
+        # calendar (afternoon 13:00-16:00), so the scheduled end is 17:00 here.
         dtShiftEnd = (
-            tzLocal.localize(datetime.combine(dStart, float_to_time(16)), is_dst=False)
+            tzLocal.localize(datetime.combine(dStart, float_to_time(17)), is_dst=False)
             .astimezone(utc)
             .replace(tzinfo=None)
         )
@@ -949,7 +953,7 @@ class TestResourceScheduleShift(TestResourceScheduleCommon):
             tzLocal.localize(
                 datetime.combine(
                     dStart,
-                    datetime.strptime("16:30", "%H:%M").time(),  # noqa: DTZ007
+                    datetime.strptime("17:30", "%H:%M").time(),  # noqa: DTZ007
                 ),
                 is_dst=False,
             )
