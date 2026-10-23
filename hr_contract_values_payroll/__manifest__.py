@@ -11,7 +11,7 @@
     "images": ["static/src/img/main_screenshot.png"],
     "website": "https://github.com/trevi-software/trevi-hr",
     "depends": [
-        "hr_contract",
+        "hr",
         "hr_contract_values",
         "payroll",
     ],

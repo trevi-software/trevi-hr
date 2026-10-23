@@ -10,13 +10,22 @@ class TestContractInit(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
 
         cls.HrEmployee = cls.env["hr.employee"]
-        cls.HrContract = cls.env["hr.contract"]
+        # Odoo 19 merged ``hr_contract`` into ``hr``: the contract (and so the
+        # payroll structure) now lives on ``hr.version``.
+        cls.HrVersion = cls.env["hr.version"]
         cls.HrPayrollStruct = cls.env["hr.payroll.structure"]
         cls.HrContractInit = cls.env["hr.contract.init"]
 
-        cls.eeJohn = cls.HrEmployee.create({"name": "John"})
+        # Every employee always owns a version dated today, so the employee
+        # version is backdated to leave today's effective date free for the
+        # version created by the test (``hr.version`` has a unique index on
+        # employee/effective date).
+        cls.eeJohn = cls.HrEmployee.create(
+            {"name": "John", "date_version": "2000-01-01"}
+        )
 
     def test_load_latest_values(self):
         """Initial values are loaded from the latest values"""
@@ -43,9 +52,8 @@ class TestContractInit(common.TransactionCase):
             }
         )
 
-        contract = self.HrContract.create(
+        contract = self.HrVersion.create(
             {
-                "name": "C1",
                 "employee_id": self.eeJohn.id,
                 "wage": 1.0,
             }
