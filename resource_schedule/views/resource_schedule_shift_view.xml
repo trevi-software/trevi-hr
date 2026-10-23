@@ -12,7 +12,7 @@
                     icon="terp-go-today"
                     string="Today"
                     name="today"
-                    domain="[('datetime_start','&gt;=',current_date),('datetime_start','&lt;=',current_date)]"
+                    domain="[('day', '=', context_today())]"
                 />
                 <separator />
                 <filter
@@ -33,7 +33,7 @@
                 <filter
                     name="my_area"
                     string="My Area"
-                    domain="[('default_area_id.resource_ids.id', 'in', [uid])]"
+                    domain="[('default_area_id.resource_ids.user_id', '=', uid)]"
                 />
                 <separator />
                 <filter

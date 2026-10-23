@@ -108,6 +108,12 @@ class ResourceCalendar(models.Model):
         "attendance_ids",
         "attendance_ids.hour_from",
         "attendance_ids.hour_to",
+        "attendance_ids.span_midnight",
+        "attendance_ids.shift_type",
+        "attendance_ids.flex_scheduled_hrs",
+        "attendance_ids.template_id",
+        "attendance_ids.template_id.autodeduct_break",
+        "attendance_ids.template_id.break_minutes",
         "two_weeks_calendar",
     )
     def _compute_hours_per_day(self):
@@ -117,6 +123,9 @@ class ResourceCalendar(models.Model):
             for attendance in attendances:
                 if attendance.shift_type != "flex":
                     hour_count += attendance.hour_to - attendance.hour_from
+                    if attendance.span_midnight:
+                        # A shift that crosses midnight has hour_to < hour_from.
+                        hour_count += 24
                 elif attendance.shift_type == "flex":
                     hour_count += attendance.flex_scheduled_hrs
                 if (

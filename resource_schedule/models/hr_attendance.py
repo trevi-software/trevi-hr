@@ -35,8 +35,9 @@ class HrAttendance(models.Model):
             self.env["ir.config_parameter"]
             .sudo()
             .get_param("resource_schedule.max_shift_length")
+            or 0
         )
-        if max_shift_length == 0 or max_shift_length is False:
+        if not max_shift_length:
             return res
 
         atts = self.search([("check_out", "=", False), ("check_in", "!=", False)])
@@ -48,5 +49,13 @@ class HrAttendance(models.Model):
         return res
 
     def _exceeds_max_duration(self, now):
+        max_shift_length = int(
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("resource_schedule.max_shift_length")
+            or 0
+        )
+        if not max_shift_length:
+            return False
         duration = now - self.check_in
-        return int(duration.total_seconds() / 60.0 / 60.0) >= 15
+        return duration >= timedelta(hours=max_shift_length)

@@ -53,8 +53,19 @@ class ResourceScheduleGenerate(models.TransientModel):
     def _onchange_resource_calendar_id(self):
         for rec in self:
             if rec.sched_type == "calendar" and rec.resource_calendar_id:
+                # Generation gives the team's calendar priority, so include the
+                # resources that use the selected schedule through their team
+                # as well as those that have it directly.
                 resources = self.env["resource.resource"].search(
-                    [("calendar_id", "=", rec.resource_calendar_id.id)]
+                    [
+                        "|",
+                        ("calendar_id", "=", rec.resource_calendar_id.id),
+                        (
+                            "schedule_team_id.resource_calendar_id",
+                            "=",
+                            rec.resource_calendar_id.id,
+                        ),
+                    ]
                 )
                 employees = self.env["hr.employee"].search(
                     [("resource_id", "in", resources.ids)]
@@ -68,8 +79,15 @@ class ResourceScheduleGenerate(models.TransientModel):
         dStart = self.date_start
         dEnd = dStart + relativedelta(weeks=abs(self.no_weeks), days=-1)
 
+        # When scheduling by team, resolve the selected teams into employees.
+        employees = self.employee_ids
+        if self.sched_type == "team" and self.schedule_team_ids:
+            employees |= self.env["hr.employee"].search(
+                [("resource_id.schedule_team_id", "in", self.schedule_team_ids.ids)]
+            )
+
         shifts = self.env["resource.schedule.shift"]
-        for ee in self.employee_ids:
+        for ee in employees:
             # If there are overlapping schedules, don't create
             #
             dTmp = dStart
@@ -80,7 +98,10 @@ class ResourceScheduleGenerate(models.TransientModel):
                     ("day", ">=", dTmp),
                 ]
             )
-            if (len(overlap_sched_ids) > 0) and (overlap_sched_ids[-1].day < dEnd):
+            if overlap_sched_ids and overlap_sched_ids[-1].day >= dEnd:
+                # The whole requested range is already scheduled: nothing to do.
+                continue
+            if overlap_sched_ids:
                 dTmp = overlap_sched_ids[-1].day + timedelta(days=1)
 
             shifts |= ee.create_schedule(dTmp, dEnd)

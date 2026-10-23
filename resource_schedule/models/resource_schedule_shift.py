@@ -213,6 +213,9 @@ class ResourceScheduleShift(models.Model):
     @api.model
     def get_daysoff(self, resource, calendar, date_start, date_end):
         def _get_preceding_weekday(day_list):
+            # Nothing to rotate when there is no day off to start from.
+            if not day_list:
+                return []
             _d = int(day_list[-1])
             _daysoff = []
             # Rolling days off means every 7 weeks both monday and sunday are off.
@@ -356,7 +359,7 @@ class ResourceScheduleShift(models.Model):
                 ("check_in", "<", dtEnd),
                 "|",
                 ("check_out", "=", False),
-                ("check_out", "<", dtEnd),
+                ("check_out", "<=", dtEnd),
             ]
         )
 
@@ -389,10 +392,13 @@ class ResourceScheduleShift(models.Model):
                     if punch.check_in == detail.datetime_start:
                         # We've found a corresponding punch time
                         found = True
-                        if not punch.check_out:
+                        # Only close the punch once the scheduled end has
+                        # actually passed, otherwise it would be closed at a
+                        # time that is still in the future.
+                        if not punch.check_out and detail.datetime_end <= now:
                             punch.check_out = detail.datetime_end
                             res |= punch
-                            break
+                        break
                 # If we didn't find a matching punch create a new one
                 if found is False:
                     values = {
@@ -494,6 +500,10 @@ class ResourceScheduleShift(models.Model):
 
                 # If this is a day off skip ahead to the next attendance_id
                 if attendance.dayofweek in daysoff[week]:
+                    # Keep the weekday cursor in step even though no shift is
+                    # created, otherwise a following entry on the same weekday
+                    # would advance the date a second time.
+                    prev_weekday = str(dTmp.weekday())
                     continue
 
                 # If the week day is not in attendance_ids move the date
@@ -514,6 +524,10 @@ class ResourceScheduleShift(models.Model):
                     "resource_id": resource.id,
                     "calendar_id": calendar.id,
                     "template_id": attendance.template_id.id,
+                    "default_area_id": (
+                        resource.default_area_id
+                        or attendance.template_id.default_area_id
+                    ).id,
                     "datetime_start": dtStart,
                     "datetime_end": dtEnd,
                     "dayofweek": str(dTmp.weekday()),
@@ -542,14 +556,14 @@ class ResourceScheduleShift(models.Model):
         return self.create(values_list)
 
     @api.model
-    def creat_mass_schedule(self):
+    def create_mass_schedule(self):
         # Create a two-week schedule beginning from Monday of next week.
         #
         dt = datetime.today()  # noqa: DTZ002
         days = 7 - dt.weekday()
         dt += relativedelta(days=+days)
         dStart = dt.date()
-        dEnd = dStart + relativedelta(weeks=+1, days=-1)
+        dEnd = dStart + relativedelta(weeks=+2, days=-1)
 
         # Create schedules for each employee in each department
         #

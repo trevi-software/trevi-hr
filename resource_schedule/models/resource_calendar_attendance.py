@@ -143,13 +143,22 @@ class ResourceCalendarAttendance(models.Model):
             hours, mins = float_split(hour_to - hour_from, precision_digits=2)
             mins = int(mins * 60 / 100)
         else:
-            hours, mins = float_split(hour_to - 0, precision_digits=2)
-            _hours, _mins = float_split(24 - hour_from, precision_digits=2)
-            hours += _hours
-            mins += _mins
+            # A shift spanning midnight runs from ``hour_from`` until 24:00 and
+            # then from 0:00 until ``hour_to``; sum both parts as a single
+            # float first so the decimal hundredths are converted to minutes
+            # exactly once.
+            hours, mins = float_split(24 - hour_from + hour_to, precision_digits=2)
+            mins = int(mins * 60 / 100)
         return (hours * 60 * 60) + (mins * 60)
 
-    @api.depends("hour_from", "hour_to")
+    @api.depends(
+        "hour_from",
+        "hour_to",
+        "span_midnight",
+        "template_id",
+        "template_id.autodeduct_break",
+        "template_id.break_minutes",
+    )
     def _compute_duration(self):
         for rec in self:
             _duration = rec._compute_duration_common(
