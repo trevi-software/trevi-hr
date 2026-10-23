@@ -1,0 +1,357 @@
+# Copyright (C) 2021 Trevi Software (https://trevi.et)
+# Copyright (C) 2013,2014 Michael Telahun Makonnen <mmakonnen@gmail.com>.
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+
+import math
+from datetime import timedelta
+
+from dateutil.relativedelta import relativedelta
+
+from odoo import api, fields, models
+from odoo.exceptions import UserError
+
+
+class BenefitPolicy(models.Model):
+    _name = "hr.benefit.policy"
+    _description = "Benefit Enrollment"
+    _check_company_auto = True
+
+    name = fields.Char(string="Reference", readonly=True)
+    benefit_id = fields.Many2one(
+        comodel_name="hr.benefit",
+        required=True,
+        readonly=True,
+        check_company=True,
+    )
+    benefit_code = fields.Char(readonly=True, related="benefit_id.code", store=True)
+    employee_id = fields.Many2one(
+        comodel_name="hr.employee",
+        required=True,
+        readonly=True,
+        check_company=True,
+    )
+    department_id = fields.Many2one(related="employee_id.department_id", store=True)
+    start_date = fields.Date(
+        string="Date of Enrollment",
+        required=True,
+        readonly=True,
+    )
+    end_date = fields.Date(string="Termination Date")
+    active = fields.Boolean(default=True)
+    advantage_override = fields.Boolean(
+        string="Change Advantage Amount",
+        help="Check this field if the amount of the advantage "
+        "should be changed in the policy.",
+    )
+    premium_override = fields.Boolean(
+        string="Change Premium Amount",
+        help="Check this field if the amount of the premium "
+        "should be changed in the policy.",
+    )
+    advantage_override_amount = fields.Float(digits="Account")
+    premium_override_amount = fields.Float(digits="Account")
+    premium_override_total = fields.Float(digits="Account")
+    advantage_amount = fields.Float(
+        digits="Account",
+        compute="_compute_amounts",
+        inverse="_inverse_amounts",
+        store=True,
+    )
+    premium_amount = fields.Float(
+        digits="Account",
+        compute="_compute_amounts",
+        inverse="_inverse_amounts",
+        store=True,
+    )
+    premium_total = fields.Float(
+        digits="Account",
+        compute="_compute_amounts",
+        inverse="_inverse_amounts",
+        store=True,
+    )
+    premium_installments = fields.Integer(
+        string="No. of Installments",
+        compute="_compute_premium_installments",
+        store=True,
+    )
+    installment_end_date = fields.Date(
+        compute="_compute_premium_installments",
+        store=True,
+        help="End of the premium installment schedule, calculated from the "
+        "enrollment date. Independent from the policy's termination date.",
+    )
+    note = fields.Text(string="Remarks")
+    state = fields.Selection(
+        selection=[("draft", "Draft"), ("open", "Open"), ("done", "Done")],
+        readonly=True,
+        default="draft",
+    )
+    company_id = fields.Many2one(
+        "res.company", required=True, default=lambda self: self.env.company
+    )
+
+    @api.depends("name", "benefit_id")
+    def _compute_display_name(self):
+        # ``name_get`` was removed in Odoo 19; the display name is computed
+        # explicitly instead.
+        for rec in self:
+            rec.display_name = f"{rec.name} {rec.benefit_id.name}"
+
+    @api.depends(
+        "benefit_id",
+        "advantage_override",
+        "premium_override",
+        "advantage_override_amount",
+        "premium_override_amount",
+        "premium_override_total",
+        "benefit_id.advantage_ids.allowance_amount",
+        "benefit_id.advantage_ids.type",
+        "benefit_id.advantage_ids.effective_date",
+        "benefit_id.premium_ids.amount",
+        "benefit_id.premium_ids.total_amount",
+        "benefit_id.premium_ids.effective_date",
+    )
+    def _compute_amounts(self):
+        for rec in self:
+            res = {
+                "advantage_amount": 0,
+                "premium_amount": 0,
+                "premium_total": 0,
+            }
+
+            if not rec.benefit_id or not rec.start_date:
+                rec.update(res)
+                continue
+
+            d_today = fields.Date.today()
+            if rec.advantage_override:
+                res["advantage_amount"] = rec.advantage_override_amount
+            else:
+                adv = rec.benefit_id.get_latest_advantage(d_today)
+                if adv is not None and adv.type == "allowance":
+                    res["advantage_amount"] = adv.allowance_amount
+            if rec.premium_override:
+                res["premium_amount"] = rec.premium_override_amount
+                res["premium_total"] = rec.premium_override_total
+            else:
+                prm = rec.benefit_id.get_latest_premium(d_today)
+                if prm is not None:
+                    res["premium_amount"] = prm.amount
+                    res["premium_total"] = prm.total_amount
+
+            rec.update(res)
+
+    def _inverse_amounts(self):
+        for rec in self:
+            if rec.advantage_override:
+                rec.advantage_override_amount = rec.advantage_amount
+            if rec.premium_override:
+                rec.premium_override_amount = rec.premium_amount
+                rec.premium_override_total = rec.premium_total
+
+    @api.depends("start_date", "premium_amount", "premium_total")
+    def _compute_premium_installments(self):
+        for rec in self:
+            installments = 0
+            end_date = False
+            if rec.premium_amount and rec.premium_total:
+                installments = math.ceil(
+                    float(rec.premium_total) / float(rec.premium_amount)
+                )
+                if installments > 0:
+                    end_date = rec.start_date + relativedelta(months=+installments)
+            rec.premium_installments = installments
+            rec.installment_end_date = end_date
+
+    @api.model
+    def _fail_eligibility(self, benefit_id, employee_id):
+        res = False
+        benefit = self.env["hr.benefit"].browse(benefit_id)
+
+        # Check if employee has worked more than minimum number of days for benefit
+        #
+        if benefit.min_employed_days > 0:
+            ee = self.env["hr.employee"].browse(employee_id)
+            d_today = fields.Date.today()
+            # Odoo 19 dropped the stored ``hr.employee.first_contract_date``
+            # field: a contract is an ``hr.version`` record now and the date is
+            # derived from its ``contract_date_start``. The core helper below
+            # is the method the removed field used to compute itself, so the
+            # eligibility date keeps its 18.0 meaning.
+            d_hire = ee._get_first_contract_date()
+            srvc_months = ee.get_months_service_to_date(dToday=d_today)
+            srvc_months = int(srvc_months)
+
+            employed_days = 0
+            d_count = d_hire
+            while d_count < d_today:
+                employed_days += 1
+                d_count += timedelta(days=+1)
+            if benefit.min_employed_days > employed_days:
+                res = True
+
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        seen = {}
+        for vals in vals_list:
+            # Check if the employee is already enrolled
+            #
+            benefit = self.env["hr.benefit"].browse(vals["benefit_id"])
+            key = (vals["employee_id"], vals["benefit_id"])
+            if not benefit.multi_policy:
+                new_start = vals.get("start_date")
+                new_end = vals.get("end_date", False)
+                # The database search below does not see records of this batch
+                # that are not created yet, so compare the validity ranges
+                # within the batch as well.
+                for other_start, other_end in seen.get(key, []):
+                    if self._ranges_overlap(new_start, new_end, other_start, other_end):
+                        raise UserError(
+                            self.env._(
+                                "The employee is enrolled in this benefit program "
+                                "more than once in the same request."
+                            )
+                        )
+                seen.setdefault(key, []).append((new_start, new_end))
+                domain = [
+                    ("employee_id", "=", vals["employee_id"]),
+                    ("benefit_id", "=", vals["benefit_id"]),
+                ]
+                if vals["start_date"] and not vals.get("end_date", False):
+                    domain = domain + [
+                        "|",
+                        ("end_date", "=", False),
+                        ("end_date", ">=", vals["start_date"]),
+                    ]
+                elif vals["start_date"] and vals["end_date"]:
+                    domain = domain + [
+                        ("start_date", "<=", vals["end_date"]),
+                        "|",
+                        ("end_date", "=", False),
+                        ("end_date", ">=", vals["start_date"]),
+                    ]
+
+                policy_ids = self.search(domain)
+                if len(policy_ids) > 0:
+                    raise UserError(
+                        self.env._(
+                            "The employee is already enrolled in this benefit program."
+                            "\n%(name)s\nPolicy: %(policy)s",
+                            name=policy_ids[0].employee_id.name,
+                            policy=policy_ids[0].name,
+                        )
+                    )
+
+            # Check if eligibility requirements have been met
+            if self._fail_eligibility(vals["benefit_id"], vals["employee_id"]):
+                raise UserError(
+                    self.env._(
+                        "Eligibility Requirements Unmet. "
+                        "The employee does not meet eligibility "
+                        "requirements for this benefit."
+                    )
+                )
+
+        ben_ids = super().create(vals_list)
+        for ben_id in ben_ids:
+            ref = self.env["ir.sequence"].next_by_code("benefit.policy.ref")
+            if not ref:
+                raise UserError(
+                    self.env._(
+                        "Critical Error. Unable to obtain a benefit policy number!"
+                    )
+                )
+            ben_id.name = ref
+        return ben_ids
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_not_draft(self):
+        for pol in self:
+            if pol.state != "draft" and not (
+                self.env.context and self.env.context.get("force_delete", False)
+            ):
+                raise UserError(
+                    self.env._(
+                        "You may not delete a policy that is not in a 'draft' state."
+                        "\nPolicy No: %s",
+                        pol.name,
+                    )
+                )
+
+    def _check_state(self, to_state):
+        for rec in self:
+            if (
+                to_state == "draft"
+                and rec.state not in ["", "draft"]
+                or to_state == "done"
+                and rec.state != "open"
+            ):
+                raise UserError(
+                    self.env._("You cannot set an open policy back to 'draft' state.")
+                )
+            elif rec.state == "done":
+                raise UserError(
+                    self.env._(
+                        "You cannot set a policy in 'Done' state to any other value."
+                    )
+                )
+
+    def write(self, vals):
+        if "state" in vals:
+            self._check_state(vals["state"])
+        return super().write(vals)
+
+    def state_open(self):
+        self.write({"state": "open"})
+        return True
+
+    def state_done(self):
+        self.write({"state": "done"})
+        return True
+
+    def end_policy(self):
+        if len(self.ids) == 0:
+            return False
+
+        # Odoo 19 environments are immutable: ``self.env.context = ...`` raises
+        # AttributeError. Build the context through ``dict()`` instead.
+        ctx = dict(self.env.context, end_benefit_policy_id=self.ids[0])
+        return {
+            "view_mode": "form",
+            "res_model": "hr.benefit.policy.end",
+            "type": "ir.actions.act_window",
+            "target": "new",
+            "context": ctx,
+        }
+
+    @api.model
+    def _ranges_overlap(self, start_a, end_a, start_b, end_b):
+        """Whether two policy validity ranges overlap (an empty end is open)."""
+        start_a = fields.Date.to_date(start_a)
+        start_b = fields.Date.to_date(start_b)
+        end_a = fields.Date.to_date(end_a) if end_a else None
+        end_b = fields.Date.to_date(end_b) if end_b else None
+        if start_a is None or start_b is None:
+            # A missing start date cannot be compared; be conservative.
+            return True
+        if end_b is not None and start_a > end_b:
+            return False
+        if end_a is not None and start_b > end_a:
+            return False
+        return True
+
+    @api.model
+    def _cron_refresh_amounts(self):
+        """Refresh stored amounts when a dated earning or premium becomes effective.
+
+        ``_compute_amounts`` resolves the applicable line "as of today", so a
+        line that is future-dated when the policy is created only takes effect
+        once the date is reached. This scheduled job re-evaluates every policy
+        that is not terminated so the stored values catch up.
+        """
+        policies = self.search([("state", "!=", "done")])
+        policies._compute_amounts()
+        policies._compute_premium_installments()
+        return True
