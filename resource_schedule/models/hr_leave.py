@@ -18,7 +18,7 @@ class HrLeave(models.Model):
         Attendance = self.env["hr.attendance"]
         for lv in lv_requests:
             # Adjust shifts around the leave
-            dictIds = self.adjust_schedule_by_leave()
+            dictIds = lv._adjust_schedule_by_leave()
 
             # Adjust attendances
             #
@@ -28,33 +28,37 @@ class HrLeave(models.Model):
                 )
                 att_ids.unlink()
             if len(dictIds["in_altered_ids"]) > 0:
-                _unlink_ids = self.env["hr.attendance"]
                 att_ids = Attendance.sudo().search(
                     [("id", "in", dictIds["in_altered_ids"])],
                 )
+                _unlink_ids = self.env["hr.attendance"]
                 for att in att_ids:
+                    if not att.check_out:
+                        # The employee is still punched in: leave it alone.
+                        continue
                     if att.check_in < lv.date_to and att.check_out > lv.date_to:
                         att.check_in = lv.date_to + timedelta(seconds=1)
                     elif att.check_in < lv.date_to and att.check_out <= lv.date_to:
                         _unlink_ids |= att
-                    if _unlink_ids:
-                        _unlink_ids.unlink()
+                _unlink_ids.unlink()
             if len(dictIds["out_altered_ids"]) > 0:
-                _unlink_ids = self.env["hr.attendance"]
                 att_ids = Attendance.sudo().search(
                     [("id", "in", dictIds["out_altered_ids"])],
                 )
+                _unlink_ids = self.env["hr.attendance"]
                 for att in att_ids:
+                    if not att.check_out:
+                        # The employee is still punched in: leave it alone.
+                        continue
                     if att.check_out > lv.date_from and att.check_in < lv.date_from:
                         att.check_out = lv.date_from - timedelta(seconds=1)
                     elif att.check_out <= lv.date_from and att.check_in < lv.date_from:
                         _unlink_ids |= att
-                    if _unlink_ids:
-                        _unlink_ids.unlink()
+                _unlink_ids.unlink()
 
         return res
 
-    def adjust_schedule_by_leave(self):
+    def _adjust_schedule_by_leave(self):
         """Returns a dictionary of hr.attendance records:
         {
             'removed_ids': []       # record ids related to removed shifts
@@ -99,6 +103,14 @@ class HrLeave(models.Model):
                         and shift not in unlink_ids
                     ):
                         unlink_ids |= shift
+                    elif leave.date_to < shift.datetime_end:
+                        # The leave lies wholly inside the shift, so keep the
+                        # work scheduled after it by splitting the shift.
+                        shift.sudo().copy(
+                            {"datetime_start": leave.date_to + timedelta(seconds=1)}
+                        )
+                        shift.sudo().datetime_end = dtLv + timedelta(seconds=-1)
+                        res["out_altered_ids"] += shift.sudo().hr_attendance_ids.ids
                     else:
                         shift.sudo().datetime_end = dtLv + timedelta(seconds=-1)
                         res["out_altered_ids"] += shift.sudo().hr_attendance_ids.ids

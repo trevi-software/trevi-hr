@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <!--
+        Multi-company rules for the company-owned scheduling models.
+
+        Read access is granted to all internal users (base.group_user) on the
+        shift, template and team models, but without these rules they would be
+        able to search and read records belonging to other companies.
+    -->
+    <record id="resource_schedule_shift_company_rule" model="ir.rule">
+        <field name="name">Shift: multi-company</field>
+        <field name="model_id" ref="model_resource_schedule_shift" />
+        <field name="domain_force">
+            ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+        </field>
+    </record>
+
+    <record id="resource_schedule_team_company_rule" model="ir.rule">
+        <field name="name">Shift Team: multi-company</field>
+        <field name="model_id" ref="model_resource_schedule_team" />
+        <field name="domain_force">
+            ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+        </field>
+    </record>
+
+    <record id="resource_schedule_area_company_rule" model="ir.rule">
+        <field name="name">Schedule Area: multi-company</field>
+        <field name="model_id" ref="model_resource_schedule_area" />
+        <field name="domain_force">
+            ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+        </field>
+    </record>
+
+    <record id="resource_schedule_group_company_rule" model="ir.rule">
+        <field name="name">Schedule Group: multi-company</field>
+        <field name="model_id" ref="model_resource_schedule_group" />
+        <field name="domain_force">
+            ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+        </field>
+    </record>
+
+    <record id="resource_calendar_attendance_template_company_rule" model="ir.rule">
+        <field name="name">Work Detail Template: multi-company</field>
+        <field name="model_id" ref="model_resource_calendar_attendance_template" />
+        <field name="domain_force">
+            ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+        </field>
+    </record>
+</odoo>

@@ -24,6 +24,7 @@
         "data/hr_schedule_cron.xml",
         "security/groups.xml",
         "security/ir.model.access.csv",
+        "security/resource_schedule_security.xml",
         "views/menus.xml",
         "views/hr_employee_view.xml",
         "views/hr_version_view.xml",
