@@ -32,6 +32,19 @@ class ResourceCalendar(models.Model):
         "resource.calendar.weekday", string="Days off"
     )
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        # Odoo 19's resource.calendar.create() builds the new records from a
+        # recordset carrying resource_skip_inverse_two_weeks=True (see
+        # resource/models/resource_calendar.py: create() and
+        # _inverse_two_weeks_calendar()). Because create() returns records bound to
+        # that very recordset, the flag leaks into the returned environment and
+        # every later write to attendance_ids_1st_week / attendance_ids_2nd_week on
+        # a just-created calendar is silently discarded by the inverse's context
+        # guard. Hand the records back with a clean environment so callers (and the
+        # test suite) can keep editing the two-week attendances.
+        return super().create(vals_list).with_env(self.env)
+
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
