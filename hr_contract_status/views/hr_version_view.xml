@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Contract versions: expose the trevi fields on the native list view -->
+    <record id="hr_version_view_list_contract_status" model="ir.ui.view">
+        <field name="name">hr.version.list.contract.status</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.hr_version_list_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='contract_date_end']" position="after">
+                <field name="trial_date_end" optional="hide" />
+                <field name="trial_ending" optional="hide" />
+                <field name="state_ending" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_expiring_contracts_tree" model="ir.ui.view">
+        <field name="name">hr.version.contract.expire.tree</field>
+        <field name="model">hr.version</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="employee_id" />
+                <field name="department_id" />
+                <field name="job_id" />
+                <field name="contract_date_start" />
+                <field name="trial_date_end" />
+                <field name="contract_date_end" />
+                <field name="trial_ending" />
+                <field name="state_ending" />
+            </list>
+        </field>
+    </record>
+    <record id="open_expiring_contracts" model="ir.actions.act_window">
+        <field name="name">Ending Trials &amp; Contracts</field>
+        <field name="res_model">hr.version</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_expiring_contracts_tree" />
+        <field
+            name="domain"
+        >['|', ('trial_ending', '=', True), ('state_ending', '=', True)]</field>
+        <field name="help" type="html">
+            <p>
+            There are currently no contracts or trial periods that are about to expire.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem
+        id="submenu_hr_contracts"
+        name="Contracts"
+        parent="hr.menu_hr_root"
+        sequence="4"
+        groups="hr.group_hr_user"
+    />
+
+    <menuitem
+        id="hr_version_menu_contract"
+        action="hr.action_hr_version"
+        parent="submenu_hr_contracts"
+        name="Contracts"
+        sequence="10"
+        groups="hr.group_hr_user"
+    />
+
+    <menuitem
+        id="menu_expiring_contracts"
+        action="open_expiring_contracts"
+        parent="submenu_hr_contracts"
+        groups="hr.group_hr_user"
+        sequence="20"
+    />
+</odoo>

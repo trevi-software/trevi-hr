@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Alert-related subtypes for messaging / Chatter -->
+
+    <record id="mt_alert_trial_ending" model="mail.message.subtype">
+        <field name="name">Trial Period Ending</field>
+        <field name="res_model">hr.version</field>
+        <field name="default" eval="True" />
+        <field name="description">Trial Period is ending</field>
+    </record>
+
+    <record id="mt_alert_contract_ending" model="mail.message.subtype">
+        <field name="name">Contract Period Ending</field>
+        <field name="res_model">hr.version</field>
+        <field name="default" eval="True" />
+        <field name="description">Contract Period is ending</field>
+    </record>
+
+    <!--
+
+    In Odoo 18 the "Update Contract State" cron lived in the ``hr_contract``
+    module and called ``hr.contract.update_state()``, which this module
+    overrode. Both are gone in 19.0 (``hr.contract`` is now ``hr.version`` and
+    core only runs ``_cron_update_current_version_id`` on ``hr.employee``), so
+    the module runs its own cron to keep ``trial_ending``/``state_ending``
+    up to date.
+
+    -->
+    <record id="ir_cron_data_hr_version_update_status" model="ir.cron">
+        <field name="name">HR Version: Update Contract Status</field>
+        <field name="model_id" ref="hr.model_hr_version" />
+        <field name="state">code</field>
+        <field name="code">model.update_status()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+</odoo>
