@@ -65,12 +65,18 @@ class HrVersion(models.Model):
 
             sched_obj = self.env["resource.schedule.shift"]
             calendar = res.resource_calendar_id
+            _, start_week = sched_obj._get_calendar_and_start_week(
+                ee.resource_id, calendar
+            )
+            max_week = 0
+            if calendar.attendance_ids:
+                max_week = calendar.attendance_ids.sorted("sequence")[-1].week_nbr
 
-            # Skip the weeks that are already scheduled, then generate the
-            # remaining range in a single call. Calling create_schedule()
-            # once per week would restart the week rotation at zero each time
-            # and repeat the first week of a multi-week calendar.
+            # Only create the schedule if there isn't one already. Carry the
+            # week rotation across the weeks so a multi-week calendar does not
+            # restart at week zero each time.
             dTmp = dStart
+            week = start_week
             while dTmp < dEnd:
                 prev_sched_ids = sched_obj.search(
                     [
@@ -79,11 +85,17 @@ class HrVersion(models.Model):
                     ]
                 )
                 if not prev_sched_ids:
-                    break
-                dTmp += timedelta(days=7)
+                    sched_obj.sudo().create_schedule(
+                        ee.resource_id,
+                        dTmp,
+                        dTmp + timedelta(days=6),
+                        calendar,
+                        start_week=week,
+                    )
 
-            if dTmp < dEnd:
-                sched_obj.sudo().create_schedule(ee.resource_id, dTmp, dEnd, calendar)
+                dTmp += timedelta(days=7)
+                if max_week:
+                    week = 0 if week >= max_week else week + 1
 
         return records
 

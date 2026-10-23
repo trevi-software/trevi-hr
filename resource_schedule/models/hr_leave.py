@@ -106,10 +106,23 @@ class HrLeave(models.Model):
                     elif leave.date_to < shift.datetime_end:
                         # The leave lies wholly inside the shift, so keep the
                         # work scheduled after it by splitting the shift.
-                        shift.sudo().copy(
-                            {"datetime_start": leave.date_to + timedelta(seconds=1)}
+                        tail_start = leave.date_to + timedelta(seconds=1)
+                        head_end = dtLv + timedelta(seconds=-1)
+                        new_tail = shift.sudo().copy({"datetime_start": tail_start})
+                        # Recompute the midnight crossing from each fragment's
+                        # own dates, the original shift's flag no longer fits
+                        # either fragment.
+                        new_tail.span_midnight = (
+                            tail_start.date() != shift.datetime_end.date()
                         )
-                        shift.sudo().datetime_end = dtLv + timedelta(seconds=-1)
+                        shift.sudo().write(
+                            {
+                                "datetime_end": head_end,
+                                "span_midnight": (
+                                    shift.datetime_start.date() != head_end.date()
+                                ),
+                            }
+                        )
                         res["out_altered_ids"] += shift.sudo().hr_attendance_ids.ids
                     else:
                         shift.sudo().datetime_end = dtLv + timedelta(seconds=-1)

@@ -304,10 +304,18 @@ class ResourceScheduleShift(models.Model):
             if today < dToday:
                 _now = datetime.combine(today, datetime.max.time())
 
+            day_start = datetime.combine(today, datetime.min.time())
             shifts = self.search(
                 [
                     ("autopunch", "=", True),
+                    "|",
                     ("day", "=", today),
+                    # A shift that started the previous day and runs into this
+                    # one (an overnight shift) must be revisited so its punch
+                    # can be closed once the shift has really ended.
+                    "&",
+                    ("day", "=", today - timedelta(days=1)),
+                    ("datetime_end", ">=", day_start),
                 ]
             )
             employees = shifts.mapped("employee_id")
@@ -428,14 +436,20 @@ class ResourceScheduleShift(models.Model):
         return (calendar, start_week)
 
     @api.model
-    def create_schedule(self, resources, date_start, date_end, calendar=None):
+    def create_schedule(
+        self, resources, date_start, date_end, calendar=None, start_week=None
+    ):
         res = self.env["resource.schedule.shift"]
         for resource in resources:
-            res |= self._create_schedule(resource, date_start, date_end, calendar)
+            res |= self._create_schedule(
+                resource, date_start, date_end, calendar, start_week
+            )
         return res
 
     @api.model
-    def _create_schedule(self, resource, date_start, date_end, calendar=None):
+    def _create_schedule(
+        self, resource, date_start, date_end, calendar=None, start_week=None
+    ):
         """
         Create schedule (shifts) for resource based on calendar (or calendar_id
         of resource, if not specified) between date_start and date_end.
@@ -448,9 +462,10 @@ class ResourceScheduleShift(models.Model):
                 )
             )
 
-        schedule_week = 0
         max_week = 0
         calendar, schedule_week = self._get_calendar_and_start_week(resource, calendar)
+        if start_week is not None:
+            schedule_week = start_week
         if calendar.attendance_ids:
             max_week = calendar.attendance_ids.sorted("sequence")[-1].week_nbr
 
