@@ -72,10 +72,14 @@ class HrVersion(models.Model):
             if calendar.attendance_ids:
                 max_week = calendar.attendance_ids.sorted("sequence")[-1].week_nbr
 
-            # Only create the schedule if there isn't one already. Carry the
-            # week rotation across the weeks so a multi-week calendar does not
-            # restart at week zero each time.
+            # Compute the days off for the whole range once so a rolling day
+            # off rotation is carried consistently across the weekly calls,
+            # and then walk the weeks week by week, skipping the ones that are
+            # already scheduled. This keeps both the rotation week and the
+            # rolling days off in step.
+            all_daysoff = sched_obj.get_daysoff(ee.resource_id, calendar, dStart, dEnd)
             dTmp = dStart
+            week_nbr = 0
             week = start_week
             while dTmp < dEnd:
                 prev_sched_ids = sched_obj.search(
@@ -85,15 +89,21 @@ class HrVersion(models.Model):
                     ]
                 )
                 if not prev_sched_ids:
+                    if week_nbr < len(all_daysoff):
+                        week_daysoff = all_daysoff[week_nbr]
+                    else:
+                        week_daysoff = all_daysoff[-1] if all_daysoff else []
                     sched_obj.sudo().create_schedule(
                         ee.resource_id,
                         dTmp,
                         dTmp + timedelta(days=6),
                         calendar,
                         start_week=week,
+                        daysoff=[week_daysoff],
                     )
 
                 dTmp += timedelta(days=7)
+                week_nbr += 1
                 if max_week:
                     week = 0 if week >= max_week else week + 1
 

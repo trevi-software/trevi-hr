@@ -437,18 +437,34 @@ class ResourceScheduleShift(models.Model):
 
     @api.model
     def create_schedule(
-        self, resources, date_start, date_end, calendar=None, start_week=None
+        self,
+        resources,
+        date_start,
+        date_end,
+        calendar=None,
+        start_week=None,
+        daysoff=None,
     ):
         res = self.env["resource.schedule.shift"]
         for resource in resources:
+            r_daysoff = daysoff
+            if r_daysoff is None:
+                r_calendar = self._get_calendar_and_start_week(resource, calendar)[0]
+                r_daysoff = self.get_daysoff(resource, r_calendar, date_start, date_end)
             res |= self._create_schedule(
-                resource, date_start, date_end, calendar, start_week
+                resource, date_start, date_end, calendar, start_week, r_daysoff
             )
         return res
 
     @api.model
     def _create_schedule(
-        self, resource, date_start, date_end, calendar=None, start_week=None
+        self,
+        resource,
+        date_start,
+        date_end,
+        calendar=None,
+        start_week=None,
+        daysoff=None,
     ):
         """
         Create schedule (shifts) for resource based on calendar (or calendar_id
@@ -471,7 +487,6 @@ class ResourceScheduleShift(models.Model):
 
         week = 0
         values_list = []
-        daysoff = self.get_daysoff(resource, calendar, date_start, date_end)
         delta = timedelta(days=1)
         dTmp = date_start
         while dTmp <= date_end:
