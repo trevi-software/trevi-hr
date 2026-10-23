@@ -143,10 +143,19 @@ class TestWizardGenerateSchedule(common.TransactionCase):
         attached = self.env["hr.employee"].search(
             [("resource_id", "in", schedule_resources.ids)]
         )
-        self.assertEqual(
+        self.assertIn(
+            self.eeJohn,
             wizard.employee_ids,
-            attached,
-            "The wizard automatically loaded the employees attached to the calendar",
+            "The wizard did not load an employee attached to the calendar",
+        )
+        self.assertIn(
+            self.eeSally,
+            wizard.employee_ids,
+            "The wizard did not load an employee attached to the calendar",
+        )
+        self.assertFalse(
+            wizard.employee_ids - attached,
+            "The wizard loaded employees that are not attached to the calendar",
         )
 
         wizard.generate_schedules()
