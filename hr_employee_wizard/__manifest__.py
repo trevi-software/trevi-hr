@@ -14,7 +14,6 @@
     "depends": [
         "hr_benefit",
         # 'ethiopic_calendar',
-        "hr_contract_reference",
         "hr_contract_values_payroll",
         "hr_contract_values_resource_schedule",
         "hr_employee_status",

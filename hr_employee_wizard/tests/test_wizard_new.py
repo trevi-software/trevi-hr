@@ -12,7 +12,7 @@ class RecruitmentTestCase(TransactionCase):
     def setUp(self):
         super().setUp()
 
-        self.Contract = self.env["hr.contract"]
+        self.Version = self.env["hr.version"]
         self.Partner = self.env["res.partner"]
         self.Period = self.env["hr.payroll.period"]
         self.PPSchedule = self.env["hr.payroll.period.schedule"]
@@ -20,11 +20,20 @@ class RecruitmentTestCase(TransactionCase):
         self.labour_model = self.env["hr.employee.wizard.new"]
         benefits_model = self.env["hr.employee.wizard.benefit"]
         self.company = self.env.user.company_id
-        self.state = self.env["res.country.state"].search([], limit=1)[0]
-        self.country = self.env["res.country"].search([], limit=1)[0]
-        self.job = self.env["hr.job"].search([], limit=1)[0]
-        self.department = self.env["hr.department"].search([], limit=1)[0]
-        self.structure = self.env["hr.payroll.structure"].search([], limit=1)[0]
+        self.state = self.env["res.country.state"].search([], limit=1)
+        self.country = self.env["res.country"].search([], limit=1)
+        # Odoo 19 does not install demo data: create the records the wizard needs.
+        self.department = self.env["hr.department"].create(
+            {"name": "Bridge", "company_id": self.company.id}
+        )
+        self.job = self.env["hr.job"].create(
+            {
+                "name": "Captain",
+                "company_id": self.company.id,
+                "department_id": self.department.id,
+            }
+        )
+        self.structure = self.env["hr.payroll.structure"].create({"name": "Base"})
         self.pps = self.create_payroll_schedule("monthly", date.today())  # noqa: DTZ011
         self.pgroup = self.PolicyGroup.create({"name": "PGroup"})
         self.calendar_id = self.env.ref("resource_schedule.resource_calendar_44h")
@@ -114,25 +123,32 @@ class RecruitmentTestCase(TransactionCase):
         )
 
         ee = self.env["hr.employee"].search([("name", "=", "Jean-Luc Picard")])
-        self.assertEqual(
-            len(ee.contract_ids), 1, "The newly created employee has a contract"
-        )
+        contracts = ee.version_ids.filtered("contract_date_start")
+        self.assertEqual(len(contracts), 1, "The newly created employee has a contract")
         self.assertTrue(
-            ee.candidate_id, "A candidate record is attached to the employee"
+            ee.applicant_ids, "A candidate record is attached to the employee"
         )
         self.assertEqual(
-            ee.candidate_id.partner_id.address_get(["contact"])["contact"],
+            ee.applicant_ids.partner_id.address_get(["contact"])["contact"],
             ee.work_contact_id.id,
             "The employee home address is correct",
         )
-        self.assertEqual(ee.gender, "male", "Gender field set according to wizard")
+        self.assertEqual(ee.sex, "male", "Gender field set according to wizard")
         self.assertEqual(
-            ee.birthday, date(1990, 1, 1), "Gender field set according to wizard"
+            ee.birthday, date(1990, 1, 1), "Birth date set according to wizard"
+        )
+        self.assertEqual(
+            ee.identification_id, "123", "Official ID set according to wizard"
         )
         self.assertEqual(ee.job_title, wizard.job_id.name, "The job title is correct")
 
-        c = self.Contract.search([("employee_id", "=", ee.id)])
+        c = contracts
         self.assertEqual(c.job_id, wizard.job_id, "The job position is correct")
+        self.assertEqual(
+            c.contract_date_start,
+            date(2017, 1, 1),
+            "The contract start date is set according to the wizard",
+        )
         self.assertEqual(
             ee.department_id, wizard.department_id, "The department is correct"
         )
@@ -151,3 +167,78 @@ class RecruitmentTestCase(TransactionCase):
 
         with self.assertRaises(ValidationError):
             wiz.hire_applicant()
+
+    def test_create_applicant_returns_applicant(self):
+        """Starting recruitment must open the applicant that was just created."""
+        wizard = self.create_wizard()
+        res = wizard.create_applicant()
+        applicant = self.env["hr.applicant"].search(
+            [("partner_name", "=", "Jean-Luc Picard")]
+        )
+
+        self.assertEqual(len(applicant), 1, "An applicant record was created")
+        self.assertEqual(
+            res["res_model"], "hr.applicant", "The action opens an applicant"
+        )
+        self.assertEqual(
+            res["res_id"], applicant.id, "The action opens the created applicant"
+        )
+
+    def test_diploma_education(self):
+        """A diploma must be accepted by the applicant and the employee."""
+        applicant = self.env["hr.applicant"].create(
+            {
+                "partner_name": "Diploma Holder",
+                "job_id": self.job.id,
+                "education": "diploma",
+            }
+        )
+        self.assertEqual(applicant.education, "diploma")
+
+        wizard = self.create_wizard()
+        wizard.education = "diploma"
+        wizard.hire_applicant()
+
+        ee = self.env["hr.employee"].search([("name", "=", "Jean-Luc Picard")])
+        self.assertEqual(
+            ee.certificate, "diploma", "The diploma is kept on the employee"
+        )
+
+    def test_applicant_without_gender(self):
+        """An applicant without a gender must not become a male employee."""
+        partner = self.Partner.create({"name": "No Gender"})
+        applicant = self.env["hr.applicant"].create(
+            {
+                "partner_name": "No Gender",
+                "partner_id": partner.id,
+                "job_id": self.job.id,
+            }
+        )
+        self.assertFalse(applicant.gender)
+
+        res = applicant.create_employee_from_applicant()
+        ee = self.env["hr.employee"].browse(res["res_id"])
+        self.assertFalse(ee.sex, "No gender was recorded on the applicant")
+
+    def test_id_no_kept_on_applicant(self):
+        """The Official ID must survive on an applicant that is not hired."""
+        wizard = self.create_wizard()
+        wizard.create_applicant()
+
+        applicant = self.env["hr.applicant"].search(
+            [("partner_name", "=", "Jean-Luc Picard")]
+        )
+        self.assertEqual(
+            applicant.id_no, "123", "The Official ID is kept on the applicant"
+        )
+
+    def test_date_start_default_is_evaluated_per_record(self):
+        """The start date default must not be frozen at module load time."""
+        default = self.labour_model._fields["date_start"].default
+        self.assertTrue(
+            callable(default),
+            "The start date default must be evaluated for each new record",
+        )
+        self.assertEqual(
+            default(), date.today(), "The default start date is today's date"
+        )

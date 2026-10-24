@@ -13,37 +13,37 @@ class NewLabour(models.TransientModel):
 
     @api.model
     def _get_wage(self):
-        Contract = self.env["hr.contract"].with_company(self.env.company)
+        Contract = self.env["hr.version"].with_company(self.env.company)
         return Contract._get_wage()
 
     @api.model
     def _get_trial_start(self):
-        Contract = self.env["hr.contract"].with_company(self.env.company)
+        Contract = self.env["hr.version"].with_company(self.env.company)
         return Contract._get_trial_date_start()
 
     @api.model
     def _get_trial_end(self):
-        Contract = self.env["hr.contract"].with_company(self.env.company)
+        Contract = self.env["hr.version"].with_company(self.env.company)
         return Contract._get_trial_date_end()
 
     @api.model
     def _get_struct(self):
-        Contract = self.env["hr.contract"].with_company(self.env.company)
+        Contract = self.env["hr.version"].with_company(self.env.company)
         return Contract._get_struct()
 
     @api.model
     def _get_policy_group(self):
-        Contract = self.env["hr.contract"].with_company(self.env.company)
+        Contract = self.env["hr.version"].with_company(self.env.company)
         return Contract._get_policy_group()
 
     @api.model
     def _get_resource_calendar(self):
-        Contract = self.env["hr.contract"].with_company(self.env.company)
+        Contract = self.env["hr.version"].with_company(self.env.company)
         return Contract._get_resource_calendar()
 
     @api.model
     def _get_pps(self):
-        Contract = self.env["hr.contract"].with_company(self.env.company)
+        Contract = self.env["hr.version"].with_company(self.env.company)
         return Contract._get_pay_sched()
 
     employee_ids = fields.Many2many(
@@ -126,7 +126,7 @@ class NewLabour(models.TransientModel):
         comodel_name="resource.calendar",
         default=lambda self: self._get_resource_calendar(),
     )
-    date_start = fields.Date(string="Start Date", default=fields.Date.today())
+    date_start = fields.Date(string="Start Date", default=fields.Date.today)
     date_end = fields.Date(string="End Date")
     trial_date_start = fields.Date(
         string="Trial Start Date", default=lambda self: self._get_trial_start()
@@ -141,7 +141,7 @@ class NewLabour(models.TransientModel):
             if not self.company_id:
                 continue
 
-            contract = self.env["hr.contract"].with_company(self.company_id)
+            contract = self.env["hr.version"].with_company(self.company_id)
             rec.wage = contract._get_wage()
             rec.struct_id = contract._get_struct()
             rec.trial_date_start = contract._get_trial_date_start()
@@ -157,7 +157,7 @@ class NewLabour(models.TransientModel):
                 rec.department_id = False
                 rec.wage = False
                 continue
-            contract = self.env["hr.contract"].with_company(rec.company_id)
+            contract = self.env["hr.version"].with_company(rec.company_id)
             rec.department_id = rec.job_id.department_id
             rec.wage = contract._get_wage(job_id=self.job_id.id)
 
@@ -173,7 +173,7 @@ class NewLabour(models.TransientModel):
     @api.onchange("trial_date_start")
     def onchange_trial(self):
         for rec in self:
-            contract = self.env["hr.contract"].with_company(rec.company_id)
+            contract = self.env["hr.version"].with_company(rec.company_id)
             if rec.trial_date_start:
                 d_start = self.trial_date_start
                 rec.trial_date_end = contract._get_trial_date_end_from_start(d_start)
@@ -190,8 +190,8 @@ class NewLabour(models.TransientModel):
         self.ensure_one()
         values = {
             "name": self.name,
-            "phone": self.telephone,
-            "mobile": self.mobile,
+            # Odoo 19 merged ``mobile`` into ``phone`` on res.partner.
+            "phone": self.mobile or self.telephone,
             "street": self.street,
             "city": self.city,
             "country_id": self.country_id.id,
@@ -204,21 +204,17 @@ class NewLabour(models.TransientModel):
 
     def _create_hr_applicant(self, partner):
         self.ensure_one()
-        candidate = self.env["hr.candidate"].create(
-            {
-                "partner_name": self.name,
-                "partner_id": partner.id,
-                "partner_phone": self.telephone,
-                "company_id": self.company_id.id,
-            }
-        )
         applicant_vals = {
-            "candidate_id": candidate.id,
+            "partner_name": self.name,
+            "partner_id": partner.id,
+            "partner_phone": self.telephone,
+            "company_id": self.company_id.id,
             "job_id": self.job_id.id,
             "department_id": self.department_id.id,
             "gender": self.gender,
             "birth_date": self.birth_date,
             "education": self.education,
+            "id_no": self.id_no,
         }
         return self.env["hr.applicant"].create(applicant_vals)
 
@@ -241,10 +237,10 @@ class NewLabour(models.TransientModel):
 
         return {
             "view_mode": "form",
-            "res_model": "hr.employee.wizard.new",
+            "res_model": "hr.applicant",
             "res_id": applicant.id,
             "type": "ir.actions.act_window",
-            "target": "new",
+            "target": "current",
             "context": self.env.context,
         }
 
@@ -273,8 +269,12 @@ class NewLabour(models.TransientModel):
         dict_act_window = applicant.create_employee_from_applicant()
         ee = self.env["hr.employee"].browse(dict_act_window["res_id"])
 
-        # Create contract
+        # Create the contract.  In Odoo 19 ``hr_contract`` was merged into
+        # ``hr``: a contract is an ``hr.version`` record, its dates live in
+        # ``contract_date_start``/``contract_date_end`` and every employee
+        # already owns a version dated today.
         #
+        Version = self.env["hr.version"].with_company(self.company_id)
         c_vals = {
             "employee_id": ee.id,
             "job_id": self.job_id.id,
@@ -282,14 +282,23 @@ class NewLabour(models.TransientModel):
             "wage": self.wage,
             "struct_id": self.struct_id.id,
             "policy_group_id": self.policy_group_id.id,
-            "date_start": self.date_start,
-            "date_end": self.date_end,
+            "contract_date_start": self.date_start,
+            "contract_date_end": self.date_end,
             "trial_date_start": self.trial_date_start,
             "trial_date_end": self.trial_date_end,
             "resource_calendar_id": self.calendar_id.id,
             "pps_id": self.pps_id.id,
         }
-        self.env["hr.contract"].create(c_vals)
+        version = ee.version_ids.filtered(
+            lambda v, d=self.date_start: v.date_version == d
+        )
+        if version:
+            # (employee_id, date_version) is unique: reuse the version that is
+            # already pinned to this start date instead of creating a second one.
+            version.write(c_vals)
+        else:
+            c_vals["date_version"] = self.date_start
+            Version.create(c_vals)
 
         # Enroll in benefits
         #

@@ -12,9 +12,11 @@ class HrApplicant(models.Model):
 
     gender = fields.Selection(selection=[("f", "Female"), ("m", "Male")])
     birth_date = fields.Date()
+    id_no = fields.Char(string="Official ID")
     education = fields.Selection(
         selection=[
             ("graduate", "Graduate"),
+            ("diploma", "Diploma"),
             ("bachelor", "Bachelor"),
             ("master", "Master"),
             ("doctor", "Doctor"),
@@ -28,12 +30,16 @@ class HrApplicant(models.Model):
 
         employee = self.env["hr.employee"].browse(res.get("res_id"))
         if employee:
-            employee.write(
-                {
-                    "gender": self.gender == "f" and "female" or "male",
-                    "birthday": self.birth_date,
-                    "certificate": self.education,
-                }
-            )
+            vals = {}
+            if self.gender:
+                vals["sex"] = {"f": "female", "m": "male"}[self.gender]
+            if self.birth_date:
+                vals["birthday"] = self.birth_date
+            if self.education:
+                vals["certificate"] = self.education
+            if self.id_no:
+                vals["identification_id"] = self.id_no
+            if vals:
+                employee.write(vals)
 
         return res
