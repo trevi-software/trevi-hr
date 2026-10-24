@@ -31,7 +31,13 @@ class TestBenefit(benefit_common.TestBenefitCommon):
 
     def test_policy_access(self):
         """
-        hr.benefit.policy access: Payroll Mgr - read-only, Payroll User read-only
+        hr.benefit.policy access: HR Officer - read/write, no unlink.
+
+        In 19.0 ``payroll.group_payroll_user`` implies ``hr.group_hr_manager``
+        (payroll officers now manage contracts, which live in ``hr``), so
+        payroll users are no longer read-only on benefit policies: they inherit
+        the HR manager ACL, which includes unlink. The read-only boundary that
+        this test used to exercise now lives on the HR Officer group.
         """
 
         bn1 = self.create_benefit(self.benefit_create_vals)
@@ -42,12 +48,33 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "multi_policy": True,
             }
         )
+
+        # Implied groups are resolved transitively by the access checks, they
+        # are not stored in ``group_ids``.
+        self.assertTrue(self.userPM.has_group("hr.group_hr_manager"))
+        self.assertTrue(self.userPU.has_group("hr.group_hr_manager"))
+
+        # Payroll Manager and Payroll User inherit the HR manager rights.
+        for user in (self.userPM, self.userPU):
+            pol = self.create_policy(self.eeJohn, bn1, date.today())  # noqa: DTZ011
+            self.create_succeeds(
+                user,
+                self.Policy,
+                {
+                    "name": "tbp",
+                    "employee_id": self.eeJohn.id,
+                    "benefit_id": bn2.id,
+                    "start_date": date.today(),  # noqa: DTZ011
+                },
+            )
+            self.read_succeeds(user, self.Policy, pol.id)
+            self.write_succeeds(user, self.Policy, pol.id, {"name": "tbp2"})
+            self.unlink_succeeds(user, pol)
+
+        # HR Officer can create and update policies but not delete them.
         pol = self.create_policy(self.eeJohn, bn1, date.today())  # noqa: DTZ011
-
-        # Mgr
-        # Succeeds because of payroll user rights
         self.create_succeeds(
-            self.userPM,
+            self.userHRO,
             self.Policy,
             {
                 "name": "tbp",
@@ -56,25 +83,33 @@ class TestBenefit(benefit_common.TestBenefitCommon):
                 "start_date": date.today(),  # noqa: DTZ011
             },
         )
-        self.unlink_fails(self.userPM, pol)
-        self.read_succeeds(self.userPM, self.Policy, pol.id)
-        self.write_succeeds(self.userPM, self.Policy, pol.id, {"name": "tbp2"})
+        self.read_succeeds(self.userHRO, self.Policy, pol.id)
+        self.write_succeeds(self.userHRO, self.Policy, pol.id, {"name": "tbp2"})
+        self.unlink_fails(self.userHRO, pol)
 
-        # User
-        # addons/payroll where payroll officer is created implies group: HR Officer
-        self.create_succeeds(
+    def test_payroll_user_payment_for_other_employee(self):
+        """A payroll officer processes payslips of employees that are not his.
+
+        Completing such a payslip creates and updates premium payments, so the
+        all-records rule must also apply to create and write.
+        """
+
+        bn = self.create_benefit(dict(self.benefit_create_vals, link2payroll=True))
+        self.create_premium(bn, amount=100.00)
+        pol = self.create_policy(self.eePaul, bn, date.today())  # noqa: DTZ011
+
+        payment = self.create_succeeds(
             self.userPU,
-            self.Policy,
+            self.PremiumPayment,
             {
-                "name": "tbp",
-                "employee_id": self.eeJohn.id,
-                "benefit_id": bn2.id,
-                "start_date": date.today(),  # noqa: DTZ011
+                "employee_id": self.eePaul.id,
+                "policy_id": pol.id,
+                "amount": 100.00,
             },
         )
-        self.unlink_fails(self.userPU, pol)
-        self.read_succeeds(self.userPU, self.Policy, pol.id)
-        self.write_succeeds(self.userPU, self.Policy, pol.id, {"name": "tbp2"})
+        self.write_succeeds(
+            self.userPU, self.PremiumPayment, payment.id, {"amount": 90.00}
+        )
 
     def test_policy_user_own(self):
         """A user can only read his/her own policies"""

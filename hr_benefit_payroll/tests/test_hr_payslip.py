@@ -38,6 +38,13 @@ class TestBenefit(benefit_common.TestBenefitCommon):
             }
         )
 
+        cls.categ_deduction = cls.SalaryRuleCateg.create(
+            {
+                "name": "Deduction",
+                "code": "DED",
+            }
+        )
+
         cls.payroll_structure = cls.PayrollStructure.create(
             {
                 "name": "Salary Structure for Sales Person",
@@ -49,20 +56,58 @@ class TestBenefit(benefit_common.TestBenefitCommon):
             }
         )
 
-    def create_contract(
-        self, eid, state, kanban_state, start, end=None, trial_end=None, pps_id=None
-    ):
-        return self.env["hr.contract"].create(
+    def _create_premium_structure(self, benefit):
+        """Structure whose premium rule deducts ``hr_benefit.<CODE>``.
+
+        ``has_premium_payment`` marks the rule as the one that actually books
+        the benefit premium deduction on the payslip.
+        """
+        rule_premium = self.SalaryRule.create(
+            {
+                "name": "Benefit Premium",
+                "code": "BENPRM",
+                "sequence": 10,
+                "category_id": self.categ_deduction.id,
+                "condition_select": "none",
+                "amount_select": "code",
+                "amount_python_compute": (
+                    f"result = hr_benefit.{benefit.code}.deductions"
+                ),
+                "has_premium_payment": True,
+                "benefit_id": benefit.id,
+            }
+        )
+        return self.PayrollStructure.create(
+            {
+                "name": "Salary Structure with Benefit Premium",
+                "code": "SPP",
+                "company_id": self.env.ref("base.main_company").id,
+                "rule_ids": [
+                    (4, self.rule_basic.id),
+                    (4, rule_premium.id),
+                ],
+            }
+        )
+
+    def create_contract(self, eid, start, end=None, trial_end=None, struct=None):
+        """Create the ``hr.version`` that represents a contract in 19.0.
+
+        ``hr.contract`` was merged into ``hr``: a contract is now an
+        ``hr.version`` with ``contract_date_start``/``contract_date_end``.
+        The version must be dated on its own start date because ``date_start``
+        is ``max(date_version, contract_date_start)``; leaving ``date_version``
+        at today would exclude the backdated period from the contract.
+        """
+        return self.env["hr.version"].create(
             {
                 "name": "Contract",
                 "employee_id": eid,
-                "state": state,
-                "kanban_state": kanban_state,
+                "date_version": start,
+                "contract_date_start": start,
+                "contract_date_end": end,
                 "wage": 1,
-                "date_start": start,
                 "trial_date_end": trial_end,
-                "date_end": end,
-                "struct_id": self.payroll_structure.id,
+                "struct_id": (struct or self.payroll_structure).id,
             }
         )
 
@@ -74,7 +119,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         benefit = self.create_benefit(bvals)
         self.create_premium(benefit, start=start, amount=100.00)
         self.create_policy(self.eeJohn, benefit, start)
-        self.create_contract(self.eeJohn.id, "draft", "done", start).signal_confirm()
+        self.create_contract(self.eeJohn.id, start)
         slip = self.Payslip.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -106,7 +151,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         benefit = self.create_benefit(bvals)
         self.create_premium(benefit, start=start, amount=100.00)
         self.create_policy(self.eeJohn, benefit, start, premium=200.00)
-        self.create_contract(self.eeJohn.id, "draft", "done", start).signal_confirm()
+        self.create_contract(self.eeJohn.id, start)
         slip = self.Payslip.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -138,7 +183,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         benefit = self.create_benefit(bvals)
         self.create_premium(benefit, start=start, amount=100.00, total=500.00)
         self.create_policy(self.eeJohn, benefit, start)
-        self.create_contract(self.eeJohn.id, "draft", "done", start).signal_confirm()
+        self.create_contract(self.eeJohn.id, start)
         slip = self.Payslip.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -170,7 +215,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         benefit = self.create_benefit(bvals)
         self.create_earning(benefit, start=start, allowance=500.00)
         self.create_policy(self.eeJohn, benefit, start)
-        self.create_contract(self.eeJohn.id, "draft", "done", start).signal_confirm()
+        self.create_contract(self.eeJohn.id, start)
         slip = self.Payslip.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -204,7 +249,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         benefit = self.create_benefit(self.benefit_create_vals)
         self.create_premium(benefit, start=start, amount=100.00)
         self.create_policy(self.eeJohn, benefit, start, policy_end)
-        self.create_contract(self.eeJohn.id, "draft", "done", start).signal_confirm()
+        self.create_contract(self.eeJohn.id, start)
         slip = self.Payslip.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -227,7 +272,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         benefit = self.create_benefit(self.benefit_create_vals)
         self.create_earning(benefit, start=start, allowance=100.00)
         self.create_policy(self.eeJohn, benefit, start)
-        self.create_contract(self.eeJohn.id, "draft", "done", start).signal_confirm()
+        self.create_contract(self.eeJohn.id, start)
         slip = self.Payslip.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -265,7 +310,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         benefit = self.create_benefit(self.benefit_create_vals)
         self.create_earning(benefit, start=start, allowance=100.00)
         self.create_policy(self.eeJohn, benefit, start + timedelta(days=1))
-        self.create_contract(self.eeJohn.id, "draft", "done", start).signal_confirm()
+        self.create_contract(self.eeJohn.id, start)
         slip = self.Payslip.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -298,7 +343,7 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         benefit = self.create_benefit(self.benefit_create_vals)
         self.create_earning(benefit, start=start, allowance=100.00)
         self.create_policy(self.eeJohn, benefit, start)
-        self.create_contract(self.eeJohn.id, "draft", "done", start).signal_confirm()
+        self.create_contract(self.eeJohn.id, start)
         slip = self.Payslip.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -336,7 +381,10 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
         pol = self.create_policy(self.eeJohn, bn, start)
         pol.state_open()
-        self.create_contract(self.eeJohn.id, "draft", "done", start).signal_confirm()
+        # A premium payment is only booked for a premium that was actually
+        # deducted, so the contract needs the premium salary rule.
+        struct = self._create_premium_structure(bn)
+        self.create_contract(self.eeJohn.id, start, struct=struct)
         slip = self.Payslip.create(
             {
                 "employee_id": self.eeJohn.id,
@@ -368,3 +416,178 @@ class TestBenefit(benefit_common.TestBenefitCommon):
             "cancel",
             "The premium payment has been cancelled",
         )
+
+    def _prepare_premium_slip(self, benefit, start=None):
+        start = start or date(2021, 1, 1)
+        end = date(2021, 1, 31)
+        policy = self.create_policy(self.eeJohn, benefit, start)
+        policy.state_open()
+        struct = self._create_premium_structure(benefit)
+        self.create_contract(self.eeJohn.id, start, struct=struct)
+        slip = self.Payslip.create(
+            {
+                "employee_id": self.eeJohn.id,
+                "date_from": start,
+                "date_to": end,
+            }
+        )
+        slip.onchange_employee()
+        return slip, policy
+
+    def test_no_premium_payment_without_deduction(self):
+        """A policy whose premium no rule deducted must not be marked as paid."""
+        start = date(2021, 1, 1)
+        end = date(2021, 1, 31)
+        self.benefit_create_vals.update({"link2payroll": True})
+        bn = self.create_benefit(self.benefit_create_vals)
+        self.create_premium(bn, start, ptype="monthly", amount=100, total=300)
+        pol = self.create_policy(self.eeJohn, bn, start)
+        pol.state_open()
+        # Contract uses the plain structure: no rule deducts the premium.
+        self.create_contract(self.eeJohn.id, start)
+        slip = self.Payslip.create(
+            {
+                "employee_id": self.eeJohn.id,
+                "date_from": start,
+                "date_to": end,
+            }
+        )
+        slip.onchange_employee()
+        slip.compute_sheet()
+        slip.action_payslip_done()
+
+        self.assertFalse(
+            slip.premium_payment_ids,
+            "No premium payment may be recorded when no rule deducted it",
+        )
+        self.assertEqual(
+            pol._get_paid_amount(),
+            0,
+            "An undeducted premium must not count towards the paid amount",
+        )
+
+    def test_premium_payment_amount_matches_deduction(self):
+        """The payment is the per-period premium, not the annual amount."""
+        start = date(2021, 1, 1)
+        self.benefit_create_vals.update({"link2payroll": True})
+        bn = self.create_benefit(self.benefit_create_vals)
+        self.create_premium(bn, start, ptype="annual", amount=1200)
+        slip, _policy = self._prepare_premium_slip(bn)
+        slip.compute_sheet()
+        slip.action_payslip_done()
+
+        self.assertEqual(
+            len(slip.premium_payment_ids),
+            1,
+            "There should be one premium payment",
+        )
+        self.assertEqual(
+            slip.premium_payment_ids.amount,
+            100,
+            "The annual premium must be split over the 12 pay periods",
+        )
+
+    def test_premium_payment_recorded_per_policy(self):
+        """Each policy of a multi-policy benefit gets its own payment."""
+        start = date(2021, 1, 1)
+        end = date(2021, 1, 31)
+        self.benefit_create_vals.update({"link2payroll": True})
+        bn = self.create_benefit(self.benefit_create_vals)
+        bn.multi_policy = True
+        self.create_premium(bn, start, ptype="monthly", amount=100)
+        struct = self._create_premium_structure(bn)
+        self.create_contract(self.eeJohn.id, start, struct=struct)
+        pol_a = self.create_policy(self.eeJohn, bn, start)
+        pol_a.name = "Policy A"
+        pol_b = self.create_policy(self.eeJohn, bn, start)
+        pol_b.name = "Policy B"
+        slip = self.Payslip.create(
+            {
+                "employee_id": self.eeJohn.id,
+                "date_from": start,
+                "date_to": end,
+            }
+        )
+        slip.onchange_employee()
+        slip.compute_sheet()
+        slip.action_payslip_done()
+
+        payments = slip.premium_payment_ids
+        self.assertEqual(len(payments), 2, "One payment per policy")
+        self.assertEqual(
+            set(payments.mapped("policy_id").ids),
+            {pol_a.id, pol_b.id},
+            "Every payment must be booked on its own policy",
+        )
+        self.assertEqual(sum(payments.mapped("amount")), 200)
+
+    def test_one_day_policy_still_counts(self):
+        """A policy ending on the first day of the period contributes."""
+        start = date(2021, 1, 1)
+        end = date(2021, 1, 31)
+        policy_start = date(2020, 12, 1)
+        self.benefit_create_vals.update({"link2payroll": True})
+        bn = self.create_benefit(self.benefit_create_vals)
+        self.create_premium(bn, policy_start, ptype="monthly", amount=100)
+        self.create_policy(self.eeJohn, bn, policy_start, start)
+        self.create_contract(self.eeJohn.id, start)
+        slip = self.Payslip.create(
+            {
+                "employee_id": self.eeJohn.id,
+                "date_from": start,
+                "date_to": end,
+            }
+        )
+        slip.onchange_employee()
+
+        line = slip.benefit_line_ids
+        self.assertEqual(len(line), 1)
+        self.assertEqual(
+            line.deductions,
+            100,
+            "The premium of the overlapping day must be deducted",
+        )
+        self.assertGreater(
+            line.ppf,
+            0,
+            "A one-day overlap must have a non-zero payroll period factor",
+        )
+
+    def test_get_payslip_vals_returns_one2many_commands(self):
+        """get_payslip_vals must return values a payslip can be created with."""
+        start = date(2021, 1, 1)
+        end = date(2021, 1, 31)
+        self.benefit_create_vals.update({"link2payroll": True})
+        bn = self.create_benefit(self.benefit_create_vals)
+        self.create_earning(bn, start=start, allowance=100.00)
+        self.create_policy(self.eeJohn, bn, start)
+        self.create_contract(self.eeJohn.id, start)
+
+        vals = self.Payslip.get_payslip_vals(start, end, employee_id=self.eeJohn.id)[
+            "value"
+        ]
+        commands = vals["benefit_line_ids"]
+        self.assertTrue(
+            all(
+                isinstance(command, tuple) and command[0] in (0, 2)
+                for command in commands
+            ),
+            "benefit_line_ids must be a list of One2many commands",
+        )
+
+        slip = self.Payslip.create(
+            {
+                "employee_id": self.eeJohn.id,
+                "date_from": start,
+                "date_to": end,
+                "contract_id": vals["contract_id"],
+                "struct_id": vals["struct_id"],
+                "benefit_line_ids": commands,
+            }
+        )
+        self.assertEqual(
+            len(slip.benefit_line_ids),
+            1,
+            "Applying the returned commands must create the benefit line",
+        )
+        self.assertEqual(slip.benefit_line_ids.earnings, 100)

@@ -134,6 +134,42 @@ class TestBenefit(benefit_common.TestBenefitCommon):
             "The last payment must be the residual amount after previous payments",
         )
 
+    def test_benefit_policy_premium_keeps_decimals(self):
+        """Premiums are rounded to the currency precision, not floored."""
+        today = date.today()  # noqa: DTZ011
+        bn = self.create_benefit(self.benefit_create_vals)
+        self.create_premium(
+            bn,
+            today - relativedelta(days=1),  # noqa: DTZ011
+            ptype="monthly",
+            amount=100.50,
+        )
+        pol = self.create_policy(self.eeJohn, bn, today)
+        self.assertAlmostEqual(
+            pol.calculate_premium(today, 12),  # noqa: DTZ011
+            100.50,
+            places=2,
+            msg="A monthly premium of 100.50 must not be rounded down to 100",
+        )
+
+    def test_benefit_policy_premium_below_one_unit(self):
+        """A premium below one currency unit must not collapse to zero."""
+        today = date.today()  # noqa: DTZ011
+        bn = self.create_benefit(self.benefit_create_vals)
+        self.create_premium(
+            bn,
+            today - relativedelta(days=1),  # noqa: DTZ011
+            ptype="monthly",
+            amount=0.50,
+        )
+        pol = self.create_policy(self.eeJohn, bn, today)
+        self.assertAlmostEqual(
+            pol.calculate_premium(today, 12),  # noqa: DTZ011
+            0.50,
+            places=2,
+            msg="A premium below one currency unit must be kept",
+        )
+
     def test_benefit_policy_premium_override(self):
         today = date.today()  # noqa: DTZ011
         policy_start = today - relativedelta(days=4)

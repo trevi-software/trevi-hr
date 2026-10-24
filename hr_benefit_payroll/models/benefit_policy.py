@@ -2,9 +2,9 @@
 # Copyright (C) 2013,2014 Michael Telahun Makonnen <mmakonnen@gmail.com>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-import math
 
 from odoo import fields, models
+from odoo.tools import float_round
 
 
 class BenefitPolicy(models.Model):
@@ -57,10 +57,19 @@ class BenefitPolicy(models.Model):
                 )
                 prm_amount = max(prm_amount, 0)
         elif prm:
+            # Round to the currency precision: flooring discarded the decimals
+            # (and zeroed premiums below one currency unit) on every pay period.
+            rounding = self.company_id.currency_id.rounding
             if prm.type == "annual":
-                prm_amount = math.floor(prm.amount / float(annual_pay_periods))
+                prm_amount = float_round(
+                    prm.amount / float(annual_pay_periods),
+                    precision_rounding=rounding,
+                )
             else:
-                prm_amount = math.floor(prm.amount / float(annual_pay_periods / 12))
+                prm_amount = float_round(
+                    prm.amount / float(annual_pay_periods / 12),
+                    precision_rounding=rounding,
+                )
             if prm.total_amount and (prm.total_amount - paid) < prm_amount:
                 prm_amount = (
                     (prm.total_amount - paid) > 0 and (prm.total_amount - paid) or 0

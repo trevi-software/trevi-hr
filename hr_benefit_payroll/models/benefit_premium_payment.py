@@ -20,7 +20,7 @@ class PremiumPayment(models.Model):
         policy_ids = policy_ids.filtered(lambda rec: rec.benefit_id.has_premium)
         return [("id", "in", policy_ids.ids)]
 
-    date = fields.Date(required=True, default=fields.Date.today())
+    date = fields.Date(required=True, default=fields.Date.today)
     policy_id = fields.Many2one(
         comodel_name="hr.benefit.policy",
         domain=lambda self: self._compute_policy_id_domain(),

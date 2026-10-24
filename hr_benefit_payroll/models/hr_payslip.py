@@ -5,7 +5,6 @@
 from datetime import timedelta
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError
 
 from odoo.addons.payroll.models.hr_payslip import BaseBrowsableObject
 
@@ -42,18 +41,22 @@ class HrPayslip(models.Model):
         res = super().get_payslip_vals(
             date_from, date_to, employee_id, contract_id, struct_id
         )
+        values = res.setdefault("value", {})
 
-        # Delete old lines
-        res.update({"benefit_line_ids": [(2, x) for x in self.benefit_line_ids.ids]})
-
-        # Get benefit lines
+        # Delete the lines of a previous computation and create one line per
+        # benefit for the new period. ``benefit_line_ids`` is a One2many, so the
+        # values must be a list of (command) tuples, not the dict keyed by
+        # benefit code returned by ``get_benefit_lines``.
         contracts = self._get_employee_contracts()
+        if not contracts:
+            # ``self`` is usually an empty recordset when the wizard builds new
+            # payslips; fall back to the contract ``super()`` selected for the
+            # employee so the benefit lines are generated for the new payslip.
+            contracts = self.env["hr.version"].browse(values.get("contract_id") or [])
         benefit_lines = self.get_benefit_lines(contracts, date_from, date_to)
-        res.update(
-            {
-                "benefit_line_ids": benefit_lines,
-            }
-        )
+        values["benefit_line_ids"] = [
+            (2, line_id) for line_id in self.benefit_line_ids.ids
+        ] + [(0, 0, vals) for vals in benefit_lines.values()]
         return res
 
     @api.model
@@ -114,7 +117,9 @@ class HrPayslip(models.Model):
             d_start = (d_pol_start > d_slip_start) and d_pol_start or d_slip_start
             d_end = (d_pol_end < d_slip_end) and d_pol_end or d_slip_end
 
-            if (d_pol_end <= d_slip_start) or (d_pol_start >= d_slip_end):
+            # Both boundary days belong to the payslip period, so a policy that
+            # starts or ends on a boundary day still contributes for that day.
+            if (d_pol_end < d_slip_start) or (d_pol_start > d_slip_end):
                 continue
 
             d = d_start
@@ -138,59 +143,66 @@ class HrPayslip(models.Model):
 
         return res
 
+    def _get_annual_pay_periods(self):
+        contracts = self._get_employee_contracts()
+        if contracts and hasattr(contracts[0], "annual_pay_periods"):
+            return contracts[0].annual_pay_periods
+        return 12
+
     def action_payslip_done(self):
         res = super().action_payslip_done()
 
         for payslip in self:
+            payslip.record_benefit_premium_payments()
+            payslip.finalize_benefit_premium_payments()
+
+        return res
+
+    def record_benefit_premium_payments(self):
+        """Record a premium payment for each deducted benefit premium.
+
+        Only benefits whose premium was actually deducted by a salary rule
+        flagged ``has_premium_payment`` get a payment: recording one for every
+        payroll-linked policy would mark premiums as paid that no rule ever
+        deducted, which would then reduce or stop later deductions.
+        """
+        premium_obj = self.env["hr.benefit.premium.payment"]
+        for payslip in self:
+            rules = payslip.line_ids.salary_rule_id.filtered("has_premium_payment")
+            benefit_ids = rules.mapped("benefit_id")
+            if not benefit_ids:
+                continue
+
             policy_ids = self.env["hr.benefit.policy"].search(
                 [
                     ("employee_id", "=", payslip.employee_id.id),
-                    ("benefit_id.link2payroll", "=", True),
+                    ("benefit_id", "in", benefit_ids.ids),
                     ("start_date", "<=", payslip.date_to),
                     "|",
                     ("end_date", "=", False),
                     ("end_date", ">=", payslip.date_from),
                 ]
             )
-            benefits = {}
-            for p in policy_ids:
-                benefits.update(
-                    {p.name: {"id": p.benefit_id.id, "amount": p.premium_amount}}
+            app = payslip._get_annual_pay_periods()
+            for policy in policy_ids:
+                # The payment mirrors the premium that ``get_benefit_lines``
+                # deducted for this policy; it must not be recomputed from the
+                # employee and benefit, otherwise several policies of the same
+                # benefit all book their payment on the first one.
+                amount = policy.calculate_premium(
+                    payslip.date_to, app, refund=payslip.credit_note
                 )
-            payslip.record_benefit_premium_payments(benefits)
-            payslip.finalize_benefit_premium_payments()
-
-        return res
-
-    def record_benefit_premium_payments(self, benefits):
-        policy_obj = self.env["hr.benefit.policy"]
-        premium_obj = self.env["hr.benefit.premium.payment"]
-        for payslip in self:
-            for k, v in benefits.items():
-                pol_ids = policy_obj.search(
-                    [
-                        ("employee_id", "=", payslip.employee_id.id),
-                        ("benefit_id", "=", v["id"]),
-                    ]
-                )
-                if len(pol_ids) == 0:
-                    raise UserError(
-                        self.env._(
-                            "Error creating benefit premium payment records!\n"
-                            "Cannot find a valid benefit policy:\n"
-                            "Employee: %(name)s\nBenefit: %(k)s",
-                            name=payslip.employee_id.name,
-                            k=k,
-                        )
-                    )
-
+                if payslip.credit_note:
+                    amount = -amount
+                if not amount:
+                    continue
                 premium_obj.create(
                     {
                         "payslip_id": payslip.id,
                         "date": payslip.date_to,
                         "employee_id": payslip.employee_id.id,
-                        "policy_id": pol_ids[0].id,
-                        "amount": payslip.credit_note and -v["amount"] or v["amount"],
+                        "policy_id": policy.id,
+                        "amount": amount,
                     }
                 )
 

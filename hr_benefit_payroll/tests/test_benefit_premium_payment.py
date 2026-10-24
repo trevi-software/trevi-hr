@@ -1,6 +1,7 @@
 # Copyright (C) 2021 Trevi Software (https://trevi.et)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
+from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import new_test_user
 
@@ -40,6 +41,18 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
         self.assertEqual(pp.state, "draft", "Initial state must be 'draft'")
 
+    def test_premium_payment_date_default_is_dynamic(self):
+        """The date default must be evaluated per record, not at import."""
+        # Odoo 19 keeps the field arguments in ``_args__``; the default must be
+        # the callable, not the date string it returned when the model loaded.
+        default = self.PremiumPayment._fields["date"]._args__["default"]
+        self.assertTrue(
+            callable(default),
+            "The payment date default must be a callable that is evaluated for "
+            "each new payment, not a date frozen when the model is loaded",
+        )
+        self.assertIs(default, fields.Date.today)
+
     def test_premium_payment_domain_policy_id(self):
         benefit = self.create_benefit(self.benefit_create_vals)
         self.create_premium(benefit, amount=100.00)
@@ -53,11 +66,10 @@ class TestBenefit(benefit_common.TestBenefitCommon):
             }
         )
 
-        domain = (
-            self.env["hr.benefit.premium.payment"]
-            ._fields["policy_id"]
-            .get_domain_list(pp)
-        )
+        # ``Many2one.get_domain_list`` does not exist anymore in 19.0. The
+        # ``policy_id`` domain is produced by ``_compute_policy_id_domain``,
+        # which is what the field's domain callable invokes for this record.
+        domain = pp._compute_policy_id_domain()
         domain_list = self.Policy.search(domain)
         self.assertEqual(
             len(domain_list),
