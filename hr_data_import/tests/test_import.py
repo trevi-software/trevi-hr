@@ -303,6 +303,67 @@ class TestImport(common.TransactionCase):
         self.assertEqual(ee.version_id.company_id, company)
         self.assertEqual(ee.work_contact_id.company_id, company)
 
+    def test_update_new_row_is_rejected(self):
+        """A new row cannot be "updated": it has no employee to update.
+
+        Regression: updating a new row set its state to "updated", so the
+        following import rejected it and the row could never be imported.
+        """
+        data = self.DataImport.create(dict(self.sample01, name="Not Imported Yet"))
+        with self.assertRaises(UserError):
+            data.action_update_employees()
+        self.assertEqual(data.state, "new", "The row is still importable")
+        self.assertFalse(data.related_employee_id)
+
+        data.action_import_employees()
+        self.assertTrue(
+            data.related_employee_id,
+            "The row can still be imported after a rejected update",
+        )
+        self.assertEqual(data.state, "imported")
+
+    def test_import_rows_restricted_to_user_companies(self):
+        """An HR user only reads the import rows of their allowed companies.
+
+        Regression: the ACL granted read access with no company record rule,
+        so an HR user of one company could read another company's wages and
+        identification numbers.
+        """
+        company_a = self.env.company
+        company_b = self.env["res.company"].create({"name": "Other Company"})
+        other_row = self.DataImport.with_company(company_b).create(
+            dict(
+                self.sample01,
+                name="Other Company Row",
+                company_id=company_b.id,
+                wage=9999.0,
+                identification_id="B-123456",
+            )
+        )
+        own_row = self.DataImport.with_company(company_a).create(
+            dict(self.sample01, name="Own Company Row", company_id=company_a.id)
+        )
+
+        groups = self.env.ref("base.group_user") | self.env.ref("hr.group_hr_user")
+        user = (
+            self.env["res.users"]
+            .with_context(no_reset_password=True)
+            .create(
+                {
+                    "name": "HR User Company A",
+                    "login": "hr_user_company_a",
+                    "email": "hr_user_company_a@example.com",
+                    "company_id": company_a.id,
+                    "company_ids": [(6, 0, [company_a.id])],
+                    "group_ids": [(6, 0, groups.ids)],
+                }
+            )
+        )
+
+        visible = self.DataImport.with_user(user).search([])
+        self.assertIn(own_row, visible, "The user reads their own company's rows")
+        self.assertNotIn(other_row, visible, "Another company's rows are hidden")
+
     def test_zero_balance_does_not_require_annual_leave_type(self):
         """An import without a leave balance must not need an 'Annual Leave'.
 
@@ -334,7 +395,10 @@ class TestImport(common.TransactionCase):
         """
         vals = dict(self.sample01, name="Rest Day Person", rest_day="Friday")
         data = self.DataImport.create(vals)
-        ee = data.import_records()
+        # Use the public import action: a row must be imported (its state
+        # leaves "new") before it can be updated.
+        data.action_import_employees()
+        ee = data.related_employee_id
         resource = ee.resource_id
         self.assertEqual(resource.dayoff_ids.mapped("name"), ["Friday"])
 

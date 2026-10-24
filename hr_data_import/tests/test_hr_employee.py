@@ -34,3 +34,18 @@ class TestHrEmployeeSeniority(common.TransactionCase):
             0,
             "Seniority is based on hire date, not contract",
         )
+
+    def test_months_service_to_date_accepts_d_today_keyword(self):
+        """The override keeps the ``dToday`` keyword used by hr_benefit.
+
+        Regression: the argument was renamed to ``today``, so
+        ``hr.benefit.policy._fail_eligibility()`` (which calls
+        ``get_months_service_to_date(dToday=...)``) raised a TypeError.
+        """
+        ee = self.HrEmployee.create({"name": "EE 2"})
+        d_today = fields.Date.today() - relativedelta(months=3)
+        self.assertEqual(
+            ee.get_months_service_to_date(dToday=d_today),
+            ee.get_months_service_to_date(d_today),
+            "The keyword call and the positional call agree",
+        )

@@ -128,6 +128,12 @@ class ImportEmployee(models.Model):
         self.write({"state": "imported"})
 
     def action_update_employees(self):
+        # A new row has no employee yet, so updating it would only flip its
+        # state to "updated" and make a later import reject it.
+        if self.filtered(lambda so: so.state == "new"):
+            raise UserError(
+                self.env._("New records must be imported before they are updated.")
+            )
         self.update_records()
         self.write({"state": "updated"})
 

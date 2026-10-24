@@ -19,8 +19,11 @@ class HrEmployee(models.Model):
     anlv_remain = fields.Float("Remaining", digits=DA_LEAVE, default=0.00)
     anlv_date = fields.Date("As of")
 
-    def get_months_service_to_date(self, today=None):
-        months = super().get_months_service_to_date(today)
+    def get_months_service_to_date(self, dToday=None):
+        # ``hr.benefit.policy._fail_eligibility()`` and the payroll accrual
+        # policies call this method with the ``dToday`` keyword, so the
+        # parent's argument name must be kept.
+        months = super().get_months_service_to_date(dToday)
         # Odoo 19 dropped the stored ``first_contract_date`` field: the first
         # contract is now derived from the employee's versions.
         first_contract_date = self._get_first_contract_date(no_gap=False)
@@ -29,14 +32,14 @@ class HrEmployee(models.Model):
             and first_contract_date
             and self.hire_date < first_contract_date
         ):
-            if today is None:
-                today = fields.Date.today()
+            if dToday is None:
+                dToday = fields.Date.today()
             delta = relativedelta(first_contract_date, self.hire_date)
             months += round(
                 float(
                     delta.years * 12
                     + delta.months
-                    + delta.days / float(self._get_days_in_month(today))
+                    + delta.days / float(self._get_days_in_month(dToday))
                 ),
                 2,
             )

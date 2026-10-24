@@ -30,6 +30,7 @@
         "resource_schedule",
     ],
     "data": [
+        "security/hr_data_import_security.xml",
         "security/ir.model.access.csv",
         "views/menus.xml",
         "views/hr_data_import_employee_views.xml",
