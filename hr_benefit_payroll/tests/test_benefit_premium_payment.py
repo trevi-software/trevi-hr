@@ -4,6 +4,7 @@
 from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import new_test_user
+from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.hr_benefit.tests import common as benefit_common
 
@@ -53,12 +54,21 @@ class TestBenefit(benefit_common.TestBenefitCommon):
         )
         self.assertIs(default, fields.Date.today)
 
+    def _policies_for(self, employee):
+        """Policies the ``policy_id`` field domain offers to ``employee``.
+
+        The domain is a client-side string; evaluating it with the employee
+        chosen in the form is exactly what the web client does.
+        """
+        domain = self.PremiumPayment._fields["policy_id"].domain
+        return self.Policy.search(safe_eval(domain, {"employee_id": employee.id}))
+
     def test_premium_payment_domain_policy_id(self):
         benefit = self.create_benefit(self.benefit_create_vals)
         self.create_premium(benefit, amount=100.00)
         self.create_policy(self.eePaul, benefit)
         policy = self.create_policy(self.eeJohn, benefit)
-        pp = self.PremiumPayment.create(
+        self.PremiumPayment.create(
             {
                 "employee_id": self.eeJohn.id,
                 "policy_id": policy.id,
@@ -66,11 +76,23 @@ class TestBenefit(benefit_common.TestBenefitCommon):
             }
         )
 
-        # ``Many2one.get_domain_list`` does not exist anymore in 19.0. The
-        # ``policy_id`` domain is produced by ``_compute_policy_id_domain``,
-        # which is what the field's domain callable invokes for this record.
-        domain = pp._compute_policy_id_domain()
-        domain_list = self.Policy.search(domain)
+        # The domain must be a client-side string: a server-side callable is
+        # evaluated once on an empty recordset, which yields no policies at all
+        # and never refreshes when the employee is changed in the form.
+        domain = self.PremiumPayment._fields["policy_id"].domain
+        self.assertIsInstance(
+            domain,
+            str,
+            "The policy domain must be a domain string referring to the form's "
+            "'employee_id', not a callable evaluated on an empty recordset",
+        )
+        self.assertIn(
+            "employee_id",
+            domain,
+            "The policy domain must be filtered on the selected employee",
+        )
+
+        domain_list = self._policies_for(self.eeJohn)
         self.assertEqual(
             len(domain_list),
             1,
@@ -80,6 +102,33 @@ class TestBenefit(benefit_common.TestBenefitCommon):
             policy,
             domain_list,
             "The policy for 'John' should be in the list of policies",
+        )
+
+        # The same domain must follow the employee selected in the form.
+        domain_list = self._policies_for(self.eePaul)
+        self.assertEqual(
+            len(domain_list),
+            1,
+            "Only the policy for 'Paul' should be in the list of policies",
+        )
+        self.assertEqual(domain_list.employee_id, self.eePaul)
+
+    def test_premium_payment_domain_excludes_benefits_without_premium(self):
+        """Benefits that have no premium are not offered for a payment."""
+        with_premium = self.create_benefit(self.benefit_create_vals)
+        self.create_premium(with_premium, amount=100.00)
+        without_premium = self.create_benefit(
+            dict(self.benefit_create_vals, name="No premium benefit", code="NOPRM")
+        )
+        self.assertFalse(without_premium.has_premium)
+        with_policy = self.create_policy(self.eeJohn, with_premium)
+        self.create_policy(self.eeJohn, without_premium)
+
+        domain_list = self._policies_for(self.eeJohn)
+        self.assertEqual(
+            domain_list,
+            with_policy,
+            "Only policies of benefits that have premiums may be selected",
         )
 
     def test_premium_payment_unlink(self):

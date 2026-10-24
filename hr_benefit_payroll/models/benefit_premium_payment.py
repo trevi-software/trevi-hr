@@ -11,19 +11,17 @@ class PremiumPayment(models.Model):
     _description = "Benefit premium payment"
     _rec_name = "date"
 
-    def _compute_policy_id_domain(self):
-        policy_ids = self.env["hr.benefit.policy"].search(
-            [
-                ("employee_id", "in", self.mapped("employee_id").ids),
-            ]
-        )
-        policy_ids = policy_ids.filtered(lambda rec: rec.benefit_id.has_premium)
-        return [("id", "in", policy_ids.ids)]
-
     date = fields.Date(required=True, default=fields.Date.today)
     policy_id = fields.Many2one(
         comodel_name="hr.benefit.policy",
-        domain=lambda self: self._compute_policy_id_domain(),
+        # A server-side callable is evaluated on an empty recordset while the
+        # field is being described, so it always yields an empty list and never
+        # reacts to the employee chosen in the form. A client-side domain
+        # string refers to the form's ``employee_id`` and is re-evaluated when
+        # that field changes.
+        domain=(
+            "[('employee_id', '=', employee_id), ('benefit_id.has_premium', '=', True)]"
+        ),
         required=True,
     )
     employee_id = fields.Many2one(
