@@ -1,1 +1,1 @@
-- TREVI Software \<https://trevi.et\>
+- [TREVI Software](https://trevi.et)

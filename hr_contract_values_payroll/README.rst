@@ -61,7 +61,7 @@ Authors
 Other credits
 -------------
 
-- TREVI Software <`https://trevi.et\\> <https://trevi.et\>>`__
+- `TREVI Software <https://trevi.et>`__
 
 Maintainers
 -----------
