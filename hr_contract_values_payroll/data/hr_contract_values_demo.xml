@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_contract_values.default_europe" model="hr.contract.init">
+        <field name="struct_id" ref="payroll.structure_base" />
+    </record>
+
+    <!-- Odoo 19 removed the demo ``hr.contract`` records (``hr_contract`` was
+         merged into ``hr``), so there were no demo versions left to amend. -->
+</odoo>
