@@ -36,7 +36,22 @@ class RecruitmentTestCase(TransactionCase):
         self.structure = self.env["hr.payroll.structure"].create({"name": "Base"})
         self.pps = self.create_payroll_schedule("monthly", date.today())  # noqa: DTZ011
         self.pgroup = self.PolicyGroup.create({"name": "PGroup"})
-        self.calendar_id = self.env.ref("resource_schedule.resource_calendar_44h")
+        # The 44h/week working schedule only exists in resource_schedule's demo
+        # data, which is not installed in CI. Build an equivalent one from the
+        # module's regular attendance templates instead of a demo xmlid.
+        morning = self.env.ref("resource_schedule.attendance_template_0")
+        afternoon = self.env.ref("resource_schedule.attendance_template_1")
+        self.calendar_id = self.env["resource.calendar"].create(
+            {
+                "name": "44 Hour/Week",
+                "attendance_ids": [
+                    (0, 0, {"dayofweek": str(day), "template_id": template.id})
+                    for day in range(5)
+                    for template in (morning, afternoon)
+                ]
+                + [(0, 0, {"dayofweek": "5", "template_id": morning.id})],
+            }
+        )
         self.benefits = self.env["hr.benefit"].create({"name": "A", "code": "A"})
 
         benefits_data = {
@@ -230,6 +245,58 @@ class RecruitmentTestCase(TransactionCase):
         )
         self.assertEqual(
             applicant.id_no, "123", "The Official ID is kept on the applicant"
+        )
+
+    def test_past_hire_keeps_contract_details_current(self):
+        """A backdated hire must not be shadowed by the initial empty version."""
+        wizard = self.create_wizard()
+        wizard.hire_applicant()
+
+        ee = self.env["hr.employee"].search([("name", "=", "Jean-Luc Picard")])
+        self.assertEqual(
+            len(ee.version_ids),
+            1,
+            "The initial version is reused, not left next to a populated one",
+        )
+        current = ee.current_version_id
+        self.assertEqual(
+            current.date_version,
+            date(2017, 1, 1),
+            "The employee's only version is dated on the contract start date",
+        )
+        self.assertEqual(
+            current.wage, 2000, "The current version carries the wizard's wage"
+        )
+        self.assertEqual(
+            current.job_id, wizard.job_id, "The current version has the right job"
+        )
+        self.assertTrue(
+            current.contract_date_start,
+            "The current version is the contract the wizard created",
+        )
+
+    def test_today_hire_creates_first_shifts(self):
+        """Hiring with today's date must still schedule the first shifts."""
+        data = dict(self.labour_data)
+        data.update({"date_start": date.today(), "date_end": False})  # noqa: DTZ011
+        wizard = self.labour_model.create(data)
+        wizard.hire_applicant()
+
+        ee = self.env["hr.employee"].search([("name", "=", "Jean-Luc Picard")])
+        self.assertEqual(
+            ee.version_ids.filtered("contract_date_start").wage,
+            2000,
+            "The contract details were written on the employee's version",
+        )
+        shifts = ee.scheduled_shift_ids
+        self.assertTrue(shifts, "The first hire gets an initial shift schedule")
+        self.assertEqual(
+            shifts.mapped("resource_id"), ee.resource_id, "Shifts are the employee's"
+        )
+        self.assertIn(
+            date.today(),  # noqa: DTZ011
+            shifts.mapped("day"),
+            "The employee is scheduled from the day the contract starts",
         )
 
     def test_date_start_default_is_evaluated_per_record(self):

@@ -2,7 +2,7 @@
 # Copyright (C) 2013 Michael Telahun Makonnen <mmakonnen@gmail.com>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from datetime import date
+from datetime import date, timedelta
 
 from odoo import api, exceptions, fields, models
 
@@ -292,10 +292,22 @@ class NewLabour(models.TransientModel):
         version = ee.version_ids.filtered(
             lambda v, d=self.date_start: v.date_version == d
         )
+        if not version:
+            # The employee was given an initial version dated today, without
+            # any contract details, when it was created. Reuse that version so
+            # the wizard's values end up on the employee's only version:
+            # ``hr.version`` backdates it when it is the employee's sole
+            # version, whereas a second, populated version would leave the
+            # empty one behind as ``current_version_id`` for a past hire.
+            version = ee.version_ids.filtered(lambda v: not v.contract_date_start)
         if version:
             # (employee_id, date_version) is unique: reuse the version that is
             # already pinned to this start date instead of creating a second one.
             version.write(c_vals)
+            # ``resource_schedule`` builds the first-hire shifts from
+            # ``hr.version.create()`` only, and that version was created before
+            # it carried a contract date. Run that step now that it has one.
+            self._create_first_hire_schedule(ee)
         else:
             c_vals["date_version"] = self.date_start
             Version.create(c_vals)
@@ -333,6 +345,48 @@ class NewLabour(models.TransientModel):
             "target": "new",
             "context": ctx,
         }
+
+    def _create_first_hire_schedule(self, employee):
+        """Schedule the first shifts for an employee hired by the wizard.
+
+        ``resource_schedule`` only creates those shifts from
+        ``hr.version.create()``. The version this wizard reuses was created
+        before it carried a contract date, so when it becomes the employee's
+        first contract the scheduling step has to be run explicitly.
+        """
+        self.ensure_one()
+        contracts = employee.version_ids.filtered("contract_date_start")
+        if len(contracts) != 1:
+            # Only the first contract of an employee is scheduled; later
+            # contracts are scheduled by the mass schedule cron.
+            return
+        if employee.scheduled_shift_ids:
+            # Never duplicate a schedule that already exists.
+            return
+        today = fields.Date.today()
+        d_end_contract = contracts.contract_date_end
+        if d_end_contract and d_end_contract < today:
+            # The contract is already over: there is nothing to schedule.
+            return
+
+        # Schedule up to the next mass schedule, exactly like
+        # ``resource_schedule`` does for a first contract.
+        d_start = max(contracts.contract_date_start, today)
+        d_end = d_start
+        xref = self.env.ref(
+            "resource_schedule.mass_schedule_cron", raise_if_not_found=False
+        )
+        if xref and xref.nextcall:
+            d_end = fields.Datetime.to_datetime(xref.nextcall).date()
+        if d_end < d_start:
+            d_end = d_start
+        while d_end.weekday() != 6:
+            d_end += timedelta(days=1)
+        # The schedule starts on the Monday of the week of the hire.
+        while d_start.weekday() != 0:
+            d_start -= timedelta(days=1)
+
+        employee.create_schedule(d_start, d_end)
 
     def cancel_wizard(self):
         action = self.env.ref("hr.open_view_employee_list_my")
