@@ -21,10 +21,17 @@ class HrEmployee(models.Model):
 
     def get_months_service_to_date(self, today=None):
         months = super().get_months_service_to_date(today)
-        if self.hire_date and self.hire_date < self.first_contract_date:
+        # Odoo 19 dropped the stored ``first_contract_date`` field: the first
+        # contract is now derived from the employee's versions.
+        first_contract_date = self._get_first_contract_date(no_gap=False)
+        if (
+            self.hire_date
+            and first_contract_date
+            and self.hire_date < first_contract_date
+        ):
             if today is None:
                 today = fields.Date.today()
-            delta = relativedelta(self.first_contract_date, self.hire_date)
+            delta = relativedelta(first_contract_date, self.hire_date)
             months += round(
                 float(
                     delta.years * 12

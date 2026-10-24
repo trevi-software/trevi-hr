@@ -146,9 +146,21 @@ class TestImport(common.TransactionCase):
                 rec.related_employee_id.work_contact_id,
                 f"The employee has a home address record: {rec.name}",
             )
+            # In Odoo 19 a contract is an ``hr.version``.
+            version = rec.related_employee_id.version_ids
             self.assertTrue(
-                rec.related_employee_id.contract_ids.ids,
+                version,
                 f"Contract created for record: {rec.name}",
+            )
+            self.assertEqual(
+                version.contract_date_start,
+                rec.date_start,
+                f"Contract start date matches imported record: {rec.name}",
+            )
+            self.assertEqual(
+                version.contract_date_end,
+                rec.date_end,
+                f"Contract end date matches imported record: {rec.name}",
             )
             if rec.identification_id:
                 self.assertEqual(
@@ -174,22 +186,14 @@ class TestImport(common.TransactionCase):
                     rec.emergency_phone,
                     "Employee emergency contact phone matches imported record",
                 )
-            if rec.hire_date:
-                self.assertEqual(
-                    rec.related_employee_id.contract_ids[0].state,
-                    "open",
-                    f"Employee's contract is in 'open' state: {rec.name}",
-                )
-            else:
-                self.assertEqual(
-                    rec.related_employee_id.contract_ids[0].state,
-                    "trial",
-                    f"Employee's contract is in 'trial' state: {rec.name}",
-                )
+            self.assertTrue(
+                version.is_in_contract,
+                f"Employee has a running contract: {rec.name}",
+            )
             if rec.rest_day:
-                self.assertEqual(
-                    rec.related_employee_id.resource_id.dayoff_ids[0].name,
+                self.assertIn(
                     self.default_rest_day,
+                    rec.related_employee_id.resource_id.dayoff_ids.mapped("name"),
                     f"Employee's rest day matches imported record: {rec.name}",
                 )
             else:
@@ -215,23 +219,22 @@ class TestImport(common.TransactionCase):
         ee = self.Employee.search([("name", "=", self.data[0].name)])
         self.assertTrue(ee, f"Found employee: {self.data[0].name}")
         self.assertEqual(
-            ee.contract_ids[0].contract_type_id,
+            ee.version_id.contract_type_id,
             self.contract_type,
             f"Contract type correctly set on employee contract: {ee.name}",
         )
 
     def test_set_value_contract_trial_end_date(self):
-        self.sample01.update(
-            {
-                "trial_date_end": date.today() + timedelta(days=15)  # noqa: DTZ011
-            }
+        vals = dict(
+            self.sample01,
+            trial_date_end=date.today() + timedelta(days=15),  # noqa: DTZ011
         )
-        data = self.DataImport.create(self.sample01)
+        data = self.DataImport.create(vals)
         data.import_records()
         ee = self.Employee.search([("name", "=", data[0].name)])
         self.assertTrue(ee, f"Found employee: {data[0].name}")
         self.assertEqual(
-            ee.contract_ids[0].trial_date_end,
+            ee.version_id.trial_date_end,
             date.today() + timedelta(days=15),  # noqa: DTZ011
             f"Trial end date correctly set on employee contract: {ee.name}",
         )
@@ -242,7 +245,7 @@ class TestImport(common.TransactionCase):
         ee = self.Employee.search([("name", "=", self.data[0].name)])
         self.assertTrue(ee, f"Found employee: {self.data[0].name}")
         self.assertEqual(
-            ee.contract_ids[0].resource_calendar_id,
+            ee.version_id.resource_calendar_id,
             self.std_calendar,
             f"Calendar correctly set on employee contract: {ee.name}",
         )
@@ -252,9 +255,9 @@ class TestImport(common.TransactionCase):
         self.data.import_records()
         ee = self.Employee.search([("name", "=", self.data[1].name)])
         self.assertTrue(ee, f"Found employee: {self.data[1].name}")
-        self.assertEqual(
-            ee.resource_id.dayoff_ids[0].name,
+        self.assertIn(
             self.default_rest_day,
+            ee.resource_id.dayoff_ids.mapped("name"),
             f"Calendar correctly set on employee contract: {ee.name}",
         )
 
@@ -264,8 +267,8 @@ class TestImport(common.TransactionCase):
         if "code" in LeaveType._fields:
             vals["code"] = "ANLV"
         LeaveType.create(vals)
-        self.sample01.update({"anlv_earned": 20.0, "anlv_used": 5.0})
-        data = self.DataImport.create(self.sample01)
+        vals = dict(self.sample01, anlv_earned=20.0, anlv_used=5.0)
+        data = self.DataImport.create(vals)
         data.import_records()
         ee = self.Employee.search([("name", "=", data[0].name)])
         allocation = self.env["hr.leave.allocation"].search(
@@ -282,3 +285,117 @@ class TestImport(common.TransactionCase):
             "validate",
             "Leave allocation is confirmed and validated",
         )
+
+    def test_import_uses_row_company(self):
+        """The employee, its contact and contract belong to the row's company.
+
+        Regression: the import used the active company instead of the one
+        stored on the import row.
+        """
+        company = self.env["res.company"].create(
+            {"name": "Second Company", "country_id": self.env.ref("base.et").id}
+        )
+        vals = dict(self.sample01, name="Company Bee", company_id=company.id)
+        data = self.DataImport.with_company(company).create(vals)
+        data.import_records()
+        ee = data.related_employee_id
+        self.assertEqual(ee.company_id, company)
+        self.assertEqual(ee.version_id.company_id, company)
+        self.assertEqual(ee.work_contact_id.company_id, company)
+
+    def test_zero_balance_does_not_require_annual_leave_type(self):
+        """An import without a leave balance must not need an 'Annual Leave'.
+
+        Regression: the leave type lookup was done before knowing whether any
+        allocation was needed, so a zero-balance import failed on it.
+        """
+        leave_type = self.env["hr.leave.type"].search(
+            [("name", "=", "Annual Leave")], limit=1
+        )
+        leave_type.name = "Not Annual Leave"
+        data = self.DataImport.create(self.sample01)
+        data.import_records()
+        self.assertTrue(
+            data.related_employee_id,
+            "The employee was created without an annual leave type",
+        )
+        self.assertFalse(
+            self.env["hr.leave.allocation"].search(
+                [("employee_id", "=", data.related_employee_id.id)]
+            ),
+            "No leave allocation is created for a zero balance",
+        )
+
+    def test_update_replaces_previous_rest_day(self):
+        """Updating the rest day replaces the imported one, keeping other days.
+
+        Regression: the previously imported day was left in ``dayoff_ids``, so
+        the employee ended up with two days off.
+        """
+        vals = dict(self.sample01, name="Rest Day Person", rest_day="Friday")
+        data = self.DataImport.create(vals)
+        ee = data.import_records()
+        resource = ee.resource_id
+        self.assertEqual(resource.dayoff_ids.mapped("name"), ["Friday"])
+
+        monday = self.env.ref("resource_schedule.wd_mon")
+        resource.dayoff_ids = [(4, monday.id)]
+        data.rest_day = "Saturday"
+        data.action_update_employees()
+
+        names = resource.dayoff_ids.mapped("name")
+        self.assertNotIn("Friday", names, "The previous imported rest day is removed")
+        self.assertIn("Saturday", names, "The new rest day is added")
+        self.assertIn("Monday", names, "Unrelated days off are preserved")
+
+    def test_imported_department_used_without_job(self):
+        """A row with a department and no job still sets the department.
+
+        Regression: the department was taken from the job only.
+        """
+        vals = dict(
+            self.sample01,
+            name="Department Only",
+            department_id=self.dept_sales.id,
+            job_id=False,
+        )
+        data = self.DataImport.create(vals)
+        data.import_records()
+        ee = data.related_employee_id
+        self.assertEqual(ee.department_id, self.dept_sales)
+        self.assertEqual(ee.version_id.department_id, self.dept_sales)
+
+    def test_department_falls_back_to_job(self):
+        """Without an imported department the job's department is used."""
+        vals = dict(self.sample01, name="Job Only", department_id=False)
+        data = self.DataImport.create(vals)
+        data.import_records()
+        ee = data.related_employee_id
+        self.assertEqual(ee.department_id, self.dept_sales)
+
+    def test_education_level_certificates(self):
+        """The imported education levels map onto certificate levels.
+
+        Regression: 'Diploma' and 'BA Degree' were compared with values that
+        do not exist and 'Masters Degree' had no branch at all, so the value
+        was silently dropped.
+        """
+        expected = {
+            "Diploma": "other",
+            "BA Degree": "bachelor",
+            "Masters Degree": "master",
+        }
+        for level, certificate in expected.items():
+            data = self.DataImport.create(
+                dict(
+                    self.sample01,
+                    name=f"Education {level}",
+                    education_level=level,
+                )
+            )
+            data.import_records()
+            self.assertEqual(
+                data.related_employee_id.certificate,
+                certificate,
+                f"Certificate level set for imported education level: {level}",
+            )

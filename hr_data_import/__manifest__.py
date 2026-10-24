@@ -15,7 +15,6 @@
         "hr",
         "hr_accrual_bank",
         "hr_benefit",
-        "hr_contract_reference",
         "hr_contract_status",
         "hr_employee_seniority_months",
         "hr_employee_status",
@@ -28,6 +27,7 @@
         "payroll_policy_presence",
         "payroll_policy_ot",
         "payroll_policy_rounding",
+        "resource_schedule",
     ],
     "data": [
         "security/ir.model.access.csv",
