@@ -64,6 +64,7 @@ class RecruitmentTestCase(TransactionCase):
             "prm_amount": 100.0,
             "prm_total": 2000.0,
         }
+        self.benefits_data = benefits_data
         self.benefit = benefits_model.create(benefits_data)
 
         self.labour_data = {
@@ -336,7 +337,17 @@ class RecruitmentTestCase(TransactionCase):
             days=(7 - date.today().weekday()) % 7  # noqa: DTZ011
         )
         data = dict(self.labour_data)
-        data.update({"date_start": hire_date, "date_end": False})
+        data.update(
+            {
+                "date_start": hire_date,
+                "date_end": False,
+                # ``hr.employee.wizard.benefit`` is a TransientModel: linking the
+                # line setUp created would ask the officer to modify another
+                # user's record before the hire is even attempted. Build the line
+                # with this wizard instead, as the officer's own form does.
+                "new_benefit_ids": [(0, 0, dict(self.benefits_data))],
+            }
+        )
         wizard = self.labour_model.with_user(officer).create(data)
         wizard.hire_applicant()
 
