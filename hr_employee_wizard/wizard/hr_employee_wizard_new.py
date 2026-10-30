@@ -373,9 +373,12 @@ class NewLabour(models.TransientModel):
         # ``resource_schedule`` does for a first contract.
         d_start = max(contracts.contract_date_start, today)
         d_end = d_start
+        # ``ir.cron`` is admin-only, but the next mass schedule date is the
+        # only thing read here and it only sizes the range: elevate the read
+        # so an HR officer can hire without system administration rights.
         xref = self.env.ref(
             "resource_schedule.mass_schedule_cron", raise_if_not_found=False
-        )
+        ).sudo()
         if xref and xref.nextcall:
             d_end = fields.Datetime.to_datetime(xref.nextcall).date()
         if d_end < d_start:
@@ -386,7 +389,17 @@ class NewLabour(models.TransientModel):
         while d_start.weekday() != 0:
             d_start -= timedelta(days=1)
 
-        employee.create_schedule(d_start, d_end)
+        # Creating shifts is a scheduling operation: ``resource_schedule``
+        # itself elevates only the ``resource.schedule.shift`` model when it
+        # builds the first-hire schedule from ``hr.version.create()`` (see
+        # ``resource_schedule/models/hr_contract.py``). Hiring must not
+        # require ``resource_schedule.group_scheduling_user``, so elevate
+        # exactly that call and nothing else: the wizard still reads and
+        # writes the employee with the hiring officer's own rights, and the
+        # only records created are the employee's own shifts for the period
+        # computed above.
+        sched_obj = self.env["resource.schedule.shift"]
+        sched_obj.sudo().create_schedule(employee.resource_id, d_start, d_end)
 
     def cancel_wizard(self):
         action = self.env.ref("hr.open_view_employee_list_my")

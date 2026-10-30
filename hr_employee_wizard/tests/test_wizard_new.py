@@ -2,7 +2,7 @@
 # Copyright (C) 2013 Michael Telahun Makonnen <mmakonnen@gmail.com>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from datetime import date
+from datetime import date, timedelta
 
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, TransactionCase
@@ -275,10 +275,19 @@ class RecruitmentTestCase(TransactionCase):
             "The current version is the contract the wizard created",
         )
 
-    def test_today_hire_creates_first_shifts(self):
-        """Hiring with today's date must still schedule the first shifts."""
+    def test_current_hire_creates_first_shifts(self):
+        """A hire in the current week must still schedule the first shifts.
+
+        The schedule is built from the Monday of the hire's week, and the
+        calendar used here has no Sunday attendance, so hire on a Monday:
+        the target day is then always a working day, whatever weekday the
+        suite runs on.
+        """
+        hire_date = date.today() + timedelta(  # noqa: DTZ011
+            days=(7 - date.today().weekday()) % 7  # noqa: DTZ011
+        )
         data = dict(self.labour_data)
-        data.update({"date_start": date.today(), "date_end": False})  # noqa: DTZ011
+        data.update({"date_start": hire_date, "date_end": False})
         wizard = self.labour_model.create(data)
         wizard.hire_applicant()
 
@@ -294,10 +303,46 @@ class RecruitmentTestCase(TransactionCase):
             shifts.mapped("resource_id"), ee.resource_id, "Shifts are the employee's"
         )
         self.assertIn(
-            date.today(),  # noqa: DTZ011
+            hire_date,
             shifts.mapped("day"),
             "The employee is scheduled from the day the contract starts",
         )
+
+    def test_hire_without_scheduling_rights(self):
+        """An HR officer without scheduling rights must still be able to hire.
+
+        Hiring creates the employee's first shifts, but that is a side effect
+        of the hire: the officer must not need
+        ``resource_schedule.group_scheduling_user`` for it.
+        """
+        groups = (
+            self.env.ref("base.group_user")
+            | self.env.ref("hr_recruitment.group_hr_recruitment_user")
+            | self.env.ref("hr.group_hr_manager")
+        )
+        officer = self.env["res.users"].create(
+            {
+                "name": "HR Officer",
+                "login": "hr_officer_no_scheduling",
+                "email": "officer_no_scheduling@example.com",
+                "group_ids": [(6, 0, groups.ids)],
+            }
+        )
+        self.assertFalse(
+            officer.has_group("resource_schedule.group_scheduling_user"),
+            "The officer must not carry the scheduling group",
+        )
+        hire_date = date.today() + timedelta(  # noqa: DTZ011
+            days=(7 - date.today().weekday()) % 7  # noqa: DTZ011
+        )
+        data = dict(self.labour_data)
+        data.update({"date_start": hire_date, "date_end": False})
+        wizard = self.labour_model.with_user(officer).create(data)
+        wizard.hire_applicant()
+
+        ee = self.env["hr.employee"].search([("name", "=", "Jean-Luc Picard")])
+        self.assertTrue(ee, "The hire went through without scheduling rights")
+        self.assertTrue(ee.scheduled_shift_ids, "The hire scheduled the first shifts")
 
     def test_date_start_default_is_evaluated_per_record(self):
         """The start date default must not be frozen at module load time."""
