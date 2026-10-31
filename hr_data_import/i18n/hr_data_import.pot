@@ -1,0 +1,589 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_data_import
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_data_import
+#. odoo-python
+#: code:addons/hr_data_import/models/hr_data_import_employee.py:0
+msgid "'hr.leave.type' with name 'Annual Leave' not found"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_policy_absence
+msgid "Absence Policies"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_accrual
+msgid "Accrual Time Banks"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__street
+msgid "Address"
+msgstr ""
+
+#. module: hr_data_import
+#: model_terms:ir.ui.view,arch_db:hr_data_import.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_data_import.view_data_form
+msgid "Annual Leave"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__anlv_date
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_employee__anlv_date
+msgid "As of"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__education_level__ba_degree
+msgid "BA Degree"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_benefit
+msgid "Benefits"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__company_id
+msgid "Company"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__contract_type_id
+#: model_terms:ir.ui.view,arch_db:hr_data_import.view_data_search
+msgid "Contract Type"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_contribution_registers
+msgid "Contribution Registers"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.actions.server,name:hr_data_import.action_import_records
+msgid "Create HR Records"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_import_root
+msgid "Data Import"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__hire_date
+msgid "Date Hired"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__birthday
+msgid "Date of Birth"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__department_id
+msgid "Department"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_hr_department_tree
+msgid "Departments"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__education_level__diploma
+msgid "Diploma"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__display_name
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_employee__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__marital__divorced
+msgid "Divorced"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__anlv_earned
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_employee__anlv_earned
+msgid "Earned"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__education_level
+msgid "Education Level"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__emergency_contact
+msgid "Emergency Contact"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__emergency_phone
+msgid "Emergency Phone"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model,name:hr_data_import.model_hr_employee
+msgid "Employee"
+msgstr ""
+
+#. module: hr_data_import
+#: model_terms:ir.ui.view,arch_db:hr_data_import.view_data_form
+msgid "Employee Data Form"
+msgstr ""
+
+#. module: hr_data_import
+#: model_terms:ir.ui.view,arch_db:hr_data_import.view_data_search
+msgid "Employee Data Search"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,help:hr_data_import.field_hr_data_import_employee__wage
+msgid "Employee's monthly gross wage."
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.actions.act_window,name:hr_data_import.open_employee_import
+#: model:ir.ui.menu,name:hr_data_import.menu_employee_import
+msgid "Employees"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__date_end
+msgid "End Date"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,help:hr_data_import.field_hr_data_import_employee__date_end
+msgid "End date of the contract (if it's a fixed-term contract)."
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,help:hr_data_import.field_hr_data_import_employee__trial_date_end
+msgid "End date of the trial period (if there is one)."
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__trial_date_end
+msgid "End of Trial Period"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__gender__female
+msgid "Female"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__last_rest_day__friday
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__rest_day__friday
+msgid "Friday"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__gender
+msgid "Gender"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_hr_top
+msgid "HR Company Data"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model,name:hr_data_import.model_hr_data_import_employee
+msgid "HR Import: Employee"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_hrmaster_top
+msgid "HR Master Data"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_employee__hire_date
+msgid "Hire Date"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__id
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_employee__id
+msgid "ID"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__identification_id
+msgid "Identification No"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__state__imported
+msgid "Imported"
+msgstr ""
+
+#. module: hr_data_import
+#: model_terms:ir.ui.view,arch_db:hr_data_import.hr_employee_view_form
+msgid "Imported Data"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_employee__import_data_id
+msgid "Imported Record"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,help:hr_data_import.field_hr_employee__hire_date
+msgid "Initial date of employment if different than date on first contract."
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,help:hr_data_import.field_hr_data_import_employee__hire_date
+msgid "Initial date of employment."
+msgstr ""
+
+#. module: hr_data_import
+#: model_terms:ir.ui.view,arch_db:hr_data_import.view_data_search
+msgid "Job"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__job_id
+msgid "Job Position"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_view_hr_job
+msgid "Job Positions"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__last_rest_day
+msgid "Last Rest Day"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__marital__cohabitant
+msgid "Legal Cohabitant"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__education_level__masters_degree
+msgid "MA Degree"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__gender__male
+msgid "Male"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__marital
+msgid "Marital Status"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__marital__married
+msgid "Married"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__last_rest_day__monday
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__rest_day__monday
+msgid "Monday"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__name
+msgid "Name"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__state__new
+msgid "New"
+msgstr ""
+
+#. module: hr_data_import
+#. odoo-python
+#: code:addons/hr_data_import/models/hr_data_import_employee.py:0
+msgid "New records must be imported before they are updated."
+msgstr ""
+
+#. module: hr_data_import
+#. odoo-python
+#: code:addons/hr_data_import/models/hr_data_import_employee.py:0
+msgid "Only new records can be imported."
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__gender__other
+msgid "Other"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_policy_ot
+msgid "Overtime Policies"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_payroll_top
+msgid "Payroll Master Data"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__pps_id
+#: model_terms:ir.ui.view,arch_db:hr_data_import.view_data_search
+msgid "Payroll Period Schedule"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_payroll_period_schedule
+msgid "Payroll Period Schedules"
+msgstr ""
+
+#. module: hr_data_import
+#: model_terms:ir.ui.view,arch_db:hr_data_import.view_data_search
+msgid "Payroll Policy Group"
+msgstr ""
+
+#. module: hr_data_import
+#: model_terms:ir.ui.view,arch_db:hr_data_import.view_data_search
+msgid "Payroll Structure"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__place_of_birth
+msgid "Place Of Birth"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__policy_group_id
+msgid "Policy Group"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_policy_groups
+msgid "Policy Groups"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_policy_presence
+msgid "Presence Policies"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__private_email
+msgid "Private Email"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__private_phone
+msgid "Private Phone"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_public_holiday
+msgid "Public Holidays"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__related_employee_id
+msgid "Related Employee"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__anlv_remain
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_employee__anlv_remain
+msgid "Remaining"
+msgstr ""
+
+#. module: hr_data_import
+#: model_terms:ir.ui.view,arch_db:hr_data_import.view_data_search
+msgid "Resource Calendar"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__rest_day
+msgid "Rest Day"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_policy_rounding
+msgid "Rounding Policies"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_salary_rule_categ
+msgid "Salary Rule Categories"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_salary_rules
+msgid "Salary Rules"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_payroll_structure
+msgid "Salary Structures"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__last_rest_day__saturday
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__rest_day__saturday
+msgid "Saturday"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__marital__single
+msgid "Single"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__date_start
+msgid "Start Date"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,help:hr_data_import.field_hr_data_import_employee__date_start
+msgid "Start date of the contract."
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__state
+msgid "State"
+msgstr ""
+
+#. module: hr_data_import
+#: model_terms:ir.ui.view,arch_db:hr_data_import.view_data_search
+msgid "State: Imported"
+msgstr ""
+
+#. module: hr_data_import
+#: model_terms:ir.ui.view,arch_db:hr_data_import.view_data_search
+msgid "State: New"
+msgstr ""
+
+#. module: hr_data_import
+#: model_terms:ir.ui.view,arch_db:hr_data_import.view_data_search
+msgid "State: Updated"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__struct_id
+msgid "Struct"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__last_rest_day__sunday
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__rest_day__sunday
+msgid "Sunday"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__taxid
+msgid "Tax ID"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__last_rest_day__thursday
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__rest_day__thursday
+msgid "Thursday"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_leave_type
+msgid "Time Off Types"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_policy_accrual
+msgid "Timebank Accrual Policies"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.ui.menu,name:hr_data_import.menu_policy_accrual_line
+msgid "Timebank Accrual Policy Lines"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__last_rest_day__tuesday
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__rest_day__tuesday
+msgid "Tuesday"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.actions.server,name:hr_data_import.action_update_records
+msgid "Update HR Records"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__state__updated
+msgid "Updated"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__anlv_used
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_employee__anlv_used
+msgid "Used"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__wage
+msgid "Wage"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__last_rest_day__wednesday
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__rest_day__wednesday
+msgid "Wednesday"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields.selection,name:hr_data_import.selection__hr_data_import_employee__marital__widower
+msgid "Widower"
+msgstr ""
+
+#. module: hr_data_import
+#: model:ir.model.fields,field_description:hr_data_import.field_hr_data_import_employee__resource_calendar_id
+msgid "Working Schedule"
+msgstr ""
