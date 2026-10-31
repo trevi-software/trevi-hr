@@ -67,6 +67,9 @@ class TestHrJobWizard(TransactionCase):
             for job in wizard1.job_ids:
                 self.assertIn(job, jobs)
 
+        with self.assertRaises(AccessError):
+            jobs.with_user(self.hr_user).set_open()
+
         with Form(
             self.Wizard.with_user(self.hr_officer).with_context(active_ids=jobs.ids)
         ) as wizard2:
