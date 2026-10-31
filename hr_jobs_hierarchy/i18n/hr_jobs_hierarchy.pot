@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -24,32 +24,27 @@ msgid "Department"
 msgstr ""
 
 #. module: hr_jobs_hierarchy
-#: model:ir.model.fields,field_description:hr_jobs_hierarchy.field_hr_job__department_manager
-msgid "Department Manager"
-msgstr ""
-
-#. module: hr_jobs_hierarchy
-#: model:ir.model.fields,field_description:hr_jobs_hierarchy.field_hr_contract__display_name
 #: model:ir.model.fields,field_description:hr_jobs_hierarchy.field_hr_department__display_name
 #: model:ir.model.fields,field_description:hr_jobs_hierarchy.field_hr_job__display_name
+#: model:ir.model.fields,field_description:hr_jobs_hierarchy.field_hr_version__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: hr_jobs_hierarchy
-#: model:ir.model,name:hr_jobs_hierarchy.model_hr_contract
-msgid "Employee Contract"
+#: model:ir.model,name:hr_jobs_hierarchy.model_hr_version
+msgid "Employee Contract / Version"
 msgstr ""
 
 #. module: hr_jobs_hierarchy
+#. odoo-python
 #: code:addons/hr_jobs_hierarchy/models/hr.py:0
-#, python-format
 msgid "Error! You cannot create recursive jobs."
 msgstr ""
 
 #. module: hr_jobs_hierarchy
-#: model:ir.model.fields,field_description:hr_jobs_hierarchy.field_hr_contract__id
 #: model:ir.model.fields,field_description:hr_jobs_hierarchy.field_hr_department__id
 #: model:ir.model.fields,field_description:hr_jobs_hierarchy.field_hr_job__id
+#: model:ir.model.fields,field_description:hr_jobs_hierarchy.field_hr_version__id
 msgid "ID"
 msgstr ""
 
@@ -65,15 +60,13 @@ msgid "Immediate Superior"
 msgstr ""
 
 #. module: hr_jobs_hierarchy
-#: model:ir.model,name:hr_jobs_hierarchy.model_hr_job
-msgid "Job Position"
+#: model:ir.model.fields,field_description:hr_jobs_hierarchy.field_hr_job__department_manager
+msgid "Is Manager"
 msgstr ""
 
 #. module: hr_jobs_hierarchy
-#: model:ir.model.fields,field_description:hr_jobs_hierarchy.field_hr_contract____last_update
-#: model:ir.model.fields,field_description:hr_jobs_hierarchy.field_hr_department____last_update
-#: model:ir.model.fields,field_description:hr_jobs_hierarchy.field_hr_job____last_update
-msgid "Last Modified on"
+#: model:ir.model,name:hr_jobs_hierarchy.model_hr_job
+msgid "Job Position"
 msgstr ""
 
 #. module: hr_jobs_hierarchy
