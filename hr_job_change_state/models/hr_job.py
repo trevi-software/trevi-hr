@@ -2,7 +2,7 @@
 # Copyright (C) 2013 Michael Telahun Makonnen <mmakonnen@gmail.com>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import AccessError
 
 
@@ -22,7 +22,9 @@ class HrJob(models.Model):
 
     def _set_recruitment_state(self, state):
         if not self.env.user.has_group("hr.group_hr_manager"):
-            raise AccessError(_("Only HR managers can change recruitment state."))
+            raise AccessError(
+                self.env._("Only HR managers can change recruitment state.")
+            )
         self.check_access("write")
         return self.sudo().write({"state": state})
 
