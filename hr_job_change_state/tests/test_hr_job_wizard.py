@@ -12,6 +12,9 @@ class TestHrJobWizard(TransactionCase):
 
         cls.group_hr_manager = cls.env.ref("hr.group_hr_manager")
         cls.group_hr_user = cls.env.ref("hr.group_hr_user")
+        cls.group_recruitment_mgr = cls.env.ref(
+            "hr_recruitment.group_hr_recruitment_manager"
+        )
 
         # -- Users
         cls.hr_user = cls.User.create(
@@ -26,6 +29,15 @@ class TestHrJobWizard(TransactionCase):
                 "name": "Hr Officer",
                 "login": "hrofficer",
                 "group_ids": [(4, cls.group_hr_manager.id)],
+            }
+        )
+        cls.recruitment_manager = cls.User.create(
+            {
+                "name": "Recruitment Manager",
+                "login": "recman",
+                "group_ids": [
+                    (4, cls.group_recruitment_mgr.id),
+                ],
             }
         )
 
@@ -82,7 +94,7 @@ class TestHrJobWizard(TransactionCase):
             self.assertEqual(job.state, "recruit")
 
         wizard = (
-            self.Wizard.with_user(self.hr_officer)
+            self.Wizard.with_user(self.recruitment_manager)
             .with_context(active_ids=jobs.ids)
             .create({})
         )
