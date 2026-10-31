@@ -33,9 +33,10 @@ class TestHrJobWizard(TransactionCase):
         )
         cls.recruitment_manager = cls.User.create(
             {
-                "name": "Recruitment Manager",
+                "name": "Recruitment/HR Manager",
                 "login": "recman",
                 "group_ids": [
+                    (4, cls.group_hr_manager.id),
                     (4, cls.group_recruitment_mgr.id),
                 ],
             }
