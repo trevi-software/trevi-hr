@@ -104,7 +104,13 @@ jobs:
           done >> test-requirements.txt
           # pdfminer.six: optional dep of core attachment_indexation; without it
           # a WARNING lands in the Odoo log and the checklog step fails the run.
+          # Pin cryptography<36 so pdfminer.six cannot upgrade it: the image's
+          # pinned pyOpenSSL breaks against newer cryptography, which makes
+          # `import odoo` fail. Seen on this branch's own CI run:
+          #   AttributeError: module 'lib' has no attribute 'GEN_EMAIL'
+          #   CRITICAL odoo.service.server: Failed to initialize database `odoo`.
           echo "pdfminer.six" >> test-requirements.txt
+          echo "cryptography<36" >> test-requirements.txt
           cat test-requirements.txt
       - name: Install addons and dependencies
         run: oca_install_addons
