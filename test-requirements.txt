@@ -1,1 +1,1 @@
-pyOpenSSL>=24.3.0
+cryptography<=31
