@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -14,135 +14,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__10
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__10
-msgid "10"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__11
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__11
-msgid "11"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__12
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__12
-msgid "12"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__13
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__13
-msgid "13"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__14
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__14
-msgid "14"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__15
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__15
-msgid "15"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__16
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__16
-msgid "16"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__17
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__17
-msgid "17"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__18
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__18
-msgid "18"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__19
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__19
-msgid "19"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__20
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__20
-msgid "20"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__21
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__21
-msgid "21"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__22
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__22
-msgid "22"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__23
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__23
-msgid "23"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__24
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__24
-msgid "24"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__25
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__25
-msgid "25"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__26
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__26
-msgid "26"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__27
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__27
-msgid "27"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__28
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__28
-msgid "28"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__29
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__29
-msgid "29"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__30
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__30
-msgid "30"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_day__31
-#: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_month_day__31
-msgid "31"
+#. odoo-python
+#: code:addons/hr_benefit/models/benefit_allwance.py:0
+msgid "A monthly reimbursement limit requires the 'First Day of Cycle'."
 msgstr ""
 
 #. module: hr_benefit
@@ -172,7 +46,6 @@ msgstr ""
 #. module: hr_benefit
 #: model:ir.actions.act_window,name:hr_benefit.open_all_claims_view
 #: model:ir.ui.menu,name:hr_benefit.menu_all_claims
-#: model_terms:ir.ui.view,arch_db:hr_benefit.view_all_claims_tree
 msgid "All Claims"
 msgstr ""
 
@@ -180,6 +53,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__type__allowance
 #: model_terms:ir.ui.view,arch_db:hr_benefit.view_benefit_policy_advantage_form
 msgid "Allowance"
+msgstr ""
+
+#. module: hr_benefit
+#. odoo-python
+#: code:addons/hr_benefit/models/benefit_allwance.py:0
+msgid ""
+"An annual reimbursement limit requires both the cycle start month and day."
 msgstr ""
 
 #. module: hr_benefit
@@ -236,18 +116,13 @@ msgid "Benefit Advantage"
 msgstr ""
 
 #. module: hr_benefit
-#: model_terms:ir.ui.view,arch_db:hr_benefit.view_benefit_policy_advantage_tree
-msgid "Benefit Advantages"
-msgstr ""
-
-#. module: hr_benefit
 #: model:ir.model,name:hr_benefit.model_hr_benefit_policy
 msgid "Benefit Enrollment"
 msgstr ""
 
 #. module: hr_benefit
-#: model_terms:ir.ui.view,arch_db:hr_benefit.view_benefits_policy_tree
-msgid "Benefit Policies"
+#: model:ir.actions.server,name:hr_benefit.ir_cron_benefit_policy_refresh_amounts_ir_actions_server
+msgid "Benefit Policies: refresh amounts"
 msgstr ""
 
 #. module: hr_benefit
@@ -266,11 +141,6 @@ msgid "Benefit Premium"
 msgstr ""
 
 #. module: hr_benefit
-#: model_terms:ir.ui.view,arch_db:hr_benefit.view_benefit_policy_premium_tree
-msgid "Benefit Premium Policies"
-msgstr ""
-
-#. module: hr_benefit
 #: model:ir.model,name:hr_benefit.model_hr_benefit_claim
 msgid "Benefit claim"
 msgstr ""
@@ -282,7 +152,6 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_benefit.menu_benefits
 #: model:ir.ui.menu,name:hr_benefit.menu_benefits_configuration
 #: model_terms:ir.ui.view,arch_db:hr_benefit.hr_employee_view_form
-#: model_terms:ir.ui.view,arch_db:hr_benefit.view_benefits_tree
 msgid "Benefits"
 msgstr ""
 
@@ -344,7 +213,10 @@ msgstr ""
 
 #. module: hr_benefit
 #: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit__company_id
+#: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit_advantage__company_id
+#: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit_claim__company_id
 #: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit_policy__company_id
+#: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit_premium__company_id
 msgid "Company"
 msgstr ""
 
@@ -373,8 +245,8 @@ msgid "Created on"
 msgstr ""
 
 #. module: hr_benefit
+#. odoo-python
 #: code:addons/hr_benefit/models/benefit_policy.py:0
-#, python-format
 msgid "Critical Error. Unable to obtain a benefit policy number!"
 msgstr ""
 
@@ -479,16 +351,12 @@ msgid "Effective Date"
 msgstr ""
 
 #. module: hr_benefit
-#: code:addons/hr_benefit/models/benefit_allwance.py:0
 #: model:ir.model.constraint,message:hr_benefit.constraint_hr_benefit_advantage_unique_date_benefit_id
-#, python-format
 msgid "Effective date must be unique per advantage in a benefit!"
 msgstr ""
 
 #. module: hr_benefit
-#: code:addons/hr_benefit/models/benefit_premium.py:0
 #: model:ir.model.constraint,message:hr_benefit.constraint_hr_benefit_premium_unique_date_benefit_id
-#, python-format
 msgid "Effective dates must be unique per premium in a benefit!"
 msgstr ""
 
@@ -498,8 +366,8 @@ msgid "Elegibility"
 msgstr ""
 
 #. module: hr_benefit
+#. odoo-python
 #: code:addons/hr_benefit/models/benefit_policy.py:0
-#, python-format
 msgid ""
 "Eligibility Requirements Unmet. The employee does not meet eligibility "
 "requirements for this benefit."
@@ -563,6 +431,13 @@ msgid "End Policy"
 msgstr ""
 
 #. module: hr_benefit
+#: model:ir.model.fields,help:hr_benefit.field_hr_benefit_policy__installment_end_date
+msgid ""
+"End of the premium installment schedule, calculated from the enrollment "
+"date. Independent from the policy's termination date."
+msgstr ""
+
+#. module: hr_benefit
 #: model_terms:ir.ui.view,arch_db:hr_benefit.enroll_employee_form
 #: model_terms:ir.ui.view,arch_db:hr_benefit.enroll_multi_employee_form
 msgid "Enroll"
@@ -589,9 +464,9 @@ msgid "Enrollment Date"
 msgstr ""
 
 #. module: hr_benefit
+#. odoo-python
 #: code:addons/hr_benefit/models/benefit_claim.py:0
-#, python-format
-msgid "ErrorYou may not a delete a claim that is not in a \"Draft\" state"
+msgid "Error: You may not a delete a claim that is not in a \"Draft\" state"
 msgstr ""
 
 #. module: hr_benefit
@@ -633,12 +508,6 @@ msgstr ""
 #. module: hr_benefit
 #: model_terms:ir.ui.view,arch_db:hr_benefit.view_benefits_policy_form
 msgid "General"
-msgstr ""
-
-#. module: hr_benefit
-#: model_terms:ir.ui.view,arch_db:hr_benefit.view_benefit_policy_filter
-#: model_terms:ir.ui.view,arch_db:hr_benefit.view_claims_filter
-msgid "Group By..."
 msgstr ""
 
 #. module: hr_benefit
@@ -691,6 +560,11 @@ msgid "Included Job Positions"
 msgstr ""
 
 #. module: hr_benefit
+#: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit_policy__installment_end_date
+msgid "Installment End Date"
+msgstr ""
+
+#. module: hr_benefit
 #: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_month__1
 msgid "January"
 msgstr ""
@@ -703,19 +577,6 @@ msgstr ""
 #. module: hr_benefit
 #: model:ir.model.fields.selection,name:hr_benefit.selection__hr_benefit_advantage__reim_period_annual_month__6
 msgid "June"
-msgstr ""
-
-#. module: hr_benefit
-#: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit____last_update
-#: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit_advantage____last_update
-#: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit_claim____last_update
-#: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit_enroll_employee____last_update
-#: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit_enroll_multi_employee____last_update
-#: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit_policy____last_update
-#: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit_policy_end____last_update
-#: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit_premium____last_update
-#: model:ir.model.fields,field_description:hr_benefit.field_hr_employee____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: hr_benefit
@@ -879,11 +740,6 @@ msgid "Policy"
 msgstr ""
 
 #. module: hr_benefit
-#: model_terms:ir.ui.view,arch_db:hr_benefit.view_benefits_form
-msgid "Premium"
-msgstr ""
-
-#. module: hr_benefit
 #: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit_enroll_multi_employee__premium_amount
 #: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit_policy__premium_amount
 #: model:ir.model.fields,field_description:hr_benefit.field_hr_benefit_premium__amount
@@ -993,12 +849,26 @@ msgid "The date the claim was made"
 msgstr ""
 
 #. module: hr_benefit
+#. odoo-python
 #: code:addons/hr_benefit/models/benefit_policy.py:0
-#, python-format
 msgid ""
 "The employee is already enrolled in this benefit program.\n"
-"%s\n"
-"Policy: %s"
+"%(name)s\n"
+"Policy: %(policy)s"
+msgstr ""
+
+#. module: hr_benefit
+#. odoo-python
+#: code:addons/hr_benefit/models/benefit_policy.py:0
+msgid ""
+"The employee is enrolled in this benefit program more than once in the same "
+"request."
+msgstr ""
+
+#. module: hr_benefit
+#. odoo-python
+#: code:addons/hr_benefit/models/benefit_allwance.py:0
+msgid "The reimbursement earning line has no limit period configured."
 msgstr ""
 
 #. module: hr_benefit
@@ -1007,41 +877,40 @@ msgid "Total"
 msgstr ""
 
 #. module: hr_benefit
+#. odoo-python
 #: code:addons/hr_benefit/wizard/end_policy.py:0
-#, python-format
 msgid "Unable to determine Benefit Policy."
 msgstr ""
 
 #. module: hr_benefit
+#. odoo-python
 #: code:addons/hr_benefit/models/benefit_allwance.py:0
-#, python-format
 msgid ""
 "Wrong earning type for this operation. Use 'Expense Re-imbursement' instead."
 msgstr ""
 
 #. module: hr_benefit
+#. odoo-python
 #: code:addons/hr_benefit/models/benefit_policy.py:0
-#, python-format
 msgid "You cannot set a policy in 'Done' state to any other value."
 msgstr ""
 
 #. module: hr_benefit
+#. odoo-python
 #: code:addons/hr_benefit/models/benefit_claim.py:0
-#, python-format
 msgid "You cannot set an approved claim back to 'draft' state."
 msgstr ""
 
 #. module: hr_benefit
+#. odoo-python
 #: code:addons/hr_benefit/models/benefit_policy.py:0
-#: code:addons/hr_benefit/models/benefit_policy.py:0
-#, python-format
 msgid "You cannot set an open policy back to 'draft' state."
 msgstr ""
 
 #. module: hr_benefit
+#. odoo-python
 #: code:addons/hr_benefit/models/benefit_policy.py:0
-#, python-format
 msgid ""
-"You may not delete a policy that is not in a \"draft\" state.\n"
+"You may not delete a policy that is not in a 'draft' state.\n"
 "Policy No: %s"
 msgstr ""
