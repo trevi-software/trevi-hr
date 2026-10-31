@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -14,11 +14,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr_contract_values
-#: code:addons/hr_contract_values/models/hr_contract_wage.py:0
 #: model:ir.model.constraint,message:hr_contract_values.constraint_hr_contract_init_wage_unique_job_cinit
-#, python-format
 msgid ""
-"A Job Position cannot be referenced more than once ina Contract Settings "
+"A Job Position cannot be referenced more than once in a Contract Settings "
 "record."
 msgstr ""
 
@@ -34,7 +32,6 @@ msgstr ""
 
 #. module: hr_contract_values
 #: model_terms:ir.ui.view,arch_db:hr_contract_values.view_contract_init_form
-#: model_terms:ir.ui.view,arch_db:hr_contract_values.view_contract_init_tree
 msgid "Contract Initial Values"
 msgstr ""
 
@@ -72,9 +69,9 @@ msgid "Currency"
 msgstr ""
 
 #. module: hr_contract_values
-#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract__display_name
 #: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__display_name
 #: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__display_name
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_version__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -84,35 +81,20 @@ msgid "Effective Date"
 msgstr ""
 
 #. module: hr_contract_values
-#: model:ir.model,name:hr_contract_values.model_hr_contract
-msgid "Employee Contract"
+#: model:ir.model,name:hr_contract_values.model_hr_version
+msgid "Employee Contract / Version"
 msgstr ""
 
 #. module: hr_contract_values
-#: model:ir.model.fields,help:hr_contract_values.field_hr_contract__wage
-msgid "Employee's monthly gross wage."
-msgstr ""
-
-#. module: hr_contract_values
-#: model:ir.model.fields,help:hr_contract_values.field_hr_contract__trial_date_end
-msgid "End date of the trial period (if there is one)."
-msgstr ""
-
-#. module: hr_contract_values
-#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract__trial_date_end
-msgid "End of Trial Period"
-msgstr ""
-
-#. module: hr_contract_values
+#. odoo-python
 #: code:addons/hr_contract_values/models/hr_contract_wage.py:0
-#, python-format
-msgid "ErrorYou may not a delete a record that is not in a \"Draft\" state"
+msgid "ErrorYou may not delete a record that is locked. Unlock it first."
 msgstr ""
 
 #. module: hr_contract_values
-#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract__id
 #: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init__id
 #: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__id
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_version__id
 msgid "ID"
 msgstr ""
 
@@ -123,7 +105,6 @@ msgstr ""
 
 #. module: hr_contract_values
 #: model_terms:ir.ui.view,arch_db:hr_contract_values.view_contract_init_form
-#: model_terms:ir.ui.view,arch_db:hr_contract_values.view_init_wage_tree
 msgid "Initial Wages"
 msgstr ""
 
@@ -135,13 +116,6 @@ msgstr ""
 #. module: hr_contract_values
 #: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__job_id
 msgid "Job"
-msgstr ""
-
-#. module: hr_contract_values
-#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract____last_update
-#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init____last_update
-#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: hr_contract_values
@@ -177,8 +151,9 @@ msgid "Name"
 msgstr ""
 
 #. module: hr_contract_values
-#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract__structure_type_id
-msgid "Salary Structure Type"
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_employee__trial_date_start
+#: model:ir.model.fields,field_description:hr_contract_values.field_hr_version__trial_date_start
+msgid "Start of Trial Period"
 msgstr ""
 
 #. module: hr_contract_values
@@ -195,11 +170,6 @@ msgstr ""
 #. module: hr_contract_values
 #: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract_init_wage__category_ids
 msgid "Tags"
-msgstr ""
-
-#. module: hr_contract_values
-#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract__trial_date_start
-msgid "Trial Date Start"
 msgstr ""
 
 #. module: hr_contract_values
@@ -223,18 +193,13 @@ msgid "Use as default wage"
 msgstr ""
 
 #. module: hr_contract_values
-#: model:ir.model.fields,field_description:hr_contract_values.field_hr_contract__wage
-msgid "Wage"
+#. odoo-python
+#: code:addons/hr_contract_values/models/hr_contract.py:0
+msgid "You may not delete a record that is locked. Unlock it first."
 msgstr ""
 
 #. module: hr_contract_values
+#. odoo-python
 #: code:addons/hr_contract_values/models/hr_contract.py:0
-#, python-format
-msgid "You may not delete a record that is locked. You must unlock it first."
-msgstr ""
-
-#. module: hr_contract_values
-#: code:addons/hr_contract_values/models/hr_contract.py:0
-#, python-format
-msgid "You may not update a record that is locked. You must unlock it first."
+msgid "You may not update a record that is locked. Unlock it first."
 msgstr ""
