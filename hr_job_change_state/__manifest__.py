@@ -9,7 +9,7 @@
     "category": "Human Resources",
     "author": "TREVI Software",
     "website": "https://github.com/trevi-software/trevi-hr",
-    "depends": ["hr"],
+    "depends": ["hrhr_recruitment"],
     "data": [
         "security/ir.model.access.csv",
         "wizard/change_state.xml",
