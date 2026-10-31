@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright (C) 2026 Trevi Software (https://trevi.et)
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html). -->
+<odoo>
+    <!-- The import rows carry private employee data (wages, identification
+         numbers, private contact details): only the companies allowed to the
+         user may be read. Applies to both HR users and HR managers. -->
+    <record id="rule_hr_data_import_employee_company" model="ir.rule">
+        <field name="name">HR Import Employee: multi-company</field>
+        <field name="model_id" ref="model_hr_data_import_employee" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field
+            name="groups"
+            eval="[(4, ref('hr.group_hr_user')), (4, ref('hr.group_hr_manager'))]"
+        />
+    </record>
+</odoo>
