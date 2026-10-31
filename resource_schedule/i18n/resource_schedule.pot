@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,8 +18,8 @@ msgstr ""
 msgid ""
 "\n"
 "        Fixed for all - the unscheduled days in the working time apply to all resources.\n"
-"        Fixed individually - the days off will be specified in each resource's record. If\n"
-"        it is not, the default days off will be used.\n"
+"        Fixed individually - the days off will be specified in each resource's record.\n"
+"        If it is not, the default days off will be used.\n"
 "        Rolling weekly - each reasource's day(s) off changes on a weekly basis. For\n"
 "        example, if the resource was off on Saturday last week, this week it will be\n"
 "        Friday, and next week it will be Thursday.\n"
@@ -45,14 +45,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:resource_schedule.selection__resource_calendar_attendance_open__day_period__8day
 #: model:ir.model.fields.selection,name:resource_schedule.selection__resource_schedule_shift__day_period__8day
 msgid "8 Hour Day"
-msgstr ""
-
-#. module: resource_schedule
-#: model_terms:ir.ui.view,arch_db:resource_schedule.res_config_settings_form
-msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" role=\"img\" aria-label=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 
 #. module: resource_schedule
@@ -124,13 +116,19 @@ msgid "Attendance Records"
 msgstr ""
 
 #. module: resource_schedule
+#: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar_attendance_open__duration_based
+#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_shift__duration_based
+msgid "Attendance based on duration"
+msgstr ""
+
+#. module: resource_schedule
 #: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar_attendance_template__autodeduct_break
 msgid "Auto-deduct break"
 msgstr ""
 
 #. module: resource_schedule
+#. odoo-python
 #: code:addons/resource_schedule/models/resource_calendar_attendance_template.py:0
-#, python-format
 msgid "Auto-deduct break time cannot be used with a Flex Shift"
 msgstr ""
 
@@ -143,10 +141,9 @@ msgid "Auto-punch"
 msgstr ""
 
 #. module: resource_schedule
-#: code:addons/resource_schedule/models/resource_calendar_attendance.py:0
+#. odoo-python
 #: code:addons/resource_schedule/models/resource_calendar_attendance.py:0
 #: code:addons/resource_schedule/models/resource_calendar_attendance_template.py:0
-#, python-format
 msgid "Auto-punch cannot be used with a Flex Shift"
 msgstr ""
 
@@ -188,7 +185,7 @@ msgid "Cancel"
 msgstr ""
 
 #. module: resource_schedule
-#: model:ir.model.fields,help:resource_schedule.field_resource_schedule_generate__type
+#: model:ir.model.fields,help:resource_schedule.field_resource_schedule_generate__sched_type
 msgid ""
 "Choose how to schedule shifts.Employee - Directly choose the employees for "
 "which to schedule shifts.Team - Shifts will be scheduled for all the "
@@ -308,16 +305,11 @@ msgid "Default Area"
 msgstr ""
 
 #. module: resource_schedule
-#: model:ir.model.fields,field_description:resource_schedule.field_hr_contract__default_area_id
 #: model:ir.model.fields,field_description:resource_schedule.field_hr_employee__default_area_id
 #: model:ir.model.fields,field_description:resource_schedule.field_hr_job__default_area_id
+#: model:ir.model.fields,field_description:resource_schedule.field_hr_version__default_area_id
 #: model:ir.model.fields,field_description:resource_schedule.field_resource_resource__default_area_id
 msgid "Default shift area"
-msgstr ""
-
-#. module: resource_schedule
-#: model_terms:ir.ui.view,arch_db:resource_schedule.res_config_settings_form
-msgid "Defaults"
 msgstr ""
 
 #. module: resource_schedule
@@ -343,17 +335,11 @@ msgid "Departmet Selection"
 msgstr ""
 
 #. module: resource_schedule
-#: model:ir.model.fields,help:resource_schedule.field_hr_attendance__autopunch
-msgid ""
-"Designates whether or not this attendance record was created automatically."
-msgstr ""
-
-#. module: resource_schedule
 #: model:ir.model.fields,field_description:resource_schedule.field_hr_attendance__display_name
-#: model:ir.model.fields,field_description:resource_schedule.field_hr_contract__display_name
 #: model:ir.model.fields,field_description:resource_schedule.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:resource_schedule.field_hr_job__display_name
 #: model:ir.model.fields,field_description:resource_schedule.field_hr_leave__display_name
+#: model:ir.model.fields,field_description:resource_schedule.field_hr_version__display_name
 #: model:ir.model.fields,field_description:resource_schedule.field_res_company__display_name
 #: model:ir.model.fields,field_description:resource_schedule.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar__display_name
@@ -386,6 +372,18 @@ msgid "Duration"
 msgstr ""
 
 #. module: resource_schedule
+#: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar_attendance_open__duration_days
+#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_shift__duration_days
+msgid "Duration (days)"
+msgstr ""
+
+#. module: resource_schedule
+#: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar_attendance_open__duration_hours
+#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_shift__duration_hours
+msgid "Duration (hours)"
+msgstr ""
+
+#. module: resource_schedule
 #: model:ir.model.fields,help:resource_schedule.field_resource_calendar_attendance__duration
 #: model:ir.model.fields,help:resource_schedule.field_resource_calendar_attendance_open__duration
 #: model:ir.model.fields,help:resource_schedule.field_resource_schedule_shift__duration
@@ -395,13 +393,13 @@ msgstr ""
 #. module: resource_schedule
 #: model:ir.model,name:resource_schedule.model_hr_employee
 #: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_shift__employee_id
-#: model:ir.model.fields.selection,name:resource_schedule.selection__resource_schedule_generate__type__employee
+#: model:ir.model.fields.selection,name:resource_schedule.selection__resource_schedule_generate__sched_type__employee
 msgid "Employee"
 msgstr ""
 
 #. module: resource_schedule
-#: model:ir.model,name:resource_schedule.model_hr_contract
-msgid "Employee Contract"
+#: model:ir.model,name:resource_schedule.model_hr_version
+msgid "Employee Contract / Version"
 msgstr ""
 
 #. module: resource_schedule
@@ -413,12 +411,6 @@ msgstr ""
 #. module: resource_schedule
 #: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_shift__datetime_end
 msgid "End"
-msgstr ""
-
-#. module: resource_schedule
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar_attendance_open__date_to
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_shift__date_to
-msgid "End Date"
 msgstr ""
 
 #. module: resource_schedule
@@ -490,8 +482,8 @@ msgid "Flex Weekly Hrs"
 msgstr ""
 
 #. module: resource_schedule
+#. odoo-python
 #: code:addons/resource_schedule/models/resource_calendar.py:0
-#, python-format
 msgid "Format of working hours is incorrect"
 msgstr ""
 
@@ -518,11 +510,6 @@ msgid "Gives the sequence of this line when displaying the resource calendar."
 msgstr ""
 
 #. module: resource_schedule
-#: model_terms:ir.ui.view,arch_db:resource_schedule.view_resource_schedule_search
-msgid "Group By..."
-msgstr ""
-
-#. module: resource_schedule
 #: model_terms:ir.ui.view,arch_db:resource_schedule.view_attendance_template_form
 #: model_terms:ir.ui.view,arch_db:resource_schedule.view_resource_calendar_attendance_form
 msgid "Hours"
@@ -540,10 +527,10 @@ msgstr ""
 
 #. module: resource_schedule
 #: model:ir.model.fields,field_description:resource_schedule.field_hr_attendance__id
-#: model:ir.model.fields,field_description:resource_schedule.field_hr_contract__id
 #: model:ir.model.fields,field_description:resource_schedule.field_hr_employee__id
 #: model:ir.model.fields,field_description:resource_schedule.field_hr_job__id
 #: model:ir.model.fields,field_description:resource_schedule.field_hr_leave__id
+#: model:ir.model.fields,field_description:resource_schedule.field_hr_version__id
 #: model:ir.model.fields,field_description:resource_schedule.field_res_company__id
 #: model:ir.model.fields,field_description:resource_schedule.field_res_config_settings__id
 #: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar__id
@@ -599,30 +586,6 @@ msgstr ""
 #. module: resource_schedule
 #: model:ir.model,name:resource_schedule.model_hr_job
 msgid "Job Position"
-msgstr ""
-
-#. module: resource_schedule
-#: model:ir.model.fields,field_description:resource_schedule.field_hr_attendance____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_hr_contract____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_hr_employee____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_hr_job____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_hr_leave____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_res_company____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar_attendance____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar_attendance_open____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar_attendance_template____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar_weekday____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_resource____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_area____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_autopunch_lastrun____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_generate____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_group____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_shift____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_team____last_update
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_validate_departments____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: resource_schedule
@@ -757,7 +720,6 @@ msgid "Record Count"
 msgstr ""
 
 #. module: resource_schedule
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar_attendance_open__resource_id
 #: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_area__resource_ids
 #: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_shift__resource_id
 #: model_terms:ir.ui.view,arch_db:resource_schedule.view_resource_schedule_search
@@ -806,13 +768,6 @@ msgid "Resource Shift Search"
 msgstr ""
 
 #. module: resource_schedule
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar_attendance__resource_type
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar_attendance_open__resource_type
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_shift__resource_type
-msgid "Resource Type"
-msgstr ""
-
-#. module: resource_schedule
 #: model:ir.model,name:resource_schedule.model_resource_calendar
 msgid "Resource Working Time"
 msgstr ""
@@ -834,6 +789,11 @@ msgstr ""
 #. module: resource_schedule
 #: model:ir.model.fields.selection,name:resource_schedule.selection__resource_calendar__dayoff_type__rolling
 msgid "Rolling weekly"
+msgstr ""
+
+#. module: resource_schedule
+#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_generate__sched_type
+msgid "Sched Type"
 msgstr ""
 
 #. module: resource_schedule
@@ -863,22 +823,16 @@ msgstr ""
 
 #. module: resource_schedule
 #: model:ir.actions.server,name:resource_schedule.autopunch_schedule_cron_ir_actions_server
-#: model:ir.cron,cron_name:resource_schedule.autopunch_schedule_cron
-#: model:ir.cron,name:resource_schedule.autopunch_schedule_cron
 msgid "Schedule: Auto-punch"
 msgstr ""
 
 #. module: resource_schedule
 #: model:ir.actions.server,name:resource_schedule.auto_clockout_schedule_cron_ir_actions_server
-#: model:ir.cron,cron_name:resource_schedule.auto_clockout_schedule_cron
-#: model:ir.cron,name:resource_schedule.auto_clockout_schedule_cron
 msgid "Schedule: Automatically clock-out after max. shift length"
 msgstr ""
 
 #. module: resource_schedule
 #: model:ir.actions.server,name:resource_schedule.mass_schedule_cron_ir_actions_server
-#: model:ir.cron,cron_name:resource_schedule.mass_schedule_cron
-#: model:ir.cron,name:resource_schedule.mass_schedule_cron
 msgid "Schedule: Mass Scheduling"
 msgstr ""
 
@@ -900,9 +854,9 @@ msgstr ""
 
 #. module: resource_schedule
 #: model:ir.module.category,name:resource_schedule.module_category_scheduling
+#: model:res.groups.privilege,name:resource_schedule.res_groups_privilege_scheduling
 #: model_terms:ir.ui.view,arch_db:resource_schedule.view_resource_schedule_shift_calendar
 #: model_terms:ir.ui.view,arch_db:resource_schedule.view_resource_schedule_shift_form
-#: model_terms:ir.ui.view,arch_db:resource_schedule.view_resource_schedule_shift_tree
 msgid "Scheduling"
 msgstr ""
 
@@ -915,11 +869,6 @@ msgid "Scheduling Area"
 msgstr ""
 
 #. module: resource_schedule
-#: model_terms:ir.ui.view,arch_db:resource_schedule.view_resource_schedule_area_tree
-msgid "Scheduling Areas"
-msgstr ""
-
-#. module: resource_schedule
 #: model:ir.actions.act_window,name:resource_schedule.open_schedule_group_view
 #: model:ir.ui.menu,name:resource_schedule.menu_schedule_group_view
 #: model_terms:ir.ui.view,arch_db:resource_schedule.view_resource_schedule_group_form
@@ -927,18 +876,7 @@ msgid "Scheduling Group"
 msgstr ""
 
 #. module: resource_schedule
-#: model_terms:ir.ui.view,arch_db:resource_schedule.view_resource_schedule_group_form
-msgid "Scheduling Group Managers"
-msgstr ""
-
-#. module: resource_schedule
-#: model_terms:ir.ui.view,arch_db:resource_schedule.view_resource_schedule_group_form
-msgid "Scheduling Group Work Detail Templates"
-msgstr ""
-
-#. module: resource_schedule
 #: model_terms:ir.ui.view,arch_db:resource_schedule.view_attendance_template_form
-#: model_terms:ir.ui.view,arch_db:resource_schedule.view_resource_schedule_group_tree
 msgid "Scheduling Groups"
 msgstr ""
 
@@ -955,7 +893,6 @@ msgstr ""
 #. module: resource_schedule
 #: model:ir.actions.act_window,name:resource_schedule.open_schedule_team_view
 #: model:ir.ui.menu,name:resource_schedule.menu_schedule_team_view
-#: model_terms:ir.ui.view,arch_db:resource_schedule.view_resource_schedule_team_tree
 msgid "Scheduling Teams"
 msgstr ""
 
@@ -1049,19 +986,13 @@ msgid ""
 msgstr ""
 
 #. module: resource_schedule
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar_attendance_open__date_from
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_shift__date_from
-msgid "Starting Date"
-msgstr ""
-
-#. module: resource_schedule
 #: model_terms:ir.ui.view,arch_db:resource_schedule.resource_calendar_form
 msgid "Switch to multi-week calendar"
 msgstr ""
 
 #. module: resource_schedule
 #: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_shift__schedule_team_id
-#: model:ir.model.fields.selection,name:resource_schedule.selection__resource_schedule_generate__type__team
+#: model:ir.model.fields.selection,name:resource_schedule.selection__resource_schedule_generate__sched_type__team
 #: model_terms:ir.ui.view,arch_db:resource_schedule.view_resource_schedule_search
 msgid "Team"
 msgstr ""
@@ -1088,6 +1019,13 @@ msgstr ""
 #. module: resource_schedule
 #: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_group__template_count
 msgid "Template Count"
+msgstr ""
+
+#. module: resource_schedule
+#: model:ir.model.fields,help:resource_schedule.field_resource_calendar_attendance_open__duration_based
+#: model:ir.model.fields,help:resource_schedule.field_resource_schedule_shift__duration_based
+msgid ""
+"The hours will be centered around 12:00 to cover the duration for the day"
 msgstr ""
 
 #. module: resource_schedule
@@ -1120,13 +1058,6 @@ msgid "The week number in the weekly rotation"
 msgstr ""
 
 #. module: resource_schedule
-#: model:ir.model.fields,help:resource_schedule.field_resource_schedule_shift__tz
-msgid ""
-"This field is used in order to define in which timezone the resources will "
-"work."
-msgstr ""
-
-#. module: resource_schedule
 #: model:ir.model.fields,help:resource_schedule.field_resource_calendar_attendance__span_midnight
 #: model:ir.model.fields,help:resource_schedule.field_resource_calendar_attendance_open__span_midnight
 #: model:ir.model.fields,help:resource_schedule.field_resource_calendar_attendance_template__span_midnight
@@ -1150,7 +1081,7 @@ msgid "Today"
 msgstr ""
 
 #. module: resource_schedule
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_generate__type
+#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_shift__resource_type
 msgid "Type"
 msgstr ""
 
@@ -1177,26 +1108,21 @@ msgid "Week"
 msgstr ""
 
 #. module: resource_schedule
+#. odoo-python
 #: code:addons/resource_schedule/models/resource_calendar.py:0
-#, python-format
 msgid "Week 0"
 msgstr ""
 
 #. module: resource_schedule
+#. odoo-python
 #: code:addons/resource_schedule/models/resource_calendar.py:0
-#, python-format
 msgid "Week 1"
-msgstr ""
-
-#. module: resource_schedule
-#: model_terms:ir.ui.view,arch_db:resource_schedule.view_resource_calendar_weekday_tree
-msgid "Week Days"
 msgstr ""
 
 #. module: resource_schedule
 #: model:ir.model.fields,field_description:resource_schedule.field_resource_calendar_attendance_open__week_type
 #: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_shift__week_type
-msgid "Week Even/Odd"
+msgid "Week Number"
 msgstr ""
 
 #. module: resource_schedule
@@ -1218,8 +1144,13 @@ msgid ""
 msgstr ""
 
 #. module: resource_schedule
+#: model:ir.model.fields,help:resource_schedule.field_hr_attendance__autopunch
+msgid "Whether or not this attendance record was created automatically."
+msgstr ""
+
+#. module: resource_schedule
+#. odoo-python
 #: code:addons/resource_schedule/models/resource_schedule_shift.py:0
-#, python-format
 msgid "While creating schedules end date cannot be less than start date."
 msgstr ""
 
@@ -1249,14 +1180,8 @@ msgid "Work Detail Template"
 msgstr ""
 
 #. module: resource_schedule
-#: model_terms:ir.ui.view,arch_db:resource_schedule.view_attendance_template_tree
 #: model_terms:ir.ui.view,arch_db:resource_schedule.view_resource_schedule_group_form
 msgid "Work Detail Templates"
-msgstr ""
-
-#. module: resource_schedule
-#: model_terms:ir.ui.view,arch_db:resource_schedule.resource_calendar_form
-msgid "Work Details"
 msgstr ""
 
 #. module: resource_schedule
@@ -1280,13 +1205,18 @@ msgstr ""
 
 #. module: resource_schedule
 #: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_generate__resource_calendar_id
-#: model:ir.model.fields.selection,name:resource_schedule.selection__resource_schedule_generate__type__calendar
+#: model:ir.model.fields.selection,name:resource_schedule.selection__resource_schedule_generate__sched_type__calendar
 msgid "Working Schedule"
 msgstr ""
 
 #. module: resource_schedule
-#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_team__resource_calendar_id
 #: model:ir.ui.menu,name:resource_schedule.menu_resource_calendar
+#: model:ir.ui.menu,name:resource_schedule.menu_resource_calendar_attendance
+msgid "Working Schedules"
+msgstr ""
+
+#. module: resource_schedule
+#: model:ir.model.fields,field_description:resource_schedule.field_resource_schedule_team__resource_calendar_id
 msgid "Working Times"
 msgstr ""
 
