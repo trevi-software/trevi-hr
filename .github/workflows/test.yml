@@ -32,6 +32,8 @@ jobs:
               fi
           done
   test:
+    permissions:
+      contents: write
     runs-on: ubuntu-22.04
     container: ${{ matrix.container }}
     name: ${{ matrix.name }}
@@ -127,5 +129,5 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: Update .pot files
-        run: oca_export_and_push_pot https://x-access-token:${{ secrets.GIT_PUSH_TOKEN }}@github.com/${{ github.repository }}
+        run: oca_export_and_push_pot https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
         if: ${{ matrix.makepot == 'true' && github.event_name == 'push' && github.repository_owner == 'trevi-software' }}
