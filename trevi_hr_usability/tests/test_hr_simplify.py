@@ -96,17 +96,26 @@ class TestHrSimplify(TransactionCase):
     ):
         start_date = Date.today() if start_date is None else start_date
         end_date = Date.today() + timedelta(days=90) if end_date is None else end_date
-        return self.Contract.create(
-            {
-                "name": name,
-                "employee_id": employee.id,
-                "job_id": job.id,
-                "wage": 1,
-                "date_version": start_date,
-                "contract_date_start": start_date,
-                "contract_date_end": end_date,
-            }
-        )
+        vals = {
+            "name": name,
+            "employee_id": employee.id,
+            "job_id": job.id,
+            "wage": 1,
+            "date_version": start_date,
+            "contract_date_start": start_date,
+            "contract_date_end": end_date,
+        }
+        # Once a payroll addon is installed its view makes ``struct_id``
+        # required on the contract form, and a saved form validates it. The
+        # tests here never look at the structure, but test_onchange_employee_id
+        # saves the form, so fill it in when such a backend is present (the CI
+        # run installs the whole repository, which brings one in).
+        struct_field = self.Contract._fields.get("struct_id")
+        if struct_field:
+            struct = self.env[struct_field.comodel_name].search([], limit=1)
+            if struct:
+                vals["struct_id"] = struct.id
+        return self.Contract.create(vals)
 
     def test_employee_country_defaults_to_et(self):
         self.assertEqual(self.emp_adam.country_id, self.env.ref("base.et"))
